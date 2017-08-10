@@ -336,6 +336,7 @@
   </div>
 </div>
 <script>
+var flag_off = true ;
 function check_password(){
   var password = $('pay_password').get('value');
   var pingRequest = new Request({
@@ -412,8 +413,15 @@ function pay_confirm (el, method) {
                             if(!rs[0].error) {
                                 Dialog.confirm('确定用你的预存款帐户支付这笔订单金额 <b class="price"><{if $order.promotion_type!='prepare'}><{$order.cur_money|cur:$order.currency}><{/if}><{if $order.promotion_type=='prepare' && $prepare.preparesell_price==$prepare.promotion_price}><{$order.cur_money|cur:$order.currency}><{/if}><{if $order.promotion_type=='prepare'&& $prepare.nowtime > $prepare.begin_time && $prepare.nowtime < $prepare.end_time && $prepare.preparesell_price<$prepare.promotion_price}><{$prepare.preparesell_price|cur:$order.currency}><{/if}><{if $order.promotion_type=='prepare' && $prepare.nowtime > $prepare.begin_time_final && $prepare.nowtime < $prepare.end_time_final && $prepare.preparesell_price<$prepare.promotion_price}><{$order.total_amount-$prepare.preparesell_price|cur:$order.currency}><{/if}></b> 吗？', function(e){
                                     if(e){
-                                        $("pay[password]").value = $("pay_password").value;
-                                        el.getParent('form').submit();
+                                      if(flag_off){
+                                        setTimeout(function(){
+                                          $("pay[password]").value = $("pay_password").value;
+                                          el.getParent('form').submit();
+                                          flag_off = false ;
+                                           console.log(flag_off);
+                                        },50)
+                                      }
+                                      return flag_off;
                                     }
                                 });
                             }
@@ -425,13 +433,20 @@ function pay_confirm (el, method) {
         }else{
           Dialog.confirm('确定用你的预存款帐户支付这笔订单金额 <b class="price"><{if $order.promotion_type!='prepare'}><{$order.cur_money|cur:$order.currency}><{/if}><{if $order.promotion_type=='prepare' && $prepare.preparesell_price==$prepare.promotion_price}><{$order.cur_money|cur:$order.currency}><{/if}><{if $order.promotion_type=='prepare'&& $prepare.nowtime > $prepare.begin_time && $prepare.nowtime < $prepare.end_time && $prepare.preparesell_price<$prepare.promotion_price}><{$prepare.preparesell_price|cur:$order.currency}><{/if}><{if $order.promotion_type=='prepare' && $prepare.nowtime > $prepare.begin_time_final && $prepare.nowtime < $prepare.end_time_final && $prepare.preparesell_price<$prepare.promotion_price}><{$order.total_amount-$prepare.preparesell_price|cur:$order.currency}><{/if}></b> 吗？', function(e){
               if(e){
-                el.getParent('form').submit();
+                if(flag_off){
+                  setTimeout(function(){
+                    el.getParent('form').submit();
+                    flag_off = false ;
+                    console.log(flag_off);
+                  },50)
+                }
+                return flag_off;
               }
           });
         }
     }
 }
-
+console.log(flag_off)
 function qrcode_pay() {
   var dialog = new Dialog("<{$form_action}>", {
             width: 630,
@@ -554,6 +569,7 @@ $(document.body).addEvents({
         }).post($('payment_center'));
     }
 });
+
 <{if $order.payinfo.pay_app_id == 'wxqrpay'}>
  //qrcode_pay();
 <{/if}>

@@ -73,7 +73,7 @@ class ectools_mdl_payment_cfgs {
         foreach($arrServicelist as $class_name => $object){
             if ($offset >= 0 && $limit > 0)
             {
-                if ($start_index >= ($offset+$limit) || $start_index < $offset)
+                if ($start_index >= ($offset+$limit) )
                 {
                     $start_index++;
                     continue;
@@ -119,6 +119,11 @@ class ectools_mdl_payment_cfgs {
                         {
                             if($object->platform == $value)
                             {
+                                $start_index++;
+                                if ($start_index <= $offset)
+                                {
+                                    continue;
+                                }
                                 $data[] = $row;
                             }
                         }
@@ -129,11 +134,21 @@ class ectools_mdl_payment_cfgs {
                         {
                             if($filter['platform'] == $object->platform)
                             {
+                                $start_index++;
+                                if ($start_index <= $offset)
+                                {
+                                    continue;
+                                }
                                 $data[] = $row;
                             }
                         }
                         else
                         {
+                            $start_index++;
+                            if ($start_index <= $offset)
+                            {
+                                continue;
+                            }
                             $data[] = $row;
                         }
                     }
@@ -148,6 +163,11 @@ class ectools_mdl_payment_cfgs {
                             {
                                 if($object->platform == $value)
                                 {
+                                    $start_index++;
+                                    if ($start_index <= $offset)
+                                    {
+                                        continue;
+                                    }
                                     $data[] = $row;
                                 }
                             }
@@ -158,11 +178,21 @@ class ectools_mdl_payment_cfgs {
                             {
                                 if($filter['platform'] == $object->platform)
                                 {
+                                    $start_index++;
+                                    if ($start_index <= $offset)
+                                    {
+                                        continue;
+                                    }
                                     $data[] = $row;
                                 }
                             }
                             else
                             {
+                                $start_index++;
+                                if ($start_index <= $offset)
+                                {
+                                    continue;
+                                }
                                 $data[] = $row;
                             }
                         }
@@ -171,10 +201,14 @@ class ectools_mdl_payment_cfgs {
             }
             else
             {
+                $start_index++;
+                if ($start_index <= $offset)
+                {
+                    continue;
+                }
                 $data[] = $row;
             }
 
-            $start_index++;
         }
 
         return $data;

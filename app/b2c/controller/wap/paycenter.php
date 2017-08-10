@@ -231,7 +231,7 @@ class b2c_ctl_wap_paycenter extends wap_frontpage{
                 $MemberData = app::get('b2c')->model('members')->getRow('*',array('member_id'=>$member_id));
                 $password = pam_encrypt::get_encrypted_password(trim($_POST['pay']['password']),pam_account::get_account_type($this->app->app_id),$use_pass_data);
                 if($MemberData['pay_password'] !== $password && !empty($MemberData['pay_password'])){
-                    $this->splash('false',null,'密码异常!');exit;
+                    $this->splash('failed',null,app::get('b2c')->_('密码异常!'));exit;
                 }
             }
         }

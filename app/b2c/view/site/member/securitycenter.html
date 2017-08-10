@@ -9,12 +9,12 @@
     <div class="member-mod">
       <form action="<{link app=b2c ctl=site_member act=save_setting}>" method="post" class="signupin-content">
         <ul class="security-list">
-          <li>
+          <li style="width:100%;">
             <span class="security-title">
               <i class="icon icon-success">%</i><b>登录密码</b>
             </span>
             <span class="security-actions">
-              <a href="<{link app=b2c ctl=site_member act=security}>">修改</a>
+              <a href="<{link app=b2c ctl=site_member act=security}>" class="btn"><span><span>&nbsp;&nbsp;修&nbsp;&nbsp;&nbsp;&nbsp;改&nbsp;&nbsp;</span></span></a>
             </span>
             <span class="security-content">
               <em>请经常更换您的登录密码，且不要和其他账号共用一个密码</em>
@@ -39,9 +39,9 @@
             </span>
             <span class="security-actions">
               <{if $verify.mobile || $verify.email}>
-              <a href="<{link app=b2c ctl=site_member act=verify arg0=setpaypassword}>">设置</a>
+              <a href="<{link app=b2c ctl=site_member act=verify arg0=setpaypassword}>" class="btn"><span><span>&nbsp;&nbsp;设&nbsp;&nbsp;&nbsp;&nbsp;置&nbsp;&nbsp;</span></span></a>
               <{else}>
-              <a href="#" onclick="alert('设置预存款支付密码前请先绑定手机或邮箱')">设置</a>
+              <a href="#" onclick="alert('设置预存款支付密码前请先绑定手机或邮箱')" class="btn"><span><span>&nbsp;&nbsp;设&nbsp;&nbsp;&nbsp;&nbsp;置&nbsp;&nbsp;</span></span></a>
               <{/if}>
             </span>
             <span class="security-content">

@@ -4,9 +4,10 @@
   <input type="hidden" name="<{$params.name}>" id="list_datas" vtype="<{$params.vtype}>" value="<{if is_array($params.value)}><{$params.value|implode:','}><{else}><{$params.value}><{/if}>" />
 </div>
 <script>
+var modeDialogBackUp;
   $('<{$params.domid}>').getElements('.label,.handle').addEvent('click', function(e){
     Ex_Loader('modedialog',function(){
-      new finderDialog('<{$url}>', {
+      modeDialogBackUp = new finderDialog('<{$url}>', {
         handle:'handle_<{$params.domid}>',
         <{if $init}>
         onInit:<{$init}>,

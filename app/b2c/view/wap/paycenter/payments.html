@@ -15,7 +15,7 @@
         </div>
     </div>
     <{/if}>
-    <form action="<{$form_action}>" method="post" id="paycenter_form">
+    <form action="<{$form_action}>" method="post" id="paycenter_form" >
         <input type="hidden" name="payment[order_id]" value="<{$order.order_id}>">
         <input type="hidden" name="payment[combination_pay]" value="false">
         <input type="hidden" name="payment[def_pay][cur_money]" value="<{$order.cur_money}>">
@@ -46,7 +46,7 @@
                                 <{if !($order.payinfo.pay_app_id == '-1' || $order.payinfo.pay_app_id == 'offline')}>
                                     <{if $order.payinfo.pay_app_id == 'deposit'}>
                                         <{if $order.cur_money - $deposit_money <= 0}>
-                                            <button type="submit" class="btn red">去付款</button>
+                                            <button type="submit" class="btn red btn-pay">去付款</button>
                                         <{/if}>
                                     <{else}>
                                         <{if $order.payinfo.platform =='iscommon' || $order.payinfo.platform =='iswap'}>
@@ -274,7 +274,7 @@
 <div class="payment-dialog confirm" id="payment_dialog" style="display:none;">
     <form action="<{$form_check}>" method="post" class="form">
         <p align="center">请输入您的预存款支付密码：</p>
-        <div class="c-g"><{input type="password" name="pay_password" id="pay_password" required="required" maxlength="20"}></div>
+        <div class="c-g"><{input type="password" name="pay_password" id="pay_password" required="required" maxlength="20" style="border:1px solid #BFBFBF;"}></div>
         <span id ="show_paystatus" style="color:red;"></span><br>
         <div align="center" class="col2">
             <{button type="submit" class="btn-confirm red col" style="margin-right:30px;" rel="_request" label="确定"}>
@@ -328,7 +328,9 @@
                             }else{
                                 var password = $("#pay_password").val();
                                 $("#password").val(password);
-                                _this.submit()
+                                setTimeout(function(){
+                                    _this.submit();
+                                },50)
                             }
                         });
                     }
@@ -336,7 +338,6 @@
             });
         }
     })();
-
 </script>
 
 

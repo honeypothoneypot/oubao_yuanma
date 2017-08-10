@@ -40,7 +40,7 @@ var mceInstance = new Class({
                 '<link rel="stylesheet" type="text/css" href="' + DESKTOPRESURL + '/wysiwyg_editor.css"/>',
                 '</head>',
                 '<body spellcheck="false" id="' + seri + '" style="break-word:break-all;word-wrap:break-word;">',
-                (editor.cleanup(editor.input.getProperty('value')) || '&nbsp;'),
+                (editor.cleanup(editor.input.getProperty('value')) || ''),
                 '</body></html>'].join('\n');
 
             frmWin.document.open();

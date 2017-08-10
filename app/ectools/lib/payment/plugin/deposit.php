@@ -151,7 +151,13 @@ final class ectools_payment_plugin_deposit extends ectools_payment_app implement
 		$obj_pay_lists = kernel::servicelist("order.pay_finish");
 		//$obj_pay = kernel::single("ectools_pay");
 		$is_payed = 'succ';
-
+        $concurrent=kernel::single("base_concurrent_file");
+        $member_group_id=  'member_group_'.$_SESSION['account']['member']/500;
+        $concurrent->status($member_group_id);
+        if(!$concurrent->check_flock()){
+            $concurrent->close_lock();
+            return false;
+        }
 		foreach ($obj_pay_lists as $order_pay_service_object)
 		{
 			$class_name = get_class($order_pay_service_object);
@@ -165,9 +171,7 @@ final class ectools_payment_plugin_deposit extends ectools_payment_app implement
 						$is_payed = 'failed';
 						return false;
 					}
-				}
-				else
-				{
+				}else{
 					$is_payed = 'failed';
 					return false;
 				}
@@ -190,7 +194,7 @@ final class ectools_payment_plugin_deposit extends ectools_payment_app implement
 				}
 
                 $db->commit($transaction_status);
-
+                $concurrent->unlock();
                 $obj_coupon = kernel::single("b2c_coupon_order");
                 if( $obj_coupon ){
                     $obj_coupon->order_pay_finish($payment, 'succ', 'font',$msg);
@@ -233,4 +237,5 @@ final class ectools_payment_plugin_deposit extends ectools_payment_app implement
 	{
 		return '';
 	}
+
 }

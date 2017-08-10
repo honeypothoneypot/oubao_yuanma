@@ -4,8 +4,9 @@
 <script>
 var shopeEvents = {},TaskRemote=null;
 W.page('<{$goto}>&dialog=true',{clearUpdateMap:false,onComplete:function(){
-    var modedialog=window.modedialogInstance;
+    var modedialog=window.modedialogInstance || window.opener.modeDialogBackUp;
     if(modedialog) modedialog.onLoad.call(modedialog,window);
+
      window.resizeLayout();
 }});
 

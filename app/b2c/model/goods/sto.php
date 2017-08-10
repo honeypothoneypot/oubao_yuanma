@@ -45,7 +45,7 @@ class b2c_mdl_goods_sto extends dbeav_model{
     }
 
     function getList($cols='*', $filter=array(), $offset=0, $limit=-1, $orderby=null){
-        $data = $this->get_sto_goods($filter['status'],$offset,$limit,$orderby);
+        $data = $this->get_sto_goods($filter,$offset,$limit,$orderby);
         return $data;
     }
 
@@ -92,8 +92,9 @@ class b2c_mdl_goods_sto extends dbeav_model{
             if($sto_product['status'] =='send'){
                 $send_status = app::get('b2c')->_('已通知');
             }
-            $uname = kernel::single('b2c_user_object')->get_member_name(null,$sto_product['member_id']);
-            if(!$uname){
+            if( $sto_product['member_id'] ){
+                $uname = kernel::single('b2c_user_object')->get_member_name(null,$sto_product['member_id']);
+            }else{
                 $uname = app::get('b2c')->_("非会员顾客");
             }
             $sdf = $obj_product->getList('*',array('product_id' =>$sto_product['product_id']));
