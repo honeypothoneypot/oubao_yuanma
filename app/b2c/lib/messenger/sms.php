@@ -39,19 +39,34 @@ class b2c_messenger_sms{
 
     }
     function send($to,$title,$message,$config){
-        if(!$to) return app::get('b2c')->_('短信发送失败：手机号为空！');
-        if(!$message) return app::get('b2c')->_('短信发送失败：短信内容为空！');
+        $sms_send_log=app::get('b2c')->model('sms_send_log');
+        $data=array('phone'=>$to,'send_time'=>time(),'message'=>$message);
+        $sms_id = $sms_send_log->insert($data);
+        if(!$to) {
+            $update=array('sms_id'=>$sms_id,'status'=>0,'msg'=>app::get('b2c')->_('短信发送失败：手机号为空！'));
+            $sms_send_log->save($update);
+            return app::get('b2c')->_('短信发送失败：手机号为空！');
+        }
+        if(!$message){
+            $update=array('sms_id'=>$sms_id,'status'=>0,'msg'=>app::get('b2c')->_('短信发送失败：短信内容为空！'));
+            $sms_send_log->save($update);
+            return app::get('b2c')->_('短信发送失败：短信内容为空！');
+        } 
 
         $setSmsSign = app::get('b2c')->getConf('setSmsSign');
         $setSmsSign = is_array($setSmsSign) ? $setSmsSign['sign'] : '';
         //判断是否含有全角
         $setSms=$this->checkReg($setSmsSign);
         if($setSms=='false')
-        {    
+        {   
+            $update=array('sms_id'=>$sms_id,'status'=>0,'msg'=>app::get('b2c')->_('含有非法字符'));
+            $sms_send_log->save($update);
             return app::get('b2c')->_('含有非法字符');
         }
         if (!$setSmsSign)
         {
+            $update=array('sms_id'=>$sms_id,'status'=>0,'msg'=>app::get('b2c')->_('短信签名不能为空！'));
+            $sms_send_log->save($update);
            return app::get('b2c')->_('短信签名不能为空！');
         }
         $message = $message.'【'. $setSmsSign .'】';
@@ -59,9 +74,18 @@ class b2c_messenger_sms{
             0 => array(
                 'phones' => $to,
                 'content' => $message
-            )
+            ),
+            1=>$sms_id
         );
         $result = kernel::single('b2c_messenger_smschg')->send($contents,$config,$msg);
+        if($result==true){
+            $update=array('sms_id'=>$sms_id,'status'=>1,'msg'=>$msg);
+            $sms_send_log->save($update);
+            $sms_send_log->update(array('sms_id'=>$sms_id),array('status'=>1,'msg'=>$msg));
+        }else{
+            $update=array('sms_id'=>$sms_id,'status'=>0,'msg'=>$msg);
+            $sms_send_log->save($update);
+        }
         return $msg;
     }
     //判断是否含有全角

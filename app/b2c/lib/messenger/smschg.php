@@ -130,6 +130,9 @@ class b2c_messenger_smschg{
      * @return void
      */
     public function send($contents,$config,&$msg) {
+        $sms_id=$contents['1'];
+        unset($contents['1']);
+        $sms_send_log=app::get('b2c')->model('sms_send_log');
         $data['certi_app'] = 'sms.send';
         $data['entId'] = $this->getEntId();
         $data['entPwd'] = $this->getEntAc();
@@ -155,6 +158,8 @@ class b2c_messenger_smschg{
         $data['certi_ac'] = $this->make_shopex_ac($data,$this->getSourceToken($config['specialChannel']));
 
         logger::info("messenger_sms:".print_r($data,1));
+        $update=array('sms_id'=>$sms_id,'status'=>4);
+        $sms_send_log->save($update);
         $result = $this->httpClient->post($this->sendUrl,$data);
         logger::info("messenger_sms:".$result);
         $result = json_decode($result,true);

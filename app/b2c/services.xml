@@ -168,6 +168,10 @@
         <class>b2c_finder_member_shopbbs</class>
     </service>
 
+    <service id="desktop_finder.b2c_mdl_sms_send_log">
+        <class>b2c_finder_sms_send_log</class>
+    </service>
+
     <service id="b2c_order_apps">
         <class>b2c_order_checkorder</class>
         <class>b2c_order_checkpay</class>

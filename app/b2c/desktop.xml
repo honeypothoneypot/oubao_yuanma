@@ -79,6 +79,7 @@
         <permission id="shopsaleanalysis" display='true' parent='0' workground='b2c.wrokground.analysis'>店铺销售情况</permission>
         <permission id="productsaleanalysis" display='true' parent='0' workground='b2c.wrokground.analysis'>商品排行</permission>
         <permission id="memberanalysis" display='true' parent='0' workground='b2c.wrokground.analysis'>会员排行</permission>
+        <permission id="sms_send_sendlog" display='true' workground='system'>短信发送记录</permission>
     </permissions>
 
     <workground name="订单" id="ectools.wrokground.order" app="b2c" controller="admin_order" action="index" order='10'>
@@ -182,6 +183,13 @@
             <menu controller='admin_analysis' action='member' permission='memberanalysis' display='true' order='60'>会员排行</menu>
         </menugroup>
 	</workground>
+
+
+    <workground name="系统" id="system.workground.setting" controller="admin_sms_sendlog" action="index" order="205">
+        <menugroup name="短信发送记录">
+            <menu controller='admin_sms_sendlog' action='index' params='p[0]:all' permission='sms_send_sendlog' display='true' order='5000100'>短信发送记录</menu>
+        </menugroup>
+    </workground>
 
 
 
