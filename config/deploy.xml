@@ -3,18 +3,18 @@
     <licence file="license.txt" />
 
     <product_name>ECstore</product_name>
-    <product_version>2.3.35</product_version>
-    <business_version>commerce_source</business_version>
-    <publish_version>commerce</publish_version>
+    <product_version>2.3.36</product_version>
+    <business_version>source</business_version>
+    <publish_version>ecstore</publish_version>
     <product_key>ecos.ecstore2.standard</product_key>
     <product_desc>The future of shopping</product_desc>
 
     <installer>
 
-        <title>ShopEx Commerce B2C 安装</title>
+        <title>ECstore 安装</title>
 
         <banner><![CDATA[
-            <h1 id="ECstore-ver">ShopEx Commerce B2C 交易中心<sup style="color:red;font-size:12px"></sup></h1>
+            <h1 id="ECstore-ver">ECstore<sup style="color:red;font-size:12px"></sup></h1>
             ]]></banner>
 
         <style><![CDATA[
@@ -141,8 +141,8 @@
         </demodata>
     </demodatas>
 
-    <setting app="desktop" key="banner">ShopEx Commerce B2C 交易中心</setting>
-    <setting app="desktop" key="logo">ShopEx Commerce B2C 交易中心</setting>
+    <setting app="desktop" key="banner">ECstore</setting>
+    <setting app="desktop" key="logo">ECstore</setting>
     <setting app="desktop" key="logo_desc">The future of shopping</setting>
 
 </deploy>

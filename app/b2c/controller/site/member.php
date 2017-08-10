@@ -240,9 +240,14 @@ class b2c_ctl_site_member extends b2c_frontpage{
         $imageDefault = app::get('image')->getConf('image.set');
         $this->pagedata['defaultImage'] = $imageDefault['S']['default_image'];
 
+        $member_signin_obj = $this->app->model('member_signin');
+        $this->pagedata['signin_status'] = $member_signin_obj->exists_signin($this->app->member_id,date('Y-m-d'));
+        $this->pagedata['site_checkout_login_point_open'] = $this->app->getConf('site.checkout.login_point.open');
+        $this->pagedata['site_login_point_num'] = $this->app->getConf('site.login_point.num');
         //输出
         $this->pagedata['member'] = $this->member;
         $this->set_tmpl('member');
+//        echo '<pre>';var_dump($this->pagedata);exit();
         $this->output();
     }
 
@@ -2166,6 +2171,43 @@ class b2c_ctl_site_member extends b2c_frontpage{
         {
             $db->rollback();
             $this->splash('error','',"订单取消失败",true);
+        }
+    }
+
+    public function signin(){
+        $site_checkout_login_point_open = $this->app->getConf('site.checkout.login_point.open');
+        $site_login_point_num = $this->app->getConf('site.login_point.num');
+        if($site_checkout_login_point_open == 'false')
+        {
+            $msg = '未开启签到送积分功能';
+            $this->splash('error','',$msg,true);
+        }
+
+        $signin_obj = $this->app->model('member_signin');
+        $member_id = $this->app->member_id;
+        $signin_date = date('Y-m-d');
+
+        if($signin_obj->exists_signin($member_id,$signin_date))
+        {
+            $msg = '您今天以及签到过';
+            $this->splash('error','',$msg,true);
+        }
+        $data = array(
+            'member_id' => $member_id,
+            'signin_date' => $signin_date,
+            'signin_time' => time(),
+            'point' => $site_login_point_num
+        );
+        $result = $signin_obj->insert($data);
+        if($result){
+            $mem_point = $this->app->model('member_point');
+            $msg = '签到赠送积分';
+            $mem_point->change_point($member_id,$site_login_point_num,$msg,'signin_score',2,0,$member_id,'charge');
+            $msg = '签到成功，获得'.$site_login_point_num.'积分';
+            $this->splash('success','',$msg,true);
+        }else{
+            $msg = '签到失败';
+            $this->splash('error','',$msg,true);
         }
     }
 }

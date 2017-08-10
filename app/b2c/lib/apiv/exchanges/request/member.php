@@ -16,7 +16,7 @@ class b2c_apiv_exchanges_request_member extends b2c_apiv_exchanges_request
         $memberModel = app::get('b2c')->model('members');
         if(isset($result['user']['user_id']) && $result['user']['user_id'] != null)
         {
-            $memberModel->update(array('crm_member_id'=>$result['user']['user_id']),array('member_id'=>$member_id));
+            $memberModel->update(array('crm_member_id'=>$result['user']['user_id'],'referrals_code'=>$result['user']['self_code']),array('member_id'=>$member_id));
         }else{
             $memberModel->update(array('crm_member_id'=>0),array('member_id'=>$member_id));
         }

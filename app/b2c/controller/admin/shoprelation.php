@@ -38,8 +38,9 @@ class b2c_ctl_admin_shoprelation extends desktop_controller
                 'actions' => array(
                     array('label'=>app::get('b2c')->_('新建绑定关系'),'icon'=>'add.gif','href'=>'index.php?app=b2c&ctl=admin_shoprelation&act=addnew','target'=>'_blank'),
                     array('label'=>app::get('b2c')->_('查看绑定情况'),'icon'=>'add.gif','onclick'=>'new Request({evalScripts:true,url:\'index.php?ctl=shoprelation&act=index&p[0]=accept&p[1]=' . $this->app->app_id . '&p[2]=' . $callback . '&p[3]=' . $api_url.'&p[4]=' . $user_id . '&p[5]=' . $user_name . '&p[6]=' . $api_v . '\'}).get()'),
-                    array('label'=>app::get('b2c')->_('初始化用户数据到CRM'),'icon'=>'add.gif','href'=>'index.php?app=b2c&ctl=admin_shoprelation&act=init_member'),
-                    array('label'=>app::get('b2c')->_('同步未连通的用户数据到CRM'),'icon'=>'add.gif','href'=>'index.php?app=b2c&ctl=admin_shoprelation&act=init_member&p[0]=1'),
+                    array('label'=>app::get('b2c')->_('初始化用户数据到CRM'),'icon'=>'add.gif','onclick'=>'return confirm_init_point(\'index.php?app=b2c&ctl=admin_shoprelation&act=init_member\')'),
+                    array('label'=>app::get('b2c')->_('同步未连通的用户数据到CRM'),'icon'=>'add.gif','onclick'=>'return confirm_init_point(\'index.php?app=b2c&ctl=admin_shoprelation&act=init_member&p[0]=1\')'),
+                    array('label'=>app::get('b2c')->_('初始化积分数据到CRM'),'icon'=>'add.gif','onclick'=>'return confirm_init_point(\'index.php?app=b2c&ctl=admin_shoprelation&act=init_member_point\')'),
                 ),
             ));
         }else{
@@ -101,6 +102,27 @@ class b2c_ctl_admin_shoprelation extends desktop_controller
         $this->end(true, app::get('b2c')->_('待初始化数据已全部加入队列'));
     }
 
+    public function init_member_point($not_all)
+    {
+        $this->begin();
+        $member_obj = app::get('b2c')->model('member_point');
+
+        if($not_all == null)
+        {
+            $expired_time = strtotime(date('Y-m-d'));
+            $sql = 'select id from sdb_b2c_member_point where status = "false"';
+            $points = $member_obj->db->select($sql);
+            $member_obj->tidy_data($points, '*');
+        }else{
+            //            $points = $member_obj->getList('member_id',array('crm_member_id'=>'0'));
+        }
+        $worker = 'b2c_tasks_member_point_changeActive';
+        foreach($points as $point)
+        {
+            system_queue::instance()->publish($worker, $worker, $point);
+        }
+        $this->end(true, app::get('b2c')->_('待初始化数据已全部加入队列'));
+    }
     public function showEdit($shop_id=0)
     {
         $obj_shop = $this->app->model('shop');

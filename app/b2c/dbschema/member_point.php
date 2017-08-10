@@ -90,7 +90,7 @@ $db['member_point']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('积分关联对象ID'),
     ),
-    'type' => 
+    'type' =>
     array (
       'type' => 'tinyint(1)',
       'required' => true,
@@ -98,11 +98,19 @@ $db['member_point']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('操作类型'),
     ),
-    'operator' => 
+    'operator' =>
     array (
       'type' => 'varchar(50)',
       'editable' => false,
       'comment' => app::get('b2c')->_('操作员ID'),
+    ),
+    'status' =>
+    array (
+      'type' => 'bool',
+      'required' => true,
+      'default' => 'false',
+      'editable' => false,
+      'comment' => app::get('b2c')->_('同步CRM的状态'),
     ),
   ),
   'engine' => 'innodb',

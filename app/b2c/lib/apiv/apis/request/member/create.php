@@ -46,13 +46,23 @@ class b2c_apiv_apis_request_member_create extends b2c_apiv_extends_request
         $params['location'] = json_encode($params['location']);
 
         if($data['members']['b_year'] && $data['members']['b_month'] && $data['members']['b_day']){
-            $birthday = $data['members']['b_year'].'-'.$data['members']['b_month'].'-'.$data['members']['b_day']; 
+            $birthday = $data['members']['b_year'].'-'.$data['members']['b_month'].'-'.$data['members']['b_day'];
         }
         $params['created'] = date('Y-m-d H:m:s',$data['members']['regtime']);
         $params['last_visit'] = date('Y-m-d H:m:s');
         $params['birthday'] = strval($birthday);
         $params['email'] = strval($data['account']['email']);
         $params['mobile'] = strval($data['account']['mobile']);
+
+        $obj_policy = kernel::service("referrals.member_policy");
+
+        if(is_object($obj_policy)){
+            $referrals_members_info = $obj_policy->referrals_members_info($member_id);
+            if(!empty( $referrals_members_info['referrals_code']))
+            {
+               $params['parent_code'] = $referrals_members_info['referrals_code'];
+            }
+        }
 
         return $params;
     }

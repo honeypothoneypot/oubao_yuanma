@@ -19,7 +19,7 @@ class b2c_mdl_member_coupon extends dbeav_model{
             $arr_coupons_info = $o_coupon->dump($row['cpns_id']);
             $row['coupons_info'] = $arr_coupons_info;
             if(empty($arr_coupons_info['rule']['rule_id'])) continue;
-            $arr_rule_info = $o_rule_order->dump($arr_coupons_info['rule']['rule_id'], 'from_time,to_time,member_lv_ids');
+            $arr_rule_info = $o_rule_order->dump($arr_coupons_info['rule']['rule_id'], 'from_time,to_time,member_lv_ids,c_template');
             $row['time'] = $arr_rule_info;
         }
         return $arr;

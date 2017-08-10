@@ -69,21 +69,28 @@ class pointprofessional_mdl_members extends b2c_mdl_members
         if (!$member_id)
             return 0;
 
+        $nodes_obj = $this->app->model('shop');
+        $nodes = $nodes_obj->count( array('node_type'=>'ecos.taocrm','status'=>'bind'));
         $real_point = 0;
 
-        // 得到所有有效的可用积分记录
-        $obj_member_point = $this->current_app->model('member_point');
-        $arr_point_historys = $obj_member_point->get_usable_point($member_id);
-        if ($arr_point_historys)
-        {
-            $discount_point = abs($point);
-            foreach ($arr_point_historys as $arr_points)
+        if($nodes > 0 ){
+            $point_rpc_object = kernel::single("b2c_apiv_exchanges_request_member_point");
+            $point_data = $point_rpc_object->getActive($member_id);
+            $real_point = $point_data['total'];
+        }else{
+            // 得到所有有效的可用积分记录
+            $obj_member_point = $this->current_app->model('member_point');
+            $arr_point_historys = $obj_member_point->get_usable_point($member_id);
+            if ($arr_point_historys)
             {
-				if ($arr_points['change_point'] > 0)
-					$real_point += $arr_points['change_point'] - $arr_points['consume_point'];
+                $discount_point = abs($point);
+                foreach ($arr_point_historys as $arr_points)
+                {
+                    if ($arr_points['change_point'] > 0)
+                        $real_point += $arr_points['change_point'] - $arr_points['consume_point'];
+                }
             }
         }
-
         return $real_point;
     }
 

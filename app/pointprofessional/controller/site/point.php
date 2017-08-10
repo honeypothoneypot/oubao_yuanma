@@ -20,8 +20,8 @@ class pointprofessional_ctl_site_point extends b2c_ctl_site_member
     }
 
 	public function point_detail($nPage=1)
-	{
-		$this->path[] = array('title'=>app::get('pointprofessional')->_('会员中心'),'link'=>$this->gen_url(array('app'=>'b2c', 'ctl'=>'site_member', 'act'=>'index','full'=>1)));
+    {
+        $this->path[] = array('title'=>app::get('pointprofessional')->_('会员中心'),'link'=>$this->gen_url(array('app'=>'b2c', 'ctl'=>'site_member', 'act'=>'index','full'=>1)));
         $this->path[] = array('title'=>app::get('pointprofessional')->_('我的积分'),'link'=>'#');
         $GLOBALS['runtime']['path'] = $this->path;
 
@@ -29,10 +29,10 @@ class pointprofessional_ctl_site_point extends b2c_ctl_site_member
         $member_point = $this->app_current->model('member_point');
 
         $obj_gift_link = kernel::service('b2c.exchange_gift');
-		if ($obj_gift_link)
-		{
-			$this->pagedata['exchange_gift_link'] = $obj_gift_link->gen_exchange_link();
-		}
+        if ($obj_gift_link)
+        {
+            $this->pagedata['exchange_gift_link'] = $obj_gift_link->gen_exchange_link();
+        }
 
         // 扩展的积分信息
         $obj_extend_point = kernel::servicelist('b2c.member_extend_point_info');
@@ -43,16 +43,29 @@ class pointprofessional_ctl_site_point extends b2c_ctl_site_member
                 $this->pagedata['extend_point_html'] = $obj->gen_extend_detail_point($this->app->member_id);
             }
         }
-		$data = $member->dump($this->app->member_id,'*',array('score/event'=>array('*')));
-        $count = count($data['score']['event']);
-        $aPage = $this->get_start($nPage,$count);
-        $params['data'] = $member_point->get_all_list('*',array('member_id' => $this->app->member_id),$aPage['start'],$this->pagesize);
+        $nodes_obj = $this->app_b2c->model('shop');
+        $nodes = $nodes_obj->count( array('node_type'=>'ecos.taocrm','status'=>'bind'));
+
+        if($nodes > 0){
+            $getlog_params = array('member_id'=>$this->app->member_id,'page'=>$nPage,'page_size'=>$this->pagesize);
+            $obj_apiv = kernel::single('b2c_apiv_exchanges_request_member_point');
+            $pointlog = $obj_apiv->getlogActive($getlog_params);
+
+            $count = $pointlog['total'];
+            $aPage = $this->get_start($nPage,$count);
+            $this->pagedata['total'] = $member->get_real_point($this->app->member_id);
+            $this->pagedata['historys'] = $pointlog['historys'];
+        }else{
+            $count = $member_point->count(array('member_id'=>$this->app->member_id));
+            $aPage = $this->get_start($nPage,$count);
+            $params['data'] = $member_point->get_all_list('*',array('member_id' => $this->app->member_id,'status'=>'false'),$aPage['start'],$this->pagesize);
+            $this->pagedata['total'] = $member->get_real_point($this->app->member_id,'2');
+            $this->pagedata['historys'] = $params['data'];
+        }
         $params['page'] = $aPage['maxPage'];
         $this->pagination($nPage,$params['page'],'point_detail','','pointprofessional','site_point');
         $this->pagedata['browser'] = $this->get_browser();
-        $this->pagedata['total'] = $data['score']['total'];
-        $this->pagedata['historys'] = $params['data'];
         $this->output('pointprofessional');
-	}
+    }
 
 }

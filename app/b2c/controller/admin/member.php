@@ -372,23 +372,45 @@ class b2c_ctl_admin_member extends desktop_controller{
     }
 
     public function detail_point($member_id=null)
-        {
+    {
         if(!$member_id) return null;
         $nPage = $_GET['detail_point'] ? $_GET['detail_point'] : 1;
         $mem_point = $this->app->model('member_point');
-         if($member_id)
-         {
-            $row = $mem_point->getList('id',array('member_id' => $member_id));
-            $count = count($row);
-        }
         $data = $this->member_model->dump($member_id,'*',array('score/event'=>array('*',null,array($this->pagelimit*($nPage-1),$this->pagelimit))));
+        $nodes_obj = $this->app->model('shop');
+        $nodes = $nodes_obj->count( array('node_type'=>'ecos.taocrm','status'=>'bind'));
+
+        if($nodes > 0){
+            $getlog_params = array('member_id'=>$member_id,'page'=>$nPage,'page_size'=>10);
+            $obj_apiv = kernel::single('b2c_apiv_exchanges_request_member_point');
+            $pointlog = $obj_apiv->getlogActive($getlog_params);
+
+            $count = $pointlog['total'];
+            $data['score']['event'] = $pointlog['historys'];
+            foreach($data['score']['event'] as $key=>$val){
+                    $data['score']['event'][$key]['operator_name'] = '';
+            }
+        }else{
+            $row = $mem_point->getList('id',array('member_id' => $member_id,'status'=>'false'));
+            $count = count($row);
+            //获取日志操作管理员名称@lujy--start--
+            foreach($data['score']['event'] as $key=>$val){
+                if( $val['status'] == 'false' ){
+                    $operatorInfo = $accountObj->getList('login_name',array('account_id' => $val['operator']));
+                    $data['score']['event'][$key]['operator_name'] = $operatorInfo['0']['login_name'];
+                }else
+                {
+                    unset($data['score']['event'][$key]);
+                }
+            }
+        }
         $this->pagedata['member'] = $data;
         $this->pagedata['event'] = $data['score']['event'];
         if($_GET['page']) unset($_GET['page']);
         $_GET['page'] = 'detail_point';
         $this->pagination($nPage,$count,$_GET);
         echo $this->fetch('admin/member/page_point_list.html');
-    }
+        }
 
     public function detail_advance($member_id=null)
     {
@@ -402,13 +424,13 @@ class b2c_ctl_admin_member extends desktop_controller{
         //后台会员列表，详细栏的预存款,支付方式改为显示中文-@lujy-start
         foreach($items_adv as $key=>$item){
             if(!empty($item['paymethod'])){
-               $oPayName = app::get('ectools')->model('payment_cfgs');
-               $items_adv[$key]['paymethod'] = $oPayName->get_app_display_name($item['paymethod']);
+                $oPayName = app::get('ectools')->model('payment_cfgs');
+                $items_adv[$key]['paymethod'] = $oPayName->get_app_display_name($item['paymethod']);
             }
         }
         if($member_id){
-             $row = $mem_adv->getList('log_id',array('member_id' => $member_id));
-             $count = count($row);
+            $row = $mem_adv->getList('log_id',array('member_id' => $member_id));
+            $count = count($row);
         }
         if($_GET['page']) unset($_GET['page']);
         $_GET['page'] = 'detail_advance';
@@ -425,13 +447,13 @@ class b2c_ctl_admin_member extends desktop_controller{
         $orders = $this->member_model->getOrderByMemId($member_id,$this->pagelimit*($nPage-1),$this->pagelimit);
         $order =  $this->app->model('orders');
         if($member_id){
-         $row = $order->getList('order_id',array('member_id' => $member_id));
-         $count = count($row);
+            $row = $order->getList('order_id',array('member_id' => $member_id));
+            $count = count($row);
         }
         foreach($orders as $key=>$order1){
-         $orders[$key]['status'] = $order->trasform_status('status',$orders[$key]['status']);
-         $orders[$key]['pay_status'] = $order->trasform_status('pay_status',$orders[$key]['pay_status'] );
-         $orders[$key]['ship_status'] = $order->trasform_status('ship_status', $orders[$key]['ship_status']);
+            $orders[$key]['status'] = $order->trasform_status('status',$orders[$key]['status']);
+            $orders[$key]['pay_status'] = $order->trasform_status('pay_status',$orders[$key]['pay_status'] );
+            $orders[$key]['ship_status'] = $order->trasform_status('ship_status', $orders[$key]['ship_status']);
         }
         $this->pagedata['orders'] = $orders;
         if($_GET['page']) unset($_GET['page']);
@@ -451,8 +473,8 @@ class b2c_ctl_admin_member extends desktop_controller{
         $count = count($_count_row);
         $this->pagedata['msgs'] =  $row;
         if($_GET['page']) unset($_GET['page']);
-         $_GET['page'] = 'detail_msg';
-         $this->pagination($nPage,$count,$_GET);
+        $_GET['page'] = 'detail_msg';
+        $this->pagination($nPage,$count,$_GET);
         echo $this->fetch('admin/member/member_msg.html');
     }
 

@@ -153,4 +153,8 @@ $order = array(
     'coupon'=>null,
     'memo'=>null,
 );
-$api_params = $order;
+
+$get_member_coupon = array('member_id'=>'1');
+
+$update_point = array('member_id'=>'1','point'=>'10402');
+$api_params = $get_member_coupon;

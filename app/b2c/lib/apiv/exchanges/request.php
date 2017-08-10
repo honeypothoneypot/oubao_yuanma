@@ -53,7 +53,8 @@ class b2c_apiv_exchanges_request implements b2c_api_rpc_request_interface{
                 #error_log(var_export($sdf,1),3,DATA_DIR."/hhhh.log");
                 //根据 本地api版本号 + 目标平台 + 动作，判断是否有对应的service
                 $apiv_service = kernel::service( 'apiv_' . $local_apiv . '_' . $node_type . '_' . $method );
-                if( $apiv_service )
+//		echo 'apiv_' . $local_apiv . '_' . $node_type . '_' . $method;
+   if( $apiv_service )
                 {
                     if( $apiv_service instanceof b2c_apiv_interface_request )
                     {

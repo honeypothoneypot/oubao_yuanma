@@ -8,6 +8,9 @@ class apiactionlog_router_logging{
         'store.trade.refund.add'=>'apiactionlog_router_refund',//退款单创建是直接post请求到矩阵，没有走api2.0机制，因此log需要单独创建文件来记录
         'store.user.add'=>'b2c_apiv_apis_request_member_create',
         'store.user.update'=>'b2c_apiv_apis_request_member_update',
+        'store.point.update'=>'b2c_apiv_apis_request_member_point_change',
+        'store.pointlog.get'=>'b2c_apiv_apis_request_member_point_getlog',
+        'store.point.get'=>'b2c_apiv_apis_request_member_point_get',
     );
 
     public function save_log($service,$method,$data){

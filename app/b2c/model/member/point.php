@@ -53,7 +53,17 @@ class b2c_mdl_member_point extends dbeav_model{
                                                     'describe' => app::get('b2c')->_('注册赠送积分.'),
                                                     'type' => 3,
                                                     'related_id' => '',
-                                                ),											
+                                                ),
+                            'signin_score' => array(
+                                                    'describe' => app::get('b2c')->_('签到赠送积分.'),
+                                                    'type' => 2,
+                                                    'related_id' => '',
+                                                ),
+                            'referrals' => array(
+                                                    'describe' => app::get('b2c')->_('推荐新用户赠送积分.'),
+                                                    'type' => 2,
+                                                    'related_id' => '',
+                                                ),
                             'consume_gift' => array(
                                                     'describe' => app::get('b2c')->_('积分换赠品.'),
                                                     'type' => 3,
@@ -256,7 +266,13 @@ class b2c_mdl_member_point extends dbeav_model{
 			 ); 
 			 $arr_reason_types = array('operator_adjust', 'exchange_coupon');
 			 if (in_array($reason_type, $arr_reason_types)){
-				if ($this->insert($sdf_point)){
+                 $point_id = $this->insert($sdf_point);
+
+				if ($point_id){
+                    $obj_apiv = kernel::single('b2c_apiv_exchanges_request_member_point');
+                    if($obj_apiv){
+                        $obj_apiv->changeActive($point_id);
+                    }
 					$aMemberLv['member_lv_id'] = $this->member_lv_chk($nMemberId,$sdf_member['member_lv']['member_group_id'],$newValue);
 					$memberFilter['member_id'] = $nMemberId;
 					$objMember->update($aMemberLv,$memberFilter);
@@ -329,18 +345,18 @@ class b2c_mdl_member_point extends dbeav_model{
     public function get_usable_point($member_id=0)
     {
         if (!$member_id)
-            return array();    
-        
+            return array();
+
         $arr_points = array();
-		
-		$expired_time = strtotime(date('Y-m-d'));        
-        $sql = "SELECT * FROM " . $this->table_name(1) . " WHERE change_point > 0 AND (expiretime > " . $expired_time . " OR expiretime='0') AND member_id = " . $member_id . ' Order by addtime';
+
+		$expired_time = strtotime(date('Y-m-d'));
+        $sql = "SELECT * FROM " . $this->table_name(1) . " WHERE change_point > 0 AND status = 'false' AND (expiretime > " . $expired_time . " OR expiretime='0') AND member_id = " . $member_id . ' Order by addtime';
         $arr_points = $this->db->select($sql);
-        $this->tidy_data($arr_points, '*');        
-        
+        $this->tidy_data($arr_points, '*');
+
         return $arr_points;
     }
-	
+
 	/**
      * 获得当前用户的积分账面数
      * @param int member id
@@ -350,10 +366,10 @@ class b2c_mdl_member_point extends dbeav_model{
     {
         if (!$member_id)
             return 0;
-            
+
         return $this->get_real_history($member_id, '2');
     }
-    
+
     /**
      * 获得积分当前的累积值
      * @param int member id
@@ -363,10 +379,10 @@ class b2c_mdl_member_point extends dbeav_model{
     {
         if (!$member_id)
             return 0;
-            
+
         return $this->get_real_history($member_id);
     }
-    
+
     /**
      * 取到有效的积分历史
      * @param int member id.
@@ -375,23 +391,31 @@ class b2c_mdl_member_point extends dbeav_model{
      */
     private function get_real_history($member_id, $type='1')
     {
+        $nodes_obj = $this->app->model('shop');
+        $nodes = $nodes_obj->count( array('node_type'=>'ecos.taocrm','status'=>'bind'));
         $real_point = 0;
-		$expired_time = strtotime(date('Y-m-d'));
-		// 所有未过期的积分
-		$sql = "SELECT * FROM " . $this->table_name(1) . " WHERE change_point > 0 AND (expiretime > " . $expired_time . " OR expiretime='0') AND member_id = " . $member_id;
-		$rows_unexpired = $this->db->select($sql);
-		$this->tidy_data($rows_unexpired, '*');
-		if ($rows_unexpired)
-		{
-			foreach ($rows_unexpired as $arr_row)
-			{
-				if ($type == '1')
-					$real_point += intval($arr_row['change_point']);
-				if ($type == '2')
-					$real_point += intval($arr_row['change_point'])-intval($arr_row['consume_point']);
-			}
-		}
-        
+
+        if($nodes > 0 ){
+            $point_rpc_object = kernel::single("b2c_apiv_exchanges_request_member_point");
+            $point_data = $point_rpc_object->getActive($member_id);
+            $real_point = $point_data['total'];
+        }else{
+            $expired_time = strtotime(date('Y-m-d'));
+            // 所有未过期的积分
+            $sql = "SELECT * FROM " . $this->table_name(1) . " WHERE change_point > 0 AND status = 'false' AND (expiretime > " . $expired_time . " OR expiretime='0') AND member_id = " . $member_id;
+            $rows_unexpired = $this->db->select($sql);
+            $this->tidy_data($rows_unexpired, '*');
+            if ($rows_unexpired)
+            {
+                foreach ($rows_unexpired as $arr_row)
+                {
+                    if ($type == '1')
+                        $real_point += intval($arr_row['change_point']);
+                    if ($type == '2')
+                        $real_point += intval($arr_row['change_point'])-intval($arr_row['consume_point']);
+                }
+            }
+        }
         return $real_point;
     }
 }

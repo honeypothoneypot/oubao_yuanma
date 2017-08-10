@@ -91,7 +91,7 @@ class b2c_ctl_site_passport extends b2c_frontpage{
                 }
             }
         }
-        
+
         //echo '<pre>';print_r($login_image_url);exit();
         //登录页面左侧大图
         $images_id = app::get('b2c')->getConf('site.loginlogo');
@@ -198,7 +198,9 @@ class b2c_ctl_site_passport extends b2c_frontpage{
     public function signup($url=null){
         //检查是否登录，如果已登录则直接跳转到会员中心
         $this->check_login();
-
+        if($_GET['referrals_code']){
+            $_SESSION['referrals_code']=$_GET['referrals_code'];
+        }
         $this->userPassport->set_next_page();
 
         if( $_GET['mini_passport'] ){
@@ -274,13 +276,20 @@ class b2c_ctl_site_passport extends b2c_frontpage{
                 $object->set_arr($member_id, 'member');
                 $refer_url = $object->get_arr($member_id, 'member');
             }
-            /*注册完成后做某些操作! begin*/
-            foreach(kernel::servicelist('b2c_register_after') as $object) {
-                $object->registerActive($member_id);
-            }
             //增加会员同步 2012-5-15
             if( $member_rpc_object = kernel::service("b2c_member_rpc_sync") ) {
                 $member_rpc_object->createActive($member_id);
+            }
+            if(!empty($_SESSION['referrals_code'])){
+                $obj_policy = kernel::service("referrals.member_policy");
+                if(is_object($obj_policy))
+                {
+                    $obj_policy ->referrals_member($_SESSION['referrals_code'],$member_id);
+                }
+            }
+            /*注册完成后做某些操作! begin*/
+            foreach(kernel::servicelist('b2c_register_after') as $object) {
+                $object->registerActive($member_id);
             }
             /*end*/
             $data['member_id'] = $member_id;

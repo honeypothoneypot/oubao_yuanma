@@ -1,3 +1,12 @@
+<div class="notice clearfix tableform" id="update_notice">
+<div class="flt">
+<b class="f-14">	【注意事项】因会员接口，积分接口更新，初始化会员积分数据到CRM时，请务必确保绑定的CRM版本不低于2.2.6，否则可能会出现积分数据不统一的状况!</b>
+</div>
+<div class="frt">
+	<span class="btn pointer close" onclick="$('update_notice').dispose();"><span><span>知道了</span></span></span>
+</div>
+</div>
+
 <div class="notice clearfix tableform" id="browser_notice" style="display:none;">
 <div class="flt">
 <b class="f-14">	我们强烈建议您升级或更换到新型浏览器，提升后台操作体验（响应速度更快、视觉效果更佳）!</b>
@@ -22,6 +31,13 @@ void function(){
 			Cookie.write('browser-notice','know',{duration:1});
 		});
 	}
+  if('know'==Cookie.read('update-notice')){
+    $('update_notice').hide();
+    return;
+  }
+  $$('#update_notice .close').addEvent('click',function(){
+      Cookie.write('update-notice','know',{duration:1});
+  });
 }();
 </script>
 <div class="widgets clearfix">

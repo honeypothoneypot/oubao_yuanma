@@ -490,6 +490,12 @@ $db['members']=array (
       'required' => false,
       'comment' => app::get('b2c')->_('支付密码'),
     ),
+    'referrals_code' => array(
+      'type' => 'varchar(32)',
+      'default' => 0,
+      'required' => false,
+      'comment' => app::get('b2c')->_('推荐二维码'),
+    ),
   ),
   'comment' => app::get('b2c')->_('商店会员表'),
   'index' =>

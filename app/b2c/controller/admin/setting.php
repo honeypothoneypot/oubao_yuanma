@@ -53,6 +53,8 @@ class b2c_ctl_admin_setting extends desktop_controller{
                 'site.get_rate.method',
                 'site.level_switch',
                 'site.point_promotion_method',
+                'site.checkout.login_point.open',
+                'site.login_point.num',
                 //'site.level_point',
             ),
            app::get('b2c')->_('购物设置')=>array(

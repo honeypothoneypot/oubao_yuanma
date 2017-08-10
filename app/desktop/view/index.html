@@ -797,7 +797,33 @@ function _get_rpcnotify_num(obj) {
 
 
 
+function confirm_init_point(url){
+  if(confirm('因积分接口更新，初始化积分数据到CRM前请确认您绑定的CRM版本不低于2.2.6，否则可能会出现积分数据不统一的状况'))
+  {
+    if(confirm('请再次确认您绑定的CRM版本不低于2.2.6'))
+    {
+      new Request({
+          url:url,
+          onSuccess:function(rs) {
+              try{
+                rs = JSON.decode(rs);
+              }catch(e){}
 
+              if(rs.error) return new MessageBox(rs.error,{autohide:true});
+              new MessageBox(rs.success,{autohide:true});
+          }
+
+          }).get();
+      return true;
+    }else{
+      return false;
+    }
+  }
+  else
+  {
+    return false;
+  }
+}
 
 var NOTEPOP = new NotePop();
 </script>

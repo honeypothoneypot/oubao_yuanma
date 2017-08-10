@@ -334,7 +334,7 @@ $setting = array(
 
 'site.point_promotion_method' => array('type'=>SET_T_ENUM,'default'=>'1','desc'=>app::get('b2c')->_('积分升级方式'),'options'=>array('1'=>app::get('b2c')->_('只升不降'),'2'=>app::get('b2c')->_('根据积分余额升级或降级')),'display'=>'false','class'=>'site-get_policy-method_cancel site-level-switch_cancel'),
 
-'site.point_expired' => array('type'=>SET_T_BOOL,'default'=>false,'desc'=>app::get('b2c')->_('积分过期设置'),'id'=>'site-point-expired','class'=>'site-get_policy-method_cancel','javascript'=>'if ($("site-point-expired-t") && $("site-point-expired-t").checked == true){$$(".site-point-expired").getParent("tr").show();}else{$$(".site-point-expired").getParent("tr").hide();}'),
+'site.point_expired' => array('type'=>SET_T_BOOL,'default'=>false,'desc'=>app::get('b2c')->_('积分过期设置'),'id'=>'site-point-expired','class'=>'site-get_policy-method_cancel','javascript'=>'if ($("site-point-expired-t") && $("site-point-expired-t").checked == true && $("site-get_policy-method").getValue() != "1"){$$(".site-point-expired").getParent("tr").show();}else{$$(".site-point-expired").getParent("tr").hide();}'),
 
 'site.point_expried_method' => array('type'=>SET_T_ENUM,'default'=>'1','desc'=>app::get('b2c')->_('积分过期方式'),'options'=>array('1'=>app::get('b2c')->_('设置过期结束时间'),'2'=>app::get('b2c')->_('设置过期时间长度')),'helpinfo'=>'<span class=\'notice-inline\'>'.app::get('b2c')->_('若选择“设置过期结束时间”请按时间格式输入结束时间').'</span>', 'class'=>'site-point-expired site-get_policy-method_cancel','id'=>'site-point-expried-method','javascript'=>'if ($("site-point-expried-method").getValue() =="1"){$$(".site-point-expried-method").set("vtype","date");}else{$$(".site-point-expried-method").set("vtype","number");}$("site-point-expried-method").addEvent("change",function(e){var _el = e.target || e;if ($(_el).getValue() == "1"){$$(".site-point-expried-method").set("vtype","date");}else{$$(".site-point-expried-method").set("vtype","number");}});'),
 
@@ -350,6 +350,8 @@ $setting = array(
 
 'site.point_usage' => array('type'=>SET_T_ENUM, 'default'=>'1', 'desc'=>app::get('b2c')->_('积分用途'), 'options'=>array('1'=>app::get('b2c')->_('只用于兑换'), '2'=>app::get('b2c')->_('只用于抵扣')),'class'=>'site-get_policy-method_cancel'),
 
+'site.checkout.login_point.open'=>array('id'=>'site_checkout_login_point_open','type'=>SET_T_BOOL,'default'=>'false','desc'=>app::get('b2c')->_('是否启用签到送积分功能'),'javascript'=>'if ($("site_checkout_login_point_open-t") && $("site_checkout_login_point_open-t").checked == true && $("site-get_policy-method").getValue() != "1"){$("login_point_num").getParent("tr").show();}else{$("login_point_num").getParent("tr").hide();}$$(".site_checkout_loginpoint_open").addEvent("change",function(el){if(this.get("value")==\'true\'){$("login_point_num").getParent("tr").show();}else{$("login_point_num").getParent("tr").hide();}});','class'=>'site-get_policy-method_cancel site_checkout_loginpoint_open'),
+'site.login_point.num'=>array('id'=>'login_point_num','type'=>SET_T_INT,'default'=>'0','desc'=>app::get('b2c')->_('每次签到获取的积分'),'class'=>'site-get_policy-method_cancel','vtype'=>'digits'),
 
 //购物车显示促销增加setting设置
 'cart.show_order_sales.type'=>array('type'=>SET_T_BOOL,'default'=>'true','desc'=>app::get('b2c')->_('购物车是否显示订单促销信息')),

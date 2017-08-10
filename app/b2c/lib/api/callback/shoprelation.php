@@ -51,5 +51,25 @@ class b2c_api_callback_shoprelation implements b2c_api_callback_interface_app
 
             }
         }
+
+        if($_POST['node_type'] == 'ecos.taocrm' && $_POST['status'] == 'unbind'){
+            $nodes = $obj_shop->count( array('node_type'=>'ecos.taocrm','status'=>'bind'));
+            if($nodes == 0 ){
+                $member_point = $this->app->model('member_point');
+                $member_point->update(array('status'=>'true')); //解除crm绑定积分清零
+                $member_obj = $this->app->model('members');
+
+                $member_data = array('point'=>0,'freezed_point'=>0,'obtained_point'=>0);
+                if($this->app->getConf('site.level_switch') == 0){
+                    $member_data['member_lv_id'] = 1;
+                }
+
+                $members = $member_obj->getList('member_id');
+                foreach($members as $key => $value){
+                    $filter = array('member_id'=>$value['member_id']);
+                    $member_obj->update($member_data,$filter);
+                }
+            }
+        }
     }
 }

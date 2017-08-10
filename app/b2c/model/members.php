@@ -651,4 +651,13 @@ class b2c_mdl_members extends dbeav_model{
         return kernel::single('b2c_user_passport')->is_exists_login_name($uname);
     }
 
+    function get_crm_member_id($member_id){
+        if($member_id){
+            $member = $this->getRow('crm_member_id',array('member_id'=>$member_id));
+            $crm_member_id = (isset($member['crm_member_id']) && $member['crm_member_id'] != null) ? $member['crm_member_id']:'0';
+            return $crm_member_id;
+        }
+
+        return '0';
+    }
 }

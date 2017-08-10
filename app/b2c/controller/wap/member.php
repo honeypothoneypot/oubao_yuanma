@@ -150,8 +150,8 @@ class b2c_ctl_wap_member extends wap_frontpage{
         $this->path[] = array('title'=>app::get('b2c')->_('会员中心'),'link'=>$this->gen_url(array('app'=>'b2c', 'ctl'=>'wap_member', 'act'=>'index','full'=>1)));
         $this->path[] = array('title'=>app::get('b2c')->_('积分历史'),'link'=>'#');
         $GLOBALS['runtime']['path'] = $this->path;
-        $member = $this->app->model('members');
-        $member_point = $this->app->model('member_point');
+        $member = app::get('pointprofessional')->model('members');
+        $member_point = app::get('pointprofessional')->model('member_point');
         $obj_gift_link = kernel::service('b2c.exchange_gift');
         if ($obj_gift_link)
         {
@@ -166,14 +166,27 @@ class b2c_ctl_wap_member extends wap_frontpage{
                 $this->pagedata['extend_point_html'] = $obj->gen_extend_detail_point($this->app->member_id);
             }
         }
-        $data = $member->dump($this->app->member_id,'*',array('score/event'=>array('*')));
-        $count = count($data['score']['event']);
-        $aPage = $this->get_start($nPage,$count);
-        $params['data'] = $member_point->getList('*',array('member_id' => $this->app->member_id),$aPage['start'],$this->pagesize);
+        $nodes_obj = $this->app->model('shop');
+        $nodes = $nodes_obj->count( array('node_type'=>'ecos.taocrm','status'=>'bind'));
+
+        if($nodes > 0){
+            $getlog_params = array('member_id'=>$this->app->member_id,'page'=>$nPage,'page_size'=>$this->pagesize);
+            $obj_apiv = kernel::single('b2c_apiv_exchanges_request_member_point');
+            $pointlog = $obj_apiv->getlogActive($getlog_params);
+
+            $count = $pointlog['total'];
+            $aPage = $this->get_start($nPage,$count);
+            $this->pagedata['total'] = $member->get_real_point($this->app->member_id,'2');
+            $this->pagedata['historys'] = $pointlog['historys'];
+        }else{
+            $count = $member_point->count(array('member_id'=>$this->app->member_id));
+            $aPage = $this->get_start($nPage,$count);
+            $params['data'] = $member_point->get_all_list('*',array('member_id' => $this->app->member_id,'status'=>'false'),$aPage['start'],$this->pagesize);
+            $this->pagedata['total'] = $member->get_real_point($this->app->member_id,'2');
+            $this->pagedata['historys'] = $params['data'];
+        }
         $params['page'] = $aPage['maxPage'];
         $this->pagination($nPage,$params['page'],'point_history');
-        $this->pagedata['total'] = $data['score']['total'];
-        $this->pagedata['historys'] = $params['data'];
         $this->page('wap/member/point_history.html');
     }
 

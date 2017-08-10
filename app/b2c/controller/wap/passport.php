@@ -87,7 +87,7 @@ class b2c_ctl_wap_passport extends wap_frontpage{
                 }
             }
         }
-        
+
         if($login_image_url)
         {
             $this->pagedata['login_image_url'] = $login_image_url;
@@ -273,6 +273,10 @@ class b2c_ctl_wap_passport extends wap_frontpage{
 
         $this->set_tmpl('passport');
 
+        if($_GET['referrals_code']){
+            $_SESSION['referrals_code']=$_GET['referrals_code'];
+        }
+
         $this->page("wap/passport/signup.html",$_GET['mini_passport']);
     }
 
@@ -332,13 +336,20 @@ class b2c_ctl_wap_passport extends wap_frontpage{
                 $object->set_arr($member_id, 'member');
                 $refer_url = $object->get_arr($member_id, 'member');
             }
+            //增加会员同步 2012-5-15
+            if( $member_rpc_object = kernel::service("b2c_member_rpc_sync") ) {
+                $member_rpc_object->createActive($member_id);
+            }
             /*注册完成后做某些操作! begin*/
             foreach(kernel::servicelist('b2c_register_after') as $object) {
                 $object->registerActive($member_id);
             }
-            //增加会员同步 2012-5-15
-            if( $member_rpc_object = kernel::service("b2c_member_rpc_sync") ) {
-                $member_rpc_object->createActive($member_id);
+            if(!empty($_SESSION['referrals_code'])){
+                $obj_policy = kernel::service("referrals.member_policy");
+                if(is_object($obj_policy))
+                {
+                    $obj_policy ->referrals_member($_SESSION['referrals_code'],$member_id);
+                }
             }
             /*end*/
             $data['member_id'] = $member_id;

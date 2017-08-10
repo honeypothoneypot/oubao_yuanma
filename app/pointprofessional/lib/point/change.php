@@ -36,7 +36,7 @@ class pointprofessional_point_change
         $objMember_point = $this->app->model('member_point');
         $row = $objMember->getList('*', array('member_id'=>$nMemberId));
         if(!$row) return null;
-        
+
         $change_remark = true;
         $memo = ($msg) ? $msg : '';
         $falg = 1;
@@ -45,9 +45,9 @@ class pointprofessional_point_change
         // 取到有效的积分值
         $obj_member_point = $this->app->model('member_point');
         $real_total_point = $objMember->get_real_point($nMemberId);
-        
+
         if ($point<0)
-        {			
+        {
             if ($remark == 'refund')
                 if ($real_total_point < abs($point))
                 {
@@ -68,7 +68,7 @@ class pointprofessional_point_change
                 }
                 else
                 {
-                    $real_total_point = $real_total_point + $point; 
+                    $real_total_point = $real_total_point + $point;
                 }
             }
         }
@@ -80,7 +80,7 @@ class pointprofessional_point_change
                 // 存入任务临时表
                 $obj_member_point_task = $this->app->model('member_point_task');
                 $obj_pointprofessional_point_task_datas = kernel::servicelist('pointprofessional_point_task_data');
-                
+
                 if ($obj_pointprofessional_point_task_datas)
                 {
                     $arr_point_task = array();
@@ -100,17 +100,17 @@ class pointprofessional_point_change
                                 'point' => $point,
                                 'operator' => $operator,
                             );
-                            $obj_service->generate_data($arr_data, $arr_point_task);                            
+                            $obj_service->generate_data($arr_data, $arr_point_task);
                             $obj_member_point_task->insert($arr_point_task);
                         }
                     }
-                    
+
                     $is_delay = true;
                 }
             }
             $real_total_point = $real_total_point + $point;
         }
-        
+
         if (!$is_delay)
         {
             if($point) $change_point = $point;
@@ -120,7 +120,7 @@ class pointprofessional_point_change
             // 取到此会员等级对应的
             $obj_member_lv = $this->app_b2c->model('member_lv');
             $rows = $obj_member_lv->getList('*', array('member_lv_id'=>$sdf_member['member_lv']['member_group_id']));
-			$default_expired = $this->app_b2c->getConf('site.point_expired_value');			
+			$default_expired = $this->app_b2c->getConf('site.point_expired_value');
             $time = time();
             if ($rows)
             {
@@ -142,7 +142,7 @@ class pointprofessional_point_change
                     }
                 }
             }
-            
+
             $reasons = $obj_member_point->getHistoryReason();
             $reason = $reasons[$reason_type];
             $remark = $pointInfo['modify_remark'];
@@ -158,38 +158,50 @@ class pointprofessional_point_change
                           'operator' => $operator,
                           'remark'=>$memo ? $memo : '',
                         );
-                       
-            if($obj_member_point->insert($sdf_point))
+            $point_id = $obj_member_point->insert($sdf_point);
+
+            if($point_id)
             {
-				if ($point<0){            
-					// 得到所有有效的可用积分记录
-					$arr_point_historys = $obj_member_point->get_usable_point($nMemberId);
-					if ($arr_point_historys)
-					{
-						$discount_point = abs($point);
-						foreach ($arr_point_historys as $arr_points)
-						{
-							// 已经消耗完的积分不在处理.
-							if ($arr_points['change_point'] == $arr_points['consume_point'])
-								continue;
-								
-							if ($arr_points['change_point'] >= ($arr_points['consume_point'] + $discount_point))
-							{
-								$arr_points['consume_point'] = $arr_points['consume_point'] + $discount_point;
-								$objMember_point->update($arr_points, array('id'=>$arr_points['id']));
-								break;
-							}
-							else
-							{
-								$real_change_point = $arr_points['change_point'] - $arr_points['consume_point'];
-								$arr_points['consume_point'] = $arr_points['change_point'];
-								$discount_point = $discount_point - $real_change_point;
-								$objMember_point->update($arr_points, array('id'=>$arr_points['id']));
-							}
-						}
-					}
-				}
-				
+                $member_point_rpc_object = kernel::single("b2c_apiv_exchanges_request_member_point");
+                if($member_point_rpc_object){
+                    $member_point_rpc_object->changeActive($point_id);
+                }
+
+                if ($point<0){
+                    $nodes_obj = $this->app_b2c->model('shop');
+                    $nodes = $nodes_obj->count( array('node_type'=>'ecos.taocrm','status'=>'bind'));
+
+                    //绑定crm后积分的使用由crm来处理
+                    if($nodes <= 0){
+                        // 得到所有有效的可用积分记录
+                        $arr_point_historys = $obj_member_point->get_usable_point($nMemberId);
+                        if ($arr_point_historys)
+                        {
+                            $discount_point = abs($point);
+                            foreach ($arr_point_historys as $arr_points)
+                            {
+                                // 已经消耗完的积分不在处理.
+                                if ($arr_points['change_point'] == $arr_points['consume_point'])
+                                    continue;
+
+                                if ($arr_points['change_point'] >= ($arr_points['consume_point'] + $discount_point))
+                                {
+                                    $arr_points['consume_point'] = $arr_points['consume_point'] + $discount_point;
+                                    $objMember_point->update($arr_points, array('id'=>$arr_points['id']));
+                                    break;
+                                }
+                                else
+                                {
+                                    $real_change_point = $arr_points['change_point'] - $arr_points['consume_point'];
+                                    $arr_points['consume_point'] = $arr_points['change_point'];
+                                    $discount_point = $discount_point - $real_change_point;
+                                    $objMember_point->update($arr_points, array('id'=>$arr_points['id']));
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if(($this->app->getConf('site.level_switch')== 0) && $falg == 1)
                 {
                     $sdf_member['member_lv']['member_group_id'] = $obj_member_point->member_lv_chk($nMemberId,$sdf_member['member_lv']['member_group_id'],$newValue);

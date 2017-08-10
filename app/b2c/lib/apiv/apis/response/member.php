@@ -77,6 +77,63 @@ class b2c_apiv_apis_response_member
         return $data;
     }
 
+    /**
+     * 获取会员优惠券
+     */
+    public function get_member_coupon($params,&$service){
+        if($params['member_id']){
+            $member_obj = app::get('b2c')->model('members');
+            $oCoupon = kernel::single('b2c_coupon_mem');
+
+            $data = array();
+            $crm_member_id = $params['member_id'];
+            $member = $member_obj->getList('member_id,member_lv_id',array('crm_member_id'=>$crm_member_id));
+            $member_id = $member[0]['member_id'];
+            $member_lv_id = $member[0]['member_lv_id'];
+            $aData = $oCoupon->get_list_m($member_id);
+            $source = array('a'=>'全体优惠券','b'=>'会员优惠券','c'=>'ShopEx优惠券');
+
+            if ($aData) {
+                foreach ($aData as $k => $item) {
+                    $data[$k]['memc_code'] = $item['memc_code'];
+                    $data[$k]['memc_name'] = $item['coupons_info']['cpns_name'];
+                    $data[$k]['memc_source'] = $source[$item['memc_source']];
+                    $data[$k]['memc_used'] = 'false';
+                    $data[$k]['from_time'] = $item['time']['from_time'];
+                    $data[$k]['to_time'] = $item['time']['to_time'];
+                    $data[$k]['conditions'] = kernel::single($item['time']['c_template'])->tpl_name;
+                    $data[$k]['valid'] = 'false';
+                    if ($item['coupons_info']['cpns_status'] !=1) {
+                        $data[$k]['memo'] = app::get('b2c')->_('此种优惠券已取消');
+                    }
+
+                    $member_lvs = explode(',',$item['time']['member_lv_ids']);
+                    if (!in_array($member_lv_id,(array)$member_lvs)) {
+                        $data[$k]['memo'] = app::get('b2c')->_('本级别不准使用');
+                    }
+
+                    $curTime = time();
+                    if ($curTime>=$item['time']['from_time'] && $curTime<$item['time']['to_time']) {
+                        if ($item['memc_used_times']<app::get('b2c')->getConf('coupon.mc.use_times')){
+                            if ($item['coupons_info']['cpns_status']){
+                                $data[$k]['valid'] = 'true';
+                                $data[$k]['memo'] = app::get('b2c')->_('可使用');
+                            }else{
+                                $data[$k]['memo'] = app::get('b2c')->_('本优惠券已作废');
+                            }
+                        }else{
+                            $data[$k]['memc_codememc_used'] = 'true';
+                            $data[$k]['memo'] = app::get('b2c')->_('本优惠券次数已用完');
+                        }
+                    }else{
+                        $data[$k]['memo'] = app::get('b2c')->_('还未开始或已过期');
+                    }
+                }
+            }
+        }
+        return $data;
+    }
+
     private function format_member_data($membersData)
     {
         $userPassport = kernel::single('b2c_user_passport');
