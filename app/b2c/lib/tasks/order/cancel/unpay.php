@@ -12,7 +12,6 @@ class b2c_tasks_order_cancel_unpay extends base_task_abstract implements base_in
         $order_mdl = app::get('b2c')->model('orders');
         $site_trigger_cancelorder = app::get('b2c')->getConf('site.trigger_cancelorder'); //是否开启自动取消未支付订单
         $site_cancelorder_timelimit = app::get('b2c')->getConf('site.cancelorder_timelimit'); //设置的时间
-        logger::info('trigger:'.$site_trigger_cancelorder.' timelimit:'.$site_cancelorder_timelimit);
         $nodes_obj = app::get('b2c')->model('shop');
         $nodes = $nodes_obj->count( array('node_type'=>'ecos.ome','status'=>'bind'));
 

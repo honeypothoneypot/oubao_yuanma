@@ -85,7 +85,7 @@
 </tr>
 
 <tr>
-  <th><{t}>促销类型：<{/t}></th>
+  <th><{t}>促销名称：<{/t}></th>
   <td>
       <{foreach from=$promotins_type item=name key=id}>
       <input type="radio" vtype="requiredradio" name="ruledata[type_id]" value="<{$id}>" <{if $ruleInfo.type_id == $id}> checked<{/if}> class="act-custom"> <{$name}>

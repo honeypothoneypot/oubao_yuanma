@@ -66,9 +66,12 @@ class starbuy_special_count {
         $count_info = $mdl_count_member_buy->db->selectrow($sql);
         if( $count_info['count'] > $special_info['limit'] )
         {
-            base_kvstore::instance('cache/expires')->store($keyStarBuy, 'hasbuy');
             return false;
         }else{
+            if( $count_info['count'] == $special_info['limit'] )
+            {
+                base_kvstore::instance('cache/expires')->store($keyStarBuy, 'hasbuy');
+            }
             return true;
         }
 
@@ -131,7 +134,7 @@ class starbuy_special_count {
         foreach($special_goods as $v)
         {
             $fmt_special_id[$v['special_id']] = $v['special_id'];
-            $fmt_special_goods[$v['special_id']] = $v;
+            $fmt_special_goods[$v['special_id']][$v['product_id']] = $v;
         }
         if($sdf_time == null)
         {
@@ -145,7 +148,14 @@ class starbuy_special_count {
                 }
             }
         }
-        return $fmt_special_goods;
+
+        $special_goods=array();
+        foreach ($fmt_special_goods  as $key=>$special){
+            foreach($special as $val){
+                $special_goods[]=$val;
+            }
+        }
+        return $special_goods;
     }
 }
 
