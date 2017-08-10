@@ -17,7 +17,8 @@ class serveradm_desktop_widgets_status implements desktop_interface_widget
     public function __construct($app)
     {
         $this->app = $app; 
-        $this->render =  new base_render(app::get('serveradm'));  
+        $serveradm = app::get('serveradm');
+        $this->render =  new base_render($serveradm);
     }
     
     /**

@@ -32,7 +32,8 @@ class content_ctl_admin_article_single extends content_admin_controller
         kernel::single('content_article_single')->editor($article_id, $layout);
         kernel::single('base_session')->close();
 
-        $render = new base_render(app::get('content'));
+        $content = app::get('content');
+        $render = new base_render($content);
         $render->force_compile = true;
 
         $render->_compiler()->set_view_helper('function_header', 'content_article_helper');

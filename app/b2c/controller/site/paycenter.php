@@ -573,7 +573,7 @@ class b2c_ctl_site_paycenter extends b2c_frontpage{
         $MemberData = app::get('b2c')->model('members')->getRow('*',array('member_id'=>$member_id));
         $msg = null;
         $MemberErrDate = app::get('b2c')->model('members_error')->getRow('*',array('member_id'=>$member_id,'type'=>'check'));
-        $datetime = date('Y-m-d',mktime());
+        $datetime = date('Y-m-d',time());
         if($datetime == date('Y-m-d',$MemberErrDate['etime']) && $MemberErrDate['error_num'] == 4){
             $msg = "您已经输错满4次,请重新设置预存款支付密码";
             $this->splash('failed',null,$msg,true);exit;
@@ -581,18 +581,18 @@ class b2c_ctl_site_paycenter extends b2c_frontpage{
             $password = pam_encrypt::get_encrypted_password(trim($_POST['pay_password']),pam_account::get_account_type($this->app->app_id),$use_pass_data);
             if($password !== $MemberData['pay_password']){
                 if(!$MemberErrDate){
-                    $datetime = mktime();
+                    $datetime = time();
                     $error_msg = array('member_id'=>$member_id,'etime'=>$datetime,'error_num'=>1,'type'=>'check');
                     app::get('b2c')->model('members_error')->save($error_msg);
                     $error_num = 1;
                 }else{
-                    $datetime = date('Y-m-d',mktime());
+                    $datetime = date('Y-m-d',time());
                     if($datetime == date('Y-m-d',$MemberErrDate['etime'])){
                         $error_num = $MemberErrDate['error_num']+1;
                     }else{
                         $error_num = 1;
                     }
-                    app::get('b2c')->model('members_error')->update(array('error_num'=>$error_num,'etime'=>mktime()),array('member_id'=>$member_id,'type'=>'check'));
+                    app::get('b2c')->model('members_error')->update(array('error_num'=>$error_num,'etime'=>time()),array('member_id'=>$member_id,'type'=>'check'));
                 }
                 $error = 4- $error_num;
                 $msg = "您输入的密码错误,您还有".$error."次输入机会";

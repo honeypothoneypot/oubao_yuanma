@@ -116,9 +116,11 @@ class weixin_message{
         if(!isset($this->_message_maps[$id][$step_key])){
             $rows = $this->get_message_images($id);
             $step = ($step==null) ? $step : $step-1;
-            foreach($rows AS $k=>$v){
-                if($v['has_children']=='true' && ($step==null || $step>=0)){
-                    $rows[$k]['childrens'] = $this->get_maps($v['id'], $step);
+            if( $rows ){
+                foreach($rows AS $k=>$v){
+                    if($v['has_children']=='true' && ($step==null || $step>=0)){
+                        $rows[$k]['childrens'] = $this->get_maps($v['id'], $step);
+                    }
                 }
             }
             $this->_message_maps[$id][$step_key] = $rows;

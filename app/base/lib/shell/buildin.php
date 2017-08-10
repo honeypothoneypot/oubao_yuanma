@@ -381,7 +381,8 @@ EOF;
         }
 
 		foreach ($applist as $str_app_id){
-			$app_xml = kernel::single('base_xml')->xml2array(file_get_contents(app::get($str_app_id)->app_dir.'/app.xml'),'base_app');
+            $xml = file_get_contents(app::get($str_app_id)->app_dir.'/app.xml');
+			$app_xml = kernel::single('base_xml')->xml2array($xml,'base_app');
 			if (isset($app_xml['node_id'])&&$app_xml['node_id']=="true"&&!base_shopnode::node_id($str_app_id)){
 				// 获取节点.
 				if(base_shopnode::register($str_app_id)){
@@ -404,7 +405,8 @@ EOF;
         }
 
 		foreach ($applist as $str_app_id){
-			$app_xml = kernel::single('base_xml')->xml2array(file_get_contents(app::get($str_app_id)->app_dir.'/app.xml'),'base_app');
+            $xml = file_get_contents(app::get($str_app_id)->app_dir.'/app.xml');
+			$app_xml = kernel::single('base_xml')->xml2array($xml,'base_app');
 			if (isset($app_xml['node_id'])&&$app_xml['node_id']=="true"&&base_shopnode::node_id($str_app_id)){
 				// 获取节点.
 				base_shopnode::delete_node_id($str_app_id);

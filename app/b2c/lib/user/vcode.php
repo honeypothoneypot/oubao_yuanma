@@ -161,7 +161,8 @@ class b2c_user_vcode{
 
     //手机激活验证
     public function mobile_login_verify($vcode,$mobile,$type){
-        if( !kernel::single('b2c_user_passport')->check_login_account($mobile) ){
+        $msg = '';
+        if( !kernel::single('b2c_user_passport')->check_login_account($mobile,$msg) ){
             return true;
         }
 

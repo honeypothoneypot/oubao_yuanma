@@ -41,7 +41,11 @@ class base_package implements Iterator{
     }
 
     public function current() {
-        $data = unpack('a100filename/a8mode/a8uid/a8gid/a12size/a12mtime/a8checksum/a1typeflag/a100link/a6magic/a2version/a32uname/a32gname/a8devmajor/a8devminor', $this->block);
+        if( defined('EC_PHP_VERSION') ){
+            $data = unpack('Z100filename/Z8mode/Z8uid/Z8gid/Z12size/Z12mtime/Z8checksum/Z1typeflag/Z100link/Z6magic/Z2version/Z32uname/Z32gname/Z8devmajor/Z8devminor', $this->block);
+        }else{
+            $data = unpack('a100filename/a8mode/a8uid/a8gid/a12size/a12mtime/a8checksum/a1typeflag/a100link/a6magic/a2version/a32uname/a32gname/a8devmajor/a8devminor', $this->block);
+        }
         $file = array();
         $file['name'] = trim($data['filename']); 
         $file['mode'] = OctDec(trim($data['mode'])); 

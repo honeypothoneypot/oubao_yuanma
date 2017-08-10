@@ -400,7 +400,14 @@ class b2c_ctl_site_member extends b2c_frontpage{
         foreach($aData['data'] as $k => &$v) {
             foreach($v['goods_items'] as $k2 => &$v2) {
                 $spec_desc_goods = $oGoods->getList('spec_desc',array('goods_id'=>$v2['product']['goods_id']));
+                // 此处是获取购买的有规格的货品的缩略图，无规格的商品没有spec_desc，没有货品，跳过该商品。
+                if( !is_array($v2['product']['products']['spec_desc']['spec_private_value_id']) ){
+                    continue;
+                }
                 $select_spec_private_value_id = reset($v2['product']['products']['spec_desc']['spec_private_value_id']);
+                if( !is_array($spec_desc_goods[0]['spec_desc']) ){
+                    continue;
+                }
                 $spec_desc_goods = reset($spec_desc_goods[0]['spec_desc']);
                 if($spec_desc_goods[$select_spec_private_value_id]['spec_goods_images']){
                     list($default_product_image) = explode(',', $spec_desc_goods[$select_spec_private_value_id]['spec_goods_images']);
@@ -946,7 +953,8 @@ class b2c_ctl_site_member extends b2c_frontpage{
             // if($arrPayments['app_id'] == $this->pagedata['order']['payinfo']['pay_app_id'])
             // {
                 $pay_class = $arrPayments['app_class'];
-                $pay_app = new $pay_class(app::get('ectools'));
+                $ectools = app::get('ectools');
+                $pay_app = new $pay_class($ectools);
                 $pay_app_setting = $pay_app->setting();
 
                 if(isset($pay_app_setting['support_bank']))
@@ -1016,13 +1024,13 @@ class b2c_ctl_site_member extends b2c_frontpage{
         $this->path[] = array('title'=>app::get('b2c')->_('商品收藏'),'link'=>'#');
         $GLOBALS['runtime']['path'] = $this->path;
         $membersData = kernel::single('b2c_user_object')->get_members_data(array('members'=>'member_lv_id'));
-        $aData = kernel::single('b2c_member_fav')->get_favorite($this->app->member_id,$membersData['members']['member_lv_id'],$nPage);
+        $aData = kernel::single('b2c_member_fav')->get_favorite($this->app->member_id,$membersData['members']['member_lv_id'],$nPage,$this->pagesize);
         $imageDefault = app::get('image')->getConf('image.set');
-        foreach ($aData['data'] as $key => $value) {
+        foreach ((array)$aData['data'] as $key => $value) {
             $aData['data'][$key]['url'] = $this->gen_url(array('app'=>'b2c','ctl'=>"site_member",'act'=>"receive",'arg0'=>$value['order_id']));;
         }
         $aProduct = $aData['data'];
-        foreach($aProduct as $k=>$v){
+        foreach((array)$aProduct as $k=>$v){
             if($v['nostore_sell']){
                 $aProduct[$k]['store'] = 999999;
                 $aProduct[$k]['product_id'] = $v['spec_desc_info'][0]['product_id'];
@@ -1073,15 +1081,15 @@ class b2c_ctl_site_member extends b2c_frontpage{
                 $reload_url = $this->gen_url(array('app'=>'b2c','ctl'=>'site_member','act'=>'favorite','args'=>array($current_page)));
                 $this->splash('success',$url,app::get('b2c')->_('成功移除！'),true);
             }
-            $aData = kernel::single('b2c_member_fav')->get_favorite($this->app->member_id,$this->member['member_lv'],$current_page);
-            foreach ($aData['data'] as $key => $value) {
+            $aData = kernel::single('b2c_member_fav')->get_favorite($this->app->member_id,$this->member['member_lv'],$current_page,$this->pagesize);
+            foreach ((array)$aData['data'] as $key => $value) {
                 $aData['data'][$key]['url'] = $this->gen_url(array('app'=>'b2c','ctl'=>"site_member",'act'=>"receive",'arg0'=>$value['order_id']));;
             }
             $aProduct = $aData['data'];
 
             $oImage = app::get('image')->model('image');
             $imageDefault = app::get('image')->getConf('image.set');
-            foreach($aProduct as $k=>$v) {
+            foreach((array)$aProduct as $k=>$v) {
                 if(!$oImage->getList("image_id",array('image_id'=>$v['image_default_id']))){
                     $aProduct[$k]['image_default_id'] = $imageDefault['S']['default_image'];
                 }
@@ -1980,7 +1988,7 @@ class b2c_ctl_site_member extends b2c_frontpage{
         }
       }
       $MemberErrDate = app::get('b2c')->model('members_error')->getRow('*',array('member_id'=>$member_id,'type'=>'possword'));
-      $datetime = date('Y-m-d',mktime());
+      $datetime = date('Y-m-d',time());
       if($datetime == date('Y-m-d',$MemberErrDate['etime']) && $MemberErrDate['error_num']>=3){
         $this->pagedata['show_varycode'] = true;
       }
@@ -2016,17 +2024,17 @@ class b2c_ctl_site_member extends b2c_frontpage{
           $msg=app::get('b2c')->_('您输入的密码与账号不匹配');
           $MemberErrDate = app::get('b2c')->model('members_error')->getRow('*',array('member_id'=>$this->app->member_id,'type'=>'possword'));
           if(!$MemberErrDate){
-            $datetime = mktime();
+            $datetime = time();
             $error_msg = array('member_id'=>$this->app->member_id,'etime'=>$datetime,'error_num'=>1,'type'=>'possword');
             app::get('b2c')->model('members_error')->save($error_msg);
           }else{
-            $datetime = date('Y-m-d',mktime());
+            $datetime = date('Y-m-d',time());
             if($datetime == date('Y-m-d',$MemberErrDate['etime'])){
               $error_num = $MemberErrDate['error_num']+1;
             }else{
               $error_num = 1;
             }
-            app::get('b2c')->model('members_error')->update(array('error_num'=>$error_num,'etime'=>mktime()),array('member_id'=>$this->app->member_id,'type'=>'possword'));
+            app::get('b2c')->model('members_error')->update(array('error_num'=>$error_num,'etime'=>time()),array('member_id'=>$this->app->member_id,'type'=>'possword'));
           }
           if($error_num ==3){
             $url = $this->gen_url(array('app'=>'b2c','ctl'=>'site_member','act'=>'verify','arg0'=>$_POST['verifyType']));

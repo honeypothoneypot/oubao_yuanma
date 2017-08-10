@@ -77,7 +77,8 @@ class desktop_ctl_dashboard extends desktop_controller{
         $this->pagedata['right'] = $widgets['l-2'];
         $this->pagedata['top'] = $widgets['t-1'];
         $this->pagedata['bottom'] = $widgets['b-1'];
-        $deploy = kernel::single('base_xml')->xml2array(file_get_contents(ROOT_DIR.'/config/deploy.xml'),'base_deploy');
+        $xml = file_get_contents(ROOT_DIR.'/config/deploy.xml');
+        $deploy = kernel::single('base_xml')->xml2array($xml,'base_deploy');
         
         $this->pagedata['deploy'] = $deploy;
         $check_version=kernel::single('b2c_version_checkversion')->check_version();

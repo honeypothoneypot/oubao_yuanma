@@ -141,7 +141,7 @@ class b2c_ctl_site_brand extends b2c_frontpage{
         $tags = app::get('desktop')->model('tag')->getList('*');
         foreach($tags as $tag_key=>$tag_row){
             if($tag_row['tag_type'] == 'goods'){//商品标签
-                if(in_array($tag_row['tag_id'],$filter['gTag'])){
+                if( is_array($filter['gTag']) && in_array($tag_row['tag_id'],$filter['gTag'] )){
                     $screen['tags']['goods'][$tag_key]['active'] = 'checked';
                 }
                 $screen['tags']['goods'][$tag_key]['tag_id'] = $tag_row['tag_id'];

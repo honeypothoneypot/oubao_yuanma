@@ -17,7 +17,8 @@ class stats_desktop_widgets_exstatistics implements desktop_interface_widget
     public function __construct($app)
     {
         $this->app = $app; 
-        $this->render =  new base_render(app::get('stats'));  
+        $stats = app::get('stats');
+        $this->render =  new base_render($stats);  
     }
     
     /**

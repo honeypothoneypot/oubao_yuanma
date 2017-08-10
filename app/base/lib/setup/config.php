@@ -43,8 +43,8 @@ class base_setup_config{
     }
 
     static function deploy_info(){
-             return kernel::single('base_xml')->xml2array(
-            file_get_contents(ROOT_DIR.'/config/deploy.xml'),'base_deploy');
+            $xml = file_get_contents(ROOT_DIR.'/config/deploy.xml');
+            return kernel::single('base_xml')->xml2array($xml,'base_deploy');
     }
 
     function write_compat() 

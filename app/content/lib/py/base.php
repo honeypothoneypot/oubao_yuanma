@@ -83,7 +83,11 @@ class content_py_base
         $off += ($l - $this->_se_off) * $this->_po;
 
         fseek($this->_obj, $off);
-        $str = unpack('a'.$this->_po, fread($this->_obj, $this->_po));
+        if( defined('EC_PHP_VERSION') ){
+            $str = unpack('Z'.$this->_po, fread($this->_obj, $this->_po));
+        }else{
+            $str = unpack('a'.$this->_po, fread($this->_obj, $this->_po));
+        }
         $str = $str[1];
         $wid = intval(substr($str, 0, 7));
         $len = intval(substr($str, 7, 2));
@@ -91,7 +95,11 @@ class content_py_base
         if($wid > 0 && $len > 0){
 
             fseek($this->_obj, $wid);
-            $str = unpack('a'.$len, fread($this->_obj, $len));
+            if( defined('EC_PHP_VERSION') ){
+                $str = unpack('Z'.$len, fread($this->_obj, $len));
+            }else{
+                $str = unpack('a'.$len, fread($this->_obj, $len));
+            }
             $arr = explode(',',  $str[1]);
             return $arr;
         }else{

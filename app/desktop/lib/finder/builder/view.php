@@ -99,7 +99,8 @@ class desktop_finder_builder_view extends desktop_finder_builder_prototype{
         }
 
 
-        $render = $this->render = new base_render(app::get('desktop'));
+        $desktop = app::get('desktop');
+        $render = $this->render = new base_render($desktop);
         $render->pagedata = $this->controller->pagedata;
         $render->pagedata['title'] = $this->title;
         $render->pagedata['name'] = $this->name;
@@ -112,7 +113,8 @@ class desktop_finder_builder_view extends desktop_finder_builder_prototype{
 
           foreach($this->top_extra_view as $app=>$view){
 
-                $_render = new base_render(app::get($app));
+                $current_app = app::get($app);
+                $_render = new base_render($current_app);
 
                 $_render->pagedata = $render->pagedata;
 
@@ -365,6 +367,7 @@ EOF;
         /** 判断是否要显示归类视图 **/
         $render->pagedata['haspacket'] = $this->__view ? true : false;
 
+        $searchOptions = array();
         if(method_exists($this->object,'searchOptions'))
             $searchOptions =  $this->object->searchOptions();
 
@@ -563,7 +566,7 @@ EOF;
             $order = $this->orderBy?$this->orderBy.' '.$this->orderType:'';
             if($this->orderBy)
             {
-                if(in_array($this->orderBy,$this->object->metaColumn))
+                if(in_array($this->orderBy,(array)$this->object->metaColumn))
                 {
                     //meta排序暂时不做修改
                 }

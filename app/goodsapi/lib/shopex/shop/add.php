@@ -67,7 +67,8 @@ class goodsapi_shopex_shop_add extends goodsapi_goodsapi{
             $data[$key] = app::get('b2c')->getConf($value);
         }
 
-        $deploy = kernel::single('base_xml')->xml2array(file_get_contents(ROOT_DIR.'/config/deploy.xml'),'base_deploy');
+        $xml = file_get_contents(ROOT_DIR.'/config/deploy.xml');
+        $deploy = kernel::single('base_xml')->xml2array($xml,'base_deploy');
         $data['shop_version'] = $deploy['product_name'].'V'.$deploy['product_version'];
         $data['site_type'] = 2; // 商品通中 2表示ecstore
         $image_size = IMAGE_MAX_SIZE/1024;//单位为KB

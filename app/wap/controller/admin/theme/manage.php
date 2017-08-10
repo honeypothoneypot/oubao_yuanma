@@ -27,7 +27,7 @@ class wap_ctl_admin_theme_manage extends desktop_controller{
             $this->pagedata['current_theme'] = $o_themes[0];
             /** 获取当前模版的信息 **/
             $current_sytle = kernel::single('wap_theme_base')->get_theme_style($o_themes[0]['theme']);
-            $preview = ($current_sytle['preview']) ? $current_sytle['preview'] : 'preview.jpg';
+            $preview = (isset($current_sytle['preview']) && $current_sytle['preview']) ? $current_sytle['preview'] : 'preview.jpg';
 
             $this->pagedata['current']['is_themme_bk'] = kernel::single('wap_theme_file')->is_themme_bk($o_themes[0]['theme'], 'theme_bak.xml');
             $src = kernel::single('wap_theme_file')->get_src($o_themes[0]['theme'], $preview);
@@ -35,16 +35,19 @@ class wap_ctl_admin_theme_manage extends desktop_controller{
             $this->pagedata['current_theme_preview_img'] = $src;
 
             $styles = kernel::single('wap_theme_base')->get_theme_styles($o_themes[0]['theme']);
-            foreach($styles as $key=>$style){
-                $style['preview'] = kernel::single('wap_theme_file')->get_src($o_themes[0]['theme'], $style['preview']);
-                $preview_prefix = kernel::single('wap_theme_file')->preview_prefix($o_themes[0]['theme']);
-                $styles[$key] = $style;
+            // 循环数组之前判断是否有值，避免Warning: Invalid argument supplied for foreach()
+            if( $style ){
+                foreach($styles as $key=>$style){
+                    $style['preview'] = kernel::single('wap_theme_file')->get_src($o_themes[0]['theme'], $style['preview']);
+                    $preview_prefix = kernel::single('wap_theme_file')->preview_prefix($o_themes[0]['theme']);
+                    $styles[$key] = $style;
+                }
             }
 
             $this->pagedata['styles'] = $styles;
             $this->pagedata['preview_prefix'] = $preview_prefix;
             $this->pagedata['current'] = $current_sytle;
-            $this->pagedata['current']['active_color'] = $current_sytle['color'];
+            $this->pagedata['current']['active_color'] = isset($current_sytle['color']) ? $current_sytle['color'] : null;
 
             //设置编辑默认页面
             $defaultIndexFile = kernel::single('wap_theme_tmpl')->get_default('index',$default_theme);  

@@ -48,7 +48,7 @@ class b2c_mdl_goods_share extends dbeav_model{
      * @params null
      * @return string table name
      */
-    public function table_name(){
+    public function table_name($real=false){
         return 'goods_share';
     }
 
@@ -80,8 +80,9 @@ class b2c_mdl_goods_share extends dbeav_model{
 
         $data = array();
         foreach($share as $key=>$value){
-            if(isset($filter['name']) && $filter['name'] != $key) continue;
-            if(isset($filter['status']) && $filter['status'] != $value['status']) continue;
+            if( isset($filter['status']) && !isset($value['status']) ) continue;
+            if( isset($filter['name']) && $filter['name'] != $key ) continue;
+            if( isset($filter['status']) && $filter['status'] != $value['status'] ) continue;
             $row['name'] = $key;
             if(is_array($value)){
                 $row['order_by'] = !empty($value['order_by']) ? $value['order_by'] : 0;
@@ -103,7 +104,7 @@ class b2c_mdl_goods_share extends dbeav_model{
         return $data;
     }
 
-    function save($data,$mustUpdate = null,$mustInsert = false){
+    function save(&$data,$mustUpdate = null,$mustInsert = false){
         $share = app::get('b2c')->getConf('share_api');
         if(!$share){
             app::get('b2c')->setConf('share_api',$data);

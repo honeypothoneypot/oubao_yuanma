@@ -17,7 +17,7 @@ class b2c_ctl_site_passport extends b2c_frontpage{
     /*
      * 如果是登录状态则直接跳转到会员中心
      * */
-    public function check_login($mini){
+    public function check_login($mini=null){
         if( $this->userObject->is_login() )
         {
             $url = $this->gen_url(array('app'=>'b2c','ctl'=>'site_member','act'=>'index'));
@@ -184,7 +184,9 @@ class b2c_ctl_site_passport extends b2c_frontpage{
         $this->userObject->set_member_session($member_id);
         $this->bind_member($member_id);
         $this->set_cookie('loginName',$post['uname'],time()+31536000);//用于记住密码
-        $this->app->model('cart_objects')->setCartNum();
+        // setCartNum()需要传入一个参数
+        $aCart = array();
+        $this->app->model('cart_objects')->setCartNum($aCart);
         $url = $this->userPassport->get_next_page('pc');
         if( !$url ){
             $url = kernel::single('b2c_frontpage')->gen_url(array('app'=>'b2c','ctl'=>'site_member','act'=>'index'));
@@ -269,7 +271,7 @@ class b2c_ctl_site_passport extends b2c_frontpage{
 
         $saveData = $this->userPassport->pre_signup_process($_POST);
 
-        if( $member_id = $this->userPassport->save_members($saveData) ){
+        if( $member_id = $this->userPassport->save_members($saveData,$msg) ){
             $this->userObject->set_member_session($member_id);
             $this->bind_member($member_id);
             foreach(kernel::servicelist('b2c_save_post_om') as $object) {

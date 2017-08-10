@@ -8,7 +8,8 @@ class weixin_view_input{
         $params['id']=$id;
 
         $img_src = app::get('desktop')->res_url;
-        $render = new base_render(app::get('weixin'));
+        $weixin = app::get('weixin');
+        $render = new base_render($weixin);
         $render->pagedata['id'] = $id;
         $render->pagedata['img_src'] = $img_src;
         $render->pagedata['includeBase'] = $includeBase;

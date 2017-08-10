@@ -76,7 +76,11 @@ class base_cache_secache_model extends base_cache_abstract
         }else{
             $this->_rs = fopen($this->_file,'rb+') or $this->trigger_error('Can\'t open the cachefile: '.realpath($this->_file),E_USER_ERROR);
             $this->_seek($this->header_padding);
-            $info = unpack('V1max_size/a*ver',fread($this->_rs,$this->info_size));
+            if( defined('EC_PHP_VERSION') ){
+                $info = unpack('V1max_size/Z*ver',fread($this->_rs,$this->info_size));
+            }else{
+                $info = unpack('V1max_size/a*ver',fread($this->_rs,$this->info_size));
+            }
             if($info['ver']!=$this->ver){
                 $this->_format(true);
             }else{
@@ -337,7 +341,11 @@ class base_cache_secache_model extends base_cache_abstract
             }
 
             $this->max_size = $this->_parse_str_size(SECACHE_SIZE,15728640); //default:15m
-            $this->_puts($this->header_padding,pack('V1a*',$this->max_size,$this->ver));
+            if( defined('EC_PHP_VERSION') ){
+                $this->_puts($this->header_padding,pack('V1Z*',$this->max_size,$this->ver));
+            }else{
+                $this->_puts($this->header_padding,pack('V1a*',$this->max_size,$this->ver));
+            }
 
             ksort($this->_bsize_list);
             $ds_offset = $this->data_core_pos;

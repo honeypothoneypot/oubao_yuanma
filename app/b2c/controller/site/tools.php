@@ -24,7 +24,8 @@ class b2c_ctl_site_tools extends b2c_frontpage{
 
         //header('Content-type: text/html;charset=utf8');
         $local = kernel::single('ectools_regions_select');
-        $ret = $local->get_area_select(app::get('ectools'),$path,array('depth'=>$depth));
+        $ectools = app::get('ectools');
+        $ret = $local->get_area_select($ectools,$path,array('depth'=>$depth));
         if($ret){
             echo '&nbsp;-&nbsp;'.$ret;exit;
         }else{

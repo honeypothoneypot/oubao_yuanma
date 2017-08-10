@@ -268,14 +268,14 @@ class b2c_finder_members{
 
             $count = $pointlog['total'];
             $data['score']['event'] = $pointlog['historys'];
-            foreach($data['score']['event'] as $key=>$val){
+            foreach((array)$data['score']['event'] as $key=>$val){
                   $data['score']['event'][$key]['operator_name'] = '';
             }
         }else{
             $row = $mem_point->getList('id',array('member_id' => $member_id,'status'=>'false'));
             $count = count($row);
             //获取日志操作管理员名称@lujy--start--
-            foreach($data['score']['event'] as $key=>$val){
+            foreach((array)$data['score']['event'] as $key=>$val){
                 if( $val['status'] == 'false' ){
                     $operatorInfo = $accountObj->getList('login_name',array('account_id' => $val['operator']));
                     $data['score']['event'][$key]['operator_name'] = $operatorInfo['0']['login_name'];

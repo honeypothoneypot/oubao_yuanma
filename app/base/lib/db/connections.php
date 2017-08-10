@@ -170,7 +170,7 @@ class base_db_connections extends base_db_abstract implements base_interface_db
         if(defined('DB_PCONNECT') && constant('DB_PCONNECT')){
             $lnk = mysql_pconnect($host,$user,$passwd);
         }else{
-            $lnk = mysql_connect($host,$user,$passwd);
+            $lnk = @mysql_connect($host,$user,$passwd);
         }
         if(!$lnk && kernel::is_online()){
             trigger_error(app::get('base')->_('无法连接数据库:').mysql_error(),E_USER_ERROR);

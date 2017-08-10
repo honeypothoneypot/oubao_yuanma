@@ -44,7 +44,8 @@ class base_vcode_gd{
         foreach($arr as $i=>$filename){
             list($w, $h) = getimagesize($filename);
             $source = imagecreatefrompng($filename);
-            $t_id = imagecolortransparent($source);
+	    $background = imagecolorallocate($source, 255, 255, 255);
+            $t_id = imagecolortransparent($source,$background);
             $rotate = imagerotate($source, rand(-20,20),$t_id);
             $w2 = $w*$baseH/$h;
             imagecopyresized($image, $rotate, $x, 0, 0, 0, $w2, $baseH, $w, $h);

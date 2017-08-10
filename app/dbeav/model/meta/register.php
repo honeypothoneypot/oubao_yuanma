@@ -39,7 +39,7 @@ class dbeav_mdl_meta_register extends base_db_model{
         }
     }
 
-    function save($column){
+    function save(&$column,$mustUpdate = null, $mustInsert = false){
         $this->col_desc = $column['col_desc'];
         $column['col_type'] = $this->get_col_type();
         return parent::save($column);

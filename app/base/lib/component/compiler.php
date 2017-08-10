@@ -74,7 +74,7 @@ class base_component_compiler{
 
         $ldq = preg_quote($this->left_delimiter,'!');
         $rdq = preg_quote($this->right_delimiter,'!');
-        $file_contents = preg_replace("!{$ldq}\*.*?\*{$rdq}!seu",'',$file_contents);
+        $file_contents = preg_replace("!{$ldq}\*.*?\*{$rdq}!su",'',$file_contents);
         $file_contents = preg_replace("!(\<\?|\?\>)!",'<?php echo \'\1\'; ?>',$file_contents);
         if($this->bundle_vars){
             $this->bundle_vars_re = '!\$('.implode('|',$this->bundle_vars).')!';

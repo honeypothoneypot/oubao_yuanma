@@ -52,7 +52,9 @@ class desktop_ctl_default extends desktop_controller{
          应用场景：在打补丁包或升级包的时候
          TODO:之后考虑在线安装的情况
         */
-        $deploy = kernel::single('base_xml')->xml2array(file_get_contents(ROOT_DIR.'/config/deploy.xml'),'base_deploy');
+        // php5.4以后只有变量才可以作为引用传递，如果调用函数的时，参数是另一个函数的返回值，则会报strict级别的错误
+        $xml = file_get_contents(ROOT_DIR.'/config/deploy.xml');
+        $deploy = kernel::single('base_xml')->xml2array($xml,'base_deploy');
         $local_has_update = false;
         $this->pagedata['ec_deploy'] = $deploy;
         if(! ($product_version = app::get('base')->getConf('product_version')) ){
@@ -89,7 +91,8 @@ class desktop_ctl_default extends desktop_controller{
         foreach( kernel::servicelist('desktop_content') as $services ) {
             if ( is_object($services) ) {
                 if ( method_exists($services, 'changeContent') ) {
-                    $services->changeContent(app::get('desktop'));
+                    $desktop = app::get('desktop');
+                    $services->changeContent($desktop);
                     $services->changeContent($desktop_menu);
                 }
             }

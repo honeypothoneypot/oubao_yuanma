@@ -42,7 +42,9 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
         }
 
         $oSearch = $this->app->model('search');
-        $tmp_filter = $oSearch->decode($urlFilter);
+        $path = array();
+        $system = '';
+        $tmp_filter = $oSearch->decode($urlFilter,$path,$system);
         if($request_params[5] || $_GET['virtual_cat_id'] ){
             $virtual_cat_id = $request_params[5] ? $request_params[5] : intval($_GET['virtual_cat_id']);
         }
@@ -258,7 +260,8 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
             $brands = app::get('b2c')->model('brand')->getList('brand_id,brand_name',array('brand_id'=>$brand_ids,'disabled'=>'false'));
             //是否已选择
             foreach($brands as $b_k=>$row){
-                if(in_array($row['brand_id'],$filter['brand_id'])){
+                // 在用in_array前验证$filter['brand_id']是否时数组
+                if( is_array($filter['brand_id']) && in_array($row['brand_id'],$filter['brand_id']) ){
                     $brands[$b_k]['active'] = 'active';
                     $active_arr['brand'] = 'active';
                     $active_filter['brand']['title'] = $this->app->_('品牌');;
@@ -332,8 +335,10 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
         if($giftAppActive){
             $tagFilter['app_id'][] = 'gift';
         }
+        // $progetcouponAppActive的值是个布尔值，当作数组赋值回报错。貌似这个地方没什么用
         $progetcouponAppActive = app::get('progetcoupon')->is_actived();
         if($progetcouponAppActive){
+            $progetcouponAppActive = array();
             $progetcouponAppActive['app_id'][] = 'progetcoupon';
         }
         $tags = app::get('desktop')->model('tag')->getList('*',$tagFilter);
@@ -342,13 +347,15 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
         }
         foreach($tags as $tag_key=>$tag_row){
             if($tag_row['tag_type'] == 'goods'){//商品标签
-                if(in_array($tag_row['tag_id'],$filter['gTag'])){
+                // 在用in_array前验证$filter['gTag']是否时数组
+                if( is_array($filter['gTag']) && in_array($tag_row['tag_id'],$filter['gTag']) ){
                     $screen['tags']['goods'][$tag_key]['active'] = 'checked';
                 }
                 $screen['tags']['goods'][$tag_key]['tag_id'] = $tag_row['tag_id'];
                 $screen['tags']['goods'][$tag_key]['tag_name'] = $tag_row['tag_name'];
             }elseif($tag_row['tag_type'] == 'promotion'){//促销标签
-                if(in_array($tag_row['tag_id'],$filter['pTag'])){
+                // 在用in_array前验证$filter['pTag']是否时数组
+                if( is_array($filter['pTag']) && in_array($tag_row['tag_id'],$filter['pTag']) ){
                     $screen['tags']['promotion'][$tag_key]['active'] = 'active';
                     $active_filter['pTag']['title'] = $this->app->_('促销商品');;
                     $active_filter['pTag']['label'] = 'pTag';
@@ -373,7 +380,7 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
         $_POST['cat_id'] = utils::_RemoveXSS($_POST['cat_id']);
         $_POST['virtual_cat_id'] = utils::_RemoveXSS($_POST['virtual_cat_id']);
         $_POST['orderBy'] = utils::_RemoveXSS($_POST['orderBy']);
-        $tmp_params = $this->filter_decode($_POST);
+        $tmp_params = $this->filter_decode($_POST,$_POST['cat_id'],$_POST['virtual_cat_id']);
         $params = $tmp_params['filter'];
         $orderby = $tmp_params['orderby'];
         $showtype = $tmp_params['showtype'];
@@ -556,7 +563,8 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
         $pageLimit = $this->app->getConf('gallery.display.listnum');
         $pageLimit = ($pageLimit ? $pageLimit : 20);
         $this->pagedata['pageLimit'] = $pageLimit;
-        $goodsData = $goodsModel->getList('*',$filter,$pageLimit*($page-1),$pageLimit,$orderby,$total=false);
+        $total = false;
+        $goodsData = $goodsModel->getList('*',$filter,$pageLimit*($page-1),$pageLimit,$orderby,$total);
         if($goodsData && $total ===false){
            $total = $goodsModel->count($filter);
         }
@@ -607,7 +615,7 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
             $this->pagedata['catArr'] = array_keys($catCount);
             $this->catCount = $catCount;
         }else{
-            $this->pagedata['show_cat_id'] = key($catCount);
+            $this->pagedata['show_cat_id'] = key((array)$catCount);
         }
 
         //货品
@@ -710,12 +718,16 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
         }
         $tagModel = app::get('desktop')->model('tag');
         $sdf_tags = $tagModel->getList('tag_id,tag_name',array('tag_id'=>$tags));
-        foreach($sdf_tags  as $tag_row){
-            $tagsData[$tag_row['tag_id']] = $tag_row;
+        if( $sdf_tags ){
+            foreach($sdf_tags  as $tag_row){
+                $tagsData[$tag_row['tag_id']] = $tag_row;
+            }
         }
-        foreach($promotionData as $gid=>$p_row){
-            foreach($p_row as $k=>$tag_id){
-                $promotion_tags[$gid][$k] = $tagsData[$tag_id];
+        if( $promotionData ){
+            foreach($promotionData as $gid=>$p_row){
+                foreach($p_row as $k=>$tag_id){
+                    $promotion_tags[$gid][$k] = $tagsData[$tag_id];
+                }
             }
         }
         foreach($goodsData as $key=>$goods_row){

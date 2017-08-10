@@ -27,11 +27,11 @@ class b2c_cart_json {
 			unset($agoods[$k_goods]['obj_items']);
 			
 		}
-		foreach($aData['aCart']['promotion']['order'] as $k_order_promotion=>$v_order_promotion)
+		foreach( (array)$aData['aCart']['promotion']['order'] as $k_order_promotion=>$v_order_promotion )
 		{
 			$apromotion['order'][] = $v_order_promotion;
 		}
-		foreach($aData['aCart']['promotion']['goods'] as $k_order_promotion=>$v_order_promotion)
+		foreach( (array)$aData['aCart']['promotion']['goods'] as $k_order_promotion=>$v_order_promotion )
 		{
 			$apromotion['goods'][] = $v_order_promotion;
 		}

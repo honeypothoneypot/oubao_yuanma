@@ -9,7 +9,8 @@
 class b2c_view_input{
 
     function input_category($params){
-        $render = new base_render(app::get('b2c'));
+        $b2c = app::get('b2c');
+        $render = new base_render($b2c);
         $mdl = app::get('b2c')->model('goods_cat');
         $render->pagedata['category'] = array();
         $render->pagedata['params'] = $params;

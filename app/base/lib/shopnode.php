@@ -133,12 +133,16 @@ class base_shopnode
         return $sign;
     }//End Function
     
-    static function node_id($app_id)
+    static function node_id($app_id=null)
 	{ 
 		if (!$app_id){
-			$config = base_setup_config::deploy_info();		
+			$config = base_setup_config::deploy_info();
 			foreach($config['package']['app'] as $k=>$app){
-				$app_xml = kernel::single('base_xml')->xml2array(file_get_contents(app::get($app['id'])->app_dir.'/app.xml'),'base_app');
+                if( !file_exists(app::get($app['id'])->app_dir.'/app.xml') ){
+                    continue;
+                }
+                $xml = file_get_contents(app::get($app['id'])->app_dir.'/app.xml');
+				$app_xml = kernel::single('base_xml')->xml2array($xml,'base_app');
 				if (isset($app_xml['node_id'])&&$app_xml['node_id']=="true"&&!self::node_id($app['id'])){
 					// 获取节点.
 					if ($node_id = self::node_id($app['id'])){

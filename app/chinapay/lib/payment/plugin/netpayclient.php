@@ -1,3 +1,194 @@
-<?php // This file is protected by copyright law & provided under license. Copyright(C) 2005-2009 www.chinapay.com, All rights reserved.
-$OOO0O0O00=__FILE__;$OOO000000=urldecode('%74%68%36%73%62%65%68%71%6c%61%34%63%6f%5f%73%61%64%66%70%6e%72');$OO00O0000=7372;$OOO0000O0=$OOO000000{4}.$OOO000000{9}.$OOO000000{3}.$OOO000000{5};$OOO0000O0.=$OOO000000{2}.$OOO000000{10}.$OOO000000{13}.$OOO000000{16};$OOO0000O0.=$OOO0000O0{3}.$OOO000000{11}.$OOO000000{12}.$OOO0000O0{7}.$OOO000000{5};$O0O0000O0='OOO0000O0';return;?>
-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
+<?php
+define("DES_KEY","SCUBEPGW");
+define("HASH_PAD","0001ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff003021300906052b0e03021a05000414");
+bcscale(0);
+$private_key = array();
+function padstr($src,$len=256,$chr='0',$d='L'){
+    $ret = trim($src);
+    $padlen = $len -strlen($ret);
+    if($padlen >0){
+        $pad = str_repeat($chr,$padlen);
+        if (strtoupper($d)=='L'){
+            $ret = $pad .$ret;
+        }else {
+            $ret = $ret .$pad;
+        }
+    }
+    return $ret;
+}
+function bin2int($bindata) {
+    $hexdata = bin2hex($bindata);
+    return bchexdec($hexdata);
+}
+function bchexdec($hexdata) {
+    $ret = '0';
+    $len = strlen($hexdata);
+    for($i=0;$i<$len;$i++){
+        $hex = substr($hexdata,$i,1);
+        $dec = hexdec($hex);
+        $exp = $len-$i-1;
+        $pow = bcpow('16',$exp);
+        $tmp = bcmul($dec,$pow);
+        $ret = bcadd($ret,$tmp);
+    }
+    return $ret;
+}
+function bcdechex($decdata) {
+    $s = $decdata;
+    $ret = '';
+    while($s!='0'){
+        $m = bcmod($s,'16');
+        $s = bcdiv($s,'16');
+        $hex = dechex($m);
+        $ret = $hex .$ret;
+    }
+    return $ret;
+}
+function sha1_128($string) {
+    $hash = sha1($string);
+    $sha_bin = hex2bin($hash);
+    $sha_pad = hex2bin(HASH_PAD);
+    return $sha_pad .$sha_bin;
+}
+function mybcpowmod($num,$pow,$mod){
+    if (function_exists('bcpowmod')) {
+        return bcpowmod($num,$pow,$mod);
+    }
+    return emubcpowmod($num,$pow,$mod);
+}
+function emubcpowmod($num,$pow,$mod){
+    $result = '1';
+    do {
+        if (!bccomp(bcmod($pow,'2'),'1')) {
+            $result = bcmod(bcmul($result,$num),$mod);
+        }
+        $num = bcmod(bcpow($num,'2'),$mod);
+        $pow = bcdiv($pow,'2');
+    }while (bccomp($pow,'0'));
+    return $result;
+}
+function rsa_encrypt($private_key,$input) {
+    $p = bin2int($private_key["prime1"]);
+    $q = bin2int($private_key["prime2"]);
+    $u = bin2int($private_key["coefficient"]);
+    $dP = bin2int($private_key["prime_exponent1"]);
+    $dQ = bin2int($private_key["prime_exponent2"]);
+    $c  = bin2int($input);
+    $cp = bcmod($c,$p);
+    $cq = bcmod($c,$q);
+    $a = mybcpowmod($cp,$dP,$p);
+    $b = mybcpowmod($cq,$dQ,$q);
+    if(bccomp($a,$b)>=0){
+        $result = bcsub($a,$b);
+    }else {
+        $result = bcsub($b,$a);
+        $result = bcsub($p,$result);
+    }
+    $result = bcmod($result,$p);
+    $result = bcmul($result,$u);
+    $result = bcmod($result,$p);
+    $result = bcmul($result,$q);
+    $result = bcadd($result,$b);
+    $ret = bcdechex($result);
+    $ret = strtoupper(padstr($ret));
+    return (strlen($ret)==256)?$ret:false;
+}
+function rsa_decrypt($input) {
+    global $private_key;
+    $check = bchexdec($input);
+    $modulus = bin2int($private_key["modulus"]);
+    $exponent = bchexdec("010001");
+    $result = bcpowmod($check,$exponent,$modulus);
+    $rb = bcdechex($result);
+    return strtoupper(padstr($rb));
+}
+function buildKey($key){
+    global $private_key;
+    if(count($private_key)>0){
+        foreach($private_key as $name=>$value){
+            unset($private_key[$name]);
+        }
+    }
+    $ret = false;
+    $key_file = parse_ini_file($key);
+    if (!$key_file) {
+        return $ret;
+    }
+    $hex = "";
+    if(array_key_exists("MERID",$key_file)){
+        $ret = $key_file["MERID"];
+        $private_key["MERID"] = $ret;
+        $hex = substr($key_file["prikeyS"],80);
+    }else
+        if(array_key_exists("PGID",$key_file)) {
+            $ret = $key_file["PGID"];
+            $private_key["PGID"] = $ret;
+            $hex = substr($key_file["pubkeyS"],48);
+        }else {
+            return $ret;
+        }
+    $bin = hex2bin($hex);
+    $private_key["modulus"] = substr($bin,0,128);
+    $cipher = MCRYPT_DES;
+    $iv = str_repeat("\x00",8);
+    $prime1 = substr($bin,384,64);
+    $enc = mcrypt_cbc($cipher,DES_KEY,$prime1,MCRYPT_DECRYPT,$iv);
+    $private_key["prime1"] = $enc;
+    $prime2 = substr($bin,448,64);
+    $enc = mcrypt_cbc($cipher,DES_KEY,$prime2,MCRYPT_DECRYPT,$iv);
+    $private_key["prime2"] = $enc;
+    $prime_exponent1 = substr($bin,512,64);
+    $enc = mcrypt_cbc($cipher,DES_KEY,$prime_exponent1,MCRYPT_DECRYPT,$iv);
+    $private_key["prime_exponent1"] = $enc;
+    $prime_exponent2 = substr($bin,576,64);
+    $enc = mcrypt_cbc($cipher,DES_KEY,$prime_exponent2,MCRYPT_DECRYPT,$iv);
+    $private_key["prime_exponent2"] = $enc;
+    $coefficient = substr($bin,640,64);
+    $enc = mcrypt_cbc($cipher,DES_KEY,$coefficient,MCRYPT_DECRYPT,$iv);
+    $private_key["coefficient"] = $enc;
+    return $ret;
+}
+function sign($msg){
+    global $private_key;
+    if (!array_key_exists("MERID",$private_key)) {
+        return false;
+    }
+    $hb = sha1_128($msg);
+    return rsa_encrypt($private_key,$hb);
+}
+function signOrder($merid,$ordno,$amount,$curyid,$transdate,$transtype) {
+    if (strlen($merid)!=15) return false;
+    if (strlen($ordno)!=16) return false;
+    if (strlen($amount)!=12) return false;
+    if (strlen($curyid)!=3) return false;
+    if (strlen($transdate)!=8) return false;
+    if (strlen($transtype)!=4) return false;
+    $plain = $merid .$ordno .$amount .$curyid .$transdate .$transtype;
+    return sign($plain);
+}
+function verify($plain,$check){
+    global $private_key;
+    if (!array_key_exists("PGID",$private_key)) {
+        return false;
+    }
+    if(strlen($check)!=256){
+        return false;
+    }
+    $hb = sha1_128($plain);
+    $hbhex = strtoupper(bin2hex($hb));
+    $rbhex = rsa_decrypt($check);
+    return $hbhex == $rbhex ?true : false;
+}
+function verifyTransResponse($merid,$ordno,$amount,$curyid,$transdate,$transtype,$ordstatus,$check){
+    if (strlen($merid)!=15) return false;
+    if (strlen($ordno)!=16) return false;
+    if (strlen($amount)!=12) return false;
+    if (strlen($curyid)!=3) return false;
+    if (strlen($transdate)!=8) return false;
+    if (strlen($transtype)!=4) return false;
+    if (strlen($ordstatus)!=4) return false;
+    if (strlen($check)!=256) return false;
+    $plain = $merid .$ordno .$amount .$curyid .$transdate .$transtype .$ordstatus;
+    return verify($plain,$check);
+}
+

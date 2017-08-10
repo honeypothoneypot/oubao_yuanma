@@ -63,9 +63,11 @@ class preparesell_prepare_goods{
     function get_product_type($filter)
     {
         $product_id = array();
-        foreach ($filter['goods']['adjunct'] as $key => $value) {
-            foreach ($value as $k => $v) {
-               $product_id[] = $k;
+        if( $filter['goods']['adjunct'] ){
+            foreach ($filter['goods']['adjunct'] as $key => $value) {
+                foreach ($value as $k => $v) {
+                    $product_id[] = $k;
+                }
             }
         }
         array_push($product_id, $filter[2]);

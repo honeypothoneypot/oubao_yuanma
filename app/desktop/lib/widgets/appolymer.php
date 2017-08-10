@@ -11,7 +11,8 @@ class desktop_widgets_appolymer implements desktop_interface_widget{
     
     function __construct($app){
         $this->app = $app; 
-        $this->render =  new base_render(app::get('desktop'));  
+        $desktop = app::get('desktop');
+        $this->render =  new base_render($desktop);  
     }
     
     function get_title(){

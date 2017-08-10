@@ -279,11 +279,11 @@ class mdl_serverinfo{
             $rst = false;
             if(defined('DB_HOST')){
                 if(defined('DB_PASSWORD')){
-                    $rs = mysql_connect(DB_HOST,DB_USER,DB_PASSWORD);
+                    $rs = @mysql_connect(DB_HOST,DB_USER,DB_PASSWORD);
                 }elseif(defined('DB_USER')){
-                    $rs = mysql_connect(DB_HOST,DB_USER);
+                    $rs = @mysql_connect(DB_HOST,DB_USER);
                 }else{
-                    $rs = mysql_connect(DB_HOST);
+                    $rs = @mysql_connect(DB_HOST);
                 }
                 $db_ver = mysql_get_server_info($rs);
             }elseif($db_ver = mysql_get_server_info()){

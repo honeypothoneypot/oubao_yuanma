@@ -248,7 +248,7 @@ EOF;
         return 'dom_el_'.substr(md5(time()),0,6).intval(self::$_ui_id++);
     }
 
-    function form_end($options){
+    function form_end($options=array()){
         $has_ok_btn=isset($options['has_ok_btn']) ? (bool)$options['has_ok_btn'] : true;
         $btn_txt=isset($options['btn_txt']) ? $options['btn_txt'] : '确定';
         if($this->_form_path[0]['element_started']){

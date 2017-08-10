@@ -11,7 +11,8 @@ class dev_desktop_docs implements desktop_interface_widget{
     var $order = 1;
     function __construct($app){
         $this->app = $app; 
-        $this->render =  new base_render(app::get('desktop'));  
+        $desktop = app::get('desktop');
+        $this->render =  new base_render($desktop);
     }
     
     function get_title(){

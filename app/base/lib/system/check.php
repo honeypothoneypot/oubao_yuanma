@@ -41,7 +41,8 @@ class base_system_check {
     function _appcheck(&$check_list,$applist){
         if($applist['app']){
             foreach($applist['app'] as $value){
-                $appcheck_list = kernel::single('base_xml')->xml2array(file_get_contents(app::get($value['id'])->app_dir.'/app.xml'),'base_app');
+                $xml = file_get_contents(app::get($value['id'])->app_dir.'/app.xml');
+                $appcheck_list = kernel::single('base_xml')->xml2array($xml,'base_app');
                 if($appcheck_list['check']){
                     $library[] = $appcheck_list['check'];
                 }

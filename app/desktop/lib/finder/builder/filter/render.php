@@ -79,7 +79,8 @@ class desktop_finder_builder_filter_render
         if($cusrender){
           return array('filter_cols'=>$columns,'filter_datatypes'=>$datatypes);
         }
-        $render = new base_render(app::get('desktop'));
+        $desktop = app::get('desktop');
+        $render = new base_render($desktop);
         
         if($object->has_tag){
             $render->pagedata['app_id'] = $app->app_id;

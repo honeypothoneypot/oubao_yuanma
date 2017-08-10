@@ -188,6 +188,7 @@ class desktop_finder_builder_prototype{
         if($app_id!=$this->controller->app->app_id){
             return array();
         }
+        $views_temp = array();
 
         if(method_exists($this->controller,'_views')){
             $views = $this->controller->_views();

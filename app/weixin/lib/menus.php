@@ -60,9 +60,11 @@ class weixin_menus {
 
         $rows = $this->get_menus($menu_id, $bind_id, $menu_theme);
         $step = ($step==null) ? $step : $step-1;
-        foreach($rows AS $k=>$v){
-            if($v['has_children']=='true' && ($step==null || $step>=0)){
-                $rows[$k]['childrens'] = $this->get_maps($v['menu_id'], $step, $bind_id, $menu_theme);
+        if( $rows ){
+            foreach($rows AS $k=>$v){
+                if($v['has_children']=='true' && ($step==null || $step>=0)){
+                    $rows[$k]['childrens'] = $this->get_maps($v['menu_id'], $step, $bind_id, $menu_theme);
+                }
             }
         }
         $this->_menu_maps[$menu_id][$step_key] = $rows;

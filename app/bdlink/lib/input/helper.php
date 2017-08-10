@@ -12,7 +12,8 @@ class bdlink_input_helper
     
     function input_refer($params)
     {
-        $render = new base_render(app::get('bdlink'));
+        $bdlink = app::get('bdlink');
+        $render = new base_render($bdlink);
         if($params['id'] && $params['name']) {
             $filter = array(
                 'target_id'   => $params['id'],

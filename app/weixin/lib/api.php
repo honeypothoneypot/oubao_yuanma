@@ -13,7 +13,7 @@ class weixin_api{
             echo $_GET["echostr"];
         }
 
-        $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+        $postStr = file_get_contents("php://input");
         if( !empty($postStr) ){
             $this->dopost($postStr);
         }else{
@@ -76,7 +76,7 @@ class weixin_api{
         $httpclient = kernel::single('base_httpclient');
         $callback_url = kernel::openapi_url('openapi.ectools_payment/parse/weixin/weixin_payment_plugin_wxpay', 'callback');
 
-        $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+        $postStr = file_get_contents("php://input");
         $postArray = kernel::single('site_utility_xml')->xml2array($postStr);
         $postData['weixin_postdata']  = $postArray['xml'];
 
@@ -91,7 +91,7 @@ class weixin_api{
         $httpclient = kernel::single('base_httpclient');
         $callback_url = kernel::openapi_url('openapi.ectools_payment/parse/weixin/weixin_payment_plugin_wxpayjsapi', 'callback');
 
-        $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+        $postStr = file_get_contents("php://input");
         $postArray = kernel::single('site_utility_xml')->xml2array($postStr);
         $postData['weixin_postdata']  = $postArray['xml'];
 
@@ -112,7 +112,7 @@ class weixin_api{
         $httpclient = kernel::single('base_httpclient');
         $callback_url = kernel::openapi_url('openapi.ectools_payment/parse/weixin/weixin_payment_plugin_wxqrpay', 'callback');
 
-        $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+        $postStr = file_get_contents("php://input");
         $postArray = kernel::single('site_utility_xml')->xml2array($postStr);
         $postData['weixin_postdata']  = $postArray['xml'];
 
@@ -132,7 +132,7 @@ class weixin_api{
 
     // 维权通知接口
     public function safeguard(){
-        $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+        $postStr = file_get_contents("php://input");
         $postArray = kernel::single('site_utility_xml')->xml2array($postStr);
         $postData  = $postArray['xml'];
         #$postData = array (
@@ -188,7 +188,7 @@ class weixin_api{
 
     // 微信告警通知接口
     public function alert(){
-        $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+        $postStr = file_get_contents("php://input");
         $postArray = kernel::single('site_utility_xml')->xml2array($postStr);
         $postData  = $postArray['xml'];
 

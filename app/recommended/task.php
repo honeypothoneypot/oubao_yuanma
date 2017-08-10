@@ -17,7 +17,8 @@ class recommended_task
 	public function post_update($dbinfo)
 	{
 		$dbver = $dbinfo['dbver'];
-		$app_xml = kernel::single('base_xml')->xml2array(file_get_contents(app::get('recommended')->app_dir.'/app.xml'),'base_app');
+        $xml = file_get_contents(app::get('recommended')->app_dir.'/app.xml');
+		$app_xml = kernel::single('base_xml')->xml2array($xml,'base_app');
 		if ($app_xml['version'] == '0.2' && $app_xml['version'] > $dbver){
 			$goods = app::get('recommended')->model('goods');
 			$filter = array('secondary_goods_id|has'=>',');

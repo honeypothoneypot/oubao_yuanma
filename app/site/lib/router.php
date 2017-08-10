@@ -221,6 +221,8 @@ class site_router implements base_interface_router
      */
     public function gen_url($params = array())
     {
+        //如果params不是数组，则返回 /；
+        if( !is_array($params) ) return '/';
         $app = $params['app'];
         if(empty($app)) return '/';
 

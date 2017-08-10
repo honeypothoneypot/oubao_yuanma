@@ -256,6 +256,7 @@ class b2c_ctl_site_product extends b2c_frontpage{
      *商品详情页TAB添加services
      * */
     private function get_body_async_url($aGoods) {
+        $list = array();
         foreach($aGoods['type_tab'] as $key=>$list_row){
             $list['type_tab_'.$key]['name'] = $list_row['name'];
             //$list['type_tab_'.$key]['is_call'] = 'ajax';
@@ -591,6 +592,7 @@ class b2c_ctl_site_product extends b2c_frontpage{
             cachemgr::set('ajax_product_basic'.$product_id, $basic_html, cachemgr::co_end());
         }
         echo $basic_html;
+        exit();
     }
 
     /*-----------------ajax调用模块 end------------*/
@@ -613,7 +615,7 @@ class b2c_ctl_site_product extends b2c_frontpage{
         return $params;
     }
     //价格数据处理
-    function _get_product_price($productId,$aGoods,$member_lv){
+    function _get_product_price($productId,$aGoods,$member_lv=null){
         $goodsPrice = array();
         $objCurrency = app::get('ectools')->model('currency');
         $money_format = json_decode($this->pagedata['money_format'],true);
@@ -765,12 +767,14 @@ class b2c_ctl_site_product extends b2c_frontpage{
 
         //没有默认货品图片则显示商品所有图片，否则显示关联货品图片
         $default_spec_image = $this->app->getConf('spec.default.pic');
-        foreach($goodsSpec['product'] as $k=>$row){
-            $spec_goods_images = $goodsSpec['goods'][$k][$row]['spec_goods_images'];
-            if(!empty($spec_goods_images) && $spec_goods_images != $default_spec_image){
-                $imagesArr = explode(',',$spec_goods_images);
-                foreach( (array)$imagesArr as $image_id ){
-                    $productBasic['images'][]['image_id'] = $image_id;
+        if( $goodsSpec['product'] ){
+            foreach($goodsSpec['product'] as $k=>$row){
+                $spec_goods_images = $goodsSpec['goods'][$k][$row]['spec_goods_images'];
+                if(!empty($spec_goods_images) && $spec_goods_images != $default_spec_image){
+                    $imagesArr = explode(',',$spec_goods_images);
+                    foreach( (array)$imagesArr as $image_id ){
+                        $productBasic['images'][]['image_id'] = $image_id;
+                    }
                 }
             }
         }
@@ -853,7 +857,8 @@ class b2c_ctl_site_product extends b2c_frontpage{
             $goodsAdjunct = $aGoods['adjunct'];
         }
 
-        if(count($goodsAdjunct) > 0){
+        // count() 的参数如果不是数组或者对象，则返回1，所以用count() > 0 是不对的
+        if( $goodsAdjunct ){
             foreach($goodsAdjunct as $key => $rows){    //loop group
                 #if($rows['price'] >= '1'){
                 #    $cols = 'product_id,goods_id,name, spec_info, store, freez, price, price-'.intval($rows['price']).' AS adjprice,marketable';
@@ -975,32 +980,34 @@ class b2c_ctl_site_product extends b2c_frontpage{
         $productPromotion = array();
         $giftId = array();
         //商品促销
-        foreach($goodsPromotion['goods'] as $row){
-            if(strpos($row['apply_platform'],'1') === false){
-                continue;
-            }
-            $temp = is_array($row['action_solution']) ? $row['action_solution'] : @unserialize($row['action_solution']);
-            if(key($temp) == 'gift_promotion_solutions_gift'){
-                if(strpos($row['member_lv_ids'],$member_lv_id) === false){
+        if( $goodsPromotion['goods'] ){
+            foreach($goodsPromotion['goods'] as $row){
+                if(strpos($row['apply_platform'],'1') === false){
                     continue;
                 }
-                $giftId = array_merge($giftId,$temp['gift_promotion_solutions_gift']['gain_gift']);
-                continue;
-            }
+                $temp = is_array($row['action_solution']) ? $row['action_solution'] : @unserialize($row['action_solution']);
+                if(key($temp) == 'gift_promotion_solutions_gift'){
+                    if(strpos($row['member_lv_ids'],$member_lv_id) === false){
+                        continue;
+                    }
+                    $giftId = array_merge($giftId,$temp['gift_promotion_solutions_gift']['gain_gift']);
+                    continue;
+                }
 
-            if(isset($same_rule[key($temp)]) && $same_rule[key($temp)]){
-                continue;
-            }else{
-                $same_rule[key($temp)] = true;
-            }
-            $ruleData = app::get('b2c')->model('sales_rule_goods')->getList('name',array('rule_id'=>$row['rule_id']));
-            $productPromotion['goods'][$row['rule_id']]['name'] = $ruleData[0]['name'];
-            $productTag = kernel::single(key($temp))->get_desc_tag();
-            $productPromotion['goods'][$row['rule_id']]['tag'] = $productTag['name'];
-            if(strpos($row['member_lv_ids'],$member_lv_id) === false){
-                $productPromotion['goods'][$row['rule_id']]['use'] = 'false';
-            }else{
-                $productPromotion['goods'][$row['rule_id']]['use'] = 'true';
+                if(isset($same_rule[key($temp)]) && $same_rule[key($temp)]){
+                    continue;
+                }else{
+                    $same_rule[key($temp)] = true;
+                }
+                $ruleData = app::get('b2c')->model('sales_rule_goods')->getList('name',array('rule_id'=>$row['rule_id']));
+                $productPromotion['goods'][$row['rule_id']]['name'] = $ruleData[0]['name'];
+                $productTag = kernel::single(key($temp))->get_desc_tag();
+                $productPromotion['goods'][$row['rule_id']]['tag'] = $productTag['name'];
+                if(strpos($row['member_lv_ids'],$member_lv_id) === false){
+                    $productPromotion['goods'][$row['rule_id']]['use'] = 'false';
+                }else{
+                    $productPromotion['goods'][$row['rule_id']]['use'] = 'true';
+                }
             }
         }
 

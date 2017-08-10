@@ -137,9 +137,10 @@ class b2c_widgets_goods extends b2c_widgets_public {
             #$lv_price = $objLvprice->getList('price',array('goods_id'=>$pv['goods_id'],'level_id'=>$member_level));
             $lv_price[0] = $goodsLvPrice[$pv['goods_id']];
             if ( isset( $dis_count ) ) {
+                //如果商品单独设置了会员价格，则使用会员价格
                 if(is_array($lv_price) && count($lv_price) > 0){
                     $lv_price = end($lv_price);
-                    $pv['memprice'] = $lv_price['price'];
+                    $pv['memprice'] = $lv_price; //$lv_price是一个字符串
                 }else{
                     $pv['memprice'] = $pv['price'] * $dis_count;
                 }
@@ -192,7 +193,7 @@ class b2c_widgets_goods extends b2c_widgets_public {
         return $this->_getOrderBy($id);
     }
 
-    protected function _getFilter($filter){
+    protected function _getFilter($filter, $accord =null){
         foreach ($this->_filter as $_k => $_v){
             if (isset($filter[$_k])) $filter[$_v] = $filter[$_k];
             unset($filter[$_k]);

@@ -511,7 +511,9 @@ class b2c_ctl_admin_goods_editor extends desktop_controller{
         $oGoods = $this->app->model('goods');
         $goods = $oGoods->dump($goods_id,'*','default');
 
-        ksort($goods['images']);
+        if( is_array($goods['images']) ){
+            ksort($goods['images']);
+        }
         $this->_editor($goods['type']['type_id']);
         if(is_numeric($goods['store'])) $goods['store'] = (float)$goods['store'];
         if(is_array($goods['product'])){

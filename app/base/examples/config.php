@@ -162,6 +162,9 @@ define("MAIL_LOG", false);
 // KV_PREFIX KV引擎前缀
 define('KV_PREFIX', 'default');
 
+#使用PHP5.6版本的ECSTORE
+#define('EC_PHP_VERSION','php5.6');
+
 // file_storage
 # define('FILE_STORAGER', 'filesystem');
 # define('STORAGE_MEMCACHED', '192.168.0.230:11211,192.168.0.231:11211');

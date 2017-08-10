@@ -136,11 +136,11 @@ class b2c_user_object{
             $this->member_id = $this->get_member_id();
         }
 
-        if( $columns['account'] ){
+        if( isset($columns['account']) ){
             $data['account'] = $this->_get_pam_members_data($columns['account'],$member_id);
         }
 
-        if($columns['members']){
+        if( isset($columns['members']) ){
             $data['members'] = $this->_get_b2c_members_data($columns['members'],$member_id);
         }
 

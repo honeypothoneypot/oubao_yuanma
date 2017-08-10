@@ -27,7 +27,7 @@ class b2c_apiv_exchanges_request_member_point extends b2c_apiv_exchanges_request
         if($sdf['member_id']){
             $result = $this->rpc_caller_request($sdf, 'pointgetlog');
             $result = json_decode($result,true);
-            foreach($result['point_log_list'] as $key => $pointlog){
+            foreach((array)$result['point_log_list'] as $key => $pointlog){
                 $data['historys'][$key]['expiretime']=strtotime($pointlog['expired_time']);
                 $data['historys'][$key]['addtime']=strtotime($pointlog['op_time']);
                 $data['historys'][$key]['change_point']=$pointlog['points'];

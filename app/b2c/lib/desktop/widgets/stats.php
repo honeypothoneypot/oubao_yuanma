@@ -11,7 +11,8 @@ class b2c_desktop_widgets_stats implements desktop_interface_widget{
     var $order = 1;
     function __construct($app){
         $this->app = $app;
-        $this->render =  new base_render(app::get('b2c'));
+        $b2c = app::get('b2c');
+        $this->render =  new base_render($b2c);
     }
 
     function get_title(){

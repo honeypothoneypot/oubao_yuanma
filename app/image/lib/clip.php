@@ -20,7 +20,7 @@
  */
 class image_clip{
     static $tool;
-    function set_tool() {
+    static function set_tool() {
         if(self::$tool) return;
 
         if (ECAE_MODE) {
@@ -42,7 +42,7 @@ class image_clip{
      * @param string 高度
      * @return null
      */
-    function image_resize(&$imgmdl,$src_file,$target_file,$new_width,$new_height){
+    static function image_resize(&$imgmdl,$src_file,$target_file,$new_width,$new_height){
         self::set_tool();
         if(isset($src_file)&&is_file($src_file)){
             list($width, $height,$type) = getimagesize($src_file);
@@ -61,7 +61,7 @@ class image_clip{
      * @param string 图片原来的高度
      * @return array 目前长宽
      */
-    function get_image_size($new_width,$new_height,$org_width,$org_height){
+    static function get_image_size($new_width,$new_height,$org_width,$org_height){
         $dest_width = $new_width;
         $dest_height = $new_height;
         if($org_width>$org_height){

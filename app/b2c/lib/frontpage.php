@@ -115,7 +115,7 @@ class b2c_frontpage extends site_controller{
         $_COOKIE[$name] = $value;
     }
 
-    function check_login(){
+    function check_login($mini=null){
         kernel::single('base_session')->start();
         if($_SESSION['account'][pam_account::get_account_type($this->app->app_id)]){
             return true;

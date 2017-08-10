@@ -21,7 +21,7 @@ class b2c_ctl_wap_comment extends wap_frontpage{
      * @params array  $_POST 验证码POST的值
      * @return bool
      * */
-    private function _check_vcode($item,$_POST){
+    private function _check_vcode($item){
         if( $this->app->getConf('comment.verifyCode') !="on" ){
             return true;;
         }
@@ -75,7 +75,7 @@ class b2c_ctl_wap_comment extends wap_frontpage{
      * @params string $type 类型discuss(评论)|ask（咨询）
      * @return bool
      * */
-    private function _check_post($_POST,$type){
+    private function _check_post($type){
         $_POST = $this->check_input($_POST);
         //验证基本参数
         if(!$_POST['goods_id']){
@@ -103,7 +103,7 @@ class b2c_ctl_wap_comment extends wap_frontpage{
             }
         }
         //验证码验证
-        $this->_check_vcode($type,$_POST);
+        $this->_check_vcode($type);
 
         return true;
     }
@@ -116,7 +116,7 @@ class b2c_ctl_wap_comment extends wap_frontpage{
             $url = $this->gen_url(array('app'=>'b2c','ctl'=>'wap_passport','act'=>'login'));
             $this->splash('success',$url,'没有登录，请登录!','','',true);exit;
         }
-        $this->_check_post($_POST,$item);
+        $this->_check_post($item);
 
         $member_data = $this->get_current_member();
         $aData['hidden_name'] = $_POST['hidden_name'];
@@ -189,7 +189,7 @@ class b2c_ctl_wap_comment extends wap_frontpage{
         }
 
         //检查验证码
-        $this->_check_vcode('reply',$_POST);
+        $this->_check_vcode('reply');
 
         //检查回复权限
         $item = ($aComment['object_type'] == 'discuss') ? 'discussReply' : 'askReply';

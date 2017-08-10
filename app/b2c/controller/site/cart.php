@@ -1167,13 +1167,15 @@ class b2c_ctl_site_cart extends b2c_frontpage{
         $this->_common(1,$aParams['is_fastbuy']);
 
         if( !$this->pagedata['is_empty'] ) {
-            foreach($this->pagedata['aCart']['object']['gift']['order']  as $gift_key=>$gift_obj){
-                $order_gift[$gift_key]['url'] = $gift_obj['url'];
-                $order_gift[$gift_key]['thumbnail'] = $gift_obj['thumbnail'];
-                $order_gift[$gift_key]['name'] = $gift_obj['name'];
-                $order_gift[$gift_key]['spec_info'] = $gift_obj['spec_info'];
-                $order_gift[$gift_key]['quantity'] = $gift_obj['quantity'];
-                $order_gift[$gift_key]['price'] =$obj_currency->changer_odr($gift_obj['price']['price'],$_COOKIE["S"]["CUR"],false,false,$system_money_decimals,$system_money_operation_carryset);
+            if( $this->pagedata['aCart']['object']['gift']['order'] ){
+                foreach($this->pagedata['aCart']['object']['gift']['order']  as $gift_key=>$gift_obj){
+                    $order_gift[$gift_key]['url'] = $gift_obj['url'];
+                    $order_gift[$gift_key]['thumbnail'] = $gift_obj['thumbnail'];
+                    $order_gift[$gift_key]['name'] = $gift_obj['name'];
+                    $order_gift[$gift_key]['spec_info'] = $gift_obj['spec_info'];
+                    $order_gift[$gift_key]['quantity'] = $gift_obj['quantity'];
+                    $order_gift[$gift_key]['price'] =$obj_currency->changer_odr($gift_obj['price']['price'],$_COOKIE["S"]["CUR"],false,false,$system_money_decimals,$system_money_operation_carryset);
+                }
             }
 
             $this->pagedata['aCart']['promotion_subtotal'] = $this->objMath->number_minus(array($this->pagedata['aCart']['subtotal'], $this->pagedata['aCart']['subtotal_discount']));
@@ -1460,7 +1462,7 @@ class b2c_ctl_site_cart extends b2c_frontpage{
         }
 
         $i = 1;
-        foreach($list as $goods_item){
+        foreach((array)$list as $goods_item){
             if($i <= 4){
                 $aGoods_list_before[] = $goods_item;
                 $i ++;

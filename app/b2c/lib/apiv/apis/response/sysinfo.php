@@ -15,7 +15,8 @@ class b2c_apiv_apis_response_sysinfo
     //获取ecstore的版本信息
     public function version($params, &$service){
         $data = array();
-        $deploy = kernel::single('base_xml')->xml2array(file_get_contents(ROOT_DIR.'/config/deploy.xml'),'base_deploy');
+        $xml = file_get_contents(ROOT_DIR.'/config/deploy.xml');
+        $deploy = kernel::single('base_xml')->xml2array($xml,'base_deploy');
 
         $data['ecstore_version'] = $deploy['product_version'];
         $data['system_version'] = $deploy['business_version'];

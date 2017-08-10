@@ -66,7 +66,8 @@ class desktop_ctl_passport extends desktop_controller{
                     );
             }
         }
-        $deploy = kernel::single('base_xml')->xml2array(file_get_contents(ROOT_DIR.'/config/deploy.xml'),'base_deploy');
+        $xml = file_get_contents(ROOT_DIR.'/config/deploy.xml');
+        $deploy = kernel::single('base_xml')->xml2array($xml,'base_deploy');
         $local_has_update = false;
         $this->pagedata['ec_deploy'] = $deploy;
 

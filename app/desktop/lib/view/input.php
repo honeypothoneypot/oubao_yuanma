@@ -88,7 +88,8 @@ class desktop_view_input{
 
         $app = app::get($app_id);
         $o = $app->model($object);
-        $render = new base_render(app::get('desktop'));
+        $desktop = app::get('desktop');
+        $render = new base_render($desktop);
         $ui = new base_component_ui($app);
 
 
@@ -167,7 +168,7 @@ class desktop_view_input{
             if(is_string($params['value'])){
                 $params['value'] = explode(',',$params['value']);
             }
-            $params['items'] = &$o->getList('*',array($key=>$params['value']),0,-1);
+            $params['items'] = $o->getList('*',array($key=>$params['value']),0,-1);
 
             //过滤不存在的值
             //某些数据被添加后 可能原表数据已删除，但此处value中还存在。
@@ -266,7 +267,8 @@ class desktop_view_input{
         $params['id']=$id;
 
         $img_src = app::get('desktop')->res_url;
-        $render = new base_render(app::get('desktop'));
+        $desktop = app::get('desktop');
+        $render = new base_render($desktop);
         $render->pagedata['id'] = $id;
         $render->pagedata['img_src'] = $img_src;
         $render->pagedata['includeBase'] = $includeBase;
@@ -285,7 +287,8 @@ class desktop_view_input{
     }
     function input_soucecode($params){
 
-        $render = new base_render(app::get('desktop'));
+        $desktop = app::get('desktop');
+        $render = new base_render($desktop);
         $id = 'sh_'.substr(md5(rand(0,time())),0,6);
         $params['id']=$id;
 		$params['res_url']=app::get('desktop')->res_url;

@@ -20,9 +20,12 @@ function theme_widget_integration_center(&$setting,&$render){
     $imageDefault = app::get('image')->getConf('image.set');
     if( is_array($arr_gift_list) ) {
         foreach( $arr_gift_list as $key => &$row ) {
+            /**
+             * 此出没用到。而且$row['goods_id']是一个字符串，不能作为一个数组来操作。
             if(!$row['goods_id']['image_default_id']){
                 $row['goods_id']['image_default_id'] = $imageDefault['M']['default_image'];
             }
+             */
             $tmp = $row;
             $row['gift'] = $tmp;
         }
