@@ -64,8 +64,8 @@ class desktop_ctl_pam extends desktop_controller{
             $html .= $this->ui()->form_input($input);
             unset($input);
         }
-
         if($_GET['p'][0] == 'openid_passport_trust'){
+            $this->pagedata['trust_type'] = 'openid_passport_trust';
             if($appid = app::get('openid')->getConf('appid')){
                 $appidInput = array(
                     'name'=>'appid',

@@ -26,7 +26,7 @@ class b2c_site_sitemaps {
         
         
         //货品 
-        $this->_get( 'goods','site_product','index','goods_id',$tmp );
+        $this->_get( 'products','site_product','index','product_id',$tmp );
         
         //品牌
         $this->_get( 'brand','site_brand','index','brand_id',$tmp );

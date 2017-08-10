@@ -5,7 +5,7 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
-
+ 
 ////////////////////////////////////////////////////
 // SMTP - PHP SMTP class
 //
@@ -70,8 +70,8 @@ class desktop_email_smtp {
      * @access public
      * @return bool
      */
-    function Connect($host,$port=0,$tval=30,$ssl='no') {
-		return $this->_adapter->Connect($host,$port,$tval,array(), $ssl);
+    function Connect($host,$port=0,$tval=30) {
+		return $this->_adapter->Connect($host,$port,$tval);
     }
 
     /**
@@ -367,7 +367,7 @@ class desktop_email_smtp {
      */
     function Verify($name) {
 		return $this->_adapter->Verify($name);
-    }
+    } 
 
 	function getError() {
 		return $this->_adapter->error;

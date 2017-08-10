@@ -183,7 +183,7 @@ class desktop_email_smtp_fsockopen
      * @access public
      * @return bool
      */
-    public function connect($host, $port = null, $timeout = 30, $options = array(), $ssl = 'no')
+    public function connect($host, $port = null, $timeout = 30, $options = array())
     {
         // Clear errors to avoid confusion
         $this->error = null;
@@ -209,7 +209,7 @@ class desktop_email_smtp_fsockopen
         $socket_context = stream_context_create($options);
         //Suppress errors; connection failures are handled at a higher level
         $this->smtp_conn = @stream_socket_client(
-            "tcp://" . $host . ":" . $port,
+            $host . ":" . $port,
             $errno,
             $errstr,
             $timeout,
@@ -234,10 +234,6 @@ class desktop_email_smtp_fsockopen
         }
         if ($this->do_debug >= 3) {
             $this->edebug('Connection: opened');
-        }
-
-        if('yes' == $ssl){
-            stream_socket_enable_crypto($this->smtp_conn, true, STREAM_CRYPTO_METHOD_SSLv23_CLIENT);
         }
 
         // SMTP server can take longer to respond, give longer timeout for first read
@@ -848,38 +844,43 @@ class desktop_email_smtp_fsockopen
         if ($this->Timelimit > 0) {
             $endtime = time() + $this->Timelimit;
         }
-
-        $str = fread($this->smtp_conn, 1024);
-        if ($this->do_debug >= 4) {
-            $this->edebug("SMTP -> get_lines(): \$data was \"$data\"");
-            $this->edebug("SMTP -> get_lines(): \$str is \"$str\"");
-        }
-        $data .= $str;
-        if ($this->do_debug >= 4) {
-            $this->edebug("SMTP -> get_lines(): \$data is \"$data\"");
-        }
-
-        // Timed-out? Log and break
-        $info = stream_get_meta_data($this->smtp_conn);
-        if ($info['timed_out']) {
+        while (is_resource($this->smtp_conn) && !feof($this->smtp_conn)) {
+            $str = @fgets($this->smtp_conn, 515);
             if ($this->do_debug >= 4) {
-                $this->edebug(
-                    'SMTP -> get_lines(): timed-out (' . $this->Timeout . ' sec)'
-                );
+                $this->edebug("SMTP -> get_lines(): \$data was \"$data\"");
+                $this->edebug("SMTP -> get_lines(): \$str is \"$str\"");
             }
-        }
-        // Now check if reads took too long
-        if ($endtime) {
-            if (time() > $endtime) {
+            $data .= $str;
+            if ($this->do_debug >= 4) {
+                $this->edebug("SMTP -> get_lines(): \$data is \"$data\"");
+            }
+            // if 4th character is a space, we are done reading, break the loop
+            if (substr($str, 3, 1) == ' ') {
+                break;
+            }
+            // Timed-out? Log and break
+            $info = stream_get_meta_data($this->smtp_conn);
+            if ($info['timed_out']) {
                 if ($this->do_debug >= 4) {
                     $this->edebug(
-                        'SMTP -> get_lines(): timelimit reached ('
-                        . $this->Timelimit . ' sec)'
+                        'SMTP -> get_lines(): timed-out (' . $this->Timeout . ' sec)'
                     );
+                }
+                break;
+            }
+            // Now check if reads took too long
+            if ($endtime) {
+                if (time() > $endtime) {
+                    if ($this->do_debug >= 4) {
+                        $this->edebug(
+                            'SMTP -> get_lines(): timelimit reached ('
+                            . $this->Timelimit . ' sec)'
+                        );
+                    }
+                    break;
                 }
             }
         }
-
         return $data;
     }
 

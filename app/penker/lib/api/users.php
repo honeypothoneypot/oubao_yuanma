@@ -12,15 +12,12 @@ class penker_api_users{
         $penker = $this->app->model('bind');
         $arr_bind = $penker->getList();
         $pack = $_GET['pack'];
-        
-        //$pack = 'fLd3cryW0F4v4fjSMHjd6YZ19lV0zaUex08cyl0z8AJKIvhur9o9fjWBmICvNx4bw8U6k%2ByKzyMj8ZTRcC4wpE%2B4eA0a82xNPdmd0tSzElH0R6f7ZQq1erI7G4x0zZ5ozptgoSv%2Bz%2Bnru98flYZ9MDmsBMdL%2BDLKBhAJJ790NK4rg6B6WBoVQ00oViDdU3RLi2pjerwXPP726DL6Du48lL5Yui69mgke%2Fbp3E0jKgUFYqHr%2FJZ4A%2FR%2BDMpdVOG17%2BzfCF98vlxQlvl8TWQwFi79Mxbsp92Hf%2FZ4OMDU1dkRjdE85tJM1OhE1QGt44cV%2FLAFfWkbkZvizAnj7MIvLZ11tKCmNrUKjwLEa8vMkYZ0V7yGVingys%2BlsCx6X4vw8ZvlOOU7v8LjPROrtAxAdawom943R5iS1bhsqNclr06qBoBjAu9sF1Xll2cETFLec0HBAztrx9fUgV2h8zl7R0ZWUbm65ZYSg2Thqh0I8b9siEXn9p1GD1iYCIItTyqvmTDwB9DZlW0J7AYvD8aDXjw%3D%3D';
-        //$pack = urldecode($pack);
 
         $key = $arr_bind[0]['secret_key'];
         $iv = substr(md5($arr_bind[0]['node_id']),0,16);
         $params = trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, base64_decode($pack), MCRYPT_MODE_CBC,$iv));
-        
         $params = json_decode($params,true);
+
         $msg = 'fail!';
         if( is_array($params) ){
             if( isset($params['userinfo']) &&is_array($params['userinfo']) && !empty($params['userinfo']['openid']) ){
@@ -45,8 +42,6 @@ class penker_api_users{
         }
 
         if($msg == 'succ'){
-            //$params['goods_id'] = '55';
-
             if( isset($params['product_id']) && !empty($params['product_id']) ){
                 $product_id = $params['product_id'];
             }else{

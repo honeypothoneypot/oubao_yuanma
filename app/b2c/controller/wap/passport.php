@@ -314,9 +314,13 @@ class b2c_ctl_wap_passport extends wap_frontpage{
         }else{
             $ajax_request = false;
         }
-		if(kernel::single('b2c_service_vcode')->status() && empty($_POST['pam_account']['verifycode'])){
-            $msg = app::get('b2c')->_('请输入验证码!');
-            $this->splash('failed',null,$msg,'','',true);exit;
+        $sms_valide=$this->app->getConf('site.sms_valide');
+
+        if($sms_valide == 'true'){
+    		if(kernel::single('b2c_service_vcode')->status() && empty($_POST['pam_account']['verifycode'])){
+                $msg = app::get('b2c')->_('请输入验证码!');
+                $this->splash('failed',null,$msg,'','',true);exit;
+            }
         }
 
         //zengxinwen
@@ -553,7 +557,7 @@ class b2c_ctl_wap_passport extends wap_frontpage{
             //发送验证码 发送短信
             //logger::info('vcode:'.$vcode);
             $data['vcode'] = $vcode;
-            if($type = 'signup')
+            if($type == 'signup')
             {
                 $type = 'signup-mobile';
             }

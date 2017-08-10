@@ -165,7 +165,7 @@ class b2c_user_passport
     /*
      * 检查注册账号合法性
      * */
-    public function check_signup_account($login_name,&$msg){
+    public function check_signup_account($login_name,&$msg,&$login_type=''){
         if( empty($login_name) ){
             $msg =app::get('b2c')->_('请输入用户名');
             return false;

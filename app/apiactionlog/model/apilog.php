@@ -28,7 +28,7 @@ class apiactionlog_mdl_apilog extends dbeav_model{
     function save_data($data){
         if($data){
             $msg_id = $data['msg_id'];
-            $log = $this->getList('*',array('msg_id'=>$msg_id));
+            $log = $this->getList('msg_id',array('msg_id'=>$msg_id));
             if(count($log)>0){
                 return $this->update($data,array('msg_id'=>$msg_id,'api_type'=>'response'));
             }else{

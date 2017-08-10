@@ -1,5 +1,8 @@
 <form action="index.php?app=desktop&ctl=pam&act=setting&p[0]=<{$passport}>" id="pam-edit-form" method="post">
 <div class="tableform">
+<{if $trust_type eq 'openid_passport_trust'}>
+建议客户逐步改用【应用中心】的【信任登录配置】应用来实现信任登陆功能
+<{/if}>
  <{$html}>
 </div>
 </from>

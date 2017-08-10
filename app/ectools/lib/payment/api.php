@@ -129,7 +129,12 @@ class ectools_payment_api
 							}
 							else
 							{
+
 								$db->commit($transaction_status);
+			                    $obj_coupon = kernel::single("b2c_coupon_order");
+			                    if( $obj_coupon ){
+			                        $obj_coupon->order_pay_finish($sdf, $ret['status'], 'font',$msg);
+			                    }
 								// 支付扩展事宜 - 如果上面与中心没有发生交互，那么此处会发出和中心交互事宜.
 								if (method_exists($order_pay_service_object, 'order_pay_finish_extends')){
                                     $sdf['status'] = $ret['status'];
@@ -138,13 +143,6 @@ class ectools_payment_api
 							}
 						}
 					}
-
-                    $obj_coupon = kernel::single("b2c_coupon_order");
-                    if( $obj_coupon ){
-                        $obj_coupon->order_pay_finish($sdf, $ret['status'], 'font',$msg);
-                    }
-
-
 					//支付成功给支付网关显示支付信息
 					if(method_exists($payments_bill, 'ret_result')){
 						$payments_bill->ret_result($ret['payment_id']);

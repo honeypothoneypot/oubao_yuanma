@@ -132,7 +132,7 @@ class b2c_apiv_apis_response_order_delivery
 
                             //修改后端全部发货,前端部分发货问题
                             $sql = "SELECT SUM(i.number) s FROM `sdb_b2c_delivery_items` i, `sdb_b2c_delivery` d " .
-                                   "WHERE i.delivery_id=d.delivery_id AND d.status='succ' AND i.order_item_id='" . $arr_odr_item['item_id'] . "'";
+                                   "WHERE i.delivery_id=d.delivery_id AND d.status='ready' AND i.order_item_id='" . $arr_odr_item['item_id'] . "'";
                             $old_delivery_list = $db->select($sql);
                             if( $old_delivery_list )
                                 $old_send = $old_delivery_list[0]['s'];

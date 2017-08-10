@@ -119,6 +119,7 @@ define("MAIL_LOG", false);
 // syscache 后端存储处理类
 # define('SYSCACHE_ADAPTER', 'base_syscache_adapter_chdb');
 # define('SYSCACHE_ADAPTER', 'base_syscache_adapter_filesystem');
+# define('SYSCACHE_ADAPTER', 'base_syscache_adapter_kvstore');
 
 // kvstore 后台存储类
 # define('KVSTORE_STORAGE', 'base_kvstore_filesystem');

@@ -63,27 +63,16 @@ class wap_frontpage extends wap_controller{
             }
         }else{
             $wechat = kernel::single('weixin_wechat');
-            if( isset($_SESSION['weixin_u_openid']) ){
-                $openid = $_SESSION['weixin_u_openid'];
-                if( !empty($_GET['code']) && !empty($_GET['state']) ){
-                    //通过微信菜单打开时，不算做导购，清cookie
-                    $path = kernel::base_url().'/index.php/wap/';
-                    $this->cookie_path = $path;
-                    $this->set_cookie('penker','',time()-3600);
-                    $this->set_cookie('guide_identity','',time()-3600);
-                }
-            }else{
-                if( !empty($_GET['code']) && !empty($_GET['state']) ){
-                    $data = $wechat->matrix_openid($_GET['code']);
-                    $openid = isset($data['openid']) ? $data['openid'] : '';
-                    $access_token = isset($data['access_token']) ? $data['access_token'] : '';
+            if( !empty($_GET['code']) && !empty($_GET['state']) ){
+                $data = $wechat->matrix_openid($_GET['code']);
+                $openid = isset($data['openid']) ? $data['openid'] : '';
+                $access_token = isset($data['access_token']) ? $data['access_token'] : '';
 
-                    //通过微信菜单打开时，不算做导购，清cookie
-                    $path = kernel::base_url().'/index.php/wap/';
-                    $this->cookie_path = $path;
-                    $this->set_cookie('penker','',time()-3600);
-                    $this->set_cookie('guide_identity','',time()-3600);
-                }
+                //通过微信菜单打开时，不算做导购，清cookie
+                $path = kernel::base_url().'/index.php/wap/';
+                $this->cookie_path = $path;
+                $this->set_cookie('penker','',time()-3600);
+                $this->set_cookie('guide_identity','',time()-3600);
             }
 
             if( $openid ){

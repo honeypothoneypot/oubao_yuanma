@@ -98,13 +98,13 @@ class b2c_apiv_apis_response_member_passport
             return $error;
         }
         $userPassport = kernel::single('b2c_user_passport');
-        $res = $userPassport->check_signup_account($params['mobile'],$msg);
+        $res = $userPassport->check_signup_account($params['mobile'],$msg,$login_type);
         if( !$res ){
             $error['status'] = 'false';
             $error['message'] = $msg;
             return $error;
         }
-        if( $msg != 'mobile' ){
+        if( $login_type != 'mobile' ){
             $error['status'] = 'false';
             $error['message'] = app::get('b2c')->_('请填写正确的手机号码');
             return $error;
@@ -128,14 +128,14 @@ class b2c_apiv_apis_response_member_passport
         $params = utils::_filter_input($params);//过滤xss攻击
         $userPassport = kernel::single('b2c_user_passport');
 
-        $res = $userPassport->check_signup_account($params['uname'],$msg);
+        $res = $userPassport->check_signup_account($params['uname'],$msg,$login_type);
         if( !$res ){
             $error['status'] = 'false';
             $error['message'] = $msg;
             return $error;
         }
 
-        if( $msg == 'mobile' ){
+        if( $login_type == 'mobile' ){
             $res = kernel::single('b2c_user_vcode')->verify($params['vcode'],$params['uname'],'signup'); 
             if(!$res || empty($params['vcode']) ){
                 $msg = app::get('b2c')->_('短信验证错误');

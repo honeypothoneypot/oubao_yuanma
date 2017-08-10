@@ -49,6 +49,12 @@ class b2c_ctl_admin_brand extends desktop_controller{
         if($obj_operatorlogs = kernel::service('operatorlog.goods')){
             $olddata = app::get('b2c')->model('brand')->dump($_POST['brand_id']);
         }
+        //更新首页缓存
+        $index_url= kernel::single('site_router')->gen_url(array('app'=>'site','ctl'=>'default',));
+        $page_key = 'SITE_PAGE_CACHE:' . $index_url;
+        $cache_options['expires'] = 1;
+        cachemgr::set($page_key, '', $cache_options);
+
         #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑记录管理员操作日志@lujy↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
         if($objBrand->save($data)){
             #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓记录管理员操作日志@lujy↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -57,6 +63,7 @@ class b2c_ctl_admin_brand extends desktop_controller{
                     $obj_operatorlogs->brand_log($_POST,$olddata);
                 }
             }
+
             #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑记录管理员操作日志@lujy↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
             $this->end(true,app::get('b2c')->_('品牌保存成功'));
         }else{

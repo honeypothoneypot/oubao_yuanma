@@ -29,12 +29,15 @@ class penker_service_user{
         $userPassport = kernel::single('b2c_user_passport');
         $userObject = kernel::single('b2c_user_object');
 
+        if( !$params['nickname'] ){
+            $params['nickname'] = 'customer_'.time();
+        }
         $login_name = $params['nickname'];
         //验证会员名是否可用
         $flag = $userPassport->check_signup_account( trim($login_name),$msg );
 
         if( !$flag ){
-            $login_name .=time();
+            $login_name .='_'.time();
         }
         $member_data = array(
             'login_name'=>$login_name,
@@ -97,8 +100,6 @@ class penker_service_user{
 
             if( $flag ){
                 return 'succ';
-            }else{
-                return 'fail!';
             }
         }
         return 'fail!';

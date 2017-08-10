@@ -5,7 +5,7 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
-
+ 
 class desktop_email_email{
     var $hasTitle = true; //是否有标题
     var $maxtime = 300; //发送超时时间 ,单位:秒
@@ -13,7 +13,7 @@ class desktop_email_email{
     var $allowMultiTarget=false; //是否允许多目标
     var $targetSplit = ',';
     var $Sendmail          = "/usr/sbin/sendmail";
-
+   
      function ready($config){
         $this->smtp = kernel::single('desktop_email_smtp');
         if($config['sendway']=='smtp'){
@@ -54,7 +54,7 @@ class desktop_email_email{
             $config['subject'] = $subject;
             $config['body']    = $body;
         }
-
+        
         $header = array(
             'Return-path'=>'<'.$config['usermail'].'>',
             'Date'=>date('r'),
@@ -229,7 +229,7 @@ class desktop_email_email{
         $this->smtp = kernel::single('desktop_email_smtp');
         $connection = ($this->smtp->Connected());
 
-        if($this->smtp->Connect($config['smtpserver'], $config['smtpport'],20, $config['smtpssl']))
+        if($this->smtp->Connect($config['smtpserver'], $config['smtpport'],20))
         {
             $this->smtp->Hello($_SERVER['HTTP_HOST']?$_SERVER['HTTP_HOST']:'localhost.localdomain');
 

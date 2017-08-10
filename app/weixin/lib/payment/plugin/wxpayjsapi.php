@@ -146,11 +146,6 @@ final class weixin_payment_plugin_wxpayjsapi extends ectools_payment_app impleme
                 'type'=>'string',
                 'validate_type' => 'required',
             ),
-            'Appsecret'=>array(
-                'title'=>app::get('weixin')->_('Appsecret'),
-                'type'=>'string',
-                'validate_type' => 'required',
-            ),
             'support_cur'=>array(
                 'title'=>app::get('weixin')->_('支持币种'),
                 'type'=>'text hidden cur',
