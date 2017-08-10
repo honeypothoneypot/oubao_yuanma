@@ -25,7 +25,9 @@
     <service id="ectools_payment.ectools_mdl_payment_cfgs" optname="支付插件列表">
         <class>wap_payment_plugin_malipay</class>
         <class>wap_payment_plugin_mtenpay</class>
-        <class>wap_payment_plugin_wapupacp</class>   
+        <class>wap_payment_plugin_wapupacp</class>
+        <class>wap_payment_plugin_lakalachuwap</class>
+        <class>wap_payment_plugin_lakalacrowap</class>
     </service>
 
     <service id="trustlogin_trustlogin.wap_trustlogin_cfg" optname="登陆插件列表">

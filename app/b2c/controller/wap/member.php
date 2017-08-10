@@ -729,8 +729,8 @@ class b2c_ctl_wap_member extends wap_frontpage{
         $this->pagedata['currencys'] = $currency;
         $this->pagedata['currency'] = $currency['cur_code'];
         $opay = app::get('ectools')->model('payment_cfgs');
-        $aOld = $opay->getList('*', array('status' => 'true', 'platform'=>array('iscommon','iswap'), 'is_frontend' => true));
-
+        $aOld = $opay->getListByCode($currency['cur_code'],array('iscommon','iswap'));
+        
         #获取默认的货币
         $obj_currency = app::get('ectools')->model('currency');
         $arr_def_cur = $obj_currency->getDefault();
@@ -1374,6 +1374,8 @@ class b2c_ctl_wap_member extends wap_frontpage{
             }
             $db->commit($transaction_status);
             $url = $this->gen_url(array('app'=>'b2c','ctl'=>'wap_member','act'=>'index'));
+            $obj_coupon = kernel::single("b2c_coupon_order");
+            $obj_coupon->use_c($sdf['order_id']);
             $this->splash('success',$url,"订单取消成功",true);
         }
         else

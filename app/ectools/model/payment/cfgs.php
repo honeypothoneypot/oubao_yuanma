@@ -351,6 +351,9 @@ class ectools_mdl_payment_cfgs {
                 case '4':
                     break;
                 default:
+                    if(!in_array( $cur_code,$paymentinfo['supportCurrency'])){
+                        unset($arr_payments[$key]);
+                    }
                     break;
             }
         }

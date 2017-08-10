@@ -100,7 +100,7 @@ class b2c_ctl_site_paycenter extends b2c_frontpage{
                 $pay_online = true;
             }
             if ($arrPayments['app_id'] == $this->pagedata['order']['payinfo']['pay_app_id'])
-            {  
+            {
                 $deposit = app::get('ectools')->model('payment_cfgs')->getPaymentInfo($this->pagedata['order']['payinfo']['pay_app_id']);
                 $this->pagedata['order']['deposit_status'] = empty($deposit['pay_status'])?0:$deposit['pay_status'];
                 $MemberData = app::get('b2c')->model('members')->getRow('*',array('member_id'=>$this->pagedata['order']['member_id']));

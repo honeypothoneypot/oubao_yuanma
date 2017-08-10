@@ -132,6 +132,10 @@
           <{t}>删除订单<{/t}></a>
         <{/if}>
         <{/if}>
+        <{if $order.is_aftersales == true}>
+        <i class="separator"></i><a href="<{link app=aftersales ctl=site_member act=add arg0=$order.order_id}>"><{t}>申请售后服务<{/t}></a>
+        <{/if}>
+
 
       </td>
     </tr>

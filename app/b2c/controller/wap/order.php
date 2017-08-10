@@ -358,11 +358,12 @@ class b2c_ctl_wap_order extends wap_frontpage{
             // 设定优惠券不可以使用
             if (isset($aCart['object']['coupon']) && $aCart['object']['coupon'])
             {
+                $coupon_status = in_array($_POST['payment']['pay_app_id'],array('-1')) ? 'true':'busy';
                 $obj_coupon = kernel::single("b2c_coupon_mem");
                 foreach ($aCart['object']['coupon'] as $coupons)
                 {
                     if($coupons['used'])
-                        $obj_coupon->use_c($coupons['coupon'], $arrMember['member_id']);
+                        $obj_coupon->use_c($coupons['coupon'], $arrMember['member_id'], $order_id,$coupon_status);
                 }
             }
 
@@ -515,6 +516,10 @@ class b2c_ctl_wap_order extends wap_frontpage{
 				{
 					$is_payed = $order_pay_service_object->order_pay_finish($sdf, 'succ', 'font',$msg);
 				}
+                $obj_coupon = kernel::single("b2c_coupon_order");
+                if( $obj_coupon ){
+                    $obj_coupon->use_c($order_id);
+                }
 			}
 
             $this->end(true, $this->app->_("订单生成成功！"), $this->gen_url(array('app'=>'b2c','ctl'=>'wap_paycenter','act'=>'index','arg0'=>$order_id,'arg1'=>'true')),'',true);

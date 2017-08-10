@@ -73,6 +73,7 @@ class ectools_payment_api
 
         logger::info("支付返回信息记录：".var_export($arrQueryStrs,1));
 		$payments_bill = new $class_name($objShopApp);
+        if(! $payments_bill instanceof ectools_payment_app) exit('Plugin Error');
 		$ret = $payments_bill->$method($arrQueryStrs);
         logger::info("支付返回信息转换之后记录：".var_export($ret,1));
 		// 支付结束，回调服务.
@@ -128,6 +129,11 @@ class ectools_payment_api
 							}
 						}
 					}
+
+                    $obj_coupon = kernel::single("b2c_coupon_order");
+                    if( $obj_coupon ){
+                        $obj_coupon->order_pay_finish($sdf, $ret['status'], 'font',$msg);
+                    }
 					//支付成功给支付网关显示支付信息
 					if(method_exists($payments_bill, 'ret_result')){
 						$payments_bill->ret_result($ret['payment_id']);

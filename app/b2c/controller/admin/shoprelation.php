@@ -31,8 +31,26 @@ class b2c_ctl_admin_shoprelation extends desktop_controller
         $api_v = $this->app->getConf("api.local.version");
         $nodes_obj = app::get('b2c')->model('shop');
         $nodes = $nodes_obj->count( array('node_type'=>'ecos.taocrm','status'=>'bind'));
-        if($nodes > 0)
+
+        $obj_policy = kernel::service("referrals.member_policy");
+        if(is_object($obj_policy)){
+            $is_referrals=true;
+        }
+
+        if($nodes > 0 && $is_referrals)
         {
+            $this->finder('b2c_mdl_shop',array(
+                'title'=>app::get('b2c')->_('数据互联') . app::get('b2c')->_('证书：') . $ceti_id . ', ' . app::get('b2c')->_('节点：') . $node_id,
+                'actions' => array(
+                    array('label'=>app::get('b2c')->_('新建绑定关系'),'icon'=>'add.gif','href'=>'index.php?app=b2c&ctl=admin_shoprelation&act=addnew','target'=>'_blank'),
+                    array('label'=>app::get('b2c')->_('查看绑定情况'),'icon'=>'add.gif','onclick'=>'new Request({evalScripts:true,url:\'index.php?ctl=shoprelation&act=index&p[0]=accept&p[1]=' . $this->app->app_id . '&p[2]=' . $callback . '&p[3]=' . $api_url.'&p[4]=' . $user_id . '&p[5]=' . $user_name . '&p[6]=' . $api_v . '\'}).get()'),
+                    array('label'=>app::get('b2c')->_('初始化用户数据到CRM'),'icon'=>'add.gif','onclick'=>'return confirm_init_point(\'index.php?app=b2c&ctl=admin_shoprelation&act=init_member\')'),
+                    array('label'=>app::get('b2c')->_('同步未连通的用户数据到CRM'),'icon'=>'add.gif','onclick'=>'return confirm_init_point(\'index.php?app=b2c&ctl=admin_shoprelation&act=init_member&p[0]=1\')'),
+                    array('label'=>app::get('b2c')->_('初始化积分数据到CRM'),'icon'=>'add.gif','onclick'=>'return confirm_init_point(\'index.php?app=b2c&ctl=admin_shoprelation&act=init_member_point\')'),
+                    array('label'=>app::get('b2c')->_('初始化推荐关系'),'icon'=>'add.gif','onclick'=>'return confirm_init_point(\'index.php?app=b2c&ctl=admin_shoprelation&act=init_member_referrals\')'),
+                ),
+            ));
+        }elseif($nodes > 0){
             $this->finder('b2c_mdl_shop',array(
                 'title'=>app::get('b2c')->_('数据互联') . app::get('b2c')->_('证书：') . $ceti_id . ', ' . app::get('b2c')->_('节点：') . $node_id,
                 'actions' => array(
@@ -43,6 +61,7 @@ class b2c_ctl_admin_shoprelation extends desktop_controller
                     array('label'=>app::get('b2c')->_('初始化积分数据到CRM'),'icon'=>'add.gif','onclick'=>'return confirm_init_point(\'index.php?app=b2c&ctl=admin_shoprelation&act=init_member_point\')'),
                 ),
             ));
+
         }else{
             $this->finder('b2c_mdl_shop',array(
                 'title'=>app::get('b2c')->_('数据互联') . app::get('b2c')->_('证书：') . $ceti_id . ', ' . app::get('b2c')->_('节点：') . $node_id,
@@ -123,6 +142,24 @@ class b2c_ctl_admin_shoprelation extends desktop_controller
         }
         $this->end(true, app::get('b2c')->_('待初始化数据已全部加入队列'));
     }
+
+    public function init_member_referrals()
+    {
+        $this->begin();
+        $worker = 'b2c_tasks_member_point_referrals';
+        $b2c_members_model = app::get('b2c')->model('members');
+        $result = $b2c_members_model->getList('member_id,crm_member_id');
+        foreach($result as $val)
+        {
+            if(!empty($val['crm_member_id'])){
+              system_queue::instance()->publish($worker, $worker, $val);
+            }
+        }
+        $this->end(true, app::get('b2c')->_('待初始化数据已全部加入队列'));
+
+    }
+
+
     public function showEdit($shop_id=0)
     {
         $obj_shop = $this->app->model('shop');

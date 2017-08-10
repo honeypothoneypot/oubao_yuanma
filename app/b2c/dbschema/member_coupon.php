@@ -86,7 +86,11 @@ $db['member_coupon']=array (
     ),
     'disabled' => 
     array (
-      'type' => 'bool',
+      'type' => array(
+        'true' => app::get('b2c')->_('无效'),
+        'busy' => app::get('b2c')->_('使用中'),
+        'false' => app::get('b2c')->_('有效'),
+      ),
       'default' => 'false',
       'comment' => app::get('b2c')->_('无效'),
       'editable' => false,

@@ -33,4 +33,13 @@ class b2c_apiv_exchanges_request_member extends b2c_apiv_exchanges_request
             $this->rpc_caller_request($member_id, 'memberupdate');
         }
     }
+
+    //推荐关系绑定接口
+    public function modifyRecommendActive($data){
+        $referee_member_id = '';
+        if($data['referee_member_id']){
+            $referee_member_id = $this->rpc_caller_request($data, 'memberrecommendupdate');
+        }
+        return $referee_member_id;
+    }
 }

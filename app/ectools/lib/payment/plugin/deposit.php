@@ -189,7 +189,13 @@ final class ectools_payment_plugin_deposit extends ectools_payment_app implement
 					return false;
 				}
 
-				$db->commit($transaction_status);
+                $db->commit($transaction_status);
+
+                $obj_coupon = kernel::single("b2c_coupon_order");
+                if( $obj_coupon ){
+                    $obj_coupon->order_pay_finish($payment, 'succ', 'font',$msg);
+                }
+
 				// 支付扩展事宜 - 如果上面与中心没有发生交互，那么此处会发出和中心交互事宜.
 				$order_pay_service_object->order_pay_finish_extends($payment);
 				return $is_payed;

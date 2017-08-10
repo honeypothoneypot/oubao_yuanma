@@ -381,11 +381,12 @@ class b2c_ctl_site_order extends b2c_frontpage{
             // 设定优惠券不可以使用
             if (isset($aCart['object']['coupon']) && $aCart['object']['coupon'])
             {
+                $coupon_status = in_array($_POST['payment']['pay_app_id'],array('-1')) ? 'true':'busy';
                 $obj_coupon = kernel::single("b2c_coupon_mem");
                 foreach ($aCart['object']['coupon'] as $coupons)
                 {
                     if($coupons['used'])
-                        $obj_coupon->use_c($coupons['coupon'], $arrMember['member_id']);
+                        $obj_coupon->use_c($coupons['coupon'], $arrMember['member_id'],$order_id,$coupon_status);
                 }
             }
 
@@ -538,6 +539,10 @@ class b2c_ctl_site_order extends b2c_frontpage{
                 foreach ($obj_pay_lists as $order_pay_service_object)
                 {
                     $is_payed = $order_pay_service_object->order_pay_finish($sdf, 'succ', 'font',$msg);
+                }
+                $obj_coupon = kernel::single("b2c_coupon_order");
+                if( $obj_coupon ){
+                    $obj_coupon->use_c($order_id);
                 }
             }
 

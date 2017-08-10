@@ -99,7 +99,6 @@ class b2c_mdl_orders extends dbeav_model{
             'total' => $total,
             'token' => $token,
         );
-
         $subsdf = array('order_objects'=>array('*',array('order_items'=>array('*',array(':products'=>'*')))));
         foreach ($sdf_orders as &$arr_order)
         {

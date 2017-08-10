@@ -336,6 +336,14 @@ class b2c_ctl_wap_passport extends wap_frontpage{
                 $object->set_arr($member_id, 'member');
                 $refer_url = $object->get_arr($member_id, 'member');
             }
+            //保存推荐关系
+            if(!empty($_SESSION['referrals_code'])){
+                $obj_policy = kernel::service("referrals.member_policy");
+                if(is_object($obj_policy))
+                {
+                    $obj_policy ->save_referrals_member($_SESSION['referrals_code'],$member_id);
+                }
+            }
             //增加会员同步 2012-5-15
             if( $member_rpc_object = kernel::service("b2c_member_rpc_sync") ) {
                 $member_rpc_object->createActive($member_id);
@@ -344,6 +352,7 @@ class b2c_ctl_wap_passport extends wap_frontpage{
             foreach(kernel::servicelist('b2c_register_after') as $object) {
                 $object->registerActive($member_id);
             }
+            //添加注册积分
             if(!empty($_SESSION['referrals_code'])){
                 $obj_policy = kernel::service("referrals.member_policy");
                 if(is_object($obj_policy))

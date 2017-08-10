@@ -618,46 +618,60 @@ class b2c_mdl_members extends dbeav_model{
      */
     public function getList($cols='*', $filter=array(), $offset=0, $limit=-1, $orderType=null)
     {
-        $arr_member = parent::getList($cols, $filter, $offset, $limit, $orderType);
-        $mem_point = $this->app->model('member_point');
+	    $arr_member = parent::getList($cols, $filter, $offset, $limit, $orderType);
+	    $mem_point = $this->app->model('member_point');
 
-		foreach ($arr_member as $key=>$arr)
-		{
-			if ($arr['member_id'])
-				$arr_member[$key]['point'] = $mem_point->get_total_count($arr['member_id']);
-		}
-		$info_object = kernel::service('sensitive_information');
-		if(is_object($info_object)) $info_object->opinfo($arr_member,'b2c_mdl_members',__FUNCTION__);
-		return $arr_member;
-	}
+	    foreach ($arr_member as $key=>$arr)
+	    {
+		    if ($arr['member_id'])
+			    $arr_member[$key]['point'] = $mem_point->get_total_count($arr['member_id']);
+	    }
+	    $info_object = kernel::service('sensitive_information');
+	    if(is_object($info_object)) $info_object->opinfo($arr_member,'b2c_mdl_members',__FUNCTION__);
+	    return $arr_member;
+    }
 
-	public function title_recycle($sdf)
-	{
-		if(!$sdf) return ;
+    /**
+     * get_list方法，不获取会员积分
+     * @param string column
+     * @param array filter
+     * @param int offset
+     * @param int limit
+     * @param string order by
+     */
+    public function get_list($cols='*', $filter=array(), $offset=0, $limit=-1, $orderType=null)
+    {
+	    $arr_member = parent::getList($cols, $filter, $offset, $limit, $orderType);
+	    return $arr_member;
+    }
 
-        if($sdf['pam_account']['mobile']){
+    public function title_recycle($sdf)
+    {
+	    if(!$sdf) return ;
+
+	    if($sdf['pam_account']['mobile']){
 		    $login_name = $sdf['pam_account']['mobile']['login_account'];
-        }
-         if($sdf['pam_account']['email']){
+	    }
+	    if($sdf['pam_account']['email']){
 		    $login_name =  $sdf['pam_account']['email']['login_account'];
-        }
-        if($sdf['pam_account']['local']){
+	    }
+	    if($sdf['pam_account']['local']){
 		    $login_name =  $sdf['pam_account']['local']['login_account'];
-        }
-        return $login_name;
-	}
+	    }
+	    return $login_name;
+    }
 
     function is_exists($uname){
-        return kernel::single('b2c_user_passport')->is_exists_login_name($uname);
+	    return kernel::single('b2c_user_passport')->is_exists_login_name($uname);
     }
 
     function get_crm_member_id($member_id){
-        if($member_id){
-            $member = $this->getRow('crm_member_id',array('member_id'=>$member_id));
-            $crm_member_id = (isset($member['crm_member_id']) && $member['crm_member_id'] != null) ? $member['crm_member_id']:'0';
-            return $crm_member_id;
-        }
+	    if($member_id){
+		    $member = $this->getRow('crm_member_id',array('member_id'=>$member_id));
+		    $crm_member_id = (isset($member['crm_member_id']) && $member['crm_member_id'] != null) ? $member['crm_member_id']:'0';
+		    return $crm_member_id;
+	    }
 
-        return '0';
+	    return '0';
     }
 }

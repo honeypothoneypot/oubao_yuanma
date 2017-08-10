@@ -36,23 +36,26 @@ class b2c_member_point_contact_crm
             $current_point = $member_data['point'];
             $current_member_lv = $member_data['member_lv_id'];
 
-            if( isset($_SESSION['point']['addtime']) && ($_SESSION['point']['addtime'] + 60*5) > time() && $type != 2){
+            if( !$this->apiStatus($type) ){
                 $real_point = $current_point;
             }else{
                 if( $this->rpc_obj ){
                     $point_data = $this->rpc_obj->getActive($member_id);
                     $real_point = $point_data['total'];
-                    $_SESSION['point']['addtime'] = time();
+                    //如果接口调用成功，则记录接口调用时间
+                    if( $real_point !== null){
+                        $_SESSION['getPoint']['addtime'] = time();
 
-                    if($real_point != $current_point){
-                        $members->update(array('point'=>$real_point),array('member_id'=>$member_id));
-
-                        $obj_member_point = app::get('b2c')->model('member_point');
-                        $member_lv_id = $obj_member_point->member_lv_chk($member_id,$current_member_lv,$real_point);
-
-                        if( $member_lv_id != $current_member_lv){
-                            $members->update(array('member_lv_id'=>$member_lv_id),array('member_id'=>$member_id));
+                        if($real_point != $current_point){
+                            $members->update(array('point'=>$real_point),array('member_id'=>$member_id));
+                            $obj_member_point = app::get('b2c')->model('member_point');
+                            $member_lv_id = $obj_member_point->member_lv_chk($member_id,$current_member_lv,$real_point);
+                            if( $member_lv_id != $current_member_lv){
+                                $members->update(array('member_lv_id'=>$member_lv_id),array('member_id'=>$member_id));
+                            }
                         }
+                    }else{
+                        $real_point = $current_point;
                     }
                 }
             }
@@ -89,5 +92,19 @@ class b2c_member_point_contact_crm
                 $this->rpc_obj->changeActive($point_id);
             }
         }
+    }
+    
+    /**
+     * 根据session判断是否调用积分查询接口 
+     * @param type 1 不调用 2需要调用接口获取会员最新的积分
+     *
+     */
+    private function apiStatus($type=1){
+        if( !isset($_SESSION['getPoint']) ) return true;
+        $addtime = $_SESSION['getPoint']['addtime'];
+        if( $addtime + 60*5 < time ) return true;
+        if( $type == 2 ) return true;
+
+        return false;
     }
 }

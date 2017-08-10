@@ -189,4 +189,90 @@ class aftersales_data_return_policy extends b2c_api_rpc_request
             }
         }
     }
+
+    public function order_products_quantity($order_id){
+        $products =app::get('b2c')->model('products');
+        $order_delivery=app::get('b2c')->model('order_delivery');
+        $aftersales_products=app::get('aftersales')->model('return_product');
+
+        $result = $order_delivery->getList('*',array('order_id'=>$order_id,'dlytype'=>'delivery'));
+        $order_delivery_send_product=array();
+        foreach ($result as $val){
+            $product_goods=unserialize($val['items']);//有些订单可能拿不到对应的数据
+            if(empty($product_goods)){
+                $payment = app::get('b2c')->model('delivery');
+                $subsdf = array('delivery_items'=>array('*'));
+                $sdf_payment = $payment->dump($val['dly_id'], '*', $subsdf);
+                if($sdf_payment){
+                    foreach($sdf_payment['delivery_items']  as $product){
+                        $order_delivery_product_id=$product['product_id'];
+                        if(empty($order_delivery_send_product[$order_delivery_product_id])){
+                            $order_delivery_send_product[$order_delivery_product_id]=$product['number'];
+                        }else{
+                            $order_delivery_send_product[$order_delivery_product_id]+=$product['number'];
+                        }
+                    }
+                }
+            }else{
+                foreach($product_goods as $product){
+                    $order_delivery_product_id=$product['products']['product_id'];
+                    if(empty($order_delivery_send_product[$order_delivery_product_id])){
+                        $order_delivery_send_product[$order_delivery_product_id]=$product['send'];
+                    }else{
+                        $order_delivery_send_product[$order_delivery_product_id]+=$product['send'];
+                    }
+                }
+            }
+        }
+        $result = $aftersales_products->getList('*',array('order_id'=>$order_id));
+        foreach ($result as $val){
+            $product_goods=unserialize($val['product_data']);
+            foreach($product_goods as $val){
+                $product_id='';
+                if(!empty($val['product_id'])) $product_id=$val['product_id'];
+                if(empty($product_id)){
+                    $result_product=$products->getRow('$result_product',array('bn'=>$val['bn']));
+                    $product_id = $result_product[$result_product];
+                }
+                if(empty($product_id)) continue;
+                $order_delivery_send_product[$product_id]-=$val['num'];
+            }
+        }
+        foreach ($order_delivery_send_product as $key=>$val){
+            if($val<=0) unset($order_delivery_send_product[$key]);
+        }
+        return $order_delivery_send_product;
+    }
+
+    public function is_order_aftersales($order_id,$member_id='0'){
+        if($member_id){
+            $check_result=$this->check_is_order_aftersales($order_id,$member_id);
+            if(!$check_result){
+                return false;
+            }
+        }
+        $result=$this->order_products_quantity($order_id);
+        if(is_array($result) && count($result)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function check_is_order_aftersales($order_id,$member_id){
+        $order = app::get('b2c')->model('orders');
+        $order_status['pay_status'] = 1;
+        //$order_status['createtime|bthan'] = time() - 15*24*3600;
+        $order_status['ship_status'] = array(1,2,3);
+        $order_status['order_id'] = $order_id;
+        $order_status['member_id'] = $member_id;
+        $order_status['status'] = 'active';
+
+        $aData = $order->getRow('order_id',$order_status);
+        if(!$aData){
+            return false;
+        }else{
+            return true;
+        }
+    }
 }

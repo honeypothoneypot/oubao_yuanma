@@ -1016,7 +1016,9 @@ class b2c_ctl_wap_cart extends wap_frontpage{
         }
         $currency = app::get('ectools')->model('currency');
         $this->pagedata['currencys'] = $currency->getList('cur_id,cur_code,cur_name');
-        $this->pagedata['current_currency'] = $sdf['cur'] ? $sdf['cur'] : '';
+        $currency = $currency->getRow('cur_id,cur_code,cur_name',array('cur_default'=>'true'));
+        $def_currency = $currency['cur_code'] ? $currency['cur_code'] : app::get('b2c')->getConf('site.currency.defalt_currency');
+        $this->pagedata['current_currency'] = $sdf['cur'] ? $sdf['cur'] : $def_currency;
         $this->pagedata['app_id'] = $app_id;
         echo $obj_payment_select->select_pay_method($this, $sdf, false,false,array('iscommon','iswap'),'wap/cart/checkout/select_currency.html');exit;
     }

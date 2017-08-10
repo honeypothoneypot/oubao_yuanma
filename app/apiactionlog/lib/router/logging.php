@@ -13,6 +13,8 @@ class apiactionlog_router_logging{
         'store.point.get'=>'b2c_apiv_apis_request_member_point_get',
         'store.member.signin'=>'b2c_apiv_apis_request_member_signin_change',
         'store.sysinfo.version'=>'b2c_apiv_apis_request_version_getcrm',
+        'store.point.update_by_parent_code'=>'b2c_apiv_apis_request_member_point_changebyparentcode',
+        'store.members.update_recommend'=>'b2c_apiv_apis_request_member_recommend_update',
     );
 
     public function save_log($service,$method,$data){

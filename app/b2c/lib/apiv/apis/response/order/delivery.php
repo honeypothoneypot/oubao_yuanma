@@ -203,6 +203,10 @@ class b2c_apiv_apis_response_order_delivery
                     if (!$has_error)
                     {
                         $db->commit($transaction_status);
+                        $obj_coupon = kernel::single("b2c_coupon_order");
+                        if( $obj_coupon ){
+                            $obj_coupon->use_c($sdf['order_bn']);
+                        }
 
                         return array('tid'=>$sdf['order_bn'],'delivery_id'=>$sdf['delivery_bn']);
                     }

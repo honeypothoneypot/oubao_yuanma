@@ -4,7 +4,7 @@ class b2c_version_checkversion {
 
 
     public function __construct( $app ) {
-        $this->lowest_crm_version = 'v2.2.6';
+        $this->lowest_crm_version = 'v2.2.8';
         $this->app = $app;
     }
 

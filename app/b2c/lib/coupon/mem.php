@@ -51,7 +51,7 @@ class b2c_coupon_mem {
     public function get_list_m($m_id=0,$nPage=null) {
         if( empty($m_id) ) return false;
         $filter = array('member_id'=>$m_id);
-        $filter['disabled'] = 'false';
+//        $filter['disabled'] = 'false';
         $filter['memc_isvalid'] = 'true';
         if($nPage){
             $pageLimit = 10;
@@ -83,7 +83,7 @@ class b2c_coupon_mem {
      * member_id 与 memc_code 组成唯一标识
      * 其他会员适用该优惠号码时修改表数据处理（根据号码查询信息、修改)
      **/
-    public function use_c($memc_code ='', $uid=null ) {
+    public function use_c($memc_code ='', $uid=null, $order_id =null, $status='busy' ) {
         if( empty($uid) ) return false;
         if( empty($memc_code) ) return false;
         $o = $this->app->model('member_coupon');
@@ -93,7 +93,9 @@ class b2c_coupon_mem {
         $coupons = $this->app->model('coupons')->getCouponByCouponCode($memc_code);
         $coupons = $coupons[0];
         $arr['memc_code'] = $memc_code;
-        $arr['memc_used_times'] = 1;
+        $arr['memc_used_times'] = $status == 'false' ? 0 : 1;
+        $arr['memc_gen_orderid'] = $order_id;
+        $arr['disabled'] = $status;
         $arr['cpns_id'] = $coupons['cpns_id'];
         $m_coupon = $o->getList( '*',array('memc_code'=>$memc_code) );
         if( !$m_coupon ) return false;

@@ -217,7 +217,10 @@ class b2c_user_passport
             return false;
         }
         $pam_members_model = app::get('pam')->model('members');
-        $flag = $pam_members_model->getList('member_id',array('login_account'=>trim($login_account)));
+        $flag = $pam_members_model->getList('*',array('login_account'=>trim($login_account)));
+        if($_SESSION['account']['member'] == $flag[0]['member_id'] && $flag[0]['disabled'] == 'true'){
+          unset($flag);
+        }
         return $flag ? true : false;
     }
 

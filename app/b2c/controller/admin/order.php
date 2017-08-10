@@ -1063,6 +1063,10 @@ class b2c_ctl_admin_order extends desktop_controller{
         }
         $db->commit($transaction_status);
 
+        $obj_coupon = kernel::single("b2c_coupon_order");
+        if( $obj_coupon ){
+            $obj_coupon->use_c($sdf['order_id']);
+        }
         foreach ($obj_pay_lists as $order_pay_service_object)
         {
             $is_payed = $order_pay_service_object->order_pay_finish_extends($sdf);
@@ -1569,6 +1573,10 @@ class b2c_ctl_admin_order extends desktop_controller{
             $obj_delivery_time = app::get('b2c')->model('order_delivery_time');
             $arr_delivery_time = array('order_id'=>$sdf['order_id'],'delivery_time'=>time()+10*24*3600);
             $obj_delivery_time->save($arr_delivery_time);
+            $obj_coupon = kernel::single("b2c_coupon_order");
+            if( $obj_coupon ){
+                $obj_coupon->use_c($sdf['order_id']);
+            }
             $this->end(true, app::get('b2c')->_('发货成功'));
         }
         else
@@ -1724,6 +1732,10 @@ class b2c_ctl_admin_order extends desktop_controller{
             if($order_object = kernel::service('b2c_order_rpc_async')){
                 $order_object->modifyActive($sdf['order_id']);
             }
+            $obj_coupon = kernel::single("b2c_coupon_order");
+            if( $obj_coupon ){
+                $obj_coupon->use_c($sdf['order_id']);
+            }
             $this->end(true, app::get('b2c')->_('订单取消成功！'));
         }
         else
@@ -1788,6 +1800,10 @@ class b2c_ctl_admin_order extends desktop_controller{
             if($order_object = kernel::service('b2c_order_rpc_async'))
             {
                 $order_object->modifyActive($sdf['order_id']);
+            }
+            $obj_coupon = kernel::single("b2c_coupon_order");
+            if( $obj_coupon ){
+                $obj_coupon->use_c($sdf['order_id']);
             }
             $this->end(true, app::get('b2c')->_('完成订单成功！'));
         }

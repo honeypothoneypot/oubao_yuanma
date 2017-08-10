@@ -45,7 +45,7 @@ class b2c_message_comment{
             $memberIds[] = $val['author_id'];
         }
         $memberLvData = app::get('b2c')->model('member_lv')->getListAll();
-        $memberLvIds = $objMember->getList('member_id,member_lv_id',array('member_id'=>$memberIds));
+        $memberLvIds = $objMember->get_list('member_id,member_lv_id',array('member_id'=>$memberIds));
         foreach($memberLvIds as $row){
             $row['member_lv_name'] = $memberLvData[$row['member_lv_id']]['name'];
             $row['member_lv_logo'] = $memberLvData[$row['member_lv_id']]['lv_logo'];

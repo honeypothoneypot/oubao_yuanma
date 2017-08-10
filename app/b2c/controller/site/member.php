@@ -191,6 +191,7 @@ class b2c_ctl_site_member extends b2c_frontpage{
      *会员中心首页
      * */
     public function index() {
+
         $userObject = kernel::single('b2c_user_object');
         //面包屑
         $this->path[] = array('title'=>app::get('b2c')->_('会员中心'),'link'=>$this->gen_url(array('app'=>'b2c', 'ctl'=>'site_member', 'act'=>'index','full'=>1)));
@@ -422,16 +423,17 @@ class b2c_ctl_site_member extends b2c_frontpage{
                 {
                     $aData['data'][$key]['prepare']=$pre_order[$value['order_id']];
                 }
-
             }
         }
+        $obj_return_policy = kernel::service("aftersales.return_policy");
+        (!isset($obj_return_policy) || !is_object($obj_return_policy)) ? $is_obj_return_policy =0 : $is_obj_return_policy=1;
         foreach ($aData['data'] as $key => $value) {
             $aData['data'][$key]['url'] = $this->gen_url(array('app'=>'b2c','ctl'=>"site_member",'act'=>"receive",'arg0'=>$value['order_id']));;
+            if($is_obj_return_policy){
+                $aData['data'][$key]['is_aftersales'] = $obj_return_policy->is_order_aftersales($value['order_id'],$this->app->member_id);
+            }
         }
-
         $this->pagedata['orders'] = $aData['data'];
-
-
         $arr_args = array($pay_status);
         $this->pagination($nPage,$aData['pager']['total'],'orders',$arr_args);
         $this->pagedata['res_url'] = $this->app->res_url;
@@ -927,8 +929,7 @@ class b2c_ctl_site_member extends b2c_frontpage{
         $this->pagedata['currencys'] = $currency;
         $this->pagedata['currency'] = $currency['cur_code'];
         $opay = app::get('ectools')->model('payment_cfgs');
-        $aOld = $opay->getList('*', array('status' => 'true', 'platform'=>array('iscommon','ispc'), 'is_frontend' => true));
-
+        $aOld = $opay->getListByCode($currency['cur_code']);
         #获取默认的货币
         $obj_currency = app::get('ectools')->model('currency');
         $arr_def_cur = $obj_currency->getDefault();
@@ -1827,7 +1828,11 @@ class b2c_ctl_site_member extends b2c_frontpage{
                         }
                     }else{
                         $aData[$k]['coupons_info']['cpns_status'] = false;
-                        $aData[$k]['memc_status'] = app::get('b2c')->_('本优惠券次数已用完');
+                        if($item['disabled'] == 'busy'){
+                            $aData[$k]['memc_status'] = app::get('b2c')->_('使用中');
+                        }else{
+                            $aData[$k]['memc_status'] = app::get('b2c')->_('本优惠券次数已用完');
+                        }
                     }
                 }else{
                     $aData[$k]['coupons_info']['cpns_status'] = false;
@@ -2177,6 +2182,10 @@ class b2c_ctl_site_member extends b2c_frontpage{
             }
             $url = $this->gen_url(array('app'=>'b2c','ctl'=>'site_member','act'=>'index'));
             $db->commit($transaction_status);
+            $obj_coupon = kernel::single("b2c_coupon_order");
+            if( $obj_coupon ){
+                $obj_coupon->use_c($sdf['order_id']);
+            }
             $this->splash('success',$url,"订单取消成功",true);
         }
         else

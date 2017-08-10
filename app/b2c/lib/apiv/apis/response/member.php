@@ -123,7 +123,11 @@ class b2c_apiv_apis_response_member
                             }
                         }else{
                             $data[$k]['memc_codememc_used'] = 'true';
-                            $data[$k]['memo'] = app::get('b2c')->_('本优惠券次数已用完');
+                            if($item['disabled'] == 'busy'){
+                                $data[$k]['memo'] = app::get('b2c')->_('使用中');
+                            }else{
+                                $data[$k]['memo'] = app::get('b2c')->_('本优惠券次数已用完');
+                            }
                         }
                     }else{
                         $data[$k]['memo'] = app::get('b2c')->_('还未开始或已过期');

@@ -141,7 +141,7 @@ class aftersales_ctl_site_member extends b2c_ctl_site_member
                     }
                 }
             }
-            $v['is_afterrec'] = $this->is_order_aftersales($v['order_id']);
+            $v['is_afterrec'] = $obj_return_policy->is_order_aftersales($v['order_id']);
         }
         $this->pagedata['orders'] = $aData['data'];
 
@@ -175,7 +175,7 @@ class aftersales_ctl_site_member extends b2c_ctl_site_member
             $this->end(false, app::get('aftersales')->_("售后服务信息没有取到！"),false,true);
         }
 
-        if(!$this->is_order_aftersales($order_id)){
+        if(!$obj_return_policy->is_order_aftersales($order_id)){
             $this->end(false, app::get('aftersales')->_("该订单您已经申请过退换货，无退换商品"),false,true);
         }
 
@@ -224,7 +224,7 @@ class aftersales_ctl_site_member extends b2c_ctl_site_member
             }
             if ($arrOdr_object['obj_type'] == 'goods')
             {
-                $order_aftersales_products_quantity=$this->order_products_quantity($order_id);
+                $order_aftersales_products_quantity=$obj_return_policy->order_products_quantity($order_id);
                 foreach($arrOdr_object['order_items'] as $key => $item)
                 {
                     if ($item['item_type'] == 'product')
@@ -312,52 +312,6 @@ class aftersales_ctl_site_member extends b2c_ctl_site_member
         return substr(strrchr($filename, '.'), 1);
     }
 
-    private function order_products_quantity($order_id){
-        $products =app::get('b2c')->model('products');
-        $order_delivery=app::get('b2c')->model('order_delivery');
-        $aftersales_products=app::get('aftersales')->model('return_product');
-
-        $result = $order_delivery->getList('*',array('order_id'=>$order_id,'dlytype'=>'delivery'));
-        $order_delivery_send_product=array();
-        foreach ($result as $val){
-            $product_goods=unserialize($val['items']);
-            foreach($product_goods as $product){
-                $order_delivery_product_id=$product['products']['product_id'];
-                if(empty($order_delivery_send_product[$order_delivery_product_id])){
-                    $order_delivery_send_product[$order_delivery_product_id]=$product['send'];
-                }else{
-                    $order_delivery_send_product[$order_delivery_product_id]+=$product['send'];
-                }
-            }
-        }
-        $result = $aftersales_products->getList('*',array('order_id'=>$order_id));
-        foreach ($result as $val){
-            $product_goods=unserialize($val['product_data']);
-            foreach($product_goods as $val){
-                $product_id='';
-                if(!empty($val['product_id'])) $product_id=$val['product_id'];
-                if(empty($product_id)){
-                    $product_id=$products->getRow('product_id',array('bn'=>$val['bn']));
-                }
-                if(empty($product_id)) continue;
-                $order_delivery_send_product[$product_id]-=$val['num'];
-            }
-        }
-        foreach ($order_delivery_send_product as $key=>$val){
-            if($val<=0) unset($order_delivery_send_product[$key]);
-        }
-        return $order_delivery_send_product;
-    }
-
-    private function is_order_aftersales($order_id){
-        $result=$this->order_products_quantity($order_id);
-        if(is_array($result) && count($result)){
-            return true;
-        }else{
-            return false;
-        }
-
-    }
     /*
      *无刷新上传图片，返回信息
      * */
@@ -432,7 +386,7 @@ class aftersales_ctl_site_member extends b2c_ctl_site_member
         $_POST = $obj_filter->check_input($_POST);
 
         $product_data = array();
-        $order_products_quantity=$this->order_products_quantity($_POST['order_id']);
+        $order_products_quantity=$obj_return_policy->order_products_quantity($_POST['order_id']);
         foreach ((array)$_POST['product_bn'] as $key => $val)
         {
             $item = array();

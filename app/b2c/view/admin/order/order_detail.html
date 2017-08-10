@@ -147,9 +147,6 @@ $$('.order-ctls button[act]').each(function(btn){
 
 
 <{assign var="order_id" value=$order.order_id}>
-<{if $is_bklinks == 'true'}>
-<{input type='refer' id=$order.order_id ident='order' name='order' show='refer_id,refer_url'}>
-<{/if}>
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td style="vertical-align:top">
@@ -172,6 +169,9 @@ $$('.order-ctls button[act]').each(function(btn){
     </div>
     <{/if}></div>
 
+<{if $is_bklinks == 'true'}>
+<{input type='refer' id=$order.order_id ident='order' name='order' show='refer_id,refer_url,refer_time,c_refer_id,c_refer_url,c_refer_time'}>
+<{/if}>
         <div class="tableform">
         <table border="0" cellpadding="0" style="margin-top:10px" cellspacing="0" class="orderdetails_basic">
   <tr>

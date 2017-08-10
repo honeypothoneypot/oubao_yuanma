@@ -68,7 +68,9 @@ class pointprofessional_point_discount
 				$objMath = kernel::single("ectools_math");
 				if ($site_point_max_deductible_method == '1')
 				{
-					$render->pagedata['max_discount_value'] = $site_point_max_deductible_value;
+					$render->pagedata['max_discount_value'] = $site_point_max_deductible_value > $this->total_amount ? $this->total_amount : $site_point_max_deductible_value;
+                    $render->pagedata['max_discount_value_point'] = floor($render->pagedata['max_discount_value'] / $render->pagedata['discount_rate']);
+                    $render->pagedata['max_discount_value_money'] = $render->pagedata['max_discount_value_point'] * $render->pagedata['discount_rate'];
 				}
 				else
 				{

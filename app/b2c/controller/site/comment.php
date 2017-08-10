@@ -159,7 +159,7 @@ class b2c_ctl_site_comment extends b2c_frontpage{
                 $this->pagedata['comments']['gask_type'] = $objComment->gask_type($_POST['goods_id']);
                 $data = $this->fetch('site/product/tab/ask/content.html');
             }else{
-                $url = $this->gen_url(array('app'=>'b2c','ctl'=>'site_member','act'=>'comment'));
+                $url = $this->gen_url(array('app'=>'b2c','ctl'=>'site_member','act'=>'nodiscuss'));
             }
             $message = $message ? $message : app::get('b2c')->_('发表成功');
             $this->splash('success',$url,$message,true,$data);

@@ -44,10 +44,18 @@ class b2c_apiv_exchanges_request_member_point extends b2c_apiv_exchanges_request
         if($member_id){
             $result = $this->rpc_caller_request($member_id, 'pointget');
             $result = json_decode($result,true);
-            $data['point'] = $result['shop_point_list']['points']? $result['shop_point_list']['points']:0;
-            $data['total'] = $result['shop_point_list']['total_point'] ? $result['shop_point_list']['total_point']:0;
+            $data['total'] = $result['shop_point_list']['total_point'];
         }
 
         return $data;
+    }
+    //根据推荐码更新积分接口
+    public function changeByParentcodeActive($data){
+        $register_crm_member_id = 0;
+        if($data['register_crm_member_id']){
+            $register_crm_member_id = $this->rpc_caller_request($data, 'pointchangebyparentcode');
+        }
+
+        return $register_crm_member_id;
     }
 }
