@@ -230,13 +230,43 @@ class b2c_user_object{
             }
         }
 
-        //信任登录用户名显示
-        $service = kernel::service('pam_account_login_name');
-        if(is_object($service)){
-            if(method_exists($service,'get_login_name')){
-                $login_name = $service->get_login_name($login_name);
+        //微信免登显示微信昵称
+        if( $this->is_wechat_login() ){
+            $login_name = $this->get_wechat_nickname( $_SESSION['weixin_u_openid'] );
+        }else{
+            //信任登录用户名显示
+            $service = kernel::service('pam_account_login_name');
+            if(is_object($service)){
+                if(method_exists($service,'get_login_name')){
+                    $login_name = $service->get_login_name($login_name);
+                }
             }
         }
         return $login_name;
+    }
+    /**
+     * 获取微信登录的会员的微信昵称
+     * @params openid string openid
+     * return tag_name string 初次绑定的微信昵称
+     */
+    public function get_wechat_nickname( $openid ){
+        if( empty($openid) ) return false;
+        $tag_name = '';
+        if( $_SESSION['weixin_u_nickname'] ){
+            $tag_name = $_SESSION['weixin_u_nickname'];
+        }else{
+            $bind_tag_model = app::get('pam')->model('bind_tag');
+            $bind_tag = $bind_tag_model->getRow('tag_name',array('open_id'=>$openid));
+            if( isset($bind_tag['tag_name']) ){
+                $tag_name = $bind_tag['tag_name'];
+            }
+        }
+        return $tag_name;
+    }
+    /**
+     * 判断是否是微信登录
+     */
+    function is_wechat_login(){
+        return $_SESSION['weixin_u_openid'] ? true : false;
     }
 }

@@ -383,4 +383,42 @@ class weixin_wechat{
             return false;
         }
     }
+
+    //通过矩阵获取用户code
+    public function matrix_code($params){
+        $obj_apiv = kernel::service('b2c_wechat_rpc_async');
+
+        $data = array();
+        if( is_object($obj_apiv) ){
+            $data = $obj_apiv->getcode($params);
+            logger::info('access matrix oauth api get code:'.var_export($data,1));
+        }
+
+        return $data;
+    }
+
+    //通过矩阵获取用户openid
+    public function matrix_openid($code){
+        $obj_apiv = kernel::service('b2c_wechat_rpc_async');
+
+        $data = array();
+        if( is_object($obj_apiv) ){
+            $data = $obj_apiv->getopenid($code);
+            logger::info('access matrix token api get openid:'.var_export($data,1));
+        }
+
+        return $data;
+    }
+    //通过矩阵获取用户信息
+    public function matrix_userinfo($openid,$access_token){
+        $obj_apiv = kernel::service('b2c_wechat_rpc_async');
+
+        $userinfo = array();
+        if( is_object($obj_apiv) ){
+            $userinfo = $obj_apiv->getuserinfo($openid,$access_token);
+            logger::info('access matrix token api get openid:'.var_export($userinfo,1));
+        }
+
+        return $userinfo;
+    }
 }

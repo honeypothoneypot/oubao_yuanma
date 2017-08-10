@@ -38,7 +38,6 @@ class b2c_ctl_wap_cart extends wap_frontpage{
         //kernel::single('base_session')->start();
         $this->obj_session = kernel::single('base_session');
         $this->obj_session->start();
-
         $this->member_status = $this->check_login();
         if(!$this->member_status){
             $this->pagedata['login'] = 'nologin';

@@ -590,4 +590,18 @@
     </service>
     <!-- end -->
 
+    <!-- 订单更新推送到crm路由方法 -->
+    <service id="b2c_wechat_rpc_async">
+        <class>b2c_apiv_exchanges_request_wechat</class>
+    </service>
+
+    <service id="apiv_2.0_wechat_wechatcode">
+      <class>b2c_apiv_apis_request_wechat_code</class>
+    </service>
+    <service id="apiv_2.0_wechat_wechatopenid">
+      <class>b2c_apiv_apis_request_wechat_openid</class>
+    </service>
+    <service id="apiv_2.0_wechat_wechatuserinfo">
+      <class>b2c_apiv_apis_request_wechat_userinfo</class>
+    </service>
 </services>

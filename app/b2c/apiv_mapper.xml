@@ -3,5 +3,6 @@
     <target version="2.2">ecos.ome</target>
     <target version="2.2">ecos.ocs</target>
     <target version="">ecos.taocrm</target>
+    <target version="">wechat</target>
   </api>
 </apiv_mapper>

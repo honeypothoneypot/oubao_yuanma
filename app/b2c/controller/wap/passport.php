@@ -251,8 +251,6 @@ class b2c_ctl_wap_passport extends wap_frontpage{
      * 绑定成功或失败提示页面
      */
     public function weixin_bind_view($status=true){
-        unset($_SESSION['weixin_u_openid']);
-        unset($_SESSION['weixin_u_nickname']);
         $this->pagedata['status'] = $status ? 'true' : 'false';
         $this->pagedata['sso_setting'] = app::get('weixin')->getConf('weixin_sso_setting');
         $this->page('wap/bind/bind_tag.html');

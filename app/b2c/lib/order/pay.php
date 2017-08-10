@@ -246,6 +246,9 @@ class b2c_order_pay extends b2c_api_rpc_request
             }
 
             $is_save = $obj_orders->update($arrOrder,array('order_id'=>$rel_id));
+            if($sdf_order['source'] == 'penker'){
+                kernel::single('penker_service_order')->update($arrOrder);
+            }
             if (!$is_save){
                 $msg = app::get('b2c')->_('订单支付状态保存失败！');
                 return false;

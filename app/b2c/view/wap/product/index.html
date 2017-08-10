@@ -51,6 +51,7 @@
     <{include file='wap/product/info/promotion.html'}>
   <{/if}>
     <!-- 商品规格 -->
+    <{if $show_status!='off'}>
     <div class="pt-sku">
       <{include file='wap/product/info/spec.html'}>
     </div>
@@ -83,6 +84,7 @@
         <{include file='wap/product/prepare/btn.html'}>
       <{/if}>
     </div>
+    <{/if}>
   </form>
 <img src="<{link app=b2c ctl=wap_product act=cron arg=$page_product_basic.goods_id }>" width="1" border="none" height="1">
   <div class="pt-detail">

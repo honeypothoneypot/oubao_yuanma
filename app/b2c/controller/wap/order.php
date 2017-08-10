@@ -242,8 +242,14 @@ class b2c_ctl_wap_order extends wap_frontpage{
         }else{
             $order_data['source'] = 'wap'; //订单来源
         }
+        if($_COOKIE['penker'] == 'true'){
+            $order_data['source'] = 'penker';
+            $order_data['guide_identity'] = $_COOKIE['guide_identity'];
+        }
          //给订单表加上预售标识
         $order_data['promotion_type']=$_POST['promotion_type'];
+        //kernel::single('penker_service_order')->create($order_data);
+        //exit;
         $result = $obj_order_create->save($order_data, $msg);
          //同时在预售订单表添加条数据245-255行
         if($_POST['promotion_type']=='prepare')
@@ -522,7 +528,9 @@ class b2c_ctl_wap_order extends wap_frontpage{
                     $obj_coupon->use_c($order_id);
                 }
 			}
-
+            if($_COOKIE['penker'] == 'true'){
+                kernel::single('penker_service_order')->create($order_data);
+            }
             $this->end(true, $this->app->_("订单生成成功！"), $this->gen_url(array('app'=>'b2c','ctl'=>'wap_paycenter','act'=>'index','arg0'=>$order_id,'arg1'=>'true')),'',true);
         }
         else

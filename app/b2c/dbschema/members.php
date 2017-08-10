@@ -473,7 +473,8 @@ $db['members']=array (
             'pc' =>app::get('b2c')->_('标准平台'),
             'wap' => app::get('b2c')->_('手机触屏'),
             'weixin' => app::get('b2c')->_('微信商城'),
-            'api' => app::get('b2c')->_('API注册')
+            'api' => app::get('b2c')->_('API注册'),
+            'penker' => app::get('b2c')->_('朋客'),
        ),
       'required' => false,
       'label' => app::get('b2c')->_('平台来源'),

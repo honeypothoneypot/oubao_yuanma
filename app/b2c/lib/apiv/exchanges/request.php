@@ -14,6 +14,13 @@ class b2c_apiv_exchanges_request implements b2c_api_rpc_request_interface{
     protected $app;
 
     /**
+     * v mapper
+     * 矩阵接口参数 v=2.0的节点类型， 在此处增加选项即可
+     */
+    protected $_v_mapper = array(
+        'wechat'=>'2.0',
+    );
+    /**
      * 构造方法
      * @param object app object
      * @return null
@@ -161,10 +168,15 @@ class b2c_apiv_exchanges_request implements b2c_api_rpc_request_interface{
     private function rpc_request($method,$params,$callback,$time_out=1,$rpc_id=null,$async=true)
     {
         $node_id = $async ? 1 : 2;
+        $version = 1;
+        if( isset($this->_v_mapper[$params['node_type']]) ){
+            $version = $this->_v_mapper[$params['node_type']];
+        }
+
         $callback_class = $callback['class'];
         $callback_method = $callback['method'];
         $callback_params = (isset($callback['params'])&&$callback['params'])?$callback['params']:array();
-        $rst = $this->app->matrix($node_id)->set_callback($callback_class,$callback_method,$callback_params)
+        $rst = $this->app->matrix($node_id,$version)->set_callback($callback_class,$callback_method,$callback_params)
                     ->set_timeout($time_out)
                     ->call($method,$params,$rpc_id);
         return $rst;

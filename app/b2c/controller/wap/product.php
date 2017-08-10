@@ -71,11 +71,18 @@ class b2c_ctl_wap_product extends wap_frontpage{
         //获取参数 货品ID
         $_getParams = $this->_request->get_params();
         $productId = $_getParams[0];
+        $type = $_getParams[1];
+        $guide_identity = $_getParams[2];
         if( $_GET['qr'] ){
             $url = $this->gen_url(array('app'=>'b2c','ctl'=>'wap_cart','act'=>'qrCodeAddCart','arg0'=>$productId));
             $this->redirect($url);
         }
 
+        $this->obj_session = kernel::single('base_session');
+        $this->obj_session->start();
+        if($type == 'guide_identity'){
+            $this->pagedata['show_status'] = 'off';
+        }
         $siteMember = $this->get_current_member();
         if( empty($siteMember['member_id']) ){
             $this->pagedata['login'] = 'nologin';

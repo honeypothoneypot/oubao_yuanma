@@ -15,6 +15,9 @@ class apiactionlog_router_logging{
         'store.sysinfo.version'=>'b2c_apiv_apis_request_version_getcrm',
         'store.point.update_by_parent_code'=>'b2c_apiv_apis_request_member_point_changebyparentcode',
         'store.members.update_recommend'=>'b2c_apiv_apis_request_member_recommend_update',
+        'store.user.oauth'=>'b2c_apiv_apis_request_wechat_code',
+        'store.user.token'=>'b2c_apiv_apis_request_wechat_openid',
+        'store.user.info'=>'b2c_apiv_apis_request_wechat_userinfo',
     );
 
     public function save_log($service,$method,$data){

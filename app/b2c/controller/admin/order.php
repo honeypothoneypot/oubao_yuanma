@@ -1555,13 +1555,18 @@ class b2c_ctl_admin_order extends desktop_controller{
     public function dodelivery()
     {
         $obj_order = $this->app->model('orders');
+        $oCorp = $this->app->model('dlycorp');
         if(!$order_id) $order_id = $_POST['order_id'];
         else $_POST['order_id'] = $order_id;
 
         $sdf = $_POST;
+        $arr_order = $obj_order->getRow('source',array('order_id'=>$_POST['order_id']));
+
         $sdf['logi_no'] = trim($sdf['logi_no']);
         $sdf['opid'] = $this->user->user_id;
         $sdf['opname'] = $this->user->user_data['account']['login_name'];
+
+            
         $this->begin();
 
         $obj_checkorder = kernel::service('b2c_order_apps', array('content_path'=>'b2c_order_checkorder'));
@@ -1584,6 +1589,19 @@ class b2c_ctl_admin_order extends desktop_controller{
             $obj_coupon = kernel::single("b2c_coupon_order");
             if( $obj_coupon ){
                 $obj_coupon->use_c($sdf['order_id']);
+            }
+            if($arr_order['source'] == 'penker'){
+                $logi_name = $oCorp->getRow('name',array('corp_id'=>$sdf['logi_id']));
+                $express_info = array(
+                    'eno' => $sdf['logi_no'],
+                    'ename' => $logi_name['name'],
+                    );
+                $arr_pengker = array(
+                    'order_id' => $sdf['order_id'],
+                    'ship_status' => 1,
+                    'express_info' => json_encode($express_info),
+                    );
+                kernel::single('penker_service_order')->update($arr_pengker);
             }
             $this->end(true, app::get('b2c')->_('发货成功'));
         }

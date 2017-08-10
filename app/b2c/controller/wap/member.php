@@ -121,6 +121,8 @@ class b2c_ctl_wap_member extends wap_frontpage{
         {
             $open_aftersales = false;
         }
+
+        $this->pagedata['is_wechat_login'] = kernel::single('b2c_user_object')->is_wechat_login();
         $this->pagedata['open_aftersales'] = $open_aftersales;
 
         $this->page('wap/member/index.html');

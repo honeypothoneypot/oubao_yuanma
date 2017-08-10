@@ -325,5 +325,31 @@ class weixin_ctl_admin_menu extends desktop_controller{
         echo json_encode($article_url);exit;
     }
 
+    public function matrix_url(){
+        $this->page("admin/matrix_url.html");
+    }
+    public function get_matrix_url(){
+        if( isset($_POST['url']) && !empty($_POST['url']) ) {
+            $url = $_POST['url'];
+            $nodes_obj = app::get('b2c')->model('shop');
+            $nodes = $nodes_obj->count( array('node_type'=>'wechat','status'=>'bind'));
+
+            if( $nodes > 0 ){
+                $wechat = kernel::single('weixin_wechat');
+                $params = array(
+                    'callback'=>$url,
+                    'state'=>true,
+                );
+                $matrix_url = $wechat->matrix_code($params);
+                if( !$matrix_url ){
+                    $msg = '接口调用失败！';
+                }
+            }
+        }
+        $this->pagedata['url'] = $url;
+        $this->pagedata['msg'] = $msg;
+        $this->pagedata['matrix_url'] = $matrix_url;
+        $this->page("admin/matrix_url.html");
+    }
 }
 

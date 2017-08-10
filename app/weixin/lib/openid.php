@@ -56,6 +56,9 @@ class weixin_openid
     {
         kernel::single('base_session')->start();
         $openid = $_SESSION['wechat_openid'];
+        if( isset($_SESSION['weixin_u_openid']) ){
+            $openid = $_SESSION['weixin_u_openid'];
+        }
         kernel::single('base_session')->close();
 
         //验证取到的openid是否为空

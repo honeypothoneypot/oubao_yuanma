@@ -701,7 +701,7 @@ class b2c_user_passport
             $bindWeixinData = array(
                 'member_id' => $member_id,
                 'open_id' => $openid,
-                'tag_name' => $login_name,
+                'tag_name' => $params['nickname'],
                 'createtime' => time()
             );
             app::get('pam')->model('bind_tag')->save($bindWeixinData);

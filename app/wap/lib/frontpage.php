@@ -25,37 +25,90 @@ class wap_frontpage extends wap_controller{
 
     public function set_weixin_openid(){
         kernel::single('base_session')->start();
-        if( !empty($_GET['signature']) &&  !empty($_GET['openid']) ){
-            $bind = app::get('weixin')->model('bind')->getRow('id',array('eid'=>$_GET['u_eid'],'status'=>'active'));
-            $flag = kernel::single('weixin_object')->check_wechat_sign($_GET['signature'], $_GET['openid']);
-            if( $flag && !empty($bind)){
-                $openid = $_GET['openid'];
-            }
-        }elseif( !empty($_GET['code']) && !empty($_GET['state']) ){
-            $bind = app::get('weixin')->model('bind')->getRow('id',array('eid'=>$_GET['state'],'status'=>'active'));
-            if( !empty($bind) &&  kernel::single('weixin_wechat')->get_oauth2_accesstoken($bind['id'],$_GET['code'],$result) ){
-                $openid = $result['openid'];
-            }
-        }
+        $nodes_obj = app::get('b2c')->model('shop');
+        $nodes = $nodes_obj->count( array('node_type'=>'wechat','status'=>'bind'));
 
-        if( $openid ){
-            $bindTagData = app::get('pam')->model('bind_tag')->getRow('tag_name,member_id',array('open_id'=>$openid));
-            if( $bindTagData ){
-				$_SESSION['weixin_u_nickname'] = $bindTagData['tag_name'];
-				$_SESSION['account']['member'] = $bindTagData['member_id'];
-				if(!isset($_COOKIE['UNAME']))
-					$this->bind_member($bindTagData['member_id']);
-            }else{
-                $res = kernel::single('weixin_wechat')->get_basic_userinfo($bind['id'],$openid);
-                $member_id = kernel::single('b2c_user_passport')->create($res,$openid);
-                if($member_id ){
-                    $this->bind_member($member_id);
-                    $_SESSION['account']['member'] = $member_id;
+        if( $nodes <= 0 ){
+            if( !empty($_GET['signature']) &&  !empty($_GET['openid']) ){
+                $bind = app::get('weixin')->model('bind')->getRow('id',array('eid'=>$_GET['u_eid'],'status'=>'active'));
+                $flag = kernel::single('weixin_object')->check_wechat_sign($_GET['signature'], $_GET['openid']);
+                if( $flag && !empty($bind)){
+                    $openid = $_GET['openid'];
                 }
-                $_SESSION['weixin_u_nickname'] = $res['nickname'];
+            }elseif( !empty($_GET['code']) && !empty($_GET['state']) ){
+                $bind = app::get('weixin')->model('bind')->getRow('id',array('eid'=>$_GET['state'],'status'=>'active'));
+                if( !empty($bind) &&  kernel::single('weixin_wechat')->get_oauth2_accesstoken($bind['id'],$_GET['code'],$result) ){
+                    $openid = $result['openid'];
+                }
             }
-            $_SESSION['weixin_u_openid'] = $openid;
-            $_SESSION['is_bind_weixin'] = false;
+
+            if( $openid ){
+                $bindTagData = app::get('pam')->model('bind_tag')->getRow('tag_name,member_id',array('open_id'=>$openid));
+                if( $bindTagData ){
+                    $_SESSION['weixin_u_nickname'] = $bindTagData['tag_name'];
+                    $_SESSION['account']['member'] = $bindTagData['member_id'];
+                    if(!isset($_COOKIE['UNAME']))
+                        $this->bind_member($bindTagData['member_id']);
+                }else{
+                    $res = kernel::single('weixin_wechat')->get_basic_userinfo($bind['id'],$openid);
+                    $member_id = kernel::single('b2c_user_passport')->create($res,$openid);
+                    if($member_id ){
+                        $this->bind_member($member_id);
+                        $_SESSION['account']['member'] = $member_id;
+                    }
+                    $_SESSION['weixin_u_nickname'] = $res['nickname'];
+                }
+                $_SESSION['weixin_u_openid'] = $openid;
+                $_SESSION['is_bind_weixin'] = false;
+            }
+        }else{
+            $wechat = kernel::single('weixin_wechat');
+            if( isset($_SESSION['weixin_u_openid']) ){
+                $openid = $_SESSION['weixin_u_openid'];
+                if( !empty($_GET['code']) && !empty($_GET['state']) ){
+                    //通过微信菜单打开时，不算做导购，清cookie
+                    $path = kernel::base_url().'/index.php/wap/';
+                    $this->cookie_path = $path;
+                    $this->set_cookie('penker','',time()-3600);
+                    $this->set_cookie('guide_identity','',time()-3600);
+                }
+            }else{
+                if( !empty($_GET['code']) && !empty($_GET['state']) ){
+                    $data = $wechat->matrix_openid($_GET['code']);
+                    $openid = isset($data['openid']) ? $data['openid'] : '';
+                    $access_token = isset($data['access_token']) ? $data['access_token'] : '';
+
+                    //通过微信菜单打开时，不算做导购，清cookie
+                    $path = kernel::base_url().'/index.php/wap/';
+                    $this->cookie_path = $path;
+                    $this->set_cookie('penker','',time()-3600);
+                    $this->set_cookie('guide_identity','',time()-3600);
+                }
+            }
+
+            if( $openid ){
+                $bindTagData = app::get('pam')->model('bind_tag')->getRow('tag_name,member_id',array('open_id'=>$openid));
+                if( $bindTagData ){
+                    $_SESSION['weixin_u_nickname'] = $bindTagData['tag_name'];
+                    $_SESSION['account']['member'] = $bindTagData['member_id'];
+                    if( !isset($_COOKIE['UNAME']) )
+                    {
+                        $this->bind_member($bindTagData['member_id']);
+                    }
+                }else{
+                    $res = $wechat->matrix_userinfo($openid,$access_token);
+                    if( isset($res['nickname']) ){
+                        $member_id = kernel::single('b2c_user_passport')->create($res,$openid);
+                        if( $member_id ){
+                            $this->bind_member($member_id);
+                            $_SESSION['account']['member'] = $member_id;
+                        }
+                        $_SESSION['weixin_u_nickname'] = $res['nickname'];
+                    }
+                }
+                $_SESSION['weixin_u_openid'] = $openid;
+                $_SESSION['is_bind_weixin'] = false;
+            }
         }
         return true;
     }
@@ -104,7 +157,7 @@ class wap_frontpage extends wap_controller{
         $userObject = kernel::single('b2c_user_object');
         $cookie_expires = $userObject->cookie_expires ? time() + $userObject->cookie_expires * 60 : 0;
         $data = $userObject->get_members_data($columns);
-        $secstr = kernel::single('b2c_user_passport')->gen_secret_str($member_id, $data['account']['login_name'], $data['account']['login_password']);
+        //$secstr = kernel::single('b2c_user_passport')->gen_secret_str($member_id, $data['account']['login_name'], $data['account']['login_password']);
         $login_name = $userObject->get_member_name($data['account']['login_name']);
         $this->cookie_path = kernel::base_url().'/';
         #$this->set_cookie('MEMBER',$secstr,0);
@@ -188,6 +241,5 @@ class wap_frontpage extends wap_controller{
         $obj_member_goods = app::get('b2c')->model('member_goods');
         return $obj_member_goods->get_member_fav($member_id);
     }
-
 
 }
