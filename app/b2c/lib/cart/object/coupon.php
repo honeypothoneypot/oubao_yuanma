@@ -265,7 +265,7 @@ class b2c_cart_object_coupon implements b2c_interface_cart_object{
 
     // 清空当次登录中优惠券数据
     public function deleteNow($sIdent) {
-        return $this->oCartObjects->delete(array('member_ident'=>$sIdent, 'obj_type'=>'coupon'));
+        return $this->oCartObjects->delete_custom(array('member_ident'=>$sIdent, 'obj_type'=>'coupon'));
     }
 
     // 统计购物车中优惠券数据

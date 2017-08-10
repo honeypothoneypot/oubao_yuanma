@@ -433,6 +433,38 @@ class b2c_mdl_cart_objects extends dbeav_model{
             return $flag;
         }
     }
+    private function parent_delete_custom( $filter,$subSdf=array() ) {//清空当次登录中优惠券数据调用
+         if($filter['is_fastbuy'] == 'true'){
+            unset($_SESSION['b2c_cart_objects_fastbuy']);
+            return true;
+         }
+         if( $filter['member_id']=='-1' ) {
+            $arr = $_SESSION['b2c_cart_objects'][$filter['member_ident']];
+            if( $arr && is_array($arr) ) {
+                foreach( $arr as $key => &$row ) {
+                    if( $row['obj_ident']==$filter['obj_ident'] /*|| empty($filter['obj_ident']) */) {
+                        unset($arr[$key]);
+                    }
+                }
+            } else {
+                $arr = array($data);
+            }
+            $_SESSION['b2c_cart_objects'][$filter['member_ident']] = $arr;
+            return true;
+        } else {
+            $flag = parent::delete( $filter,$subSdf );
+            if( $filter['member_ident'] )
+                $f = array('member_ident'=>$filter['member_ident']);
+            if( $filter['member_id'] )
+                $f['member_id'] = $filter['member_id'];
+            $arr = parent::getList( '*',$f );
+            #if( $arr )
+                $this->kv_instance()->store( $this->kv_prefix,$arr );
+            #else
+            #    $this->kv_instance()->delete( $this->kv_prefix );
+            return $flag;
+        }
+    }
 
 
     //是否使用kv
@@ -460,6 +492,24 @@ class b2c_mdl_cart_objects extends dbeav_model{
         } else {
             $filter['member_id'] = -1;
             return $this->parent_delete( $filter,$subSdf );
+        }
+    }
+
+    public function delete_custom( $filter,$subSdf = 'delete' ) {
+        if( !$filter['member_ident'] ) $filter['member_ident']=kernel::single('base_session')->sess_id();
+
+        $arr_member_info = $this->get_member_info();
+
+        if( $arr_member_info['member_id'] ) {
+            if( is_array($filter) ) {
+                $filter['member_id'] = $arr_member_info['member_id'];
+                unset( $filter['member_ident'] );
+                return $this->parent_delete_custom( $filter,$subSdf );
+            }
+            return false;
+        } else {
+            $filter['member_id'] = -1;
+            return $this->parent_delete_custom( $filter,$subSdf );
         }
     }
 

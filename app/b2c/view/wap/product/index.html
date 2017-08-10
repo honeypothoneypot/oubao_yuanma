@@ -249,9 +249,10 @@ $('.num-ipt').on('change',function(){
 		if(re){
 			try{
 				result = $.parseJSON(re);
-				alert(result.error);
+        popup(result.error,800,"sm-pop");
 				} catch (e){
-					new Dialog(re,{'type':'confirm'});
+          popup("已加入购物车",2000);
+          skuDialog.close();
 				}
 
 		}

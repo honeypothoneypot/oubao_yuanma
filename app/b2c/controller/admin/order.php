@@ -866,8 +866,10 @@ class b2c_ctl_admin_order extends desktop_controller{
             $current_order=1;
         }
 
+        //累计次数和金额取已支付和已发货的订单
         $obj_order = $this->app->model('orders');
-        $aData = $obj_order->getList('total_amount,order_id',array('member_id' =>$member_id,'status'=>'finish'));
+        $sql = "select total_amount,order_id from ".$obj_order->table_name(true)." where member_id = $member_id and status <> 'dead' and (pay_status = '1' or ship_status = '1' ) ";
+        $aData = $obj_order->db->select($sql);
         if($aData){
             $row['sum'] = count($aData);
             $row['sum_pay'] = 0;
