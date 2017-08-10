@@ -172,6 +172,32 @@
 
     <!-- 订单信息区 -->
     <div id="order_main" class="order-main order-container">
+      <{if $is_minfo ==1}>
+      <!-- 商品必填项信息 -->
+      <div id="order_payment" class="order-section order-payment">
+        <div class="order-section-title"><b><{t}>购物必填信息<{/t}></b></div>
+        <div class="order-section-content">
+          <table class="view-payment">
+            <tbody>
+            <{foreach from=$minfo  item="minfo"}>
+              <tr>
+                <td></td>
+                <td>购物  <{t}><{$minfo.name}> x <{$minfo.quantity}><{/t}>  时必填信息</td>
+                
+              </tr>
+                <{foreach from=$minfo.minfo  item="minfo_info"}>
+              <tr>
+                <th><{t}><{$minfo_info.label}><{/t}>：</th>
+                <td><{$minfo_info.value}></td>
+              </tr>
+                 <{/foreach}> 
+              <{/foreach}>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <{/if}>
+
       <!-- 收货信息模块 -->
       <div id="order_shipping" class="order-section order-shipping">
         <div class="order-section-title"><b>收货信息</b></div>
@@ -315,10 +341,7 @@
           <!-- 主商品 -->
           <tr class="cart-product">
             <td class="p-info">
-              <div class="p-title"><a href="<{$item.product.link_url}>" target="_blank"><{$item.product.name}>
-      			  <{foreach from=$item.product.minfo item=minfo key=name}>
-      				，<{$minfo.value}>
-      			  <{/foreach}></a></div>
+              <div class="p-title"><a href="<{$item.product.link_url}>" target="_blank"><{$item.product.name}></a></div>
             </td>
             <td class="p-price"><{$item.product.g_price|cur_odr:$order.currency}></td>
             <td><{$item.product.quantity}></td>
@@ -336,9 +359,6 @@
   			    <b>[赠品]</b>
     			    <a href="<{$gifts.link_url}>" target="_blank">
     				  <{$gifts.name}>
-    					<{foreach from=$gifts.minfo item=minfo key=name}>
-    					<br>，<{$minfo.value}>
-    				  <{/foreach}>
   				    </a>
 			      </td>
     			  <td class="p-price"><{$gifts.products.price.price.price|cur_odr:$order.currency}></td>
@@ -374,9 +394,6 @@
               <div class="p-title"><b>[<{t}>配件商品<{/t}>]</b>
         			  <a href="<{$ajuncts.link_url}>" target="_blank">
         			  <{$ajuncts.name}>
-        			   <{foreach from=$ajuncts.minfo item=minfo key=name}>
-        				<br>，<{$minfo.value}>
-        			   <{/foreach}>
         			  </a></div>
             </td>
             <td class="p-price"><{$ajuncts.price|cur_odr:$order.currency}></td>

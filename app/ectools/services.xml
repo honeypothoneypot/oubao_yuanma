@@ -8,6 +8,7 @@
     </service>
 
     <service id="ectools_payment.ectools_mdl_payment_cfgs" optname="支付插件列表">
+        <class>ectools_payment_plugin_teegonali</class>
         <class>ectools_payment_plugin_alipay</class>
         <class>ectools_payment_plugin_alipaygateway</class>
         <class>ectools_payment_plugin_99bill</class>

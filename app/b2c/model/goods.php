@@ -1253,7 +1253,9 @@ class b2c_mdl_goods extends dbeav_model{
         foreach($goods_id as $pk => $pv){
            $result['goods_id'][] = $pv['goods_id'];
         }
-
+        if(empty($result) && $finderResult['goods_id'][0] != '_ALL_'){
+            return false;
+        }
         #检测special活动是否存活，是否可下架
         if($data['marketable'] == 'false'){
             foreach(kernel::servicelist('b2c_goods_model_check') as $service_sepcial_goods_check)

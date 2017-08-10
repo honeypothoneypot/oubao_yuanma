@@ -21,8 +21,6 @@
 	
 	<service id="pointprofessional_point_task_data">
 		<class>pointprofessional_point_task_order</class>
-		<class>pointprofessional_point_task_comment</class>
-		<class>pointprofessional_point_task_admincharge</class>
 	</service>
 	
 	<service id="b2c.order_total_change">

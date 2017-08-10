@@ -35,7 +35,7 @@ class pointprofessional_point_task_admincharge implements pointprofessional_poin
 			'addtime' => $arr_data['addtime'],
 			'enddate' => $arr_data['enddate'],
 			'related_id' => $arr_data['related_id'],
-			'task_type' => '1',
+			'task_type' => '3',
 			'remark' => app::get('pointprofessional')->_('管理员充值添加积分定时任务'),
 			'operator' => $arr_data['operator'],
 		);

@@ -34,6 +34,13 @@ class starbuy_special_count {
             $sdf['count'] = 0;
         }
         $ret = $mdl_count_member_buy->save($sdf);
+
+        $special_info = $this->get_special_info($product_id, 'special_id,`limit`');
+        if( $sdf['count'] < $special_info['limit'] )
+        {
+            $keyStarBuy = 'starBuy_' . $special_id . '_' . $member_id . '_' . $product_id;
+            base_kvstore::instance('cache/expires')->store($keyStarBuy, '');
+        }
         return $ret;
     }
 

@@ -102,10 +102,9 @@ class pointprofessional_point_change
                             );
                             $obj_service->generate_data($arr_data, $arr_point_task);
                             $obj_member_point_task->insert($arr_point_task);
+                            $is_delay = true;
                         }
                     }
-
-                    $is_delay = true;
                 }
             }
             $real_total_point = $real_total_point + $point;

@@ -61,7 +61,7 @@ class referrals_member_policy
     {
         $mem_point =kernel::single('b2c_mdl_member_point');
         $msg = '推荐送积分';
-        $mem_point->change_point($referrals_member_id,$register_point,$msg,'referrals',2,0,$referrals_member_id,'charge');
+        $mem_point->change_point($referrals_member_id,$register_point,$msg,'referrals',2,0,$referrals_member_id,'referrals');
     }
 
     public function create_code($member_id)

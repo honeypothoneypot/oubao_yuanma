@@ -124,6 +124,60 @@ class b2c_cart_object_coupon implements b2c_interface_cart_object{
         $arr = $this->app->model('sales_rule_order')->getList( '*',array('rule_id'=>$aCouponRule[0]['rule_id']) );
         $usedCoupon = $this->getAll();
 
+        //模拟下购物车的数据。验证促销规则的时候需要用到
+        $aCart = $this->app->model('cart')->get_objects($aData);
+        $discount_amount = $aCart['discount_amount'];
+        $subtotal_price = $aCart['subtotal_prefilter_after'];
+        $current_total = $subtotal_price - $discount_amount;
+        $coupon_info = array(
+            'obj_ident'    => $objIdent,
+            'obj_type' => 'coupon',
+            'quantity' => 1,
+            'description' => '',
+            'coupon' => $aData['coupon'],
+            'rule_id'   => $aCouponRule[0]['rule_id'],
+            'cpns_id'   => $aCouponRule[0]['cpns_id'],
+            'cpns_type' => $aCouponRule[0]['cpns_type'],
+            'name'  =>  '',
+        );
+        $aCart['object']['coupon'][] = $coupon_info;
+        unset($aCart['_cookie']);
+        //模拟结束
+        //模拟下促销规则验证,老规则如果验证失败了。不做处理
+        $oCond = kernel::single('b2c_sales_order_aggregator_combine');
+        $conditions = $arr[0]['conditions'];
+        $validate = $oCond->validate($aCart,$conditions);
+
+        if( $validate ){
+            $status = true;
+            $fail = 0;
+            $aggregator = $conditions['conditions']['1']['aggregator'];
+            $main_conditions = $conditions['conditions']['1']['conditions'];
+            $rule_count = count($main_conditions);
+            //注销验证失败的规则
+            foreach( $main_conditions as $key=>$rule ){
+                if( $rule['attribute'] == 'order_subtotal' ){
+                    $status = $this->valid_order_subtotal($rule,$current_total);
+                    if( !$status ){
+                        $fail++;
+                        unset($conditions['conditions']['1']['conditions'][$key]);
+                    }
+                }
+            }
+
+            if( $fail ){
+                //如果还剩余规则，则再验证剩余规则（如果没有剩余规则，验证时会返回ture，好尴尬）,主要用于组合条件的促销
+                if( $conditions['conditions']['1']['conditions'] && $$aggregator == 'any' ){
+                    $validate = $oCond->validate($aCart,$conditions);
+                }else{
+                    $validate = false;
+                }
+                if( !$validate ){
+                    $msg = app::get('b2c')->_('不满足该优惠券的使用条件！');
+                    return false;
+                }
+            }
+        }
         if( !$arr || !is_array($arr) ) {
 			$msg = app::get('b2c')->_('优惠券信息错误！');
 			return false;
@@ -292,4 +346,41 @@ class b2c_cart_object_coupon implements b2c_interface_cart_object{
     public function apply_to_disabled( $data,$session,$flag ) {
         return $data;
     }
+
+    /**
+     * 满减促销规则重新验证
+     * @params rule array 促销规则
+     * @params current_total 当前优惠后的订单金额
+     * @return bool
+     */
+    private function valid_order_subtotal($rule,$current_total){
+        $operator = $rule['operator'];
+        $value = $rule['value'];
+//        logger::info('operator:'.$operator);
+//        logger::info('value:'.$value);
+//        logger::info('current_total:'.$current_total);
+
+        $status = true;
+        switch( $operator){
+        case '>':
+            $status = $current_total > $value ? true : false;
+            break;
+        case '>=':
+            $status = $current_total >= $value ? true : false;
+            break;
+        case '<':
+            $status = $current_total < $value ? true : false;
+            break;
+        case '<=':
+            $status = $current_total <= $value ? true : false;
+            break;
+        case '=':
+            $status = $current_total = $value ? true : false;
+            break;
+        default:
+            break;
+        }
+        return $status;
+    }
+
 }

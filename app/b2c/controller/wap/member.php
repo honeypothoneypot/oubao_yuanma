@@ -681,6 +681,14 @@ class b2c_ctl_wap_member extends wap_frontpage{
                 }
             }
         }
+        //显示是否有必填项
+        $minfo = $objOrder->minfo($sdf_order);
+        if(!empty($minfo)){
+            $this->pagedata['is_minfo'] = 1;
+            $this->pagedata['minfo'] = $minfo;
+        }else{
+            $this->pagedata['is_minfo'] = 0;
+        }
         $this->pagedata['order'] = $sdf_order;
 
         $order_items = array();

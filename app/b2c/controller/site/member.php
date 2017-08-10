@@ -918,8 +918,16 @@ class b2c_ctl_site_member extends b2c_frontpage{
                 }
             }
         }
-
         $this->pagedata['order'] = $sdf_order;
+        //显示是否有必填项
+        $minfo = $objOrder->minfo($sdf_order);
+        if(!empty($minfo)){
+            $this->pagedata['is_minfo'] = 1;
+            $this->pagedata['minfo'] = $minfo;
+        }else{
+            $this->pagedata['is_minfo'] = 0;
+        }
+
         $order_items = array();
         $gift_items = array();
         $this->get_order_detail_item($sdf_order,'member_order_detail');

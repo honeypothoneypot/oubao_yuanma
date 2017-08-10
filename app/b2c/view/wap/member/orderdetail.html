@@ -122,6 +122,29 @@
             </div>
         </div>
     </div>
+
+      <{if $is_minfo ==1}>
+      <!-- 商品必填项信息 -->
+      <div id="order_payment" class="section">
+        <!-- <div class="d-line"><span class="k"><{t}>购物必填信息：<{/t}></span></div> -->
+        <div class="d-line c-fix">
+            <{foreach from=$minfo  item="minfo"}>
+                <p style="text-align:left;">购物  <{t}><{$minfo.name}> x <{$minfo.quantity}><{/t}> 时必填信息</p><span style="float:left;"><{t}>购物必填信息：<{/t}></span>
+                <{foreach from=$minfo.minfo  item="minfo_info"}>
+                <div class="wap" style="margin-left:90px;">
+                    <span class="l-k"><{t}><{$minfo_info.label}><{/t}>：</span>
+                    <span class='l-v'><{$minfo_info.value}></span>
+                </div>
+
+                 <{/foreach}> 
+              <{/foreach}>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <{/if}>
+
+      
     <div class="section">
         <div class="d-line c-fix">
             <span class="l-k">支付方式：</span>
@@ -190,9 +213,6 @@
                 <{$goods.product.name}>
             </div>
             <div class="pt-h-other">
-                <{foreach from=$goods.product.minfo item=minfo key=name}>
-                    <{$minfo.label}>：<{$minfo.value}>
-                <{/foreach}>
                 <{if $goods.product.attr}>
                     <{$goods.product.attr}>
                 <{/if}>
@@ -223,9 +243,6 @@
                 <{$ajuncts.name}>
             </div>
             <div class="pt-h-other">
-                <{foreach from=$ajuncts.minfo item=minfo key=name}>
-                <{$minfo.label}>：<{$minfo.value}>
-                <{/foreach}>
                 <{if $ajuncts.attr}>
                     <{$ajuncts.attr}>
                 <{/if}>
@@ -258,9 +275,6 @@
                 <{$gifts.name}>
             </div>
             <div class="pt-h-other">
-                <{foreach from=$gifts.minfo item=minfo key=name}>
-                    <{$minfo.label}>：<{$minfo.value}>
-                <{/foreach}>
                 <{if $gifts.attr}>
                     <{$gifts.attr}>
                 <{/if}>

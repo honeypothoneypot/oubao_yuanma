@@ -148,6 +148,9 @@ final class ectools_payment_plugin_deposit extends ectools_payment_app implement
      */
     public function do_payment($payment, &$msg)
 	{
+        if( !defined('DB_CACHE') ){
+            define('DB_CACHE',TRUE);
+        }
 		$obj_pay_lists = kernel::servicelist("order.pay_finish");
 		//$obj_pay = kernel::single("ectools_pay");
 		$is_payed = 'succ';

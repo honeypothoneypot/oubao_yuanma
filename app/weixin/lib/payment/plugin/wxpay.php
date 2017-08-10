@@ -272,7 +272,7 @@ final class weixin_payment_plugin_wxpay extends ectools_payment_app implements e
     /**
      * 支付成功回打支付成功信息给支付网关
      */
-    function ret_result($paymentId){
+    function ret_result($paymentId,$ret){
         echo 'success';exit;
     }
 

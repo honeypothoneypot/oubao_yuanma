@@ -2,7 +2,7 @@
 /*------- Author: Tyler Chao===tylerchao.sh@gmail.com -------*/
 .inner-wrap { width: 1225px; margin: 0 auto; *zoom: 1; }
 .inner-wrap:after { content: "\0020"; display: block; visibility: hidden; clear: both; height: 0; overflow: hidden; }
-.inner-wrap .page-aside { width: 160px; }
+.inner-wrap .page-aside { width: 160px; position: absolute; }
 .inner-wrap .page-article { margin-left: 180px; }
 
 .inside-wrap { width: 1000px; margin: 0 auto; *zoom: 1; }

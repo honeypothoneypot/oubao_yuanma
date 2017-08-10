@@ -35,7 +35,7 @@ class base_db_connections extends base_db_abstract implements base_interface_db
             $sql = preg_replace_callback('/([`\s\(,])(sdb_)([0-9a-z\_]+)([`\s\.]{0,1})/is', array($this, 'fix_dbprefix'), $sql); //todo: 兼容有特殊符号的表名前缀
         }
 
-        if(!$skipModifiedMark && cachemgr::enable() && preg_match('/(?:(delete\s+from)|(insert\s+into)|(update))\s+([]0-9a-z_:"`.@[-]*)/is', $sql, $match)){
+        if(!$skipModifiedMark && !defined('DB_CACHE') && cachemgr::enable() && preg_match('/(?:(delete\s+from)|(insert\s+into)|(update))\s+([]0-9a-z_:"`.@[-]*)/is', $sql, $match)){
             $table = strtoupper(trim(str_replace('`','',str_replace('"','',str_replace("'",'',$match[4])))));
             $now = time();
             $pos = strpos($table, strtoupper($this->prefix));

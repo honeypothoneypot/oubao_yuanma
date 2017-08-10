@@ -75,7 +75,7 @@ class b2c_member_signin
         $member_id = $data['member_id'];
         $point = $data['point'];
         $msg = '签到赠送积分';
-        $mem_point->change_point($member_id,$point,$msg,'signin_score',2,0,$member_id,'charge');
+        $mem_point->change_point($member_id,$point,$msg,'signin_score',2,0,$member_id,'sign');
         return true;
     }
 }

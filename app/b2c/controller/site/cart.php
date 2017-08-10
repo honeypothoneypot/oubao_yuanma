@@ -165,6 +165,7 @@ class b2c_ctl_site_cart extends b2c_frontpage{
                 }
             }
         }
+        $aData['apply_platform'] = '1';
         // 进行各自的特殊校验
         if (method_exists($arr_objects[$type], 'check_object'))
         {

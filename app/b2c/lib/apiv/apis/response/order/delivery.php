@@ -628,7 +628,7 @@ class b2c_apiv_apis_response_order_delivery
                 if($policy_stage == 2 && $orders[0]['pay_status'] == 1 && $orders[0]['ship_status'] != 1 && $aUpdate['ship_status'] == 1)
                 {
                     $obj_add_point = kernel::service('b2c_member_point_add');
-                    $obj_add_point->change_point($orders[0]['member_id'], intval($orders[0]['score_g']), $msg, 'order_pay_get', 2, 1, $orders[0]['order_id'], '0', 'delivery');
+                    $obj_add_point->change_point($orders[0]['member_id'], intval($orders[0]['score_g']), $msg, 'order_pay_get', 2, 1, $orders[0]['order_id'], '0', 'pay');
 
                 }
                //订单积分处理结束

@@ -37,6 +37,9 @@ class ectools_payment_api
 	 */
 	public function parse($params='')
 	{
+		if( !defined('DB_CACHE') ){
+			define('DB_CACHE',TRUE);
+		}
 		// 取到内部系统参数
 		$arr_pathInfo = explode('?', $_SERVER['REQUEST_URI']);
 		$pathInfo = substr($arr_pathInfo[0], strpos($arr_pathInfo[0], "parse/") + 6);
@@ -145,7 +148,7 @@ class ectools_payment_api
 					}
 					//支付成功给支付网关显示支付信息
 					if(method_exists($payments_bill, 'ret_result')){
-						$payments_bill->ret_result($ret['payment_id']);
+						$payments_bill->ret_result($ret['payment_id'],$ret);
 					}
 				}
 

@@ -28,8 +28,14 @@
         <input type="hidden" name="point[rate]" value="<{$discount_rate}>">
         <input type="hidden" name="point[score]" >
         <{/if}>
+        <{if $minfo}>
+        <div class="section">
+            <{include file='wap/cart/checkout/goods.html' app='b2c'}>
+        </div>
+        <{/if}>
         <div class="section">
             <div class="d-line c-fix">
+
                 <span class="l-k">收货地址：</span>
                 <span class="l-v <{if !$def_addr}>hide<{/if}>" id="J_sel_address">
                     <!-- <input type="hidden" name="address" /> -->
@@ -46,6 +52,8 @@
                     <{/if}>
                 </span>
             </div>
+            
+
             <ul class="address-list <{if $def_addr}>hide<{/if}>" id="J_address_list">
                 <{include file='wap/cart/checkout/shipping.html' app='b2c'}>
             </ul>
@@ -229,7 +237,7 @@
                         });
                     });
                 }else{
-                    alert('请选择收货地址');
+                    popup('请选择收货地址');
                 }
             },
             save:function(shipping_text,shipping_value){
@@ -269,7 +277,7 @@
                         });
                     });
                 }else{
-                    alert('请选择配送方式');
+                    popup('请选择配送方式');
                 }
             },
             save:function(pay_text,pay_value){
@@ -330,22 +338,22 @@
 
           if(typeof(cpn) != 'undefined'){
               if($.inArray('coupon_' + o.prev().val(), cpn) > -1){
-                  alert('此优惠券使用中！');
+                  popup('此优惠券使用中！');
                   return false;
               }
               if($.inArray(cpn_id, data_cpn) > -1){
-                  alert('同一类优惠券一次只能用一张！');
+                  popup('同一类优惠券一次只能用一张！');
                   return false;
               }
           }
             $.post('<{link app=b2c ctl=wap_cart act=add arg0=coupon}>',postdata,function(re){
                 var couponResult = $.parseJSON(re);
                 if(!couponResult){
-                    alert('优惠券添加失败，请检查您的优惠券号码是否填写正确或者明确优惠券适用范围或者是否已被使用过。');
+                    popup('优惠券添加失败，请检查您的优惠券号码是否填写正确或者明确优惠券适用范围或者是否已被使用过。');
                     return false;
                 }
                 if(couponResult.error){
-                    alert('优惠券添加失败，' + couponResult.error);
+                    popup('优惠券添加失败，' + couponResult.error);
                     return false;
                 }
                 if(couponResult.data.length) {
@@ -354,7 +362,7 @@
                         updateCoupon(couponResult.data);
                         getTotal();
                     } else {
-                        alert('优惠券添加失败，请明确优惠券的适用范围。');
+                        popup('优惠券添加失败，请明确优惠券的适用范围。');
                         return false;
                     }
                     $('input[name="md5_cart_info"]').attr('value',couponResult.md5_cart_info);
@@ -443,7 +451,25 @@
             $('button[rel=_request]')[0].click();
             return false;
         });
-
-
+        var testShould = function(that){
+            if(that.val()==""){
+                popup("请输入购物必填信息!")
+                 return false;
+            };
+        };
+        $(".should-input").on("blur" ,function(){
+            var that = $(this);
+            testShould(that);
+        });
+        $(".should-text").on("blur" ,function(){
+            var that = $(this);
+            testShould(that);
+        });
+        $("button[type='submit']").on('click', function(event) {
+            if($(".should-input").val()==""||$(".should-text").val()==""){
+                popup("请输入购物必填信息!");
+                return false;
+            }
+        });
     })();
 </script>

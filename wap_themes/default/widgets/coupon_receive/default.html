@@ -32,49 +32,40 @@ Zepto(function(){
   (function cardInit(){
     var $cards = $('.cp-item');
     var cardlists={};
-    $.post('<{link app=b2c ctl=wap_passport act=ajax_check_login}>',function(re) {
+    $.each($cards,function(index,item){
+      var cid = $(item).data('cid');
+      cardlists[cid] = $(item);
+    });
+    var url = $("#coupons_status_url").val();
+    $.post(url,function(re){
+      var coupons,obj;
       re = $.parseJSON(re);
-      if( re.status ){
-      $.each($cards,function(index,item){
-        var cid = $(item).data('cid');
-        cardlists[cid] = $(item);
-      });
-        var url = $("#coupons_status_url").val();
-        $.post(url,function(re){
-          var coupons,obj;
-          re = $.parseJSON(re);
-          if(re.status==="success"){
-            coupons = re.coupon;
-            for(var key in coupons){
-              var arrcoupon = function(key){
-                if(!cardlists[key]) return;
-                obj = cardlists[key];
-                if(obj.hasClass('act')){
-                  obj.addClass('act');
-                  $(obj.find('.J-getCoupon')).text(coupons[key].receiveStatusName);
-                };
-              }
-              arrcoupon(key)
-            }
-          }else if(re.status === "fail"){
-            coupons = re.coupon;
-            for(var key in coupons){
-              var arrcoupon = function(key){
-                if(!cardlists[key]) return;
-                obj = cardlists[key];
-                if(obj.hasClass('act')){
-                  obj.removeClass('act');
-                  //$(obj.find('.J-getCoupon')).text(coupons[key].receiveStatusName);
-                };
-              }
-              arrcoupon(key)
-            }
+      if(re.status==="success"){
+        coupons = re.coupon;
+        for(var key in coupons){
+          var arrcoupon = function(key){
+            if(!cardlists[key]) return;
+            obj = cardlists[key];
+            if(obj.hasClass('act')){
+              obj.addClass('act');
+              $(obj.find('.J-getCoupon')).text(coupons[key].receiveStatusName);
+            };
           }
-        });
-      }else{
-        popup("您还没有登录",1000,"sm-pop",function(){
-          location.href = re.url;
-        });
+          arrcoupon(key)
+        }
+      }else if(re.status === "fail"){
+        coupons = re.coupon;
+        for(var key in coupons){
+          var arrcoupon = function(key){
+            if(!cardlists[key]) return;
+            obj = cardlists[key];
+            if(obj.hasClass('act')){
+              obj.removeClass('act');
+              //$(obj.find('.J-getCoupon')).text(coupons[key].receiveStatusName);
+            };
+          }
+          arrcoupon(key)
+        }
       }
     });
   })();
@@ -101,13 +92,13 @@ Zepto(function(){
           }else if(re.status === "fail"){
             popup(re.msg,1000,"sm-pop",function(){
               console.log(re.msg)
-              card.removeClass('act');
+                card.removeClass('act');
               that.text("立即领取");
               // location.href = "<{link app=b2c ctl='wap_passport'}>";
             });
           }else{
             popup(re.msg,1000,"sm-pop",function(){
-              
+
             });
           }
         });

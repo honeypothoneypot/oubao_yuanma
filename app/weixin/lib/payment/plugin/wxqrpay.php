@@ -260,7 +260,7 @@ final class weixin_payment_plugin_wxqrpay extends ectools_payment_app implements
     /**
      * 支付成功回打支付成功信息给支付网关
      */
-    function ret_result($paymentId){
+    function ret_result($paymentId,$ret){
         $ret = array('return_code'=>'SUCCESS','return_msg'=>'');
         $ret = $this->arrayToXml($ret);
         echo $ret;exit;

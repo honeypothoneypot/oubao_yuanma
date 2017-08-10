@@ -260,7 +260,7 @@ final class ectools_payment_plugin_99bill extends ectools_payment_app {
     /**
      * 支付成功回打支付成功信息给支付网关
      */
-    function ret_result($paymentId){
+    function ret_result($paymentId,$ret){
         $rtnOk=1;
         $rtnUrl = app::get('site')->router()->gen_url(array('app'=>'b2c','ctl'=>'site_paycenter','full'=>1,'act'=>'result_pay','arg'=>$paymentId));
         echo "<result>".$rtnOk."</result><redirecturl>".$rtnUrl."</redirecturl>";

@@ -161,6 +161,7 @@ class b2c_ctl_wap_cart extends wap_frontpage{
             }
         }
         if (method_exists($arr_objects[$type], 'get_data'))
+        {
             if (!$aData = $arr_objects[$type]->get_data($data,$msg))
             {
                 if($_POST['mini_cart']){
@@ -171,6 +172,8 @@ class b2c_ctl_wap_cart extends wap_frontpage{
                     $this->splash('error',$fail_url,$msg,'','',true);
                 }
             }
+        }
+        $aData['apply_platform'] = '1';
         // 进行各自的特殊校验
         if (method_exists($arr_objects[$type], 'check_object'))
         {

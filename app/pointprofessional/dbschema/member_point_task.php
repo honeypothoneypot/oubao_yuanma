@@ -42,6 +42,7 @@ $db['member_point_task']=array (
     array (
       'type' => 'time',
       'required' => true,
+      'comment' => app::get('pointprofessional')->_('积分获取时间'),
       'default' => '0',
       'editable' => false,
     ),
@@ -87,11 +88,13 @@ $db['member_point_task']=array (
   ),
   'index' => 
   array (
-    'ind_task_type' => 
+    'ind_task_type_enddate' =>
     array (
-      'columns' => 
+      'columns' =>
       array (
         0 => 'task_type',
+        1 => 'status',
+        2 => 'enddate',
       ),
     ),
     'ind_status' => 

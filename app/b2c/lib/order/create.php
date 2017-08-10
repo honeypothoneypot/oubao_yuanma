@@ -292,15 +292,17 @@ class b2c_order_create extends b2c_api_rpc_request
                         {
                             // 订单附加信息
                             $strAddon = "";
+                            $minfo = '';
                             $arrAddon = array();
                             if ($sdf['minfo'])
                             {
                                 if ($sdf['minfo'][$arrObjItems['obj_items']['products'][0]['product_id']])
                                 {
-                                    $arrAddon  = $sdf['minfo'][$arrObjItems['obj_items']['products'][0]['product_id']];
-                                    $strAddon .= serialize($arrAddon);
+                                    $minfo  = $sdf['minfo'][$arrObjItems['obj_items']['products'][0]['product_id']];
+                                    $minfo = serialize($minfo);
                                 }
                             }
+
 
                             if ($arrObjItems['obj_items']['products'][0]['package_use'] == '1')
                             {
@@ -353,6 +355,8 @@ class b2c_order_create extends b2c_api_rpc_request
 											'g_price'=>$arrObjItems['obj_items']['products'][0]['price']['member_lv_price'],
                                             'weight'=>$arrObjItems['obj_items']['products'][0]['weight'],
                                             'addon'=>$strAddon,
+                                            'minfo'=>$minfo,
+
                                         ),
                                     ),
                                 );
@@ -409,6 +413,7 @@ class b2c_order_create extends b2c_api_rpc_request
 											'g_price'=>$arrObjItems['obj_items']['products'][0]['price']['member_lv_price'],
                                             'weight'=>$arrObjItems['obj_items']['products'][0]['weight'],
                                             'addon'=>$strAddon,
+                                            'minfo'=>$minfo,
                                         ),
                                     ),
                                 );
@@ -459,6 +464,7 @@ class b2c_order_create extends b2c_api_rpc_request
                                             'weight' => $adjunctItems['weight'],
                                             'score' => $this->objMath->number_multiple(array($adjunctItems['gain_score'], $adjunctItems['quantity'])),
                                             'addon' => $strAddon,
+                                            'minfo'=>$minfo,
                                         );
 
                                         // 处理adjunct库存冻结
@@ -534,6 +540,7 @@ class b2c_order_create extends b2c_api_rpc_request
                                             'score'=> $this->objMath->number_multiple(array($arr_gift_info['consume_score'], $adgiftItems['quantity'])),
                                             'weight' => $adgiftItems['weight'],
                                             'addon' => $strAddon,
+                                            'minfo'=>$minfo,
                                         );
 
                                         // 处理赠品库存冻结

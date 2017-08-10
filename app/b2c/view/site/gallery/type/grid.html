@@ -23,7 +23,7 @@
         <{/foreach}>
         <{/if}>
       </div>
-      <div class="goods-info">
+      <div class="goods-info" style="text-align:center;">
         <{if !isset($goods.prepare)}>
           <{if $goods.products.promotion_type_name }>
             <h3 class="goods-name">
@@ -70,7 +70,7 @@
       <div class="goods-action">
         <!--预售商品的显示判断-->
       <{if !isset($goods.prepare)}>
-          <div class="goods-buy">
+          <div class="goods-buy" style="text-align:center;">
             <{if $goods.products.store > 0}>
             <!-- 加入购物车 -->
             <{if $env.conf.b2c.gallery.display.buynum == 'true'}>
@@ -115,7 +115,7 @@
 
           </div>
         <{/if}>
-        <div class="goods-others">
+        <div class="goods-others" style="text-align:center;">
           <{if $login=='nologin'}>
           <a href="<{link app=b2c ctl=site_passport act=login}>" class="btn btn-simple"><span><span>收藏</span></span></a>
           <{else}>

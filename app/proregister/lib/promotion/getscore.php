@@ -21,7 +21,7 @@ class proregister_promotion_getscore
         if( !$this->get_status() ) return true;
         $app = app::get('b2c');
         $reason_type = 'register_score';
-        $app->model('member_point')->change_point($member_id,$point,$errMsg,$reason_type,2,$member_id,$member_id);
+        $app->model('member_point')->change_point($member_id,$point,$errMsg,$reason_type,2,$member_id,$member_id,'register');
     }
     
     public function get_status() {

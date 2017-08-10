@@ -12,6 +12,7 @@ class b2c_finder_orders{
     var $detail_items = '商品';
     var $detail_bills = '收退款记录';
     var $detail_delivery = '收发货记录';
+    var $detail_minfo = '必填信息';
     var $detail_pmt = '优惠方案';
     var $detail_mark = '订单备注';
     var $detail_logs = '订单日志';
@@ -674,6 +675,22 @@ class b2c_finder_orders{
 		}
         return $render->fetch('admin/order/od_delivery.html',$this->app->app_id);
     }
+
+    public function detail_minfo($order_id){
+        $render = $this->app->render();
+        $order = $this->app->model('orders');
+        $subsdf = array('order_objects'=>array('*',array('order_items'=>array('*',array(':products'=>'*')))), 'order_pmt'=>array('*'));
+        $sdf_order = $order->dump(array('order_id'=>$order_id), '*', $subsdf);
+        $minfo = $order->minfo($sdf_order);
+        if(!empty($minfo)){
+            $render->pagedata['is_minfo'] = 1;
+            $render->pagedata['minfo'] = $minfo;
+        }else{
+            $this->pagedata['is_minfo'] = 0;
+        }
+
+        return $render->fetch('admin/order/od_minfo.html',$this->app->app_id);
+    }    
 
     public function detail_pmt($order_id)
     {
