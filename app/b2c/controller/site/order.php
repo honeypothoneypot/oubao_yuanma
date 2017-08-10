@@ -29,7 +29,7 @@ class b2c_ctl_site_order extends b2c_frontpage{
     public function create()
     {
         //删除异常优惠券
-        $this->app->model('coupons')->deleteCart($arrMember['member_id']);
+        //$this->app->model('coupons')->deleteCart($arrMember['member_id']);
         /**
          * 取到扩展参数,用来判断是否是团购立即购买，团购则不判断登录（无注册购买情况下）
          */
@@ -58,6 +58,13 @@ class b2c_ctl_site_order extends b2c_frontpage{
         $fastbuy_filter['apply_platform'] = '1';
         $aCart = $this->mCart->get_objects($fastbuy_filter);
         $aCart['apply_platform'] = $fastbuy_filter['apply_platform'];
+        //判断B类优惠券是否已使用
+        $checkCodeB_use = app::get('b2c')->model('coupons')->checkCodeB_use($aCart['object']['coupon']);
+        if($checkCodeB_use===false){
+            $db->rollback();
+            $msg = app::get('b2c')->_("优惠券正在使用中……")."<br />";
+            $this->end(false, $msg, '',true,true);
+        }
         //当有活动时，在生成订单前做一个当前购买数量与实际库存的判断
         if( isset($aCart['cart_status'] )){
 

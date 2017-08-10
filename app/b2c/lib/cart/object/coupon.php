@@ -159,12 +159,6 @@ class b2c_cart_object_coupon implements b2c_interface_cart_object{
             }
         }
 
-        $status = $obj_coupons->checkCart($aData['coupon']);
-        if( !$status ){
-			$msg = app::get('b2c')->_('该优惠券已经被使用！');
-			return false;
-        }
-
         $aSave = array(
 		   'obj_ident'    => $objIdent,
 		   'member_ident' => $this->member_ident,

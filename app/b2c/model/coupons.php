@@ -748,4 +748,24 @@ var $idColumn = 'cpns_id'; //表示id的列
         $sql = "SELECT * FROM `sdb_b2c_coupons` WHERE cpns_point is not null AND cpns_status='1'";
         return $this->db->count($sql);
     }
+
+    public function checkCodeB_use($coupon) {
+        $coupons_use_obj = app::get('b2c')->model('coupons_use');
+        $time = time();	
+        foreach ($coupon as $k => $v) {
+            $code_type = $this->getFlagFromCouponCode($v['coupon']);
+            if($code_type==='B'){
+                $_code = $v['coupon'];
+		$data= array('cpns_id'=>$_code,'last_modify'=>$time);
+                $result = $coupons_use_obj->insert($data);
+		if($result ==true || (is_numeric($result) && $result>0) ){
+		}else{
+		  return false;	
+		}
+	    }
+        }
+        return true;
+    }//function end
+
+
 }

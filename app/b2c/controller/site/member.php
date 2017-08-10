@@ -2211,11 +2211,11 @@ class b2c_ctl_site_member extends b2c_frontpage{
                 $order_object->modifyActive($sdf['order_id']);
             }
             $url = $this->gen_url(array('app'=>'b2c','ctl'=>'site_member','act'=>'index'));
-            $db->commit($transaction_status);
             $obj_coupon = kernel::single("b2c_coupon_order");
             if( $obj_coupon ){
                 $obj_coupon->use_c($sdf['order_id']);
             }
+            $db->commit($transaction_status);
             $this->splash('success',$url,"订单取消成功",true);
         }
         else

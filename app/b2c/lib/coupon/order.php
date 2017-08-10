@@ -76,10 +76,18 @@ class b2c_coupon_order {
         if( empty($order_id) ) return false;
         $coupon_user = app::get('couponlog')->model('order_coupon_user');
         $coupon_ref = app::get('couponlog')->model('order_coupon_ref');
-
+        $coupons_use_obj = app::get('b2c')->model('coupons_use');
+        $member_coupon_obj = app::get('b2c')->model('member_coupon');
+        $send_back_coupons = $member_coupon_obj->getList('memc_code',array('memc_gen_orderid'=>$order_id));
+        if(!empty($send_back_coupons)){
+            foreach($send_back_coupons as $val){
+                $coupons_use_obj->delete(array('cpns_id'=>$val['memc_code']));
+            }
+        }
         $filter = array('order_id'=>$order_id);
         $coupon_user->delete($filter);
         $coupon_ref->delete($filter);
     }
+
 }
 
