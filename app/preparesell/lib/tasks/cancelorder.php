@@ -21,6 +21,10 @@ class preparesell_tasks_cancelorder extends base_task_abstract implements base_i
         foreach ($orders_cancel as $key => $value) {
         	if($value['pay_status']==0)
         	{
+                $order_payed = kernel::single('b2c_order_pay')->check_payed($value['order_id']);
+                if($order_payed>0){//支付过的订单无法自动取消订单
+                    continue;
+                }
         		$orders_id[]=$value['order_id'];
         	}
         }

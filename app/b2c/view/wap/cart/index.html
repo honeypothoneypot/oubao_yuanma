@@ -108,6 +108,7 @@
                 if(o.promotion.order){
                     $.each(o.promotion.order,function(){
                         ul += '<li><b class="f-red">['+this.desc_tag+']</b>'+this.name+'</li>';
+                        window.location.href=window.location.href;
                     });
                     promotion.html(ul);
                     ul = '';
@@ -116,6 +117,7 @@
                 }
             }else{
                 promotion.html('');
+                window.location.href=window.location.href;
             }
             if(o.unuse_rule){
                 $.each(o.unuse_rule,function(){
@@ -159,6 +161,7 @@
             $('#J_total .num').html(rs.number.cart_number);
             if(rs.error) return alert(rs.error);
             oo.parents('.pt-h-item').remove();
+            window.location.href=window.location.href;
             // if(p.hasClass('item') && $('.pt-list').children().length == 2){
             //     oo.parents('.pt-h-item').remove();
             //     $('cart-pt').remove();

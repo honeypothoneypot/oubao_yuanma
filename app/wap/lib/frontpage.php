@@ -43,13 +43,14 @@ class wap_frontpage extends wap_controller{
             }
 
             if( $openid ){
+                $wechat_obj = kernel::single('weixin_wechat');
                 $bindTagData = app::get('pam')->model('bind_tag')->getRow('tag_name,member_id',array('open_id'=>$openid));
                 if( $bindTagData ){
-                    $_SESSION['weixin_u_nickname'] = $bindTagData['tag_name'];
+                    $_SESSION['weixin_u_nickname'] = $wechat_obj->emoji_decode( $bindTagData['tag_name'] );
                     $_SESSION['account']['member'] = $bindTagData['member_id'];
                     $this->bind_member($bindTagData['member_id']);
                 }else{
-                    $res = kernel::single('weixin_wechat')->get_basic_userinfo($bind['id'],$openid);
+                    $res = $wechat_obj->get_basic_userinfo($bind['id'],$openid);
 
                     $wap_wxlogin = app::get("weixin")->getConf('weixin_basic_setting.wxlogin');
                     if( $wap_wxlogin == 'true' ){
@@ -59,7 +60,7 @@ class wap_frontpage extends wap_controller{
                             $this->bind_member($member_id);
                         }
                     }
-                    $_SESSION['weixin_u_nickname'] = $res['nickname'];
+                    $_SESSION['weixin_u_nickname'] = $wechat_obj->emoji_decode( $res['nickname'] );
                 }
                 $_SESSION['weixin_u_openid'] = $openid;
                 $_SESSION['is_bind_weixin'] = false;
@@ -81,7 +82,7 @@ class wap_frontpage extends wap_controller{
             if( $openid ){
                 $bindTagData = app::get('pam')->model('bind_tag')->getRow('tag_name,member_id',array('open_id'=>$openid));
                 if( $bindTagData ){
-                    $_SESSION['weixin_u_nickname'] = $bindTagData['tag_name'];
+                    $_SESSION['weixin_u_nickname'] = $wechat_obj->emoji_decode( $bindTagData['tag_name'] );
                     $_SESSION['account']['member'] = $bindTagData['member_id'];
                     $this->bind_member($bindTagData['member_id']);
                 }else{
@@ -96,7 +97,7 @@ class wap_frontpage extends wap_controller{
                                 $this->bind_member($member_id);
                             }
                         }
-                        $_SESSION['weixin_u_nickname'] = $res['nickname'];
+                        $_SESSION['weixin_u_nickname'] = $wechat_obj->emoji_decode( $res['nickname'] );
                     }
                 }
                 $_SESSION['weixin_u_openid'] = $openid;

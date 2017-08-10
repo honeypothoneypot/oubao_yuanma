@@ -47,7 +47,7 @@ class b2c_finder_members{
         $member_model = $this->app->model('members');
         $a_mem = $member_model->dump($member_id);
         $accountData = $userObject->get_members_data(array('account'=>'login_account'),$member_id);
-        $a_mem['contact']['name'] = $accountData['account']['local'];
+        $a_mem['contact']['name'] = kernel::single('weixin_wechat')->emoji_decode($accountData['account']['local']);
         $a_mem['contact']['email'] = $accountData['account']['email'];
         $a_mem['contact']['phone']['mobile'] = $accountData['account']['mobile'];
 
@@ -134,6 +134,7 @@ class b2c_finder_members{
         $membersData['lv']['value'] = $membersData['members']['member_lv_id'];
 
         $render = $app->render();
+        $membersData['account']['local'] = kernel::single('weixin_wechat')->emoji_decode($membersData['account']['local']);
         $render->pagedata['mem'] = $membersData;
         $render->pagedata['attr'] = $userPassport->get_signup_attr($member_id);
         $render->pagedata['member_id'] = $member_id;
@@ -526,7 +527,8 @@ class b2c_finder_members{
     public function column_uname($row){
         $pam_member_info = $this->userObject->get_members_data(array('account'=>'login_account'),$row['member_id']);
         $this->pam_member_info[$row['member_id']] = $pam_member_info;
-        return $pam_member_info['account']['local'];
+        $uname = kernel::single('weixin_wechat')->emoji_decode($pam_member_info['account']['local']);
+        return $uname;
     }
 
     var $column_email_order = 12;
@@ -567,6 +569,6 @@ class b2c_finder_members{
     var $column_weixin_nickname = '微信昵称';
     public function column_weixin_nickname($row){
         $data = app::get('pam')->model('bind_tag')->getList('tag_type,tag_name',array('member_id'=>$row['member_id']));
-        return $data[0]['tag_name'];
+        return kernel::single('weixin_wechat')->emoji_decode($data[0]['tag_name']);
     }
 }

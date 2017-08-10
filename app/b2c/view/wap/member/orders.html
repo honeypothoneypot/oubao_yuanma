@@ -91,10 +91,16 @@
                     <div class="col d-line">
                         <div class="t-r">
                             <{if $order.status == 'active' && ($order.pay_status=='0' || $order.pay_status=='3')}>
-                            <{if $order.payinfo.pay_app_id != '-1'}>
+                            <{if $order.payinfo.pay_app_id != '-1' && $order.is_pay==0 }>
                             <a href="<{link app=b2c ctl=wap_paycenter act=index arg0=$order.order_id}>" >
                                 去付款
                                 <i class="arr right"></i>
+                            </a>
+                            <{/if}>
+                            <{if $order.payinfo.pay_app_id != '-1' && $order.is_pay==1 }>
+                            <a href="javascript:void(0);" onclick="js_method()" style="color:#ccc;">
+                                支付结果返回中
+                                <!-- <i class="arr right"></i> -->
                             </a>
                             <{/if}>
                             <{/if}>
@@ -121,7 +127,7 @@
                                 <i class="arr right"></i>
                             </a>
                         </div>
-                        <{if $order.status == 'active' && $order.pay_status == '0' && $order.ship_status == '0' }>
+                        <{if $order.status == 'active' && $order.pay_status == '0' && $order.ship_status == '0' &&  $order.is_pay==0 }>
                         <div class="t-r">
                             <a href="<{link app=b2c ctl="wap_member" act="cancel" arg0=$order.order_id}>">
                                取消订单

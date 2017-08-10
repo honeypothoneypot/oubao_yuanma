@@ -55,6 +55,7 @@ class b2c_finder_member_gask{
 			}
 		}
 		if(is_array($gask_type) === false) unset($gask_data['gask_type']);
+        $gask_data['author'] = kernel::single('weixin_wechat')->emoji_decode($gask_data['author']);
 		$render->pagedata['comment'] = $gask_data;
         $render->pagedata['reply'] = $reply_data;
         $render->pagedata['object_type'] = $mem_com->type;

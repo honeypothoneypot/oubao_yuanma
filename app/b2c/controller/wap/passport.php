@@ -137,6 +137,7 @@ class b2c_ctl_wap_passport extends wap_frontpage{
                 $url = $this->gen_url(array('app'=>'b2c','ctl'=>'wap_passport','act'=>'loginbind'));
                 $this->redirect($url);
             }else{
+                $bind_tag['tag_name'] = kernel::single('weixin_wechat')->emoji_decode($bind_tag['tag_name']);
                 $this->pagedata['name'] = $bind_tag['tag_name'] ? $bind_tag['tag_name'] : $bind_tag['tag_type'].'_'.$bind_tag['id'];
                 $this->page('wap/bind/bindstatus.html');
             }
@@ -211,7 +212,6 @@ class b2c_ctl_wap_passport extends wap_frontpage{
 
         $b2c_members_model->update($member_data,array('member_id'=>$member_id));
         $this->userObject->set_member_session($member_id);
-        $this->bind_member($member_id);
         kernel::single('pam_lock')->flush_lock($member_id);
         $this->set_cookie('loginName',$_POST['uname'],time()+31536000);//用于记住用户名
         if($_POST['site_autologin'] == 'on'){
@@ -226,10 +226,11 @@ class b2c_ctl_wap_passport extends wap_frontpage{
             $bindWeixinData = array(
                 'member_id' => $member_id,
                 'open_id' => $_SESSION['weixin_u_openid'],
-                'tag_name' => $_SESSION['weixin_u_nickname'],
+                'tag_name' => kernel::single('weixin_wechat')->emoji_encode($_SESSION['weixin_u_nickname']),
                 'createtime' => time()
             );
             $flag = app::get('pam')->model('bind_tag')->save($bindWeixinData);
+            $this->bind_member($member_id); //绑定完微信之后，在创建cookie
             $url = kernel::single('wap_frontpage')->gen_url(array('app'=>'b2c','ctl'=>'wap_passport','act'=>'weixin_bind_view','arg0'=>$flag));
             $this->splash('success',$url,'','','',true);
         }else{
@@ -242,6 +243,7 @@ class b2c_ctl_wap_passport extends wap_frontpage{
                 unset($_SESSION['is_bind_weixin']);
                 $this->splash('error',null,app::get('b2c')->_('该账号绑定过其他微信账号,不能再进行绑定,请先解除绑定,或再直接登录'),'','',true);
             }else{
+                $this->bind_member($member_id); //绑定完微信之后，在创建cookie
                 $this->splash('success',$url,app::get('b2c')->_('登录成功'),'','',true);
             }
         }
@@ -355,7 +357,6 @@ class b2c_ctl_wap_passport extends wap_frontpage{
         }
         if( $member_id = $this->userPassport->save_members($saveData) ){
             $this->userObject->set_member_session($member_id);
-            $this->bind_member($member_id);
             foreach(kernel::servicelist('b2c_save_post_om') as $object) {
                 $object->set_arr($member_id, 'member');
                 $refer_url = $object->get_arr($member_id, 'member');
@@ -390,12 +391,13 @@ class b2c_ctl_wap_passport extends wap_frontpage{
                 $bindWeixinData = array(
                     'member_id' => $member_id,
                     'open_id' => $_SESSION['weixin_u_openid'],
-                    'tag_name' => $_SESSION['weixin_u_nickname'],
+                    'tag_name' => kernel::single('weixin_wechat')->emoji_encode($_SESSION['weixin_u_nickname']),
                     'createtime' => time()
                 );
                 $flag = app::get('pam')->model('bind_tag')->save($bindWeixinData);
             }
             /*end*/
+            $this->bind_member($member_id);
             $data['member_id'] = $member_id;
             $data['uname'] = $saveData['pam_account']['login_account'];
             $data['passwd'] = $_POST['pam_account']['psw_confirm'];

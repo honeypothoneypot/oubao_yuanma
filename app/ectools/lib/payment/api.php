@@ -117,7 +117,7 @@ class ectools_payment_api
 								logger::error(app::get('ectools')->_('支付失败') . " " . $msg ."\n");
 								$db->rollback();
                                 //添加到异常订单中，同时记录展现
-								$obj_abnormal_orders = app::get('b2c')->model('order_abnormal');
+								$obj_abnormal_orders = app::get('b2c')->model('order_newabnormal');
 								foreach($sdf['orders'] as $val){
 									$order_id = $val['rel_id'];
 								}

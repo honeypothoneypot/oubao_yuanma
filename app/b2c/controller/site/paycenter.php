@@ -430,6 +430,22 @@ class b2c_ctl_site_paycenter extends b2c_frontpage{
                         }
                     }
 
+                    //检查已支付金额
+                    $order_payed = kernel::single('b2c_order_pay')->check_payed($sdf['order_id']);
+                    if($order_payed>0){
+                        //判断是否在预售期，查看订金金额是否已经支付
+                        if($promotion_type=='prepare' && $prepare['begin_time'] < time() && time() < $prepare['end_time'] ){
+                            if($order_payed==$prepare['preparesell_price']){
+                                $this->splash('failed',null, app::get('b2c')->_('您已经支付过了订金无需再支付'));
+                            }
+                        }
+                        if($order_payed==$orders['total_amount']){
+                            $this->splash('failed',null, app::get('b2c')->_('您已经支付过了无需再支付'));
+                        }
+                        if(($order_payed+$_POST['payment']['def_pay']['cur_money'])>$orders['total_amount']){
+                            $this->splash('failed',null, app::get('b2c')->_('您支付的金额大于订单应支付金额，请联系管理员'));
+                        }
+                    }
                     // 检查是否能够支付
                     $obj_checkorder = kernel::service('b2c_order_apps', array('content_path'=>'b2c_order_checkorder'));
                     $sdf_post = $sdf;
@@ -474,6 +490,11 @@ class b2c_ctl_site_paycenter extends b2c_frontpage{
                     $sdf['rel_id'] = $sdf['rel_id'];
                     break;
             }
+
+
+
+
+
 
             $payment_id = $sdf['payment_id'] = $objPay->get_payment_id($sdf['rel_id']);
             if ($sdf['pay_app_id'] == 'deposit'){

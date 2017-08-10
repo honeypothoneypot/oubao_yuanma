@@ -433,7 +433,16 @@ class b2c_ctl_wap_paycenter extends wap_frontpage{
                         }
 
                     }
-
+                    //检查已支付金额
+                    $order_payed = kernel::single('b2c_order_pay')->check_payed($sdf['order_id']);
+                    if($order_payed>0){
+                        if($order_payed==$orders['total_amount']){
+                            $this->splash('failed',null, app::get('b2c')->_('您已经支付过了无需再支付'));
+                        }
+                        if(($order_payed+$_POST['payment']['def_pay']['cur_money'])>$orders['total_amount']){
+                            $this->splash('failed',null, app::get('b2c')->_('您支付的金额大于订单应支付金额，请联系管理员'));
+                        }
+                    }
                     // 检查是否能够支付
                     $obj_checkorder = kernel::service('b2c_order_apps', array('content_path'=>'b2c_order_checkorder'));
                     $sdf_post = $sdf;

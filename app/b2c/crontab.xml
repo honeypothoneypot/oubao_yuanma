@@ -15,12 +15,12 @@
     <enabled>true</enabled>
   </cron>
   <cron id="b2c_tasks_order_delivery">
-    <description>自动确认收货</description>s
+    <description>自动确认收货</description>
     <schedule>5 * * * *</schedule>
     <enabled>true</enabled>
   </cron>
   <cron id="b2c_tasks_order_check_payment">
-    <description>检查已支付订单是否已经变更订单支付状态</description>s
+    <description>检查已支付订单是否已经变更订单支付状态</description>
     <schedule>55 * * * *</schedule>
     <enabled>true</enabled>
   </cron>

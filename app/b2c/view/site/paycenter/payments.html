@@ -195,7 +195,7 @@
                       <{button type="submit" disabled="false" class="btn-import btn-big" label="等待支付尾款"}>
                     <{/if}>
                     <{if $prepare.nowtime > $prepare.begin_time_final && $prepare.nowtime < $prepare.end_time_final  && $order.pay_status=='3' && $prepare.status=='true' && $deposit_money - ($order.total_amount-$prepare.preparesell_price) >= 0}>
-                      <{button type="submit"  class="btn-import btn-big" action-prepaid label="支付尾款"}>
+                      <{button type="submit"  class="btn-import btn-big action-prepaid "  label="支付尾款"}>
                     <{/if}>
                     <{if $prepare.nowtime > $prepare.end_time_final && $prepare.status=='true'}>
                       <{button type="submit" disabled="false" class="btn-import btn-big" label="活动结束"}>
@@ -218,7 +218,7 @@
                     <{/if}>
 
                      <{if $prepare.nowtime > $prepare.begin_time_final && $prepare.nowtime < $prepare.end_time_final  && $order.pay_status=='3' && $prepare.status=='true'}>
-                      <{button type="submit" class="btn-import btn-big" label="支付尾款" action-pay}>
+                      <{button type="submit" class="btn-import btn-big action-pay " label="支付尾款" }>
                     <{/if}>
 
                   <{/if}>

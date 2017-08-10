@@ -15,21 +15,23 @@
         <{if $order.payinfo.pay_app_id != '-1'}>
           <{if ($order.pay_status == '0' || $order.pay_status == '3') && $order.status != 'dead' && $order.status != 'finish'}>
             <div class="col">
+               <{if $order.is_pay == 0}>
               <a href="<{link app=b2c ctl=wap_paycenter act=index arg0=$order.order_id}>">
                 更改付款方式
                 <i class="arr right"></i>
               </a>
+              <{/if}>
             </div>
 
             <div class="col">
             <{if $order.payinfo.pay_app_id != 'offline'}>
-                <{if $prepare.prepare_type != 'prepare'}>
+                <{if $prepare.prepare_type != 'prepare' && $order.is_pay == 0}>
                       <a href="<{link app=b2c ctl=wap_paycenter act=index arg0=$order.order_id}>">
                         去付款
                         <i class="arr right"></i>
                       </a>
                 <{/if}>
-                <{if $prepare.prepare_type == 'prepare' && $prepare.nowtime > $prepare.begin_time && $prepare.nowtime < $prepare.end_time  && $order.pay_status=='0' && $prepare.status=='true'}>
+                <{if $prepare.prepare_type == 'prepare' && $prepare.nowtime > $prepare.begin_time && $prepare.nowtime < $prepare.end_time  && $order.pay_status=='0' && $prepare.status=='true' && $order.is_pay == 0}>
                       <a href="<{link app=b2c ctl=wap_paycenter act=index arg0=$order.order_id}>">
                         去付订金
                         <i class="arr right"></i>
@@ -39,7 +41,7 @@
                         等待支付尾款
                         <i class="arr right"></i>
                 <{/if}>
-                <{if $prepare.prepare_type == 'prepare'&& $prepare.nowtime > $prepare.begin_time_final && $prepare.nowtime < $prepare.end_time_final  && $order.pay_status=='3' && $prepare.status=='true'}>
+                <{if $prepare.prepare_type == 'prepare'&& $prepare.nowtime > $prepare.begin_time_final && $prepare.nowtime < $prepare.end_time_final  && $order.pay_status=='3' && $prepare.status=='true' &&  $order.is_pay == 0}>
                         支付尾款
                         <i class="arr right"></i>
                 <{/if}>

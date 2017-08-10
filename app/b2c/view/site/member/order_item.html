@@ -84,32 +84,45 @@
       <td class="actions" valign="top"<{if $is_orders}> rowspan="2"<{/if}>>
         <!--普通订单-->
         <{if $order.status == 'active' && ($order.pay_status=='0' || $order.pay_status=='3') && $order.promotion_type != 'prepare'}>
-          <{if $order.payinfo.pay_app_id != '-1'}>
+          <{if $order.payinfo.pay_app_id != '-1' && $order.is_pay==0}>
           <a href="<{link app=b2c ctl=site_paycenter arg0=$order.order_id}>" class="btn btn-import"><span><span><{t}>去付款<{/t}></span></span></a>
+          <{/if}>
+          <{if $order.payinfo.pay_app_id != '-1' && $order.is_pay==1}>
+          <a href="javascript:void(0);" onclick="js_method()" class="btn btn-grayed"><span><span><{t}>支付结果返回中<{/t}></span></span></a>
           <{/if}>
         <{/if}>
 
         <!--预售订单-->
         <{if $order.status == 'active' && $order.pay_status=='0' && $order.promotion_type == 'prepare' && $order.prepare.status=='true' && $order.prepare.begin_time < $order.prepare.nowtime &&  $order.prepare.nowtime < $order.prepare.end_time}>
-          <{if $order.payinfo.pay_app_id != '-1'}>
+          <{if $order.payinfo.pay_app_id != '-1' && $order.is_pay==0}>
           <a href="<{link app=b2c ctl=site_paycenter arg0=$order.order_id}>" class="btn btn-import"><span><span><{t}>去付订金<{/t}></span></span></a>
+          <{/if}>
+          <{if $order.payinfo.pay_app_id != '-1' && $order.is_pay==1}>
+          <a href="javascript:void(0);" onclick="js_method()" class="btn btn-grayed"><span><span><{t}>支付结果返回中<{/t}></span></span></a>
           <{/if}>
         <{/if}>
         <!--预售订单-->
         <{if $order.status == 'active' && $order.pay_status=='3' && $order.promotion_type == 'prepare' && $order.prepare.status=='true' && $order.prepare.begin_time_final < $order.prepare.nowtime &&  $order.prepare.nowtime < $order.prepare.end_time_final}>
-          <{if $order.payinfo.pay_app_id != '-1'}>
+          <{if $order.payinfo.pay_app_id != '-1' && $order.is_pay==0}>
           <a href="<{link app=b2c ctl=site_paycenter arg0=$order.order_id}>" class="btn btn-import"><span><span><{t}>去付尾款<{/t}></span></span></a>
+          <{/if}>
+          <{if $order.payinfo.pay_app_id != '-1' && $order.is_pay==1}>
+          <a href="javascript:void(0);" onclick="js_method()" class="btn btn-grayed"><span><span><{t}>支付结果返回中<{/t}></span></span></a>
           <{/if}>
         <{/if}>
         <!--预售订单-->
         <{if $order.status == 'active' && $order.pay_status=='3' && $order.promotion_type == 'prepare' && $order.prepare.status=='true' && $order.prepare.begin_time < $order.prepare.nowtime &&  $order.prepare.nowtime < $order.prepare.begin_time_final}>
-          <{if $order.payinfo.pay_app_id != '-1'}>
+          <{if $order.payinfo.pay_app_id != '-1' && $order.is_pay==1 }>
+          <a href="javascript:void(0);" onclick="js_method()" class="btn btn-grayed"><span><span><{t}>支付结果返回中<{/t}></span></span></a>
+          <{elseif $order.payinfo.pay_app_id != '-1' }>
           <a href="#" class="btn btn-import"><span><span><{t}>等待支付尾款<{/t}></span></span></a>
           <{/if}>
         <{/if}>
 
         <{if $order.status == 'active' && $order.pay_status!='1' && $order.promotion_type == 'prepare' && $order.prepare.status=='true' &&  $order.prepare.nowtime > $order.prepare.end_time_final}>
-          <{if $order.payinfo.pay_app_id != '-1'}>
+          <{if $order.payinfo.pay_app_id != '-1' && $order.is_pay==1 }>
+          <span><span><{t}>支付结果返回中<{/t}></span></span>
+          <{elseif $order.payinfo.pay_app_id != '-1' }>
           <span><span><{t}>支付尾款时间已过,请联系管理员进行退款<{/t}></span></span>
           <{/if}>
         <{/if}>
@@ -127,7 +140,9 @@
         <i class="separator"></i><a href="<{link app=b2c ctl=site_member act=orderdetail arg0=$order.order_id arg1=$archive}>"><{t}>查看订单<{/t}></a>
 
         <{if $order.status == 'active' && $order.pay_status == '0' && $order.ship_status == '0' && $order.promotion_type != 'prepare'}>
+        <{if $order.is_pay == 0}>
         <i class="separator"></i><a class="btn-cancel" href="<{link app=b2c ctl=site_member act=cancel arg0=$order.order_id arg1=$archive}>"><{t}>取消订单<{/t}></a>
+        <{/if}>
         <{else}>
         <i class="separator"></i><a href="<{link app=b2c ctl=site_member act=reAddCart arg0=$order.order_id arg1=$archive}>"><{t}>再次购买<{/t}></a>
         <{if $order.status == 'dead'}>

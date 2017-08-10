@@ -32,7 +32,7 @@ $db['bind_tag'] = array(
         ),
         'tag_name'=>
         array(
-            'type'=>'varchar(100)',
+            'type'=>'varchar(300)',
             'comment' => app::get('pam')->_('绑定平台的昵称'),
         ),
         'member_id'=>

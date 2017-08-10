@@ -229,6 +229,36 @@ class b2c_ctl_site_member extends b2c_frontpage{
         }
         foreach ($aData['data'] as $key => $value) {
             $aData['data'][$key]['url'] = $this->gen_url(array('app'=>'b2c','ctl'=>"site_member",'act'=>"receive",'arg0'=>$value['order_id']));;
+            $order_payed = kernel::single('b2c_order_pay')->check_payed($value['order_id']);
+            if($order_payed==$value['total_amount']){
+                $aData['data'][$key]['is_pay'] = 1;
+            }else{
+                $aData['data'][$key]['is_pay'] = 0;
+            }
+        }
+        $prepare_order=kernel::service('prepare_order');
+        if($prepare_order)
+        {
+            $pre_order=$prepare_order->get_prepare_info($aData['data']);
+            foreach ($aData['data'] as $key => $value) {
+                if($value['promotion_type']=='prepare')
+                {
+                    //判断是否在预售期，查看订金金额是否已经支付
+                    $prepare=$aData['data'][$key]['prepare']=$pre_order[$value['order_id']];
+                    $order_payed = kernel::single('b2c_order_pay')->check_payed($value['order_id']);
+                    if($order_payed>0 ){
+
+                        if( $prepare['begin_time'] < time() && time() < $prepare['end_time']){
+                            if($order_payed==$prepare['preparesell_price'] && $value['pay_status']=='0'){
+                                $aData['data'][$key]['is_pay']=1;
+                            }
+                        }
+                        if(time() > $prepare['begin_time_final'] && $order_payed >= $prepare['promotion_price'] && ($value['pay_status']=='0' || $value['pay_status']=='3' )){
+                            $aData['data'][$key]['is_pay']=1;
+                        }
+                    }
+                }
+            }
         }
         $this->get_order_details($aData, 'member_latest_orders');//--177sql 优化点
         $this->pagedata['orders'] = $aData['data'];
@@ -397,6 +427,13 @@ class b2c_ctl_site_member extends b2c_frontpage{
         $oGoods = app::get('b2c')->model('goods');
         $imageDefault = app::get('image')->getConf('image.set');
         foreach($aData['data'] as $k => &$v) {
+            $order_payed = kernel::single('b2c_order_pay')->check_payed($v['order_id']);
+            if($order_payed==$v['total_amount']){
+                $v['is_pay']=1;
+            }else{
+                $v['is_pay']=0;
+            }
+
             foreach($v['goods_items'] as $k2 => &$v2) {
                 $spec_desc_goods = $oGoods->getList('spec_desc',array('goods_id'=>$v2['product']['goods_id']));
                 // 此处是获取购买的有规格的货品的缩略图，无规格的商品没有spec_desc，没有货品，跳过该商品。
@@ -427,7 +464,20 @@ class b2c_ctl_site_member extends b2c_frontpage{
             foreach ($aData['data'] as $key => $value) {
                 if($value['promotion_type']=='prepare')
                 {
-                    $aData['data'][$key]['prepare']=$pre_order[$value['order_id']];
+                    //判断是否在预售期，查看订金金额是否已经支付
+                    $prepare=$aData['data'][$key]['prepare']=$pre_order[$value['order_id']];
+                    $order_payed = kernel::single('b2c_order_pay')->check_payed($value['order_id']);
+                    if($order_payed>0 ){
+
+                        if( $prepare['begin_time'] < time() && time() < $prepare['end_time'] ){
+                            if($order_payed==$prepare['preparesell_price'] && $value['pay_status']=='0'){
+                                $aData['data'][$key]['is_pay']=1;
+                            }
+                        }
+                        if(time() > $prepare['begin_time_final'] && $order_payed >= $prepare['promotion_price'] && ($value['pay_status']=='0' || $value['pay_status']=='3' ) ){
+                            $aData['data'][$key]['is_pay']=1;
+                        }
+                    }
                 }
             }
         }
@@ -812,6 +862,14 @@ class b2c_ctl_site_member extends b2c_frontpage{
         if(!$sdf_order||$this->app->member_id!=$sdf_order['member_id']){
             kernel::single('site_router')->http_status(404);return;
         }
+
+        $order_payed = kernel::single('b2c_order_pay')->check_payed($sdf_order['order_id']);
+        if($order_payed==$sdf_order['total_amount']){
+            $sdf_order['is_pay'] = 1;
+        }else{
+            $sdf_order['is_pay'] = 0;
+        }
+
         if($sdf_order['member_id']){
             $member = $this->app->model('members');
             $aMember = $member->dump($sdf_order['member_id'], 'email');
@@ -844,6 +902,23 @@ class b2c_ctl_site_member extends b2c_frontpage{
                 $this->pagedata['discount_html'] = $obj->gen_point_discount($sdf_order);
             }
         }
+        //判断预售 promotion_type
+        if($sdf_order['promotion_type']=='prepare'){
+            $prepare_order=kernel::service('prepare_order');
+            if($prepare_order)
+            {
+                $prepare=$prepare_order->get_order_info($sdf_order['order_id']);
+                $order_payed = kernel::single('b2c_order_pay')->check_payed($sdf_order['order_id']);
+                if($order_payed>0 ){
+                    if( $prepare['begin_time'] < time() && time() < $prepare['end_time'] ){
+                        if($order_payed==$prepare['preparesell_price']){
+                            $sdf_order['is_pay']=1;
+                        }
+                    }
+                }
+            }
+        }
+
         $this->pagedata['order'] = $sdf_order;
         $order_items = array();
         $gift_items = array();
@@ -2203,6 +2278,11 @@ class b2c_ctl_site_member extends b2c_frontpage{
         $sdf['op_id'] = $arrMember['member_id'];
         $sdf['opname'] = $arrMember['uname'];
         $sdf['account_type'] = 'member';
+
+        $order_payed = kernel::single('b2c_order_pay')->check_payed($sdf['order_id']);
+        if($order_payed>0){
+            $this->splash('error','',"支付过的订单，无法取消订单",true);
+        }
 
         $b2c_order_cancel = kernel::single("b2c_order_cancel");
         if ($b2c_order_cancel->generate($sdf, $this, $message))

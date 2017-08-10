@@ -199,6 +199,7 @@ class weixin_wechat{
         $response = $httpclient->set_timeout(6)->get($url, $post_menu);
         $result = json_decode($response, true);
         if( $result['errcode']==0 ){
+            $result['nickname'] = $this->emoji_encode($result['nickname']);
             return $result;
         }else{
             $msg = "微信基本获取用户信息错误(非OAUTH2方式),微信返回的错误码为 {$result['errcode']}";
@@ -416,9 +417,42 @@ class weixin_wechat{
         $userinfo = array();
         if( is_object($obj_apiv) ){
             $userinfo = $obj_apiv->getuserinfo($openid,$access_token);
+            $userinfo['nickname'] = $this->emoji_encode($userinfo['nickname']);
             logger::info('access matrix token api get openid:'.var_export($userinfo,1));
         }
 
         return $userinfo;
+    }
+
+    /**
+     * emoji_decode 
+     *
+     * @param mixed $nicknamei 微信昵称
+     * @access public
+     * @return 转码之后的emoji表情
+     */
+    public function emoji_decode($nickname){
+        if( !$nickname ){return '';}
+        $nickname_json =  '{"nickname":"' . $nickname . '"}';
+        $arr = json_decode($nickname_json,true);
+        $nickname = $arr['nickname'];
+
+        return $nickname;
+    }
+
+    /**
+     * emoji_encode   
+     *
+     * @param mixed $nickname 微信昵称
+     * @access public
+     * @return 编码之后 的emoji表情
+     */
+    public function emoji_encode($nickname){
+        if( !$nickname ){return '';}
+        $nickname = json_encode($nickname);
+        $nickname = preg_replace("#(\\\u(e|d)[0-9a-f]{3})#ie","addslashes('\\1')",$nickname);
+        $nickname = json_decode($nickname);
+
+        return $nickname;
     }
 }

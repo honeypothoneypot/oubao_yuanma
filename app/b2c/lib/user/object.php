@@ -242,6 +242,8 @@ class b2c_user_object{
                 }
             }
         }
+
+        $login_name = kernel::single('weixin_wechat')->emoji_decode($login_name);
         return $login_name;
     }
     /**

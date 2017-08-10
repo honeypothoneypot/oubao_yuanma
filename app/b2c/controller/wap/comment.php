@@ -135,6 +135,7 @@ class b2c_ctl_wap_comment extends wap_frontpage{
         $aData['lastreply'] = 0;
         $aData['ip'] = $_SERVER["REMOTE_ADDR"];
         $aData['display'] = ($this->app->getConf('comment.display')=='soon' ? 'true' : 'false');
+        $aData['author'] = kernel::single('weixin_wechat')->emoji_encode($aData['author']);
 
         //更新goods表,统计此商品评论，咨询的数量
         $objGoods = $this->app->model('goods');

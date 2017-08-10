@@ -6,7 +6,7 @@
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
 
-class b2c_finder_orders{
+class b2c_finder_order_newabnormal{
 
     var $detail_basic = '基本信息';
     var $detail_items = '商品';
@@ -16,26 +16,26 @@ class b2c_finder_orders{
     var $detail_mark = '订单备注';
     var $detail_logs = '订单日志';
     var $detail_msg = '顾客留言';
-    var $column_editbutton = '操作';
+
 
     public function __construct($app)
     {
         $this->app = $app;
         $this->app_ectools = app::get('ectools');
         $this->odr_action_buttons = array('pay','delivery','finish','refund','reship','cancel','delete');
-		// 判定是否绑定ome或者其他后端店铺
+        // 判定是否绑定ome或者其他后端店铺
         $obj_b2c_shop = $this->app->model('shop');
         //ajx ecos.ocs
         $node_type=array('ecos.ome','ecos.ocs');
         $cnt = $obj_b2c_shop->count(array('status'=>'bind','node_type|in'=>$node_type));
-		if ($cnt > 0)
-		{
-			$this->odr_action_is_all_disable = true;
-		}
-		else
-		{
-			$this->odr_action_is_all_disable = false;
-		}
+        if ($cnt > 0)
+        {
+            $this->odr_action_is_all_disable = true;
+        }
+        else
+        {
+            $this->odr_action_is_all_disable = false;
+        }
     }
 
     public function detail_basic($order_id)
@@ -97,7 +97,6 @@ class b2c_finder_orders{
             $member = $this->app->model('members');
             $aOrder['member'] = $member->dump($aOrder['member_id'], '*', array('pam_account'=>'*'));
 
-            $aOrder['member']['pam_account']['local']['login_account'] = kernel::single('weixin_wechat')->emoji_decode($aOrder['member']['pam_account']['local']['login_account']);
             // 得到meta的信息
             $arrTree = array();
             $index = 0;
@@ -303,11 +302,11 @@ class b2c_finder_orders{
         }
         // 添加 html 埋点
         foreach( kernel::servicelist('b2c.order_add_html') as $services ) {
-        	if ( is_object($services) ) {
-        		if ( method_exists($services, 'fetchHtml') ) {
-        			$services->fetchHtml($render,$order_id,'admin/invoice_detail.html');
-        		}
-        	}
+            if ( is_object($services) ) {
+                if ( method_exists($services, 'fetchHtml') ) {
+                    $services->fetchHtml($render,$order_id,'admin/invoice_detail.html');
+                }
+            }
         }
         // 判断是否安装物流单跟踪服务
         //物流跟踪安装并且开启
@@ -317,11 +316,11 @@ class b2c_finder_orders{
             $render->pagedata['services']['logisticstrack'] = $logisticst_service;
         }
 
-		$render->pagedata['services']['logisticstrack_url'] = 'index.php?'.utils::http_build_query(array(
-			'app'=>'b2c','ctl'=>'admin_order','act'=>'index','action'=>'detail',
-			'finderview'=>'detail_delivery','_finder'=>array('finder_id'=>$_GET['finder_id']),'finder_name'=>$_GET['finder_id'],'finder_id'=>$_GET['finder_id'],
-			'id'=>$order_id,
-		));
+        $render->pagedata['services']['logisticstrack_url'] = 'index.php?'.utils::http_build_query(array(
+            'app'=>'b2c','ctl'=>'admin_order','act'=>'index','action'=>'detail',
+            'finderview'=>'detail_delivery','_finder'=>array('finder_id'=>$_GET['finder_id']),'finder_name'=>$_GET['finder_id'],'finder_id'=>$_GET['finder_id'],
+            'id'=>$order_id,
+        ));
 
         $mdl_order_cancel = app::get('b2c')->model('order_cancel_reason');
         $sdf_order_cancel_reason = $mdl_order_cancel->getRow('*',array('order_id'=>$order_id));
@@ -329,7 +328,7 @@ class b2c_finder_orders{
             $sdf_order_cancel_reason['reason_type'] = $mdl_order_cancel->change_reason_type($sdf_order_cancel_reason['reason_type']);
             $render->pagedata['order_cancel_reason'] = $sdf_order_cancel_reason;
         }
-        return $render->fetch('admin/order/order_detail.html');
+        return $render->fetch('admin/order/order_abnormal_detail.html');
     }
 
     public function detail_items($order_id)
@@ -659,19 +658,19 @@ class b2c_finder_orders{
         }
 
         if ( $render->pagedata['services']['logisticstrack'] ) {
-			foreach( $render->pagedata['consign']  as $k=>&$v) {
-				$v['logistictrack_url'] = app::get('desktop')->router()->gen_url(
-					array('app'=>'logisticstrack','ctl'=>'admin_tracker','act'=>'pull','p'=>array('0'=>$v['delivery_id']))
-				);
-			}
-			unset($v);
-			foreach( $render->pagedata['reship']  as $k=>&$v) {
-				$v['logistictrack_url'] = app::get('desktop')->router()->gen_url(
-					array('app'=>'logisticstrack','ctl'=>'admin_tracker','act'=>'pull','p'=>array('0'=>$v['reship_id']))
-				);
-			}
-			unset($v);
-		}
+            foreach( $render->pagedata['consign']  as $k=>&$v) {
+                $v['logistictrack_url'] = app::get('desktop')->router()->gen_url(
+                    array('app'=>'logisticstrack','ctl'=>'admin_tracker','act'=>'pull','p'=>array('0'=>$v['delivery_id']))
+                );
+            }
+            unset($v);
+            foreach( $render->pagedata['reship']  as $k=>&$v) {
+                $v['logistictrack_url'] = app::get('desktop')->router()->gen_url(
+                    array('app'=>'logisticstrack','ctl'=>'admin_tracker','act'=>'pull','p'=>array('0'=>$v['reship_id']))
+                );
+            }
+            unset($v);
+        }
         return $render->fetch('admin/order/od_delivery.html',$this->app->app_id);
     }
 

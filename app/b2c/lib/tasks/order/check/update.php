@@ -5,10 +5,33 @@
  * @copyright  Copyright (c) 2005-2012 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
-class b2c_tasks_order_cancel_unpay_cancel extends base_task_abstract implements base_interface_task{
+class b2c_tasks_order_check_update extends base_task_abstract implements base_interface_task{
 
     function exec($params=null)
     {
+        $obj_payments = app::get('ectools')->model('payments');
+        $obj_order_bills = app::get('ectools')->model('order_bills');
+        $obj_orders = app::get('b2c')->model('orders');
+        $obj_abnormal_orders = app::get('b2c')->model('order_newabnormal');
+        $order_pay = kernel::single('b2c_order_pay');
+
+        $order = $obj_orders->getRow('total_amount,pay_status,status',array('order_id'=>$params['order_id']));
+        if($order['status'] != 'active' ){
+            return ;
+        }
+        $order_payed=$order_pay->check_payed($params['order_id']);
+        if($order['total_amount']>$order_payed && $order['pay_status']==3 ){
+            return ;
+        }
+
+        if($order['total_amount']>$order_payed && $order['pay_status']==0 ){//把未支付的订单变为部分付款
+            $obj_orders->update();
+        }
+
+
+
+
+
         $order_id = $params['order_id'];
         if( $order_id ){
             $this->cancel_orders($order_id);

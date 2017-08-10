@@ -392,9 +392,9 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
         $_POST['cat_id'] = utils::_RemoveXSS($_POST['cat_id']);
         $_POST['virtual_cat_id'] = utils::_RemoveXSS($_POST['virtual_cat_id']);
         $_POST['orderBy'] = utils::_RemoveXSS($_POST['orderBy']);
-        //限制orderBy值范围，防止sql的order by 注入
+        //限制orderBy值范围，防止sql的order by 注入, 如果不是正常值，则采用默认排序方式：d_order  DESC ,goods_id   DESC
         if( !in_array($_POST['orderBy'],$orderBy_arr) ){
-            $_POST['orderBy'] = 'view_count desc';
+            $_POST['orderBy'] = '';
         }
         $tmp_params = $this->filter_decode($_POST,$_POST['cat_id'],$_POST['virtual_cat_id']);
         $params = $tmp_params['filter'];

@@ -19,10 +19,14 @@ class b2c_mdl_analysis_productsale extends dbeav_model{
 
         if($orderType)$sql.=' ORDER BY '.(is_array($orderType)?implode($orderType,' '):$orderType);
 
+        $cols_arr = explode(',', $cols);
         $rows = $this->db->selectLimit($sql,$limit,$offset);
         $this->tidy_data($rows, $cols);
         foreach($rows as $key=>$val){
             $rows[$key]['rownum'] = (string)($offset+$key+1);
+            if( $cols != "*" && !in_array('goods_id',$cols_arr)){
+                unset($rows[$key]['goods_id']);
+            }
             $sql = 'SELECT sum(number) as refund_num FROM '.
                 kernel::database()->prefix.'b2c_reship_items as I LEFT JOIN '.
                 kernel::database()->prefix.'b2c_products as P ON P.product_id=I.product_id '.
@@ -31,10 +35,15 @@ class b2c_mdl_analysis_productsale extends dbeav_model{
             $rows[$key]['refund_num'] = intval($row[0]['refund_num']);
             $rows[$key]['refund_ratio'] = isset($val['saleTimes'])?number_format($rows[$key]['refund_num']/$val['saleTimes'],2):0;
             $image = $this->app->model('goods')->dump($val['rownum'],'image_default_id,udfimg,thumbnail_pic');
-            $rows[$key]['image_default_id'] = $image['image_default_id'];
-            $rows[$key]['udfimg'] = $image['udfimg'];
-            $rows[$key]['thumbnail_pic'] = $image['thumbnail_pic'];
-            
+            if( $cols == "*" || in_array('image_default_id',$cols_arr)){
+                $rows[$key]['image_default_id'] = $image['image_default_id'];
+            }
+            if( $cols == "*" || in_array('udfimg',$cols_arr)){
+                $rows[$key]['udfimg'] = $image['udfimg'];
+            }
+            if( $cols == "*" || in_array('thumbnail_pic',$cols_arr)){
+                $rows[$key]['thumbnail_pic'] = $image['thumbnail_pic'];
+            }
         }
         return $rows;
     }
