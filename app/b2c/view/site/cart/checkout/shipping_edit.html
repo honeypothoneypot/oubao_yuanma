@@ -18,12 +18,12 @@
       <td><{input type="text" name=name id="" vtype="required" value=$edit_addr.name data-caution="请填写收货人姓名"}></td>
     </tr>
     <tr>
-      <th><{t}>手机<{/t}>：</th>
-      <td><{input type="text" name="mobile" id="" vtype="mobile" data-caution="请填写手机号码或者固定电话" value=$edit_addr.mobile}> <span class="caution notice-inline">手机号码和固定电话至少填写一个</span></td>
-    </tr>
-    <tr>
-      <th><{t}>固定电话<{/t}>：</th>
-      <td><{input type="text" name="tel" id="" value=$edit_addr.tel vtype="tel"}></td>
+      <th><em>*</em><{t}>联系方式<{/t}>：</th>
+      <td>
+        <{t}>手机<{/t}> <{input type="text" name="mobile" id="" vtype="mobile" data-caution="请填写手机号码或者固定电话" value=$edit_addr.mobile}> 
+        或
+        <{t}>固定电话<{/t}> <{input type="text" name="tel" id="" value=$edit_addr.tel vtype="tel"}>
+        <span class="caution notice-inline">手机号码和固定电话至少填写一个</span></td>
     </tr>
     <{if $site_checkout_receivermore_open == 'true'}>
     <tr>

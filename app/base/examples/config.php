@@ -56,6 +56,7 @@ define('SCRIPT_DIR', ROOT_DIR.'/script');
 define('APP_DIR', ROOT_DIR.'/app');
 # define('TMP_DIR', '/tmp');
 # define('DEV_CHECKDEMO', true);
+# define('HTTPCLIENT_TYPE', 'curl');
 
 define('SECACHE_SIZE', '1g'); // 缓存大小,最大不能超过1G
 # define('TEMPLATE_MODE','database');

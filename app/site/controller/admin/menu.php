@@ -35,7 +35,7 @@ class site_ctl_admin_menu extends site_admin_controller
                 array(
                     'label' => app::get('site')->_('添加菜单'), 
                     'href' => 'index.php?app=site&ctl=admin_menu&act=add', 
-                    'target' => 'dialog::{frameable:true, title:\''. app::get('site')->_('添加菜单').'\', width:400, height:400}',
+                    'target' => 'dialog::{frameable:true, title:\''. app::get('site')->_('添加菜单').'\', width:430, height:430}',
                 ),
             ),
         ));

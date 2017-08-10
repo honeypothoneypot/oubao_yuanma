@@ -372,6 +372,7 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
     public function ajax_get_goods(){
         $_POST['cat_id'] = utils::_RemoveXSS($_POST['cat_id']);
         $_POST['virtual_cat_id'] = utils::_RemoveXSS($_POST['virtual_cat_id']);
+        $_POST['orderBy'] = utils::_RemoveXSS($_POST['orderBy']);
         $tmp_params = $this->filter_decode($_POST);
         $params = $tmp_params['filter'];
         $orderby = $tmp_params['orderby'];

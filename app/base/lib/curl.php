@@ -28,6 +28,7 @@ class base_curl{
     function action($action,$url,$headers=null,$callback=null,$data=null,$ping_only=false){
 		$action = $action=='post'?true:false;
         $headers = array_merge($this->default_headers,(array)$headers);
+        $strData = is_string($data) ? $data : http_build_query($data);
 
         foreach((array)$headers as $k=>$v){
             $set_headers[] .= $k.': '.$v;
@@ -42,7 +43,7 @@ class base_curl{
 		curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 		curl_setopt($ch, CURLOPT_HEADERFUNCTION, array($this,'callback_header'));
 		curl_setopt($ch, CURLOPT_WRITEFUNCTION, array($this,'callback_body'));
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $strData);
 		if($set_headers)
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $set_headers);
 		curl_setopt($ch, CURLOPT_HTTP_VERSION, $this->http_ver);

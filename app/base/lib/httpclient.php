@@ -9,7 +9,7 @@
  
 class base_httpclient{
 	function __construct(){
-		if(ECAE_MODE==true){
+		if(ECAE_MODE==true || HTTPCLIENT_TYPE=='curl'){
 			$this->netcore = kernel::single('base_curl');
 		}else{
 			$this->netcore = kernel::single('base_http');

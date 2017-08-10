@@ -17,7 +17,7 @@
 .home-nav-down td a { display: block; line-height: 30px; color: #FFFFFF; }
 
 .home-to-top { position: relative; padding: 10px 0; text-align: center; }
-.home-to-top .to-top { position: absolute; right: 10px; padding-right: 15px; color: #666; background: url(../images/top.jpg) no-repeat 100% 2px; }
+.home-to-top .to-top { position: absolute; right: 10px; padding-right: 15px; color: #666; background: url(./top.jpg) no-repeat 100% 2px; }
 
 .search { position: relative; height: 30px; background-color: #FC6B00; border: 2px solid #FC6B00; margin: 16px 0px 13px; }
 .search .key { display: block; margin-right: 36px; background-color: #FFFFFF; border: none; width: 100%; height: 30px; -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; }

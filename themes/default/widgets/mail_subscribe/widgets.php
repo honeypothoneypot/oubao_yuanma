@@ -6,12 +6,12 @@
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
 $setting['author']='zinkwind@gmail.com';
-$setting['name']='邮件订阅';
+$setting['name']='文章栏目';
 $setting['version']='1.0.0';
 $setting['stime']='2012-08';
 $setting['catalog']='辅助信息';
 $setting['usual'] = '0';
-$setting['description']='展示模板使用的邮件订阅挂件';
+$setting['description']='展示栏目节点下的文章';
 $setting['userinfo']='';
 $setting['tag'] = 'auto';
 $setting['template'] = array(

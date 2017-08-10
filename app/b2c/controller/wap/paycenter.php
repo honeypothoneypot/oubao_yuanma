@@ -29,19 +29,24 @@ class b2c_ctl_wap_paycenter extends wap_frontpage{
         //当支付方式为微信支付js接口时，获取openid
         if( $sdf['payinfo']['pay_app_id'] == 'wxpayjsapi' )
         {
-            $wxpayjsapi_conf = app::get('ectools')->getConf('weixin_payment_plugin_wxpayjsapi');
-            $wxpayjsapi_conf = unserialize($wxpayjsapi_conf);
-            if(!$_GET['code'])
-            {
-                $return_url = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_paycenter','act'=>'index','args'=>array($order_id),'full'=>1));
-                $appId_to_get_code = trim($wxpayjsapi_conf['setting']['appId']);
-                kernel::single('weixin_wechat')->get_code($appId_to_get_code, $return_url);
-            }else{
-                $code = $_GET['code'];
-                $openid = kernel::single('weixin_wechat')->get_openid_by_code($wxpayjsapi_conf['setting']['appId'], $wxpayjsapi_conf['setting']['Appsecret'], $code);
-                if($openid == null)
-                    $this->splash('failed', 'back',  app::get('b2c')->_('获取openid失败'));
-            }
+
+            $return_url = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_paycenter','act'=>'index','args'=>array($order_id),'full'=>1));
+            if(!kernel::single('weixin_openid')->check($return_url, $msg))
+                  $this->splash('failed', 'back',  $msg);
+
+        //  $wxpayjsapi_conf = app::get('ectools')->getConf('weixin_payment_plugin_wxpayjsapi');
+        //  $wxpayjsapi_conf = unserialize($wxpayjsapi_conf);
+        //  if(!$_GET['code'])
+        //  {
+        //      $return_url = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_paycenter','act'=>'index','args'=>array($order_id),'full'=>1));
+        //      $appId_to_get_code = trim($wxpayjsapi_conf['setting']['appId']);
+        //      kernel::single('weixin_wechat')->get_code($appId_to_get_code, $return_url);
+        //  }else{
+        //      $code = $_GET['code'];
+        //      $openid = kernel::single('weixin_wechat')->get_openid_by_code($wxpayjsapi_conf['setting']['appId'], $wxpayjsapi_conf['setting']['Appsecret'], $code);
+        //      if($openid == null)
+        //          $this->splash('failed', 'back',  app::get('b2c')->_('获取openid失败'));
+        //  }
         }
         //获取openid结束
 

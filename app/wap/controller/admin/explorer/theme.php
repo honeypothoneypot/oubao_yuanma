@@ -270,4 +270,14 @@ class wap_ctl_admin_explorer_theme extends desktop_controller
         return true;
     }//End Function
 
+    /*
+     * 错误
+     * @param string $msg
+     */
+    public function _error($msg='非法操作')
+    {
+        header("Content-type: text/html; charset=utf-8");
+        echo $msg;exit;
+    }//End Function
+
 }//End Class

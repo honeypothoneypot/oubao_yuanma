@@ -271,6 +271,7 @@ class weixin_wechat{
     {
         $api_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?';
         $api_url = $api_url.'appid='.$appid.'&redirect_uri='.urlencode($redirect_uri).'&response_type='.$response_type.'&scope='.$scope.'&state='.$state.'#wechat_redirect';
+        logger::info('location url for weixin get code :'.$api_url);
         header('Location:'.$api_url);
         exit;
     }
@@ -290,6 +291,7 @@ class weixin_wechat{
         $api_url = $api_url.'&grant_type='.$grant_type;
         $httpclient = kernel::single('base_httpclient');
         $response = $httpclient->set_timeout(6)->get($api_url);
+        logger::info('weixin get access_token by code with code('.$code.') :'.$response);
         $result = json_decode($response, true);
         return $result;
     }
