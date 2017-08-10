@@ -1605,6 +1605,7 @@ select { line-height: 25px; }
  	background: url(../images/window-wx.jpg) no-repeat center;
  	background-size: cover;
  	text-align: center;
+        margin:0 auto;
  }
  #qrcode .wrapper img{
  	position: absolute;

@@ -182,9 +182,9 @@ class importexport_data_b2c_goods {
             $goodsData['thumbnail_pic'] = $goodsData['thumbnail_pic'].'@'.$imageData['url'];
         }
 
-        //图片名称
-        $goodsData['pic_name'] = $this->_get_gods_images($row['goods_id']);
 
+        //图片名称
+        $goodsData['pic_name'] = $this->_get_gods_images($row['goods_id'],$row['image_default_id']);
         //类型名称
         $goodsTypeModel = app::get('b2c')->model('goods_type');
         $goodsTypeData = $goodsTypeModel->getList('type_id,name,params', array('type_id'=>$row['type_id']) );
@@ -267,10 +267,19 @@ class importexport_data_b2c_goods {
     }
 
     //图片文件名称
-    private function _get_gods_images($goods_id){
+    private function _get_gods_images($goods_id,$image_default_id){
         $goodsImages = app::get('image')->model('image_attach')->getList('attach_id,image_id',array('target_id'=>$goods_id, 'target_type'=>'goods') );
         if( !$goodsImages ) return '';
-
+        $temp=array();
+        if(!empty($image_default_id)){
+            foreach($goodsImages as $key=>$val){
+                if( $val['image_id'] == $image_default_id && $key != 0 ){
+                    $temp[0]=$goodsImages[$key];
+                    unset($goodsImages[$key]);
+                    array_unshift($goodsImages, $temp[0]);
+                }
+            }
+        }
         $imageModel = app::get('image')->model('image');
         foreach( $goodsImages as $row){
             $imageData = $imageModel->dump($row['image_id'],'url');

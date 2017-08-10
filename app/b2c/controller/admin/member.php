@@ -158,7 +158,11 @@ class b2c_ctl_admin_member extends desktop_controller{
           $view_filter = $this->get_view_filter('b2c_ctl_admin_member','b2c_mdl_members');
           $aMember = array();
           $obj_member = app::get('b2c')->model('members');
-          $aData = $obj_member->getList('member_id',$view_filter);
+          $_POST = array_merge($_POST,$view_filter);
+          unset($_POST['isSelectedAll']);
+
+          $obj_member->filter_use_like = true;
+          $aData = $obj_member->getList('member_id',$_POST);
           foreach((array)$aData as $key => $val){
             $aMember[] = $val['member_id'];
           }
@@ -178,8 +182,12 @@ class b2c_ctl_admin_member extends desktop_controller{
         if($_POST['isSelectedAll'] == '_ALL_'){
             $aMember = array();
             $view_filter = $this->get_view_filter('b2c_ctl_admin_member','b2c_mdl_members');
-            $obj_member = app::get('b2c')->model('members',$view_filter);
-            $aData = $obj_member->getList('member_id');
+            $obj_member = app::get('b2c')->model('members');
+            $_POST = array_merge($_POST,$view_filter);
+            unset($_POST['isSelectedAll']);
+
+            $obj_member->filter_use_like = true;
+            $aData = $obj_member->getList('member_id',$_POST);
             foreach((array)$aData as $key => $val){
                 $aMember[] = $val['member_id'];
             }
@@ -198,7 +206,11 @@ class b2c_ctl_admin_member extends desktop_controller{
         if($params['isSelectedAll'] == '_ALL_'){
             $aMember = array();
             $view_filter = $this->get_view_filter('b2c_ctl_admin_member','b2c_mdl_members');
-            $aData = $obj_member->getList('member_id',$view_filter);
+            $_POST = array_merge($_POST,$view_filter);
+            unset($_POST['isSelectedAll']);
+
+            $obj_member->filter_use_like = true;
+            $aData = $obj_member->getList('member_id',$_POST);
             foreach($aData as $val){
                 $aMember[] = $val['member_id'];
             }

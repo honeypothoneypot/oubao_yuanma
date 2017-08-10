@@ -288,10 +288,15 @@ final class weixin_payment_plugin_wxqrpay extends ectools_payment_app implements
         $qrcode_url = app::get('site')->router()->gen_url(array('app'=>'weixin','ctl'=>'site_qrcode','act'=>'index','full'=>1));
         $qrcode_url .= '?text='.urlencode($this->fields['code_url']);
         $check_url = app::get('site')->router()->gen_url(array('app'=>'b2c','ctl'=>'site_paycenter','act'=>'check_payments','full'=>1,'arg0'=>$this->fields['payment_id']));
-        $success_url = app::get('site')->router()->gen_url(array('app'=>'b2c','ctl'=>'site_paycenter','act'=>'result_pay','full'=>1,'arg0'=>$this->fields['order_id'],'arg1'=>'true'));
-        $path = app::get('weixin')->res_full_url;
+		if( $this->fields['order_id'] ){
+            $success_url = app::get('site')->router()->gen_url(array('app'=>'b2c','ctl'=>'site_paycenter','act'=>'result_pay','full'=>1,'arg0'=>$this->fields['order_id'],'arg1'=>'true'));
+        }else{
+            $success_url = app::get('site')->router()->gen_url(array('app'=>'b2c','ctl'=>'site_member','act'=>'balance','full'=>1));
+        }
+        $path = app::get('site')->res_full_url;
+        $path_b2c = app::get('b2c')->res_full_url;
         $strHtml ="<!DOCTYPE HTML><html><head><meta charset='utf-8'><title>微信扫码支付</title><meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'/>";
-        $strHtml .= "<link rel='stylesheet' href='".$path."/css/qrpay.css'>";
+        $strHtml .= "<link rel='stylesheet' href='".$path_b2c."/css_mini/basic.min.css' />";
         $strHtml .= "</head>";
         $strHtml .=
             '<body>

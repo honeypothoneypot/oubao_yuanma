@@ -410,7 +410,11 @@ class b2c_ctl_admin_order extends desktop_controller{
         elseif ($_POST['isSelectedAll'] == '_ALL_')
         {
             $view_filter = $this->get_view_filter('b2c_ctl_admin_order','b2c_mdl_orders');
-            $arr_idColumns = $objOrder->getList($objOrder->idColumn,$view_filter);
+            $_POST = array_merge($_POST,$view_filter);
+            unset($_POST['isSelectedAll']);
+
+            $objOrder->filter_use_like = true;
+            $arr_idColumns = $objOrder->getList($objOrder->idColumn,$_POST);
             if ($arr_idColumns)
             {
                 foreach ($arr_idColumns as $_order_id)

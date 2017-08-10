@@ -101,6 +101,7 @@ class b2c_mdl_member_goods extends dbeav_model{
 #####添加商品收藏
 
     function add_fav($member_id=null,$object_type='goods',$goods_id=null){
+        $goods_id = intval($goods_id);
         if(!$member_id || !$goods_id) return false;
         $filter['member_id'] = $member_id;
         $filter['goods_id'] = $goods_id;

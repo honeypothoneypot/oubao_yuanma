@@ -31,7 +31,7 @@ class wap_task
         kernel::single('wap_theme_base')->set_last_modify();
         kernel::single('wap_theme_install')->initthemes();
         $themes = kernel::single('wap_theme_install')->check_install();
-
+kernel::single('ectools_regions_operation')->updateRegionData();
         //初始化logo
         $this->init_logo();
 

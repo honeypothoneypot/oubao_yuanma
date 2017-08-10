@@ -16,6 +16,7 @@ class b2c_coupon_order {
     public function get_list_order($order_id = 0) {
         if( empty($order_id) ) return false;
         $filter = array('memc_gen_orderid'=>$order_id);
+        $filter['memc_isvalid'] = 'true'; //只获取已经激活的优惠券，避免更新因订单营销活动获得的优惠券
         $arr = $this->app->model('member_coupon')->getList('memc_code,member_id,disabled', $filter);
         return $arr;
     }

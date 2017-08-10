@@ -14,6 +14,7 @@ class desktop_finder_builder_settag extends desktop_finder_builder_prototype{
         $tag_stat = $_POST['tag']['stat'];
         $tag_ids = $_POST['tag']['tag_id'];
 
+        $this->object->filter_use_like = true;
         if($_POST['filter']){
             $obj = $this->object;
             $schema = $obj->get_schema();

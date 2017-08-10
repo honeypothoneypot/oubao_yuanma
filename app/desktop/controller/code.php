@@ -96,7 +96,7 @@ class desktop_ctl_code extends base_controller
             case "invalid_version":
                 $msg = "版本号有误，查看mysql是否运行正常"; break;
             case "RegUrlError":
-                $msg = "你当前使用的域名与证书所绑定的域名不一致。";break;
+                $msg = "您当前使用的域名与证书所绑定的域名不一致。";break;
             case "SessionError":
                 $msg = "中心请求网店API失败!，请联系您的服务商，或找贵公司相关人员检测网络，以确保网络正常"; break;
             case "license_error":

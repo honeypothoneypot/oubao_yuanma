@@ -16,6 +16,7 @@ class desktop_finder_builder_tag extends desktop_finder_builder_prototype{
             'app_id'=>$this->app->app_id
 //            ,'tag_mode'=>'normal'
         ));
+        $this->object->filter_use_like = true;
         $filter['tag_type'] = $this->object->table_name();
         $rel_mdl = $this->app->model($filter['tag_type']);
         $filter['app_id'] = $this->app->app_id;
