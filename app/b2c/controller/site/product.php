@@ -134,10 +134,6 @@ class b2c_ctl_site_product extends b2c_frontpage{
         $goodsAdjunct = $this->_get_goods_adjunct($aGoods);//配件信息
         $this->pagedata['page_goods_adjunct'] = $goodsAdjunct;
 
-        //社会化分享
-        $goodsshare = kernel::single('b2c_goods_share')->get_share($productBasic);
-        $this->pagedata['goods_share'] = $goodsshare;
-
         /**** start 商品评分 ****/
         $objPoint = $this->app->model('comment_goods_point');
         $this->pagedata['goods_point'] = $objPoint->get_single_point($goodsId);

@@ -113,8 +113,8 @@ class aftersales_ctl_site_member extends b2c_ctl_site_member
         $order = $this->app->model('orders');
 
         $order_status['pay_status'] = 1;
-        $order_status['create_time'] = time() - 15*24*3600;
         $order_status['ship_status'] = array(1,2,3);
+        $order_status['status'] ='active';
 
         $aData = $order->fetchByMember($this->app_b2c->member_id,$nPage-1,$order_status,10);
 

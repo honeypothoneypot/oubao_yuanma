@@ -128,7 +128,6 @@ class importexport_type_xls implements importexport_interface_type{
             $rs .= '<Cell><Data ss:Type="String">'.htmlspecialchars($data).'</Data></Cell>'."\n";
             $rs .= '</Row>'."\n";
         }
-
         return $rs;
     }
 

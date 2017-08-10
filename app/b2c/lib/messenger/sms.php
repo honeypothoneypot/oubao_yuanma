@@ -48,7 +48,7 @@ class b2c_messenger_sms{
         $setSms=$this->checkReg($setSmsSign);
         if($setSms=='false')
         {    
-            $this->end(false,app::get('b2c')->_('含有非法字符'));
+            return app::get('b2c')->_('含有非法字符');
         }
         if (!$setSmsSign)
         {

@@ -17,9 +17,6 @@
 
 	<adminpanel group="desktop_other" permission="other" controller='admin_shopnode' action='index' display='false'>网店节点显示</adminpanel>
 
-	<adminpanel group="desktop_other" permission="other" controller='admin_goods_share' action='index' display='true'>商品分享配置</adminpanel>
-
-
     <permissions>
         <permission id="shipment" display='true' parent='0'>配送设置</permission>
         <!--商品-->

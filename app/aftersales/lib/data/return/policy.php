@@ -231,8 +231,8 @@ class aftersales_data_return_policy extends b2c_api_rpc_request
                 $product_id='';
                 if(!empty($val['product_id'])) $product_id=$val['product_id'];
                 if(empty($product_id)){
-                    $result_product=$products->getRow('$result_product',array('bn'=>$val['bn']));
-                    $product_id = $result_product[$result_product];
+                    $result_product=$products->getRow('product_id',array('bn'=>$val['bn']));
+                    $product_id = $result_product['product_id'];
                 }
                 if(empty($product_id)) continue;
                 $order_delivery_send_product[$product_id]-=$val['num'];

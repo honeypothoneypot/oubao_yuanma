@@ -14,6 +14,7 @@ $db['apilog'] = array(
         'apilog'=>array(
             'type' => 'varchar(32)',
             'label' => '日志编号',
+            'default' => '',
             'editable' => false,
             'in_list' => false,
             'default_in_list' => false,
@@ -185,18 +186,20 @@ $db['apilog'] = array(
     ),
     'index' =>
     array (
-        'ind_msg_id' =>
+        'ind_msg_id_api_type' =>
         array (
             'columns' =>
             array (
                 0 => 'msg_id',
+                1 => 'api_type',
             ),
         ),
-        'ind_status' =>
+        'ind_status_api_type' =>
         array (
             'columns' =>
             array (
                 0 => 'status',
+                1 => 'api_type',
             ),
         ),
         'ind_calltime' =>
@@ -206,11 +209,13 @@ $db['apilog'] = array(
                 0 => 'calltime',
             ),
         ),
-        'ind_api_type' =>
+        'ind_apilog_api_type_calltime' =>
         array (
             'columns' =>
             array (
-                0 => 'api_type',
+                0 => 'apilog',
+                1 => 'api_type',
+                2 => 'calltime',
             ),
         ),
     ),
@@ -218,4 +223,5 @@ $db['apilog'] = array(
     'engine' => 'innodb',
 
 );
+
 

@@ -212,9 +212,9 @@ class b2c_ctl_wap_passport extends wap_frontpage{
         $b2c_members_model->update($member_data,array('member_id'=>$member_id));
         $this->userObject->set_member_session($member_id);
         $this->bind_member($member_id);
-        kernel::single('pam_lock')->flush_lock($member_id);
         $this->set_cookie('loginName',$_POST['uname'],time()+31536000);//用于记住用户名
         $this->app->model('cart_objects')->setCartNum();
+        kernel::single('pam_lock')->flush_lock($member_id);
         $bindOpenId = app::get('pam')->model('bind_tag')->getRow('member_id',array('open_id'=>$_SESSION['weixin_u_openid']));
         $bindMember = app::get('pam')->model('bind_tag')->getRow('member_id',array('member_id'=>$member_id));
         if( $_SESSION['weixin_u_openid'] && !$bindOpenId && !$bindMember ){
@@ -544,7 +544,7 @@ class b2c_ctl_wap_passport extends wap_frontpage{
         $userVcode = kernel::single('b2c_user_vcode');
         if( !$vcodeData = $userVcode->verify($_POST[$send_type.'vcode'],$_POST[$send_type],'forgot')){
             $msg = app::get('b2c')->_('验证码错误');
-            $this->splash('failed',null,$msg,true);exit;
+            $this->splash('failed',null,$msg,'','',true);exit;
         }
         $data['key'] = $userVcode->get_vcode_key($_POST[$send_type],'forgot');
         $data['key'] = md5($vcodeData['vcode'].$data['key']);

@@ -172,6 +172,12 @@ class ectools_pay extends ectools_operation
             return false;
         }
 
+        $objPayments = $this->app->model('payment_list');
+        $payment_msg = array('account'=>$sdf['account'],'bank'=>$sdf['bank']);
+        $payment_list = $objPayments->getRow('*',$payment_msg);
+        if(empty($payment_list)){
+            $objPayments->save($payment_msg);
+        }
         return true;
     }
 }

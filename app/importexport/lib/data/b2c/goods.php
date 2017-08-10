@@ -170,7 +170,7 @@ class importexport_data_b2c_goods {
         $goodsData['name'] = $row['name'];
         $goodsData['store'] = $row['store'];
         $goodsData['brief'] = $row['brief'];
-        $goodsData['description'] = str_replace( '"','""', str_replace("\n"," ",$row['intro']) );
+        $goodsData['description'] = str_replace("\n"," ",$row['intro']);
         $goodsData['unit'] = $row['unit'];
         $goodsData['status'] = ($row['marketable'] == 'true') ? 'Y' : 'N';
 

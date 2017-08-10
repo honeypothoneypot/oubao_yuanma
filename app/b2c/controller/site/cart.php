@@ -737,8 +737,12 @@ class b2c_ctl_site_cart extends b2c_frontpage{
             $oCoupon = kernel::single('b2c_coupon_mem');
             $aData = $oCoupon->get_list_m($arrMember['member_id']);
             if( is_array($aData) ) {
+                $curTime = time();
                 foreach( $aData as $_key => $_val ) {
-                    if( $_val['memc_used_times'] ) unset($aData[$_key]);
+                    // 验证优惠券是否开始使用、是否过期、是否使用、是否禁用，注销不符合条件的优惠券
+                    if ($curTime<$_val['time']['from_time'] || $curTime>=$_val['time']['to_time'] || $_val['memc_used_times'] || !$_val['coupons_info']['cpns_status']) {
+                        unset($aData[$_key]);
+                    }
                 }
             }
             $this->pagedata['coupon_lists'] = $aData;

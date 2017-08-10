@@ -680,7 +680,8 @@ select { line-height: 25px; }
 .product-album-thumb .thumbnail-list .active .thumbnail { border: 2px solid #FF6600; }
 
 .share-recommend { clear: both; text-align: center; margin-top: 15px; }
-.share-recommend .pop-wrapper { display: inline-block; position: relative; z-index: 12; margin-right: 5px; }
+.share-recommend .pop-wrapper { display: inline-block; position: relative; z-index: 12; margin-right: 5px; vertical-align: middle;}
+.share-recommend .btn{height:24px;}
 .share-recommend .form-item { min-width: 296px; _width: 296px; }
 .share-recommend .form-label { white-space: nowrap; text-align: right; }
 .share-recommend .form-act textarea { width: 97%; _width: 96%; }

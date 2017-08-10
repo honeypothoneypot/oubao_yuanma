@@ -1,17 +1,13 @@
 <div class="share-recommend" id="share_recommend">
-  <{if $goods_share}>
-  <!-- share -->
   <span class="share pop-wrapper">
-    <button type="button" class="btn btn-rounded action-handle"><span><span><i class="icon icon-share">&#x58;</i><i class="text"><{t}>分享<{/t}></i><i class="icon arrow">&#x37;</i></span></span></button>
-    <div class="pop-body" style="display:none">
-      <div class="share-mini">
-        <{foreach from=$goods_share item=row}>
-        <a href="<{$row.url}>" target="_blank" class="<{$row.key}>"><i class="icon"></i><{$row.name}></a>
-        <{/foreach}>
-      </div>
-    </div>
+  <div class="jiathis_style_24x24">
+    <span class="jiathis_txt" style="font-size:13px;">分享到：</span>
+    <a class="jiathis_button_qzone"></a>
+    <a class="jiathis_button_weixin"></a>
+    <a class="jiathis_button_tsina"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+  </div>
   </span>
-  <{/if}>
 
   <{if $setting.recommend == 'true'}>
   <!-- recommend -->
@@ -63,3 +59,4 @@
   <a href="javascript:void(0);" class="btn btn-rounded btn-faved" rev="_favbtn_" <{if !$page_product_basic.is_fav}> style="display:none;"<{/if}>><span><span><{t}>已收藏<{/t}></span></span></a>
   <{/if}>
 </div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>

@@ -61,11 +61,11 @@ class importexport_ctl_admin_export extends importexport_controller{
             'key'=> $_POST['key'],
             'suffix'=> $params['suffix'],
         );
-        system_queue::instance()->publish('importexport_tasks_runexport', 'importexport_tasks_runexport', $queue_params);
+        //system_queue::instance()->publish('importexport_tasks_runexport', 'importexport_tasks_runexport', $queue_params);
         app::get('importexport')->model('task')->create_task('export',$_POST);
         //测试，直接导出数据到存储服务器，不进行队列
-        #print_r($queue_params);exit;
-        #kernel::single('importexport_tasks_runexport')->exec($queue_params);
+        //print_r($queue_params);exit;
+        kernel::single('importexport_tasks_runexport')->exec($queue_params);
     }
 
     /**

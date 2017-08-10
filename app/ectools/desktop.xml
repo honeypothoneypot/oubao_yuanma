@@ -1,10 +1,10 @@
 <desktop>
     <panelgroup id="currency" icon="panel-currency.png" order="20">支付与货币</panelgroup>
     <panelgroup id="regions" icon="panel-regions.png" order="40">地区管理</panelgroup>
-
     <adminpanel group="ectools_currency" controller="currency" action="index" permission='currency' order="20" display='true'>货币管理</adminpanel>
     <adminpanel group="ectools_currency" controller="setting" action="index" permission='currency' order="30" display='true'>价格精度设置</adminpanel>
     <adminpanel group="ectools_currency" controller="payment_cfgs" action="index" permission='currency' order="10" display='true'>支付方式管理</adminpanel>
+    <adminpanel group="ectools_currency" controller="payment_list" action="index" permission='currency' order="40" display='true'>收款帐号管理</adminpanel>
     <!--
 	<adminpanel group="ectools_currency" controller="admin_payment_notice" action="index" permission='currency' order="31" display='true'>支付自定义设置</adminpanel>
     -->

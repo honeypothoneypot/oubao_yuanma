@@ -939,8 +939,8 @@ class b2c_ctl_admin_order extends desktop_controller{
 
         if ($aORet['member_id'] > 0)
         {
-            $objPayments = app::get('ectools')->model('payments');
-            $aRet = $objPayments->getAccount();
+            $objPayments = app::get('ectools')->model('payment_list');
+            $aRet = $objPayments->getList();
             $this->pagedata['member'] = $aRet;
         }
         else
