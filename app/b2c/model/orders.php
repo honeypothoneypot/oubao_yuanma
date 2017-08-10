@@ -511,7 +511,12 @@ class b2c_mdl_orders extends dbeav_model{
 				if ($filter['member_login_name'] == app::get('b2c')->_('非会员顾客'))
 					$filter['member_id'] = 0;
 			}
+
             unset($filter['member_login_name']);
+        }
+        if( trim($filter['ship_addr']) ){
+            $filter['ship_addr|has'] = $filter['ship_addr'];
+            unset($filter['ship_addr']);
         }
 
         foreach(kernel::servicelist('b2c_mdl_orders.filter') as $k=>$obj_filter){

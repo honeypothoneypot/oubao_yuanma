@@ -114,12 +114,16 @@
           <{/if}>
         <{/if}>
         <{if $order.status != 'dead' && $order.status != 'finish' && $order.ship_status =="1" && $order.received_status =='0'}>
+
+        <!--=======================================================================================================================-->
+
           <a href="javascript:void(0);" class="btn btn-import" onclick="return receive('<{$order.url}>')"><span><span><{t}>确认收货<{/t}></span></span></a>
         <{/if}>
         <{if $order.status != 'dead' && $order.status != 'finish' && $order.ship_status =="2" && $order.received_status =='0'}>
         <a href="javascript:void(0);" class="btn btn-import disabled" onclick="error_show()"><span><span><{t}>确认收货<{/t}></span></span></a>
         <{/if}>
-
+        <!--=======================================================================================================================-->
+        
         <i class="separator"></i><a href="<{link app=b2c ctl=site_member act=orderdetail arg0=$order.order_id arg1=$archive}>"><{t}>查看订单<{/t}></a>
 
         <{if $order.status == 'active' && $order.pay_status == '0' && $order.ship_status == '0' && $order.promotion_type != 'prepare'}>
@@ -239,7 +243,7 @@ function receive(url){
       }else{
         return false;
       }
-    }, 
+    }
     }); 
   pingRequest.send("url="+ url);
 }

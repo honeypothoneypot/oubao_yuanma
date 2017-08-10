@@ -603,4 +603,22 @@ class b2c_ctl_site_paycenter extends b2c_frontpage{
             }
         }
     }
+
+    //用来确认支付单是否支付成功
+    public function check_payments($payment_id)
+    {
+        if(!is_numeric($payment_id))
+        {
+            $this->splash('failed',null,"payment_id格式错误",true);exit;
+        }
+        $payment = app::get('ectools')->model('payments')->getRow('status', array('payment_id'=>$payment_id));
+        if($payment['status']=='succ')
+        {
+            $this->splash('succ',null,"该支付单已经完成支付",true);exit;
+        }
+        else
+        {
+            $this->splash('failed',null,"该支付单未完成支付",true);exit;
+        }
+    }
 }

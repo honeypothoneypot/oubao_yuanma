@@ -162,7 +162,13 @@
                   <{/if}>
                 <{else}>
                   <{if $order.payinfo.platform =='iscommon' || $order.payinfo.platform =='ispc'}>
-                  <{button type="submit" class="btn-import btn-big action-pay" label="去付款"}>
+                    <{if $order.payinfo.pay_app_id == 'wxqrpay'}>
+                      <div>
+                      <{button type="button" class="btn-import btn-big qrcode-pay" label="去付款"}>
+                      </div>
+                    <{else}>
+                      <{button type="submit" class="btn-import btn-big action-pay" label="去付款"}>
+                    <{/if}>
                   <{/if}>
                 <{/if}>
                 </span>
@@ -332,9 +338,9 @@
 <script>
 function check_password(){
   var password = $('pay_password').get('value');
-  var pingRequest = new Request({ 
+  var pingRequest = new Request({
   data: "pay_password="+password,
-  url: '<{$form_check}>', 
+  url: '<{$form_check}>',
   onSuccess:  function(rs){
     var rs = JSON.decode(rs);
     if(rs){
@@ -348,8 +354,8 @@ function check_password(){
         $("pay[password]").value = password;
       }
     }
-  }, 
-  }); 
+  },
+  });
   pingRequest.send();
 }
 Object.merge(validatorMap, {
@@ -425,6 +431,24 @@ function pay_confirm (el, method) {
         }
     }
 }
+
+function qrcode_pay() {
+  var dialog = new Dialog("<{$form_action}>", {
+            width: 630,
+            title: '微信扫一扫',
+            modal: true,
+            async: 'ajax',
+            asyncOptions: {
+                method: 'post',
+                data: 'payment[order_id]=<{$order.order_id}>&payment[def_pay][cur_money]=<{$order.cur_money}>&payment[def_pay][pay_app_id]=<{$order.payinfo.pay_app_id}>&payment[memo]=<{$order.memo}>',
+                onComplete: function() {
+                    dialog.position();
+                    $$('.popup-container')[0].setStyle('z-index', '10001');
+                    $$('.mask')[0].setStyle('z-index', '10000');
+                }
+            }
+   });
+}
 function loadPayment(data) {
     new Request({
         url: '<{link app=b2c ctl=site_order act=payment_change}>',
@@ -485,6 +509,26 @@ $(document.body).addEvents({
             loadPayment(parent, update);
         }
     },
+    'click:relay(.qrcode-pay)': function(e) {
+      if(this.disabled) return;
+
+      new Request({
+        url:'<{link app=b2c ctl=site_passport act=ajax_check_login}>',
+        onComplete:function(rs) {
+
+          rs = JSON.parse(rs);
+          if( rs.status == true ){
+            qrcode_pay();
+          }else{
+            Dialog.confirm('登录超时，请重新登录。',function(e){
+              if( e ){
+               location.href = rs.url;
+              }
+            });
+          }
+        }
+      }).post();
+    },
     'click:relay(.action-recharge)': function(e) {
         new Dialog($('payment_recharge').wrapped(), {
             width:400,
@@ -510,4 +554,7 @@ $(document.body).addEvents({
         }).post($('payment_center'));
     }
 });
+<{if $order.payinfo.pay_app_id == 'wxqrpay'}>
+ //qrcode_pay();
+<{/if}>
 </script>

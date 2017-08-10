@@ -14,22 +14,22 @@
     <div class="signup-contant-main ">
       <div class="logo clearfix">
           <{if $ec_deploy.publish_version == 'ecstore' && $ec_deploy.publish_version== 'quick' }>
-          <h3>ONex ECStore快启版<span>
+          <h3>ONex ECStore快启版
           <{elseif $ec_deploy.publish_version == 'ONex_ECStore_quick' }>
-          <h3>ONex ECStore快启版<span>
+          <h3>ONex ECStore快启版
           <{elseif $ec_deploy.publish_version == 'ONex_ECStore' ||  $ec_deploy.publish_version == 'ecstore' }>
-           <h3>ONex ECStore标准版<span>
+           <h3>ONex ECStore标准版
           <{else}>
-           <h3>ONex ECStore专业版<span>
+           <h3>ONex ECStore专业版
           <{/if}>
-          <{$env.conf.desktop.logo_desc}></span></h3>
+          </h3>
       </div>
       <div class="signup">
         <div class="signip-main">
           <div class="ifram">
             <div class="publicize" id="publicize">
 
-              <img src="<{$env.app.res_url}>/login.png" width="100%" height="100%">  
+              <img src="<{$env.app.res_url}>/login.gif" >  
               <!-->
               <{if $Commerce=='yes'}>
               <{else}>

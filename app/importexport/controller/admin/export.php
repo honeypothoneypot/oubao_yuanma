@@ -41,8 +41,16 @@ class importexport_ctl_admin_export extends importexport_controller{
         $filter = unserialize($_POST['filter']);
         $params = unserialize($_POST['params']);
         if(isset($filter['isSelectedAll']) && $filter['isSelectedAll'] == '_ALL_'){
+            if( isset($filter['filter']) )
+            {
+                foreach( $filter['filter'] as $key=>$value )
+                {
+                    $filter[$key] = $value;
+                }
+            }
             $filter = $this->view_filter($filter,$params);
         }
+
         $_POST['key'] = $this->gen_key();
         $queue_params = array(
             'filter'=>$filter,

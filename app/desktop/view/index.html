@@ -65,13 +65,13 @@ window.loadedPart = [1,0,startTime];
         <h1 class="logo">
 
           <{if $ec_deploy.publish_version == 'ecstore' && $ec_deploy.publish_version== 'quick' }>
-          <a href="index.php?ctl=dashboard&act=index">ONex ECStore快启版</a>
+          <a href="index.php?ctl=dashboard&act=index">ECStore快启版</a>
           <{elseif $ec_deploy.publish_version == 'ONex_ECStore_quick' }>
-          <a href="index.php?ctl=dashboard&act=index">ONex ECStore快启版</a>
+          <a href="index.php?ctl=dashboard&act=index">ECStore快启版</a>
           <{elseif $ec_deploy.publish_version == 'ONex_ECStore' ||  $ec_deploy.publish_version == 'ecstore' }>
-          <a href="index.php?ctl=dashboard&act=index">ONex ECStore标准版</a>
+          <a href="index.php?ctl=dashboard&act=index">ECStore标准版</a>
           <{else}>
-          <a href="index.php?ctl=dashboard&act=index">ONex ECStore专业版</a>
+          <a href="index.php?ctl=dashboard&act=index">ECStore专业版</a>
           <{/if}>
 
           <!--<a href="index.php?ctl=dashboard&act=index"><{$env.conf.desktop.banner}></a>-->

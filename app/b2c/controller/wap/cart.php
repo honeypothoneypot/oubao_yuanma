@@ -534,6 +534,8 @@ class b2c_ctl_wap_cart extends wap_frontpage{
         $this->pagedata['json_args'] = json_encode($arr_args);
         if($isfastbuy){
             $this->pagedata['is_fastbuy'] = $isfastbuy;
+        }else{
+            $this->pagedata['is_fastbuy'] = false;
         }
 
         if (!$this->member_status){

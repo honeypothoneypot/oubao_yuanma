@@ -140,7 +140,7 @@ class b2c_ctl_admin_member extends desktop_controller{
       $saveData = $_POST;
       $saveData = $userPassport->pre_signup_process($saveData);
       if( !$member_id = $userPassport->save_members($saveData,$msg) ){
-          $this->end(true, app::get('b2c')->_('添加失败！'));
+          $this->end(false, app::get('b2c')->_('添加失败！'));
       }
       //增加会员同步 2012-5-15
       if( $member_rpc_object = kernel::service("b2c_member_rpc_sync") ) {

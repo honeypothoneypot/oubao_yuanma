@@ -106,6 +106,29 @@ class weixin_api{
         // echo $returnXml;exit;
     }
 
+    // 微信扫码支付回调地址
+    function wxqrpay(){
+        $postData = array();
+        $httpclient = kernel::single('base_httpclient');
+        $callback_url = kernel::openapi_url('openapi.ectools_payment/parse/weixin/weixin_payment_plugin_wxqrpay', 'callback');
+
+        $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+        $postArray = kernel::single('site_utility_xml')->xml2array($postStr);
+        $postData['weixin_postdata']  = $postArray['xml'];
+
+        $nodify_data = array_merge($_GET,$postData);
+        $response = $httpclient->post($callback_url, $nodify_data);
+        // if($notify->checkSign() == FALSE){
+        //     $arr = array('return_code'=>'FAIL','return_msg'=>'签名失败')；
+        // }else{
+        //     $arr = array('return_code'=>'SUCCESS');
+        // }
+        // $returnXml = $notify->returnXml();
+        // echo $returnXml;exit;
+    }
+
+
+
 
     // 维权通知接口
     public function safeguard(){
@@ -132,7 +155,7 @@ class weixin_api{
         if(!weixin_util::verifySignatureShal($signData, $postData['AppSignature'])){
             return false;
         }
-        
+
         $saveData['openid'] = $postData['OpenId'];
         $saveData['appid'] = $postData['AppId'];
         $saveData['msgtype'] = $postData['MsgType'];
@@ -154,7 +177,7 @@ class weixin_api{
                 $safeguardModel->update($saveData,array('id'=>$row['id']));
             }
         }else{
-            $bindData = app::get('weixin')->model('bind')->getRow('id',array('appid'=>$saveData['appid'])); 
+            $bindData = app::get('weixin')->model('bind')->getRow('id',array('appid'=>$saveData['appid']));
             $res = kernel::single('weixin_wechat')->get_basic_userinfo($bindData['id'],$saveData['openid']);
             $saveData['weixin_nickname'] = $res['nickname'];
             if( !$safeguardModel->save($saveData) ){

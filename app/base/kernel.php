@@ -64,7 +64,7 @@ class kernel{
 
             require(ROOT_DIR.'/config/mapper.php');
             if( self::is_online() ){
-                require(ROOT_DIR.'/config/config.php');
+                require_once(ROOT_DIR.'/config/config.php');
             }
             @include(APP_DIR.'/base/defined.php');
             date_default_timezone_set(
@@ -302,7 +302,7 @@ class kernel{
         if(self::$__online===null){
             if(ECAE_MODE){
                 if(file_exists(ROOT_DIR.'/config/config.php') && $__require_config === null ){
-                    require(ROOT_DIR.'/config/config.php');
+                    require_once(ROOT_DIR.'/config/config.php');
                     $__require_config = true;
                 }else{
                     self::$__online = false;

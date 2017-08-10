@@ -12,7 +12,7 @@ body { font-size: 12px; text-align: center; font-family: Arial, Simsun, Helvetic
 
 .login-t { width: 50%; margin: 0; padding: 0; }
 
-.publicize { height: 250px; }
+.publicize { height: 250px; text-align: center;}
 
 .passport-item { border: 1px #cccccc solid; border-left-color: #999999; border-bottom-color: #999999; padding: 10px; height: 250px; background: #efefef; border-radius: 0 10px 10px 0; -webkit-border-radius: 0 10px 10px 0; -moz-border-radius: 0 10px 10px 0; -o-border-radius: 0 10px 10px 0; -ms-border-radius: 0 10px 10px 0; }
 
@@ -80,7 +80,7 @@ li.colspan { padding-left: 45px; padding-top: 5px; color: #3F4C68; text-align: l
 
 .signup-contant-main { width: 754px; height: auto; margin: 0 auto; padding: 0; }
 
-.logo { height: 35px; padding: 0 0 6px 0; }
+.logo { padding: 13px 0 6px 0; }
 
 .logo h3 { text-align: left; margin: 0; padding: 0 0 0 5px; border: 0; color: #4F638F; }
 

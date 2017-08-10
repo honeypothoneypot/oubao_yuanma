@@ -210,7 +210,10 @@ class b2c_mdl_goods extends dbeav_model{
                 $obj_filter->extend_filter($filter);
             }
         }
+
+//        echo '<pre/>';var_export($filter);
         $filter = kernel::single('b2c_goods_filter')->goods_filter($filter, $this);
+//        echo '<pre/>';var_export($filter);
         return parent::_filter($filter);
     }
 

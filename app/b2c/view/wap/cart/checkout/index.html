@@ -200,7 +200,7 @@
                 shipping_confirm('address='+$('#J_sel_address input').val());
                 this.close();
                 this.saved = true;
-                step2.open('<{link app=b2c ctl=wap_cart act=delivery_change}>','area='+$.parseJSON($('#J_sel_address input[name="address"]').val()).area);
+                step2.open('<{link app=b2c ctl=wap_cart act=delivery_change}>','area='+$.parseJSON($('#J_sel_address input[name="address"]').val()).area+'&isfastbuy=<{$is_fastbuy}>');
             },
             close:function(){
                 $('#J_address_list').addClass('hide');
@@ -299,7 +299,7 @@
             step1.open();
         });
         $('#J_sel_shipping').bind('click',function(e){
-            step2.open('<{link app=b2c ctl=wap_cart act=delivery_change}>','area='+$.parseJSON($('#J_sel_address input[name="address"]').val()).area);
+            step2.open('<{link app=b2c ctl=wap_cart act=delivery_change}>','area='+$.parseJSON($('#J_sel_address input[name="address"]').val()).area+'&isfastbuy=<{$is_fastbuy}>');
         });
         $('#J_sel_pay').bind('click',function(e){
             step3.open('<{link app=b2c ctl=wap_cart act=payment_change arg0=$promotion_type}>','shipping='+encodeURIComponent($('#J_sel_shipping input[name="shipping"]').val()));

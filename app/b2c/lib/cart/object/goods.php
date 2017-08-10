@@ -1626,7 +1626,6 @@ class b2c_cart_object_goods implements b2c_interface_cart_object{
 
 		$system_money_decimals = app::get('b2c')->getConf('system.money.decimals');
 		$system_money_operation_carryset = app::get('b2c')->getConf('system.money.operation.carryset');
-
         foreach( (array)$data as $row ) {
             if( $row['obj_ident']!==$ident['ident'] ) continue;
             if( $ident['index'] ) {

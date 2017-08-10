@@ -13,6 +13,9 @@ $db['special_remind']=array(
         'product_id'=>array(
             'type'=>'number',
         ),
+        'type_id'=>array(
+            'type'=>'number',
+        ),
         'goodsname'=>array(
             'type'=>'varchar(50)',
             ),

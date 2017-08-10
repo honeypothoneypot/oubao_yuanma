@@ -83,6 +83,22 @@ class b2c_ctl_admin_goods extends desktop_controller{
         $actions_base['allow_detail_popup'] = true;
         $actions_base['use_view_tab'] = true;
 
+        if( $_GET['action'] == 'tag' || $_GET['action'] == 'dorecycle' ){
+            $cat_id = array();
+            if($_GET['cat_id']){
+                $cat_id[]=$_GET['cat_id'];
+            }
+
+            if($_POST['cat_id']){
+                $cat_id[]=$_POST['cat_id'];
+            }
+
+            if( $_POST['filter']['cat_id'] ){
+                $cat_id[] = $_POST['filter']['cat_id'];
+            }
+
+            $_POST['cat_id'] = $cat_id;
+        }
         $this->finder('b2c_mdl_goods',$actions_base);
     }
 
@@ -179,6 +195,18 @@ class b2c_ctl_admin_goods extends desktop_controller{
             $_POST = array_merge($_POST,$view_filter);
             unset($_POST['isSelectedAll']);
         }
+        $cat_id = array();
+
+        if( $_POST['filter']['cat_id'] ){
+            $cat_id[] = $_POST['filter']['cat_id'];
+        }
+
+        if($_POST['cat_id']){
+            $cat_id[]=$_POST['cat_id'];
+        }
+
+        $_POST['cat_id'] = $cat_id;
+
         $objGoods = $this->app->model('goods');
         $glist = $objGoods->setEnabled($_POST,'true');
         $this->end(true, app::get('b2c')->_('选中商品上架完成'));
@@ -197,6 +225,18 @@ class b2c_ctl_admin_goods extends desktop_controller{
             $_POST = array_merge($_POST,$view_filter);
             unset($_POST['isSelectedAll']);
         }
+
+        $cat_id = array();
+
+        if($_POST['cat_id']){
+            $cat_id[]=$_POST['cat_id'];
+        }
+
+        if( $_POST['filter']['cat_id'] ){
+            $cat_id[] = $_POST['filter']['cat_id'];
+        }
+
+        $_POST['cat_id'] = $cat_id;
         $glist = $objGoods->setEnabled($_POST,'false',$msg);
         if(!$glist){
             $this->end(false, $msg);
@@ -228,16 +268,28 @@ class b2c_ctl_admin_goods extends desktop_controller{
         }
         if($_POST['filter']){
             $_POST['_finder'] = unserialize($_POST['filter']);
-            $editType = $_POST['updateAct'];
+            if( $_POST['updateAct'] ){
+                $editType = $_POST['updateAct'];
+            }
         }
+        $cat_id = array();
         if($_GET['cat_id']){
-            $_POST['cat_id']=$_GET['cat_id'];
+            $cat_id[]=$_GET['cat_id'];
         }
+
+        if($_POST['cat_id']){
+            $cat_id[]=$_POST['cat_id'];
+        }
+
+        if( $_POST['filter']['cat_id'] ){
+            $cat_id[] = $_POST['filter']['cat_id'];
+        }
+
+        $_POST['cat_id'] = $cat_id;
 
         $this->pagedata['editInfo'] = $objGoods->getBatchEditInfo($_POST);
         $oPro = $this->app->model('products');
         $oLevel = $this->app->model('member_lv');
-        $_POST['cat_id']=array($_GET['cat_id']);
         switch( $editType ){
             case 'uniformPrice':
                 //@lujy--批量调价权限
@@ -277,7 +329,8 @@ class b2c_ctl_admin_goods extends desktop_controller{
                 if( empty( $_POST['goods_id'] ) || $_POST['goods_id'][0] == '_ALL_' ){
                     unset($_POST['goods_id']);
                 }
-                if($_POST['price']){
+                // 如果price有值，不应该注释
+                if( empty($_POST['price']) ){
                     unset($_POST['price']);
                 }
 
@@ -410,6 +463,14 @@ class b2c_ctl_admin_goods extends desktop_controller{
     function saveBatchEdit(){
         $this->begin('');
         $filter = unserialize($_POST['filter']);
+
+        if( isset($filter['filter']) )
+        {
+            foreach( $filter['filter'] as $key=>$value )
+            {
+                $filter[$key] = $value;
+            }
+        }
         $oPro = $this->app->model('products');
         $objGoods = $this->app->model('goods');
         //预售判断
@@ -510,6 +571,20 @@ class b2c_ctl_admin_goods extends desktop_controller{
 
 
     function batchImage(){
+        $cat_id = array();
+        if($_GET['cat_id']){
+            $cat_id[]=$_GET['cat_id'];
+        }
+
+        if($_POST['cat_id']){
+            $cat_id[]=$_POST['cat_id'];
+        }
+
+        if( $_POST['filter']['cat_id'] ){
+            $cat_id[] = $_POST['filter']['cat_id'];
+        }
+
+        $_POST['cat_id'] = $cat_id;
         $goods = $this->app->model('goods');
         $count = $goods->count($_POST);
         $this->pagedata['goodscount'] = $count;
@@ -520,6 +595,20 @@ class b2c_ctl_admin_goods extends desktop_controller{
     function batchQrcode(){
         $goods = $this->app->model('goods');
         if($_POST['isSelectedAll'] == '_ALL_'){
+            $cat_id = array();
+            if($_GET['cat_id']){
+                $cat_id[]=$_GET['cat_id'];
+            }
+
+            if($_POST['cat_id']){
+                $cat_id[]=$_POST['cat_id'];
+            }
+
+            if( $_POST['filter']['cat_id'] ){
+                $cat_id[] = $_POST['filter']['cat_id'];
+            }
+
+            $_POST['cat_id'] = $cat_id;
             $view_filter = $this->get_view_filter('b2c_ctl_admin_goods','b2c_mdl_goods');
             $_POST = array_merge($_POST,$view_filter);
             unset($_POST['isSelectedAll']);

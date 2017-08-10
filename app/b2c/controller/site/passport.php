@@ -538,6 +538,22 @@ class b2c_ctl_site_passport extends b2c_frontpage{
         $this->display('site/passport/forgot/forgot4.html');
     }
 
+    /*
+     * ajax验证是否登录，前台使用dialog时，如果登录超时，系统会跳转到首页，这样dialog会加载成首页
+     * */
+    public function ajax_check_login(){
+        $url = '';
+        $status = false;
+        if( $this->userObject->is_login() )
+        {
+            $status = true;
+        }else
+        {
+            $url = app::get('site')->router()->gen_url(array('app'=>'b2c', 'ctl'=>'site_passport','act'=>'login','full'=>1));
+        }
+        echo json_encode(array('status'=>$status,'url'=>$url));
+    }
+
     public function error(){
         $this->unset_member();
         $back_url = $this->gen_url(array('app'=>'b2c','ctl'=>'site_passport','act'=>'index'));

@@ -11,9 +11,13 @@ class b2c_goods_filter extends dbeav_filter{
     var $name = 'B2C商品筛选器';
     function goods_filter(&$filter, &$object){
 
-        if(!is_array($filter) || (isset($filter['goods_id']) && count($filter['goods_id']) == 1) ){
-            return $this -> _pre_filter($filter);
-        } 
+        if(!is_array($filter) || (isset($filter['goods_id']) && count($filter['goods_id']) == 1) )
+        {
+            if( $filter['goods_id'][0] != '_ALL_' )
+            {
+                return $this -> _pre_filter($filter);
+            }
+        }
         $filter = utils::addslashes_array($filter);
         //过滤基本的条件
         $filter = $this->base_filter($filter);

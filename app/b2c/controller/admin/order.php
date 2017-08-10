@@ -2551,7 +2551,7 @@ class b2c_ctl_admin_order extends desktop_controller{
             $returnValue .= '<td><input type="text" vtype="unsigned" size="8" value="'.$productInfo['mprice'].'" name="aPrice['.$productInfo['product_id'].'_0]" class="x-input itemPrice_'.$productInfo['product_id'] . '-0 itemrow" required="true" autocomplete="off"></td>';
             $returnValue .= '<td><input type="text" vtype="positive" size="4" value="1" name="aNum['.$productInfo['product_id'].'_0]" class="x-input itemNum_'.$productInfo['product_id'].'-0 itemrow" required="true" autocomplete="off"></td>';
             $returnValue .= '<td class="itemSub_'.$productInfo['product_id'] . '-0 itemCount Colamount">'.$productInfo['mprice'].'</td>';
-            $returnValue .= '<td><img class="imgbundle" app="desktop" onclick="delgoods(this)" style="cursor: pointer;" title="删除" src="' . kernel::base_url() . '/app/desktop/statics/bundle/delecate.gif"></td>';
+            $returnValue .= '<td><img class="imgbundle" app="desktop" onclick="delgoods(this)" style="cursor: pointer;" title="删除" src="' . kernel::base_url() . '/public/app/desktop/statics/bundle/delecate.gif"></td>';
             $returnValue .= '</tr>';
             echo $returnValue;
         }

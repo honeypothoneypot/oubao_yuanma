@@ -523,7 +523,7 @@ EOF;
             $views = $controller->_views();
         }
         if(isset($views[$_POST['view']])){
-            return $views[$_POST['view']]['filter'];
+            return (array)$views[$_POST['view']]['filter'];
         }
 
         //自定义筛选器
@@ -545,7 +545,7 @@ EOF;
         if($rows[$view_id]){
             parse_str($rows[$view_id]['filter_query'],$filter_query);
         }
-        return $filter_query;
+        return (array)$filter_query;
     }
 
 }

@@ -15,6 +15,7 @@ class starbuy_ctl_site_special extends starbuy_frontpage{
     function index($type_id,$page=1){
         $type_id = $this->_request->get_param(0);
         $GLOBALS['runtime']['path'] = $this->runtime_path($type_id);
+        $this->pagedata['type_id']=$type_id;
         $page = $page ? $page : 1;
         $params = $this->filter_decode('',$type_id);
         $filter = $params['filter'];
@@ -181,6 +182,10 @@ class starbuy_ctl_site_special extends starbuy_frontpage{
         $remind['remind_way'] = $way;
         $remind['savetime'] = time();
         $remind['goodsname'] = $product['name'];
+        $count = $remind_mdl->count(array('product_id'=>$remind['product_id'],'goal'=>$remind['goal'],'type_id'=>$remind['type_id']));
+        if($count){
+            $this->splash('error',"",'您已经订阅过',true);
+        }
         $result = $remind_mdl->save($remind);
         if($result){
             $url = $this->gen_url(array('app'=>'starbuy', 'ctl'=>'site_team','act'=>'index','arg0'=>$remind['product_id'],'arg1'=>$remind['type_id']));
@@ -257,6 +262,11 @@ class starbuy_ctl_site_special extends starbuy_frontpage{
 		}
 		$product = $this->mdl_product->getRow('name',array('product_id'=>$remind['product_id']));
 		$remind['remind_way'] = $way;
+        $count = $remind_mdl->count(array('product_id'=>$remind['product_id'],'goal'=>$remind['goal'],'type_id'=>$remind['type_id']));
+        if($count){
+            $this->splash('error',"",'您已经订阅过',true);
+        }
+
 		$remind['savetime'] = time();
 		$remind['goodsname'] = $product['name'];
 		$result = $remind_mdl->save($remind);
