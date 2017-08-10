@@ -78,16 +78,18 @@ class trustlogin_api
         {
             return false;
         }
+        $ret['data']['trust_source'] = $class_name;
         $trustMdl = app::get('trustlogin')->model('trustinfo');
         $pamMemberMdl = app::get('pam')->model('members');
         $pamAuthMdl = app::get('pam')->model('auth');
         $checkData = array(
             'openid'=>$ret['data']['openid'],
-            'realname'=>$ret['data']['realname'],
+            'trust_source'=>$ret['data']['trust_source'],
+            //'realname'=>$ret['data']['realname'],
             //'nickname'=>$ret['data']['nickname'],
         );
-        $trustData = $trustMdl->getRow('trust_id,member_id',$checkData);
-            //检查是否已经登录过了
+        $trustData = $trustMdl->getRow('trust_id,member_id',$checkData);//检查是否已经登录过了
+        $_SESSION['trustlogin_openid']=$ret['data']['openid'];//以后校验备用，以免被恶意注册
         if($trustData)
         {
             $memberData = $pamMemberMdl->getRow('member_id',array('member_id'=>$trustData['member_id']));
@@ -108,7 +110,9 @@ class trustlogin_api
                 {
                     $auth = pam_auth::instance($params['type']);
                     $params['data']['account_type'] = $params['type'];
-                    $auth->account()->update($params['module'], $module_uid, $params['data']);
+                    //$auth->account()->update($params['module'], $module_uid, $params['data']);
+                    $this->bind_member($memberData['member_id']);
+                    $_SESSION['account']['member'] = $memberData['member_id'];
                     if($ret['type']=='pc')
                     {
                         $back_url = app::get('site')->router()->gen_url(array('app'=>'trustlogin','ctl'=>'trustlogin_trust','act'=>'post_login','arg0'=>$ret['type'],'full'=>1));
@@ -211,7 +215,35 @@ class trustlogin_api
         return app::get($arrUrl[0]);
     }
 
-
+    function bind_member($member_id){
+        $columns = array(
+            'account'=> 'member_id,login_account,login_password',
+            'members'=> 'member_id,member_lv_id,cur,lang',
+        );
+        $userObject = kernel::single('b2c_user_object');
+        $data = $userObject->get_members_data($columns);
+        $secstr = kernel::single('b2c_user_passport')->gen_secret_str($member_id, $data['account']['login_name'], $data['account']['login_password']);
+        $login_name = $userObject->get_member_name($data['account']['login_name']);
+        $this->cookie_path = kernel::base_url().'/';
+        #$this->set_cookie('MEMBER',$secstr,0);
+        $this->set_cookie('loginName',$login_name,time()+31536000);
+        $this->set_cookie('UNAME',$login_name,0);
+        $this->set_cookie('MLV',$data['members']['member_lv_id'],0);
+        $this->set_cookie('CUR',$data['members']['cur'],0);
+        $this->set_cookie('LANG',$data['members']['lang'],0);
+        $this->set_cookie('S[MEMBER]',$member_id,0);
+    }
+    function set_cookie($name,$value,$expire=false,$path=null){
+        if(!$this->cookie_path){
+            $this->cookie_path = kernel::base_url().'/';
+            #$this->cookie_path = substr(PHP_SELF, 0, strrpos(PHP_SELF, '/')).'/';
+            $this->cookie_life =  app::get('b2c')->getConf('system.cookie.life');
+        }
+        $this->cookie_life = $this->cookie_life > 0 ? $this->cookie_life : 315360000;
+        $expire = $expire === false ? time()+$this->cookie_life : $expire;
+        setcookie($name,$value,$expire,$this->cookie_path);
+        $_COOKIE[$name] = $value;
+    }
     /**
     * 登录调用的方法
     * @param array $params 认证传递的参数,包含认证类型，跳转地址,第三方返回数据等

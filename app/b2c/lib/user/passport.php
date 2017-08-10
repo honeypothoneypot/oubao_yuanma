@@ -680,5 +680,64 @@ class b2c_user_passport
         $msg  = app::get('b2c')->_('保存失败,请重试或联系客服');
         return false;
     }
+    //创建会员
+    public function create($params,$openid){
+        if( empty($openid) ) return false;
+
+        $login_name = $params['nickname'];
+        //验证会员名是否可用
+        $flag = $this->check_signup_account( trim($login_name),$msg );
+
+        if( !$flag ){
+            $login_name .=time();
+        }
+        $data['pam_account']['login_name'] = $login_name;
+        $data['pam_account']['login_password'] = '';
+        $data['pam_account']['psw_confirm'] = '';
+        $saveData = $this->pre_signup_process($data);
+
+        $saveData['b2c_members']['source'] = 'weixin';
+        if( $member_id = $this->save_members($saveData) ){
+            $bindWeixinData = array(
+                'member_id' => $member_id,
+                'open_id' => $openid,
+                'tag_name' => $login_name,
+                'createtime' => time()
+            );
+            app::get('pam')->model('bind_tag')->save($bindWeixinData);
+
+            foreach(kernel::servicelist('b2c_save_post_om') as $object) {
+                $object->set_arr($member_id, 'member');
+                $refer_url = $object->get_arr($member_id, 'member');
+            }
+            //保存推荐关系
+            if(!empty($_SESSION['referrals_code'])){
+                $obj_policy = kernel::service("referrals.member_policy");
+                if(is_object($obj_policy))
+                {
+                    $obj_policy ->save_referrals_member($_SESSION['referrals_code'],$member_id);
+                }
+            }
+            //增加会员同步 2012-5-15
+            if( $member_rpc_object = kernel::service("b2c_member_rpc_sync") ) {
+                $member_rpc_object->createActive($member_id);
+            }
+            /*注册完成后做某些操作! begin*/
+            foreach(kernel::servicelist('b2c_register_after') as $object) {
+                $object->registerActive($member_id);
+            }
+            //添加注册积分
+            if(!empty($_SESSION['referrals_code'])){
+                $obj_policy = kernel::service("referrals.member_policy");
+                if(is_object($obj_policy))
+                {
+                    $obj_policy ->referrals_member($_SESSION['referrals_code'],$member_id);
+                }
+            }
+            return $member_id;
+        }
+        return false;
+    }
+
 }
 

@@ -23,7 +23,8 @@ class b2c_tasks_sendsms extends base_task_abstract implements base_interface_tas
         $config['shopname'] = app::get('site')->getConf('site.name');
         $config['use_reply'] = ($params['data']['use_reply']=='true') ? 1 : 0;
         $config['sendType'] = ($params['data']['sendType']=='fan-out') ? 'fan-out' : 'notice';
-        if($obj_memmsm->ready($config)) $obj_memmsm->send($to,$title,$message,$config);
+        if($obj_memmsm->ready($config))
+        $obj_memmsm->send($to,$title,$message,$config);
 		
         if($params['gnotify_id']) {
             $member_goods = app::get('b2c')->model('member_goods');

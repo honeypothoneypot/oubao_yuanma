@@ -52,7 +52,6 @@ class b2c_user_vcode{
         $vcodeData['createtime'] = date('Ymd');
         $vcodeData['lastmodify'] = time();
         $key = $this->get_vcode_key($account,$type);
-
         if(defined('WITHOUT_CACHE') && !constant('WITHOUT_CACHE')){
             cacheobject::set($key,$vcodeData,$this->ttl+time());
         }else{
@@ -80,7 +79,6 @@ class b2c_user_vcode{
         }else{
             base_kvstore::instance('vcode/account')->fetch($key,$vcode);
         }
-
         return $vcode;
     }
 

@@ -147,11 +147,11 @@ class weixin_menus {
         foreach ( (array)$data as $k => $d ) {
             if ($d['parent_id'] != 0)
                 continue;
-            $tree ['button'] [$d['menu_id']] = $this->_deal_data ( $d );
+            $tree ['button'] [$d['menu_id']] = $this->_deal_data ( $d,$bind_id );
             unset ( $data [$k] );
         }
         foreach ( $data as $k => $d ) {
-            $tree ['button'] [$d ['parent_id']] ['sub_button'] [] = $this->_deal_data ( $d );
+            $tree ['button'] [$d ['parent_id']] ['sub_button'] [] = $this->_deal_data ( $d,$bind_id );
             unset ( $data [$k] );
         }
         $tree2 = array ();
@@ -195,11 +195,11 @@ class weixin_menus {
         
         return $data;
     }
-    function _deal_data($d) {
+    function _deal_data($d,$bind_id) {
         $res ['name'] = $d['menu_name'];
         if($d['content_type']=='msg_url'){
             $res ['type'] = 'view';
-            $res ['url'] = $d['msg_url'];
+            $res ['url'] = $this->gen_menu_url($bind_id,$d['msg_url']);
         } elseif($d['content_type']=='msg_text'){
             $res ['type'] = 'click';
             $res ['key'] = 'text_'.$d['msg_text'];
@@ -208,6 +208,24 @@ class weixin_menus {
             $res ['key'] = 'image_'.$d['msg_image'];
         }
         return $res;
+    }
+    //根据微信免登开启情况，生成需要绑定链接
+    function gen_menu_url($bind_id,$url){
+        if( empty($bind_id) ) return $url;
+        $auth_url = $url;
+        $wap_wxlogin = app::get("weixin")->getConf('weixin_basic_setting.wxlogin');
+
+        $auth_status = preg_match('/authorize/i',$url);
+
+        if( $wap_wxlogin == 'true' && !$auth_status ){
+            $bind_info = $bindinfo = app::get('weixin')->model('bind')->getRow('appid,eid',array('id'=>$bind_id));
+            $appid = $bind_info['appid'];
+            $eid = $bind_info['eid'];
+
+            $genauthurl = kernel::single('weixin_wechat');
+            $auth_url = $genauthurl->gen_auth_link($appid,$eid,urlencode($url));
+        }
+        return $auth_url;
     }
 
     // 需要绑定才能查看的链接

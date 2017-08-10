@@ -71,6 +71,17 @@ $db['link']=array (
           'comment' => app::get('bdlink')->_('推广成功类型, 目前支持会员注册:member, 下单成功:order两种'),
         ),
    ),
+   'index' =>
+    array(
+        'ind_target_id_type' =>
+        array(
+            'columns'=>
+            array(
+                '0'=>'target_id',
+                '1'=>'target_type',
+            ),
+        ),
+    ),
   'version' => '$Rev: 41137 $',
   'engine' => 'innodb',
   'comment' => app::get('bdlink')->_('外部链接表(包括订单外部链接和会员外部链接)'),

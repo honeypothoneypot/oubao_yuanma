@@ -51,6 +51,18 @@
           </span>
         </td>
       </tr>
+      <tr>
+        <th><{t}>是否开启微信免登:<{/t}></th>
+        <td>
+          <span>
+           <input value="true"      <{if $setting.wxlogin ==true}>   checked="checked"  <{/if}> title="是否开启微信免登：" type="radio" name="wxlogin"   > 是
+           <input value="false"  <{if $setting.wxlogin ==false}> checked="checked"<{/if}> title="是否开启微信免登：" type="radio" name="wxlogin"   >否
+          </span>
+           <span class="notice-inline"><br>
+            <{t}>开启该功能并将微信自定义菜单更新后，自定义菜单中的链接都将带上免登功能   <a href="./#app=weixin&ctl=admin_menu&act=index"   target="_blank" >前往更新</a><{/t}>
+          </span>
+        </td>
+      </tr>
     </tbody>
   </table>
   <div class="table-action">

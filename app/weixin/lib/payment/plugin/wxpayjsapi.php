@@ -448,7 +448,7 @@ final class weixin_payment_plugin_wxpayjsapi extends ectools_payment_app impleme
     /**
      *  作用：post请求xml
      */
-    function postXml()
+    function postXml($url)
     {
         $xml = $this->createXml();
         $this->response = $this->postXmlCurl($xml,$this->url,$this->curl_timeout);

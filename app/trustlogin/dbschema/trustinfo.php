@@ -154,6 +154,14 @@ $db['trustinfo']  = array(
             'order'=>15,
             'width' => 50,
         ),
-
+        'trust_source'=>array(
+            'type'=>'varchar(55)',
+            'in_list' => false,
+            'editable' => false,
+            'filtertype' => 'yes',
+            'label'=>app::get('trustlogin')->_('免登来源'),
+            'comment'=>app::get('trustlogin')->_('免登来源'),
+            'order'=>15,
+        ),
     ),
 );

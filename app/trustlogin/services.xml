@@ -11,8 +11,8 @@
         <class>trustlogin_plugin_kaixin</class>
         <!-- <class>trustlogin_plugin_sohu</class> -->
         <!-- <class>trustlogin_plugin_baidu</class>
-        <class>trustlogin_plugin_alipay</class>
-        <class>trustlogin_plugin_weixin</class> -->
+        <class>trustlogin_plugin_alipay</class> -->
+        <!--<class>trustlogin_plugin_weixin</class>-->
     </service>
     <service id="openapi.trustlogin_api">
         <class>trustlogin_api</class>

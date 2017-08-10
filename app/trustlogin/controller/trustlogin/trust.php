@@ -14,6 +14,10 @@ class trustlogin_ctl_trustlogin_trust extends b2c_frontpage{
         $params['module'] = $postData['module'];
         $params['redirect'] = $postData['redirect'];
         $params['data'] = json_decode(urldecode($postData['data']),true);
+        if($_SESSION['trustlogin_openid']!=$params['data']['data']['openid']){
+               $msg = app::get('trustlogin')->_('验证码错误');
+               $this->splash('failed',null,$msg,true);exit;
+        }
         if($postData['skip'] != 'jump')
         {
             if(kernel::single('b2c_service_vcode')->status() && empty($postData['verifycode']))

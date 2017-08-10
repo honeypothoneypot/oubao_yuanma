@@ -29,6 +29,7 @@ class wap_ctl_admin_setting extends desktop_controller{
                 'wap.shopname',
                 'wap.status',
                 'wap.scanbuy',
+                //'wap.wxlogin',
                 'wap.register.license',
                 'wap.foot_edit',
             ),

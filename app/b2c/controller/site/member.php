@@ -1258,8 +1258,9 @@ class b2c_ctl_site_member extends b2c_frontpage{
      *发送站内信
      * */
     function send_msg(){
+        $member_id = $_SESSION['member'];
     	//判断当前时间与session时间是否在5秒内
-    	if (isset($_SESSION['last_send']) and (time()-$_SESSION['last_send']) <= 5){
+    	if (isset($_SESSION[$member_id]['last_send']) and (time()-$_SESSION[$member_id]['last_send']) <= 5){
     		return false;
     	}
 		
@@ -1289,20 +1290,20 @@ class b2c_ctl_site_member extends b2c_frontpage{
             }
 			
 	//设置session时间
-	    $_SESSION['last_send']=time();
+	    $_SESSION[$member_id]['last_send']=time();
 			
             if( $objMessage->send($_POST) ) {
             if($_POST['has_sent'] == 'false'){
                 $this->splash('success','reload',app::get('b2c')->_('保存到草稿箱成功'),$_POST['response_json']);
 				//发送成功后释放session
-				unset($_SESSION['last_send']);
+				unset($_SESSION[$member_id]['last_send']);
             }else{
                 $this->splash('success','reload',app::get('b2c')->_('发送成功'),$_POST['response_json']);
-				unset($_SESSION['last_send']);
+				unset($_SESSION[$member_id]['last_send']);
             }
             } else {
                 $this->splash('failed',null,app::get('b2c')->_('发送失败'),$_POST['response_json']);
-				unset($_SESSION['last_send']);
+				unset($_SESSION[$member_id]['last_send']);
             }
         }
         else {

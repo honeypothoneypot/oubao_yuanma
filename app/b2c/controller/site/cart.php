@@ -546,7 +546,7 @@ class b2c_ctl_site_cart extends b2c_frontpage{
             'get' => $arr_args,
             'post' => array('modify_quantity'=>$_POST['modify_quantity']),
         );
-		$arr_args = utils::_RemoveXSS($arr_args);
+	$arr_args = utils::_RemoveXSS($arr_args);
         $this->pagedata['json_args'] = json_encode($arr_args);
         if($isfastbuy){
             $this->pagedata['is_fastbuy'] = $isfastbuy;

@@ -11,14 +11,12 @@ class wap_frontpage extends wap_controller{
     protected $member = array();
     function __construct(&$app){
         parent::__construct($app);
-        if($_COOKIE['S']['SIGN']['AUTO'] > 0 || $_POST['site_autologin'] == 'on'){
-            $minutes = 14*24*60;
-            kernel::single('base_session')->set_sess_expires($minutes);
-            kernel::single('base_session')->set_cookie_expires($minutes);
-        }//如果有自动登录，设置session过期时间，单位：分
         if($_COOKIE['S']['SIGN']['REMEMBER'] !== '1'){
             setcookie("S[SIGN][REMEMBER]", null, time() - 3600);
             setcookie("loginName", null, time() - 3600);
+        }
+        if($_COOKIE['autologin'] > 0){
+            kernel::single('base_session')->set_sess_expires($_COOKIE['autologin']);
         }
         $this->pagedata['site_b2c_remember'] = $_COOKIE['S']['SIGN']['REMEMBER'];
 
@@ -49,6 +47,11 @@ class wap_frontpage extends wap_controller{
 					$this->bind_member($bindTagData['member_id']);
             }else{
                 $res = kernel::single('weixin_wechat')->get_basic_userinfo($bind['id'],$openid);
+                $member_id = kernel::single('b2c_user_passport')->create($res,$openid);
+                if($member_id ){
+                    $this->bind_member($member_id);
+                    $_SESSION['account']['member'] = $member_id;
+                }
                 $_SESSION['weixin_u_nickname'] = $res['nickname'];
             }
             $_SESSION['weixin_u_openid'] = $openid;

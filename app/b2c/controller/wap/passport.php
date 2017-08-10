@@ -214,6 +214,10 @@ class b2c_ctl_wap_passport extends wap_frontpage{
         $this->bind_member($member_id);
         kernel::single('pam_lock')->flush_lock($member_id);
         $this->set_cookie('loginName',$_POST['uname'],time()+31536000);//用于记住用户名
+        if($_POST['site_autologin'] == 'on'){
+            $minutes = 14*24*60;
+            $this->set_cookie('autologin',$minutes);
+        }
         $this->app->model('cart_objects')->setCartNum();
 
         $bindOpenId = app::get('pam')->model('bind_tag')->getRow('member_id',array('open_id'=>$_SESSION['weixin_u_openid']));
@@ -316,18 +320,27 @@ class b2c_ctl_wap_passport extends wap_frontpage{
             $msg = app::get('b2c')->_('请输入验证码!');
             $this->splash('failed',null,$msg,'','',true);exit;
         }
-        if($_POST['pam_account']['verifycode'] && !kernel::single('pam_passport_site_basic')->vcode_verify($_POST['pam_account']['verifycode']) ){
-            $msg = app::get('b2c')->_('验证码错误');
+
+        //zengxinwen
+        $userVcode = kernel::single('b2c_user_vcode');
+        $vcode = $userVcode->get_vcode($_POST['pam_account']['login_name'],'signup');
+        if($_POST['pam_account']['login_verification'] && $_POST['pam_account']['login_verification']!= $vcode['vcode'] ){
+        //end
+            $msg = app::get('b2c')->_('短信验证码错误，请重试！');
             $this->splash('failed',null,$msg,'','',true);exit;
         }
         if(!preg_match("/^1[34578]{1}[0-9]{9}$/",$_POST['pam_account']['login_name'])){
             $msg = app::get('b2c')->_('手机号格式不正确');
             $this->splash('failed',null,$msg,'','',true);exit;
         }
-		$_POST['vcode'] = $_POST['pam_account']['vcode'];
+        //zengxinwen
+		$_POST['vcode'] = $_POST['pam_account']['login_verification'];
+        //end
         //$_POST['vcode'] = $_POST['pam_account']['login_password'];
         $_POST['pam_account']['psw_confirm'] = $_POST['pam_account']['login_password'];
+
         if( !$this->userPassport->check_signup($_POST,$msg) ){
+
             $this->splash('failed',null,$msg,'','',true);exit;
         }
 

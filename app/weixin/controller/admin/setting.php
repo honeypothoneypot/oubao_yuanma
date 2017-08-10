@@ -20,6 +20,7 @@ class weixin_ctl_admin_setting extends desktop_controller{
         $setting['weixin_name']  = app::get('weixin')->getConf('weixin_basic_setting.weixin_name');
         $setting['weixin_brief'] = app::get('weixin')->getConf('weixin_basic_setting.weixin_brief');
         $setting['share_page'] = app::get('weixin')->getConf('weixin_basic_setting.share_page');
+        $setting['wxlogin'] = app::get('weixin')->getConf('weixin_basic_setting.wxlogin');
         $share_page = array(
             'index'=>app::get('b2c')->_('首页'),
             'gallery-index'=>app::get('b2c')->_('商品列表页'),
@@ -40,6 +41,7 @@ class weixin_ctl_admin_setting extends desktop_controller{
         app::get('weixin')->setConf('weixin_basic_setting.weixin_name', $_POST['weixin_name']);
         app::get('weixin')->setConf('weixin_basic_setting.weixin_brief', $_POST['weixin_brief']);
         app::get('weixin')->setConf('weixin_basic_setting.share_page', $_POST['share_page']);
+        app::get('weixin')->setConf('weixin_basic_setting.wxlogin', $_POST['wxlogin']);
 
         $this->end(true,app::get('weixin')->_('保存成功'));
 

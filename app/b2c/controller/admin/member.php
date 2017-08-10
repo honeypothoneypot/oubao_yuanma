@@ -253,7 +253,6 @@ class b2c_ctl_admin_member extends desktop_controller{
        $this->begin();
        $member_obj = $this->app->model('members');
        $mobile_number = json_decode($_POST['mobile_number']);
-
        if(!$mobile_number) $this->end(false,app::get('b2c')->_('所选会员都没有填写手机号码'));
        $mobile_number = array_unique($mobile_number);
 

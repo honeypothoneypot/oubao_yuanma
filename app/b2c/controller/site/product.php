@@ -722,6 +722,7 @@ class b2c_ctl_site_product extends b2c_frontpage{
             $siteMember['member_lv'] = '-1';
         }
         $productPromotion= $this->_get_goods_promotion($aGoods['goods_id'],$aGoods,$siteMember['member_lv']);
+
         $productBasic['promotion'] = $productPromotion;//商品促销
 
          //获取预售信息

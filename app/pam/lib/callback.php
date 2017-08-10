@@ -65,7 +65,7 @@ class pam_callback{
                         //如果自动登录，设置cookie过期时间，单位：分
                     }
                     if($_COOKIE['S']['SIGN']['AUTO'] > 0){
-                        $minutes = 10*24*60;
+                        $minutes = 14*24*60;
                         kernel::single('base_session')->set_cookie_expires($minutes);
                     }
 

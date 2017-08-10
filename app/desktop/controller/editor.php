@@ -662,7 +662,6 @@ EOF;
             $textColumn = $textColumn[0];
 
             $keycol = $_POST['key']?$_POST['key']:$schema['idColumn'];
-
             //统一做掉了。
             $all_filter = !empty($obj->__all_filter) ? $obj->__all_filter : array();
             $filter = !empty($_POST['filter']) ? $_POST['filter'] : $all_filter;
@@ -679,7 +678,6 @@ EOF;
             }else{
                 $arr_filter = array_merge($filter,array($keycol=>$_POST['data']));
             }
-
             $items = $obj->getList('*', $arr_filter);
             $name = $items[0][$textColumn];
             if($_POST['type']=='radio'){
@@ -717,7 +715,6 @@ EOF;
                 $this->pagedata['_input']['view'] = $view;
 
             }
-
             $this->display('finder/input-row.html');
         }
     }

@@ -2,7 +2,7 @@
 <?php
 class trustlogin_plugin_weixin implements trustlogin_interface_trust
 {
-    public $name = '微信登陆';
+    public $name = '微信扫码登录';
     public $app_name = 'trustlogin';
     public $ver = '2.0';
     public $view = 'trust/weixin.html';
@@ -101,8 +101,8 @@ class trustlogin_plugin_weixin implements trustlogin_interface_trust
     public function getUserInfo($userinfo)
     {
         $userdata['openid'] = $userinfo['openid']?$userinfo['openid']:' ';
-        $userdata['realname'] = $userinfo['data']['nickname']?$userinfo['data']['nickname']:' ';
-        $userdata['nickname'] = $userinfo['data']['nickname']?$userinfo['data']['nickname']:' ';
+        $userdata['realname'] = $userinfo['nickname']?$userinfo['nickname']:' ';
+        $userdata['nickname'] = $userinfo['nickname']?$userinfo['nickname']:' ';
         $userdata['avatar'] = $userinfo['headimgurl']?$userinfo['headimgurl']:' ';
         $userdata['url'] = $userinfo['headimgurl']?$userinfo['headimgurl']:' ';
         $userdata['gender'] = $userinfo['sex']?$userinfo['sex']:' ';
