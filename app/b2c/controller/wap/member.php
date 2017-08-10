@@ -1454,14 +1454,6 @@ class b2c_ctl_wap_member extends wap_frontpage{
     }
 
     public function coupon_receive(){
-        $concurrent=kernel::single("base_concurrent_file");
-        $member_group_id = 'coupon_group_'.intval($_SESSION['account']['member']%1000);
-        $concurrent->status($member_group_id);
-        if(!$concurrent->check_flock()){
-            $concurrent->close_lock();
-            echo json_encode(array('status'=>'fail',msg=>"异常操作"));exit();
-        }
-
         if( isset($_POST['cpns_id']) ){
             $cpnsId = $_POST['cpns_id'];
 
@@ -1469,7 +1461,6 @@ class b2c_ctl_wap_member extends wap_frontpage{
             $cpns_group_id = 'cpns_group_'.intval($cpnsId%1000);
             $concurrent_cpns->status($cpns_group_id);
             if(!$concurrent_cpns->check_flock()){
-                $concurrent->close_lock();
                 $concurrent_cpns->close_lock();
                 echo json_encode(array('status'=>'fail',msg=>"网络异常，请重试"));exit();
             }
@@ -1486,14 +1477,12 @@ class b2c_ctl_wap_member extends wap_frontpage{
                     '6'=>'活动已结束',
                 );
                 if( $obj_widget_coupons->getReceiveStatus($cpnsId) ){
-                    $concurrent->close_lock();
                     $concurrent_cpns->close_lock();
                     echo json_encode(array('status'=>'fail',msg=>"不可重复领取"));exit();
                 }
 
                 $verify_status = $obj_widget_coupons->verify($cpnsId);
                 if( $verify_status != 1 ){
-                    $concurrent->close_lock();
                     $concurrent_cpns->close_lock();
                     echo json_encode(array('status'=>'fail','msg'=>$msgArr[$verify_status]));exit();
                 }
@@ -1502,23 +1491,19 @@ class b2c_ctl_wap_member extends wap_frontpage{
                 $cur_coupon = $coupons->dump($cpnsId);
 
                 if( $oExchangeCoupon->obtain($cpnsId,$memberId,$params) ){
-                    $concurrent->unlock();
                     $concurrent_cpns->unlock();
                     echo json_encode(array('status'=>'success',msg=>"领取成功"));exit();
                 }else
                 {
-                    $concurrent->close_lock();
                     $concurrent_cpns->close_lock();
                     echo json_encode(array('status'=>'fail',msg=>"领取失败"));exit();
                 }
             }else{
-                $concurrent->close_lock();
                 $concurrent_cpns->close_lock();
                 echo json_encode(array('status'=>'fail',msg=>"没有登录"));exit();
             }
         }
 
-        $concurrent->unlock();
         echo json_encode(array('status'=>'fail',msg=>"参数异常"));exit();
     }
 

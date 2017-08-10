@@ -69,17 +69,24 @@ class b2c_sales_basic_operator_contain implements b2c_interface_sales_operator
         //商品包含某个字
         switch($operator) {
             case '()':
-                if(is_array($value)) return in_array($validate,$value);
-                $flag = strpos($validate,$value);
-                if( $flag===false ) return false;
-                else return true;
+	       if(!is_array($value)) $value=explode(',',$value);
+               return in_array($validate,$value);
                 break;
+                //if(is_array($value)) return !in_array($validate,$value);
+                //$flag = strpos($validate,$value);
+                //if( $flag===false ) return false;
+               // else return true;
+               // break;
+ 
             case '!()':
-                if(is_array($value)) return !in_array($validate,$value);
-                $flag = strpos($validate,$value);
-                if( $flag===false ) return false;
-                else return true;
-                break;
+	       if(!is_array($value)) $value=explode(',',$value);
+               return in_array($validate,$value);
+       		break; 
+                //if(is_array($value)) return !in_array($validate,$value);
+                //$flag = strpos($validate,$value);
+                //if( $flag===false ) return false;
+               // else return true;
+               // break;
         }
         return false;
     }

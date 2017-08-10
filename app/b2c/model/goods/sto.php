@@ -45,14 +45,17 @@ class b2c_mdl_goods_sto extends dbeav_model{
     }
 
     function getList($cols='*', $filter=array(), $offset=0, $limit=-1, $orderby=null){
+        logger::info('sto getList filter:'.var_export($filter,1));
         $data = $this->get_sto_goods($filter,$offset,$limit,$orderby);
         return $data;
     }
 
-    function count($filter=null){
-        $filter['type'] = 'sto';
-        $filter['object_type'] = 'goods';
-        $row = kernel::database()->select('SELECT count(*) AS _count FROM sdb_b2c_member_goods WHERE '.$this->_filter($filter));
+    function count($filter=array()){
+        $sql = 'SELECT count(*) AS _count FROM sdb_b2c_member_goods WHERE type="sto" and object_type="goods"';
+        if( $filter ){
+            $sql .= ' and '.$this->_filter($filter);
+        }
+        $row = kernel::database()->select($sql);
         return intval($row[0]['_count']);
     }
 
