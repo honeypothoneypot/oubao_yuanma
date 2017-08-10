@@ -718,11 +718,9 @@ class b2c_ctl_site_product extends b2c_frontpage{
         $this->brand_name = $goodsBasic['brand']['brand_name'];//seo 品牌名称
         $productBasic['brand']['brand_id'] = $goodsBasic['brand']['brand_id'];//商品品牌ID
         //促销
-        if(empty($siteMember['member_lv'])){
-            $siteMember['member_lv'] = '-1';
-        }
-        $productPromotion= $this->_get_goods_promotion($aGoods['goods_id'],$aGoods,$siteMember['member_lv']);
-
+        //未登录下，让member_lv为1，这样在未登录的情况下就可显示赠品信息
+	$site_member_lv = (!empty($siteMember['member_lv'])) ? $siteMember['member_lv'] : '1';
+        $productPromotion= $this->_get_goods_promotion($aGoods['goods_id'],$aGoods,$site_member_lv);
         $productBasic['promotion'] = $productPromotion;//商品促销
 
          //获取预售信息

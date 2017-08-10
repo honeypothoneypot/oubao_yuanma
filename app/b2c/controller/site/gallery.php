@@ -387,10 +387,15 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
      * 前台筛选商品ajax调用
      * */
     public function ajax_get_goods(){
+        $orderBy_arr = array('price desc','price asc','view_w_count desc','view_count desc','buy_count desc','buy_w_count desc','last_modify desc','last_modify asc','comments_count desc');
     	$this->pagedata['commentListListnum'] = $this->app->getConf('gallery.comment.time');
         $_POST['cat_id'] = utils::_RemoveXSS($_POST['cat_id']);
         $_POST['virtual_cat_id'] = utils::_RemoveXSS($_POST['virtual_cat_id']);
         $_POST['orderBy'] = utils::_RemoveXSS($_POST['orderBy']);
+        //限制orderBy值范围，防止sql的order by 注入
+        if( !in_array($_POST['orderBy'],$orderBy_arr) ){
+            $_POST['orderBy'] = 'view_count desc';
+        }
         $tmp_params = $this->filter_decode($_POST,$_POST['cat_id'],$_POST['virtual_cat_id']);
         $params = $tmp_params['filter'];
         $orderby = $tmp_params['orderby'];

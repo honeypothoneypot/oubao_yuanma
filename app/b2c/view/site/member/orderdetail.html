@@ -124,12 +124,12 @@
                 <td class="step-item step-1 active"><span><q class="icon">&#x50;</q><i>2</i>订单作废</span></td>
                 <{else}>
                   <{if $order.payinfo.pay_app_id != '-1'}>
-                  <td class="icon step-arrow">&#x28;</td>
+                  <td class="icon step-arrow <{if $order.pay_status == 1 || $order.pay_status==2}> active <{/if}>" >&#x28;</td>
                   <td class="step-item step-2 <{if $order.pay_status == 1 || $order.pay_status==2}> active <{/if}>"><span><q class="icon">&#x50;</q><i>2</i>付款成功</span></td>
                   <{/if}>
-                  <td class="icon step-arrow">&#x28;</td>
+                  <td class="icon step-arrow <{if $order.ship_status == '1'}>active<{/if}>">&#x28;</td>
                   <td class="step-item step-3 <{if $order.ship_status == '1'}>active<{/if}>"><span><q class="icon">&#x50;</q><i>3</i>发货</span></td>
-                  <td class="icon step-arrow">&#x28;</td>
+                  <td class="icon step-arrow <{if $order.received_status == '1'}>active<{/if}>">&#x28;</td>
                   <td class="step-item step-4 <{if $order.received_status == '1'}>active<{/if}>"><span><q class="icon">&#x50;</q><i>4</i>确认收货</span></td>
                 <{/if}>
               </tr>

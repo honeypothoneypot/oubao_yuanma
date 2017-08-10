@@ -1179,13 +1179,15 @@ class b2c_ctl_admin_order extends desktop_controller{
         $obj_order = $this->app->model('orders');
         $subsdf = array('order_objects'=>array('*',array('order_items'=>array('*',array(':products'=>'*')))));
         $sdf_order = $obj_order->dump($sdf['order_id'],'*',$subsdf);
-
         if (!$sdf['money'])
         {
             //退款金额不是从弹出的退款单里输入而来
             $sdf['money'] = $sdf_order['payed'];
             $sdf['return_score'] = $sdf_order['score_g'];
         }
+        //zenngxinwen
+        $sdf['score_u'] = $sdf_order['score_u'];
+        //end
 
         $refunds = app::get('ectools')->model('refunds');
         $objOrder->op_id = $this->user->user_id;
@@ -1222,7 +1224,6 @@ class b2c_ctl_admin_order extends desktop_controller{
         $sdf['status'] = 'ready';
         $sdf['app_name'] = $arrPaymentInfo['app_name'];
         $sdf['app_version'] = $arrPaymentInfo['app_version'];
-
         $obj_refunds = kernel::single("ectools_refund");
         if ($obj_refunds->generate($sdf, $this, $msg))
         {

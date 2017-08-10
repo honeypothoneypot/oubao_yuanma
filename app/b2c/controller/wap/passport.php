@@ -216,7 +216,7 @@ class b2c_ctl_wap_passport extends wap_frontpage{
         $this->set_cookie('loginName',$_POST['uname'],time()+31536000);//用于记住用户名
         if($_POST['site_autologin'] == 'on'){
             $minutes = 14*24*60;
-            $this->set_cookie('autologin',$minutes);
+            $this->set_cookie('autologin',$minutes,time()+31536000);
         }
         $this->app->model('cart_objects')->setCartNum();
 

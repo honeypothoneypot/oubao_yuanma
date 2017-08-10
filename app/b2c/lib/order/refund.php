@@ -134,7 +134,11 @@ class b2c_order_refund extends b2c_api_rpc_request
 				$sdf['return_score'] = $is_real_point;
 			}
             $obj_members_point->change_point($sdf_order['member_id'], (0 - intval($sdf['return_score'])), $msg, 'order_refund_use', 1, $sdf['order_id'], $this->op_id, 'refund');
-            
+            //zengxinwen
+            if(intval($sdf['score_u'])){
+                $obj_members_point->change_point($sdf_order['member_id'], intval($sdf['score_u']), $msg, 'operator_adjust', 3, $sdf['order_id'], $this->op_id, 'refund');
+            }
+            //end
             $obj_other_joinfee = kernel::servicelist('b2c.other_joinfee.refund_finish');
 			$is_frontend = ($from=='Back') ? false : true;
             if ($obj_other_joinfee)

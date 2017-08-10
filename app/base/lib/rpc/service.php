@@ -213,7 +213,7 @@ class base_rpc_service{
 
         // 防止多次重刷.
 
-        if (!$obj_rpc_poll->db->select('SELECT apilog_id FROM ' . $obj_rpc_poll->table_name(1) . ' WHERE calltime > ' . (time() - 3600) . ' apilog=\''.$_REQUEST['task'].'\' AND api_type=\'response\' LIMIT 0,30 LOCK IN SHARE MODE')) {
+        if (!$obj_rpc_poll->db->select('SELECT apilog_id FROM ' . $obj_rpc_poll->table_name(1) . ' WHERE calltime > ' . (time() - 3600) . ' AND apilog=\''.$_REQUEST['task'].'\' AND api_type=\'response\' LIMIT 0,30 LOCK IN SHARE MODE')) {
             //记录apilog
             $apilog_services = kernel::single('apiactionlog_router_logging');
             $apilog_services->save_log($service,$method,$data);

@@ -679,6 +679,12 @@ EOF;
                 $arr_filter = array_merge($filter,array($keycol=>$_POST['data']));
             }
             $items = $obj->getList('*', $arr_filter);
+            //@djh编辑组合促销 ，原货品的促销价格显示
+            $pro_items = $_POST['extend'];
+            foreach($items as $key=>$val){
+                $items[$key]['extend']=$pro_items[$val['product_id']];
+            }
+            //end
             $name = $items[0][$textColumn];
             if($_POST['type']=='radio'){
                 if(strpos($textColumn,'@')!==false){

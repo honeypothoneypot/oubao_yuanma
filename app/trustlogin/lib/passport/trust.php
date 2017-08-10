@@ -236,9 +236,9 @@ class trustlogin_passport_trust{
     public function pre_pam_members_data($result){
         $data = $result['data'];
         if(empty($data['realname'])){
-          $login_name = $data['nickname'].'_'.$data['openid'];
+          $login_name = $data['nickname'].'_'.time();
         }else{
-          $login_name = $data['realname'].'_'.$data['openid'];
+          $login_name = $data['realname'].'_'.time();
         }
 
         $return = array(
@@ -261,11 +261,11 @@ class trustlogin_passport_trust{
         }
         elseif($data=='女')
         {
-            return '2';
+            return '0';
         }
         else
         {
-            return '0';
+            return '2';
         }
     }
 

@@ -1670,9 +1670,10 @@ class b2c_cart_object_goods implements b2c_interface_cart_object{
                         }
                     }else{
                         $goods_data = array(
-                            'buy_price'=>'￥0.00',
-                            'consume_score'=>'0',
-                            'discount' => '￥0.00',
+                            'buy_price'=>$o_currency->changer_odr($row['obj_items']['products'][0]['price']['price']*$row['quantity']),
+                            'consume_score'=>(float)($row['obj_items']['products'][0]['gain_score']*$row['quantity']),
+                            'discount' => $o_currency->changer_odr(($row['obj_items']['products'][0]['json_price']['price'] - $row['obj_items']['products'][0]['price']['price'])*$row['quantity']),
+
                         );
                     }
                 }
