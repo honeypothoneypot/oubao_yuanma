@@ -156,4 +156,22 @@
     <module id='b2c.brand' type='goods' class='b2c_apiv_apis_response_goods_brand'>
         <api function='get_brand_detail' > 获取品牌详情 </api>
     </module>
+    
+    <!-- 新商品接口 -->
+    <module id='b2c.items.all' type='items' class='b2c_apiv_apis_response_items_all'>
+        <api function='get' > 获取店铺内出售中的商品列表 </api>
+    </module>
+    
+    <module id='b2c.items.list' type='items' class='b2c_apiv_apis_response_items_list'>
+        <api function='get' > 通过IID获取多个前端商品 </api>
+    </module>
+    
+    <module id='b2c.item' type='items' class='b2c_apiv_apis_response_items_item'>
+        <api function='get' > 通过IID获取前端商品 </api>
+    </module>
+    
+    <module id='b2c.item.sku' type='items' class='b2c_apiv_apis_response_items_sku'>
+        <api function='get' > 通过IID获取前端商品SKU </api>
+    </module>
+    
 </apilist>

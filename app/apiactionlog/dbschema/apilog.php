@@ -121,6 +121,7 @@ $db['apilog'] = array(
             'type' => array(
                 'order'=>'订单同步日志',
                 'goods'=>'商品同步日志',
+                'items'=>'商品查询日志',
                 'member'=>'会员同步日志',
                 'payments'=>'支付方式同步日志',
                 'coupon'=>'优惠券同步日志',

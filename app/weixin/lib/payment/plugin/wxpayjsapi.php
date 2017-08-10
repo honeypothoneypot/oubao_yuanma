@@ -304,8 +304,13 @@ final class weixin_payment_plugin_wxpayjsapi extends ectools_payment_app impleme
     protected function get_html(){
 
         header("Content-Type: text/html;charset=".$this->submit_charset);
-        $success_url = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_paycenter','act'=>'result_pay','full'=>1,'arg0'=>$this->fields['order_id'],'arg1'=>'true'));
-        $failure_url = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_paycenter','act'=>'index','full'=>1,'arg0'=>$this->fields['order_id']));
+		if( $this->fields['order_id'] ){
+			$success_url = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_paycenter','act'=>'result_pay','full'=>1,'arg0'=>$this->fields['order_id'],'arg1'=>'true'));
+			$failure_url = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_paycenter','act'=>'index','full'=>1,'arg0'=>$this->fields['order_id']));
+		}else{
+			$success_url = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_member','act'=>'balance','full'=>1));
+			$failure_url = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_member','act'=>'index','full'=>1));
+		}
         $strHtml = '
                 <html>
                     <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
@@ -319,7 +324,7 @@ final class weixin_payment_plugin_wxpayjsapi extends ectools_payment_app impleme
                                         '.$this->fields['jsApiParameters'].',
                                         function(res){
                                             // WeixinJSBridge.log(res.err_msg);
-                                            if(res.err_msg=="get_brand_wcpay_requst:ok"){
+                                            if(res.err_msg=="get_brand_wcpay_request:ok"){
                                                 window.location.href = "' . $success_url . '";
                                             }else{
                                             //  alert(res.err_msg);
