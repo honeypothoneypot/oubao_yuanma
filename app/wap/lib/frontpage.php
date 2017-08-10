@@ -47,10 +47,18 @@ class wap_frontpage extends wap_controller{
                 if( $bindTagData ){
                     $_SESSION['weixin_u_nickname'] = $bindTagData['tag_name'];
                     $_SESSION['account']['member'] = $bindTagData['member_id'];
-                    if(!isset($_COOKIE['UNAME']))
-                        $this->bind_member($bindTagData['member_id']);
+                    $this->bind_member($bindTagData['member_id']);
                 }else{
                     $res = kernel::single('weixin_wechat')->get_basic_userinfo($bind['id'],$openid);
+
+                    $wap_wxlogin = app::get("weixin")->getConf('weixin_basic_setting.wxlogin');
+                    if( $wap_wxlogin == 'true' ){
+                        $member_id = kernel::single('b2c_user_passport')->create($res,$openid);
+                        if($member_id ){
+                            $_SESSION['account']['member'] = $member_id;
+                            $this->bind_member($member_id);
+                        }
+                    }
                     $_SESSION['weixin_u_nickname'] = $res['nickname'];
                 }
                 $_SESSION['weixin_u_openid'] = $openid;
@@ -75,17 +83,18 @@ class wap_frontpage extends wap_controller{
                 if( $bindTagData ){
                     $_SESSION['weixin_u_nickname'] = $bindTagData['tag_name'];
                     $_SESSION['account']['member'] = $bindTagData['member_id'];
-                    if( !isset($_COOKIE['UNAME']) )
-                    {
-                        $this->bind_member($bindTagData['member_id']);
-                    }
+                    $this->bind_member($bindTagData['member_id']);
                 }else{
                     $res = $wechat->matrix_userinfo($openid,$access_token);
                     if( isset($res['nickname']) ){
-                        $member_id = kernel::single('b2c_user_passport')->create($res,$openid);
-                        if( $member_id ){
-                            $this->bind_member($member_id);
-                            $_SESSION['account']['member'] = $member_id;
+
+                        $wap_wxlogin = app::get("weixin")->getConf('weixin_basic_setting.wxlogin');
+                        if( $wap_wxlogin == 'true' ){
+                            $member_id = kernel::single('b2c_user_passport')->create($res,$openid);
+                            if( $member_id ){
+                                $_SESSION['account']['member'] = $member_id;
+                                $this->bind_member($member_id);
+                            }
                         }
                         $_SESSION['weixin_u_nickname'] = $res['nickname'];
                     }

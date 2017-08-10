@@ -267,6 +267,17 @@ class b2c_user_object{
      * 判断是否是微信登录
      */
     function is_wechat_login(){
-        return $_SESSION['weixin_u_openid'] ? true : false;
+        if( !$_SESSION['weixin_u_openid'] ){
+            return false;
+        }
+
+        $member_id = $this->get_member_id();
+        $bind_obj = app::get('pam')->model("bind_tag");
+
+        $filter = array('member_id'=>$member_id,'open_id'=>$_SESSION['weixin_u_openid']);
+        if( $bind_obj->getRow('open_id',$filter) ){
+            return true;
+        }
+        return false;
     }
 }

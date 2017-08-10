@@ -26,7 +26,7 @@ class b2c_ctl_admin_sales_coupon_exchange extends desktop_controller{
 
 
     public function add() {
-        $filter = array('cpns_status' => '1', 'cpns_type' => '1');
+        $filter = array('cpns_status' => '1', 'cpns_type' => '1','cpns_receive'=>'0');
         $cpns = $this->app->model('coupons')->getList('*', $filter);
         foreach( $cpns as $key => $row ) {
             if( $row['cpns_point'] ) unset($cpns[$key]);

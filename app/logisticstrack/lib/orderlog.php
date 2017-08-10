@@ -134,6 +134,17 @@ class logisticstrack_orderlog {
                             }
                         }
                         break;
+                        case 'receive':
+                            $logitems['behavior'] = app::get('b2c')->_("确认收货");
+                            if ($arr_log_text = unserialize($logitems['log_text']))
+                            {
+                                $logitems['log_text'] = '';
+                                foreach ($arr_log_text as $arr_log)
+                                {
+                                    $logitems['log_text'] .= app::get('b2c')->_($arr_log['txt_key']);
+                                }
+                            }
+                            break;
                     default:
                         break;
                 }

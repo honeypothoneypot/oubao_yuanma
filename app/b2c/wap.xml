@@ -18,6 +18,11 @@
         <title>会员中心</title>
         <disable>false</disable>
     </module>
+    <module id='b2c' controller='wap_activity' >
+        <name>activity</name>
+        <title>活动页</title>
+        <disable>false</disable>
+    </module>
     
     <module id='b2c' controller='wap_brand' >
         <name>brand</name>

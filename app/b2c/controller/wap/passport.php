@@ -654,6 +654,20 @@ class b2c_ctl_wap_passport extends wap_frontpage{
             $service->logout();
         }
     }
-	
 
+    /*
+     * 验证是否登陆
+     * */
+    public function ajax_check_login(){
+        $url = '';
+        $status = false;
+        if( $this->userObject->is_login() )
+        {
+            $status = true;
+        }else
+        {
+            $url = $this->gen_url(array('app'=>'b2c', 'ctl'=>'wap_passport','act'=>'login','full'=>1));
+        }
+        echo json_encode(array('status'=>$status,'url'=>$url));
+    }
 }

@@ -9,8 +9,13 @@
 class wap_widgets{
 
     private static $__last_modified = null;
+    private static $_prefix = 'wap_widgets_';
+    //数据对象对外名称
+    private static $_widgets_conf = array(
+        'Goods'         => 'goods',
+        'Coupons'       => 'coupons',
+    );
 
-    
     static public function set_last_modify() {
         $last_modified = time();
         if (app::get('wap')->setConf('widgets_css_last_modify', $last_modified )){
@@ -42,5 +47,21 @@ class wap_widgets{
             return true;
         }
         return false;
+    }
+
+    /**
+     * 获取某个数据对象
+     * @param string $obj_name
+     */
+    public static function load($obj_name){
+        if (!array_key_exists($obj_name, self::$_widgets_conf)) return false;
+        return self::_get_obj($obj_name);
+    }
+
+    private static function _get_obj($obj_name){
+        $_obj_name      = self::$_widgets_conf[$obj_name];
+        $object_class   = self::$_prefix.$_obj_name;
+        $object         = kernel::single($object_class);
+        return $object;
     }
 }

@@ -36,11 +36,34 @@
          </td>
       </tr>
       <tr>
+        <th><span class="red"><{t}>注意：<{/t}></span></th>
+         <td>
+           <span class="red">设置类型及获取方式时请慎重，一旦设置完毕后将无法进行修改</span>
+         </td>
+      </tr>
+      <tr>
         <th><{t}>优惠券类型：<{/t}></th>
         <td id='c_t'>
-            <label><input id="c_t" type='radio' name='coupon[cpns_type]' value=0  <{if $coupon.cpns_type eq 0}>checked="checked"<{/if}> <{if $coupon.cpns_id}>disabled='disabled'<{/if}>/><{t}>A类优惠券<{/t}>&nbsp;&nbsp;<span class="font-gray"><{t}>说明：此类优惠券，顾客只需获得一张，即可在规定的时间内重复使用。<{/t}></span></label><br>
-            <label><input type='radio' name='coupon[cpns_type]' value=1  <{if $coupon.cpns_type eq 1}>checked="checked"<{/if}> <{if $coupon.cpns_id}>disabled='disabled'<{/if}>/><{t}>B类优惠券<{/t}>&nbsp;&nbsp;<span class="font-gray"><{t}>说明：此类优惠券，顾客可一次获得多张，但在规定时间内每张只能使用一次，无法重复使用。 只限会员使用<{/t}></span></label>
+            <label><input id="c_t" class="coupon-A" type='radio' name='coupon[cpns_type]' value=0  <{if $coupon.cpns_type eq 0}>checked="checked"<{/if}> <{if $coupon.cpns_id}>disabled='disabled'<{/if}>/><{t}>A类优惠券<{/t}>&nbsp;&nbsp;<span class="font-gray"><{t}>说明：此类优惠券，顾客只需获得一张，即可在规定的时间内重复使用。<{/t}></span></label><br>
+            <label><input type='radio' class="coupon-B" name='coupon[cpns_type]' value=1  <{if $coupon.cpns_type eq 1}>checked="checked"<{/if}> <{if $coupon.cpns_id}>disabled='disabled'<{/if}>/><{t}>B类优惠券<{/t}>&nbsp;&nbsp;<span class="font-gray"><{t}>说明：此类优惠券，顾客可一次获得多张，但在规定时间内每张只能使用一次，无法重复使用。 只限会员使用<{/t}></span></label>
         </td>
+      </tr>
+      <tr class="coupon-way hide">
+        <th><{t}>优惠券获取方式：<{/t}></th>
+        <td id='c_r'>
+            <label><input id="c_r" class="point" type='radio' name='coupon[cpns_receive]' value=0  <{if $coupon.cpns_receive eq 0}>checked="checked"<{/if}> <{if $coupon.cpns_id}>disabled='disabled'<{/if}>/><{t}>积分兑换<{/t}>&nbsp;&nbsp;<span class="font-gray"><{t}>说明：此类优惠券，顾客只能通过积分兑换获取（只对B类优惠卷生效）。<{/t}></span></label><br>
+            <label><input class = "lcoupon " type='radio' name='coupon[cpns_receive]' value=1  <{if $coupon.cpns_receive eq 1}>checked="checked"<{/if}> <{if $coupon.cpns_id}>disabled='disabled'<{/if}>/><{t}>领取<{/t}>&nbsp;&nbsp;<span class="font-gray"><{t}>说明：此类优惠券，顾客只能通过领取获取（只对B类优惠卷生效）。<{/t}></span></label>
+        </td>
+      <tr>
+      <tr class="coupon-tr hide" >
+        <th><em class="red">*</em><{t}>优惠券领取上限：<{/t}></th>
+         <td>
+           <{input type="unsignedint" value=$coupon.cpns_max_receive_num name="coupon[cpns_max_receive_num]" maxlength="5" size="5"  required="true" vtype='required&&unsignedint' }>&nbsp;
+           <{t}>张<{/t}>&nbsp;&nbsp;&nbsp;&nbsp;
+           <span class="font-gray"><{t}>发放的优惠券数目上限<{/t}></span>&nbsp;&nbsp;&nbsp;
+           <span class="surplus red"> 剩余数量：<{$coupon.remain}></span>
+           <input type="hidden" name='coupon[cpns_gen_quantity]' value="<{$coupon.cpns_gen_quantity}>" />
+         </td>
       </tr>
     </table>
     </div>
@@ -74,11 +97,6 @@
             </tr>
         </table>
     </div>
-
-
-
-
-
 <script>
   $ES('input', 'c_t').each(function(item){
     if(item.checked) {
@@ -99,4 +117,40 @@
       }
     });
   });
+    var maxCoupon = $$("input[name='coupon[cpns_max_receive_num]']");
+    var surplus = $$(".surplus");
+    maxCoupon.addEvent("blur",function(){
+      var numCoupon = maxCoupon.getValue();
+      console.log(numCoupon[0])
+      surplus.setHTML("剩余数量："+numCoupon[0]);
+    });
+      var coupon_A = $$(".coupon-A");
+      var coupon_B = $$(".coupon-B");
+      var lcoupon = $$(".lcoupon");
+      var point = $$(".point"); 
+      var coupon_way = $$(".coupon-way");
+    coupon_A.addEvent("click",function(){
+      if(coupon_A[0].checked){
+        coupon_way[0].addClass('hide')
+      };
+    })
+    coupon_B.addEvent("click",function(){
+      if(coupon_B[0].checked){
+        coupon_way[0].removeClass('hide')
+        lcoupon.addEvent("click", function(){
+            $$(".coupon-tr").removeClass('hide');
+        });
+        point.addEvent("click",function(){
+            $$(".coupon-tr").addClass('hide');
+        });
+      }
+    })
+    var fnChecked = function(){
+        if(!point[0].checked){
+          coupon_way[0].addClass('hide')
+          $$(".coupon-tr").removeClass('hide');
+          }
+    };
+    fnChecked();
 </script>
+

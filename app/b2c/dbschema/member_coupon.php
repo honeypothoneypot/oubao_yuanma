@@ -115,11 +115,12 @@ $db['member_coupon']=array (
               0 => 'memc_gen_orderid',
           ),
       ),
-      'ind_member_id' =>
+      'ind_member_id_cpns_id' =>
       array (
           'columns' =>
           array (
               0 => 'member_id',
+              1 => 'cpns_id',
           ),
       ),
   ),

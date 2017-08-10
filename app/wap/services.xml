@@ -13,6 +13,10 @@
         <class>wap_finder_theme</class>
     </service>
 
+    <service id="desktop_finder.wap_mdl_activity">
+        <class>wap_finder_activity</class>
+    </service>
+
     <service id="wap_theme_content_detector">
         <class>wap_application_themewidgets</class>
     </service>

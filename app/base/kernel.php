@@ -175,7 +175,13 @@ class kernel{
             case E_ERROR:
             case E_USER_ERROR:
                 logger::error(sprintf('error: %s, severity:%s, file:%s, line:%s', $errstr, $errno, $errfile, $errline));
-                throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+                //隐藏数据库连接敏感信息
+                //if(preg_match('/Access denied for user/', $errstr)){
+                    //echo  '<html lang="en"><head><meta charset="UTF-8"><meta http-equiv="content-type" content="text/html; charset=utf-8" />    </head>';
+                    //echo $errstr;
+                    //exit;
+                //}
+                throw new ErrorException($errstr, 1, $errno, $errfile, $errline);
             break;
             case E_STRICT:
             case E_USER_WARNING:

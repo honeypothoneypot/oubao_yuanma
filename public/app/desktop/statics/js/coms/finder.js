@@ -321,7 +321,7 @@
                 this.form.retrieve('rowselected').empty().push('_ALL_');
                 this.tip.fireEvent('_update', 'selectedall').fireEvent('_show');
             }else{
-                this.form.retrieve('rowselected').empty().push(100000000);
+                //this.form.retrieve('rowselected').empty().push(100000000);
                 this.form.retrieve('_rowindex',$H()).empty();
                 this.tip.fireEvent('_hide');
             }
@@ -549,26 +549,25 @@
                         /*rowindex Hash*/
                         var frowindex= finder.form.retrieve('_rowindex', $H());
                         this.checked ? frowindex.set(this.value,this.get('rowindex')):frowindex.erase(this.value);
-                        if(frowselected.length==0){
-                            frowselected.empty().push(this.value+10000000);
-                        }
+                        /*if(frowselected.length==0){
+                            frowselected.empty().push("this.value+10000000");
+                        }*/
                     }
 
                     if (!this.checked && frowselected.contains('_ALL_')) {
                         frowselected.erase('_ALL_');
                         return finder.unselectAll();
                     }
-
+                    console.log(frowselected)
                     var selectedLength = frowselected.length;
-
+                    //console.log(selectedLength)
                     var displayTipDelay = 0;
 
-                    if (selectedLength > 1) {
+                    if (selectedLength > 0) {
                         if (selectedLength == finder.tip.get('count').toInt() || frowselected.contains('_ALL_')) {
-
                             finder.tip.fireEvent('_update', ['selectedall', selectedLength]).fireEvent('_show');
-
                         } else {
+
                             finder.tip.fireEvent('_update', ['selected', selectedLength]);
                             displayTipDelay = (function() {
                                 $clear(displayTipDelay);

@@ -36,6 +36,12 @@ class b2c_ctl_admin_sales_coupon extends desktop_controller{
         $aCoupon = $mCoupon->dump($coupon_id);
         if(empty($aCoupon)) $this->splash('fail','index.php?app=b2c&ctl=admin_sales_coupon',app::get('b2c')->_('数据错误'));
         $aCoupon['cpns_prefix'] = substr($aCoupon['cpns_prefix'],1);
+        if( $aCoupon['cpns_receive'] ){
+            $aCoupon['remain'] = intval($aCoupon['cpns_max_receive_num']) - intval($aCoupon['cpns_gen_quantity']);
+            $aCoupon['remain'] = $aCoupon['remain'] > 0 ? $aCoupon['remain'] : 0;
+        }else{
+            $aCoupon['remain'] = '';
+        }
         $this->pagedata['coupon'] = $aCoupon;
 
         ////////////////////////// 订单促销规则信息 ///////////////////////////
@@ -121,6 +127,14 @@ class b2c_ctl_admin_sales_coupon extends desktop_controller{
     function _prepareData($aData) {
         $this->_checkData($aData);
         $aResult = array();
+        //b类优惠券 + 领取
+        if( $aData['coupon']['cpns_type'] && $aData['coupon']['cpns_receive'] ){
+            if( $aData['coupon']['cpns_max_receive_num'] < $aData['coupon']['cpns_gen_quantity'] ){
+                $this->end(false,'优惠券领取上限不可小于已获取总数量，请重新设置优惠券领取上限。');
+            }
+        }else{
+            $aData['coupon']['cpns_max_receive_num'] = 0;
+        }
         ///////////////////////////////// coupon ///////////////////////////////////
         $aResult['coupon'] = $aData['coupon'];
         if(isset($aResult['coupon']['cpns_prefix'])) { // 修改的时候这个是没有的 编辑的话只显示不提交到这里
@@ -220,16 +234,27 @@ class b2c_ctl_admin_sales_coupon extends desktop_controller{
      */
     function download($cpnsId,$nums){
         $exporter = kernel::single("b2c_sales_csv");
-        $mCoupon = $this->app->model('coupons');
         if( !$nums ) {
             header("Content-type: text/html; charset=UTF-8");
             echo __('<script>alert("'.app::get('b2c')->_("数量错误！").'")</script>');exit;
         }
+        $mCoupon = $this->app->model('coupons');
+        $coupon_info = $mCoupon->getRow('cpns_receive,cpns_gen_quantity,cpns_max_receive_num,cpns_status',array('cpns_id'=>$cpnsId));
+        if( $coupon_info['cpns_receive'] )
+        {
+            if( (intval($coupon_info['cpns_gen_quantity']) + $nums ) > intval($coupon_info['cpns_max_receive_num']) ){
+                header("Content-type: text/html; charset=UTF-8");
+                echo __('<script>alert("'.app::get('b2c')->_("下载的数目超过优惠券领取上限,不能下载").'")</script>');
+                exit;
+            }
+        }
         if ($list = $mCoupon->downloadCoupon($cpnsId,$nums)) {
             $exporter->download(app::get('b2c')->_('优惠券代码'),'coupon',$nums, $list);
+            exit;
         }else{
             header("Content-type: text/html; charset=UTF-8");
             echo __('<script>alert("'.app::get('b2c')->_("当前优惠券未发布/时间未到,暂时不能下载").'")</script>');
+            exit;
         }
         //*/
     }

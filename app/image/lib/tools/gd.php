@@ -6,7 +6,11 @@ class image_tools_gd implements image_interface_tool
     {
         $quality  = 80;
         $image_p = imagecreatetruecolor($new_width, $new_height);
+        $white= imagecolorallocate($image_p , 255 , 255 ,255);//拾取白色
+        imagefill($image_p , 0 , 0, $white);//把画布染成白色
+        imagecolortransparent($image_p ,$white );//把图片中白色设置为透明色
         imagealphablending($image_p,true);
+
         if($new_width>$width || $new_height>$height){
             $background_color = imagecolorallocate($image_p, 255, 255, 255);
             imagefilledrectangle ( $image_p, 0, 0, $new_width, $new_height, $background_color );

@@ -1453,6 +1453,96 @@ class b2c_ctl_wap_member extends wap_frontpage{
         }
     }
 
+    public function coupon_receive(){
+        $concurrent=kernel::single("base_concurrent_file");
+        $member_group_id = 'coupon_group_'.intval($_SESSION['account']['member']%1000);
+        $concurrent->status($member_group_id);
+        if(!$concurrent->check_flock()){
+            $concurrent->close_lock();
+            echo json_encode(array('status'=>'fail',msg=>"异常操作"));exit();
+        }
+
+        if( isset($_POST['cpns_id']) ){
+            $cpnsId = $_POST['cpns_id'];
+
+            $concurrent_cpns=kernel::single("base_concurrent_file");
+            $cpns_group_id = 'cpns_group_'.intval($cpnsId%1000);
+            $concurrent_cpns->status($cpns_group_id);
+            if(!$concurrent_cpns->check_flock()){
+                $concurrent->close_lock();
+                $concurrent_cpns->close_lock();
+                echo json_encode(array('status'=>'fail',msg=>"网络异常，请重试"));exit();
+            }
+
+            $oExchangeCoupon = kernel::single('b2c_coupon_mem');
+            $memberId = intval($this->app->member_id);//会员id号
+            $obj_widget_coupons = kernel::single('wap_widgets_coupons');
+            if($memberId){
+                $msgArr = array(
+                    '2'=>'cpns_id为空',
+                    '3'=>'优惠券已经领光',
+                    '4'=>'会员等级不符',
+                    '5'=>'活动未开始',
+                    '6'=>'活动已结束',
+                );
+                if( $obj_widget_coupons->getReceiveStatus($cpnsId) ){
+                    $concurrent->close_lock();
+                    $concurrent_cpns->close_lock();
+                    echo json_encode(array('status'=>'fail',msg=>"不可重复领取"));exit();
+                }
+
+                $verify_status = $obj_widget_coupons->verify($cpnsId);
+                if( $verify_status != 1 ){
+                    $concurrent->close_lock();
+                    $concurrent_cpns->close_lock();
+                    echo json_encode(array('status'=>'fail','msg'=>$msgArr[$verify_status]));exit();
+                }
+
+                $coupons = $this->app->model('coupons');
+                $cur_coupon = $coupons->dump($cpnsId);
+
+                if( $oExchangeCoupon->obtain($cpnsId,$memberId,$params) ){
+                    $concurrent->unlock();
+                    $concurrent_cpns->unlock();
+                    echo json_encode(array('status'=>'success',msg=>"领取成功"));exit();
+                }else
+                {
+                    $concurrent->close_lock();
+                    $concurrent_cpns->close_lock();
+                    echo json_encode(array('status'=>'fail',msg=>"领取失败"));exit();
+                }
+            }else{
+                $concurrent->close_lock();
+                $concurrent_cpns->close_lock();
+                echo json_encode(array('status'=>'fail',msg=>"没有登录"));exit();
+            }
+        }
+
+        $concurrent->unlock();
+        echo json_encode(array('status'=>'fail',msg=>"参数异常"));exit();
+    }
+
+
+    /**
+     * 优惠券列表挂件内优惠券状态查询
+     * @params $cpns_id string 优惠券id
+     * @return json array('status'=>'success/fail',coupon=>array('1'=>array('receiveStatus'=>true,'url'=>)),msg=>'tips')
+     */
+    public function coupon_status($cpns_id){
+        if( !$cpns_id ){
+            echo json_encode(array('status'=>'fail','coupon'=>array(),'msg'=>'参数异常'));
+            exit();
+        }
+        $cpns_id = explode(',',$cpns_id);
+
+        $data = array();
+        $filter = array('cpns_id'=>$cpns_id);
+
+        $data = kernel::single('wap_widgets_coupons')->getPromotionCoupons($filter);
+
+        echo json_encode(array('status'=>'success','coupon'=>$data,'msg'=>''));exit();
+    }
+
     function afterlist($nPage=1){
         $nPage =intval($nPage);
         $this->path[] = array('title'=>app::get('b2c')->_('会员中心'),'link'=>$this->gen_url(array('app'=>'b2c', 'ctl'=>'wap_member', 'act'=>'index','full'=>1)));
@@ -1622,9 +1712,9 @@ class b2c_ctl_wap_member extends wap_frontpage{
 
                             }
                         }else{
-                             $result = $products ->getRow('goods_id,spec_desc',array('product_id'=>$product_id));
-                             $default_image=$oGoods->getRow('image_default_id',array('goods_id'=>$result['goods_id']));
-                             $order_items[$product_id]['thumbnail_pic'] = $default_image['image_default_id'];
+                            $result = $products ->getRow('goods_id,spec_desc',array('product_id'=>$product_id));
+                            $default_image=$oGoods->getRow('image_default_id',array('goods_id'=>$result['goods_id']));
+                            $order_items[$product_id]['thumbnail_pic'] = $default_image['image_default_id'];
                         }
                     }
                 }
@@ -1640,7 +1730,7 @@ class b2c_ctl_wap_member extends wap_frontpage{
                             $tmp['arrNum'] = $this->intArray($tmp['quantity']);
                             $order_items[$tmp['product_id']] = $tmp;
                         }else{
-                           
+
                             $order_items[$tmp['product_id']]['sendnum'] = floatval($objMath->number_plus(array($order_items[$tmp['product_id']]['sendnum'],$tmp['sendnum'])));
                             $order_items[$tmp['product_id']]['nums'] = floatval($objMath->number_plus(array($order_items[$tmp['product_id']]['nums'],$tmp['nums'])));
                             $order_items[$tmp['product_id']]['quantity'] = floatval($objMath->number_plus(array($order_items[$tmp['product_id']]['quantity'],$tmp['quantity'])));
@@ -1754,7 +1844,7 @@ class b2c_ctl_wap_member extends wap_frontpage{
         if(!empty($is_aftersales_status)){
             $this->afterlist_msg('fail','您申请退换货的物品大于可退货换数量',$url='');
             return '';
-    }
+        }
 
 
         $aData['order_id'] = $_POST['order_id'];
@@ -1792,7 +1882,7 @@ class b2c_ctl_wap_member extends wap_frontpage{
 
 
 
-    
+
     function afterrec($type='noarchive', $nPage=1){
         $this->path[] = array('title'=>app::get('b2c')->_('会员中心'),'link'=>$this->gen_url(array('app'=>'b2c', 'ctl'=>'wap_member', 'act'=>'index','full'=>1)));
         $GLOBALS['runtime']['path'] = $this->path;
@@ -1842,16 +1932,16 @@ class b2c_ctl_wap_member extends wap_frontpage{
                     $aData['data'][$key]['product_data'][$gkey]['thumbnail_pic'] = $default_product_image;
                 }elseif($spec_desc_goods[0]['image_default_id']){
                     if(!$oImage->getList("image_id",array('image_id'=>$spec_desc_goods[0]['image_default_id']))){
-                         $aData['data'][$key]['product_data'][$gkey]['thumbnail_pic'] = $imageDefault['S']['default_image'];
+                        $aData['data'][$key]['product_data'][$gkey]['thumbnail_pic'] = $imageDefault['S']['default_image'];
                     }else{
-                         $aData['data'][$key]['product_data'][$gkey]['thumbnail_pic'] = $spec_desc_goods[0]['image_default_id'];
+                        $aData['data'][$key]['product_data'][$gkey]['thumbnail_pic'] = $spec_desc_goods[0]['image_default_id'];
                     }
                 }else{
                     $default_image=$oGoods->getRow('image_default_id',array('goods_id'=>$result['goods_id']));
                     $aData['data'][$key]['product_data'][$gkey]['thumbnail_pic'] = $default_image['image_default_id'];
 
                 }
-               $aData['data'][$key]['product_data'][$gkey]['link_url']= $this->gen_url(array('app'=>'b2c','ctl'=>'wap_product','act'=>'index','arg0'=>$aData['data'][$key]['product_data']['0']['product_id']));
+                $aData['data'][$key]['product_data'][$gkey]['link_url']= $this->gen_url(array('app'=>'b2c','ctl'=>'wap_product','act'=>'index','arg0'=>$aData['data'][$key]['product_data']['0']['product_id']));
             }
             $aData['data'][$key]['comment'] = unserialize($val['comment']);
         }
@@ -1927,16 +2017,16 @@ class b2c_ctl_wap_member extends wap_frontpage{
                         $aData['data'][$key]['product_data'][$gkey]['thumbnail_pic'] = $default_product_image;
                     }elseif($spec_desc_goods[0]['image_default_id']){
                         if(!$oImage->getList("image_id",array('image_id'=>$spec_desc_goods[0]['image_default_id']))){
-                             $aData['data'][$key]['product_data'][$gkey]['thumbnail_pic'] = $imageDefault['S']['default_image'];
+                            $aData['data'][$key]['product_data'][$gkey]['thumbnail_pic'] = $imageDefault['S']['default_image'];
                         }else{
-                             $aData['data'][$key]['product_data'][$gkey]['thumbnail_pic'] = $spec_desc_goods[0]['image_default_id'];
+                            $aData['data'][$key]['product_data'][$gkey]['thumbnail_pic'] = $spec_desc_goods[0]['image_default_id'];
                         }
                     }else{
                         $default_image=$oGoods->getRow('image_default_id',array('goods_id'=>$result['goods_id']));
                         $aData['data'][$key]['product_data'][$gkey]['thumbnail_pic'] = $default_image['image_default_id'];
 
                     }
-                   $aData['data'][$key]['product_data'][$gkey]['link_url']= $this->gen_url(array('app'=>'b2c','ctl'=>'wap_product','act'=>'index','arg0'=>$aData['data'][$key]['product_data']['0']['product_id']));
+                    $aData['data'][$key]['product_data'][$gkey]['link_url']= $this->gen_url(array('app'=>'b2c','ctl'=>'wap_product','act'=>'index','arg0'=>$aData['data'][$key]['product_data']['0']['product_id']));
                 }
                 $aData['data'][$key]['comment'] = unserialize($val['comment']);
             }
@@ -1954,7 +2044,7 @@ class b2c_ctl_wap_member extends wap_frontpage{
 
     }
 
-   public  function read(){
+    public  function read(){
         $this->pagedata['comment'] = app::get('aftersales')->getConf('site.return_product_comment');
         $this->page('wap/afterlist/afterpact.html');
 

@@ -199,8 +199,7 @@ class weixin_menus {
         $res ['name'] = $d['menu_name'];
         if($d['content_type']=='msg_url'){
             $res ['type'] = 'view';
-//            $res ['url'] = $this->gen_menu_url($bind_id,$d['msg_url']);
-            $res ['url'] = $d['msg_url'];
+            $res ['url'] = $this->gen_menu_url($bind_id,$d['msg_url']);
         } elseif($d['content_type']=='msg_text'){
             $res ['type'] = 'click';
             $res ['key'] = 'text_'.$d['msg_text'];

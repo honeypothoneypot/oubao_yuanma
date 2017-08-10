@@ -9,6 +9,8 @@
 class b2c_finder_coupons{
     var $column_control = '操作';
     var $detail_basic = '查看';
+    var $column_remain = '剩余数量';
+    var $column_remain_order = COLUMN_IN_TAIL;
     
     public function __construct($app) {
         $this->app = $app;
@@ -29,11 +31,21 @@ class b2c_finder_coupons{
         }
         return '<a href="index.php?app=b2c&ctl=admin_sales_coupon&act=edit&p[0]='.$row['cpns_id'].'" target="_blank">'.app::get('b2c')->_('编辑').'</a>'.$download_html;
     }
-    
-    
-    
-    
-    
+
+    /**
+     * 剩余数量
+     *
+     */
+    function column_remain($row){
+        if( $row['cpns_receive'] ){
+            $remain = intval($row['cpns_max_receive_num']) - intval($row['cpns_gen_quantity']);
+            $remain = $remain > 0 ? $remain : 0;
+        }else{
+            $remain = '';
+        }
+        return $remain;
+    }
+
     function detail_basic($id){
         $arr = $this->app->model('coupons')->dump($id); 
 

@@ -95,6 +95,23 @@ $db['coupons']=array (
       'default_in_list' => true,
       'filterdefault'=>true,
     ),
+    'cpns_receive' =>
+    array (
+        'type' => 
+        array (
+            0 => app::get('b2c')->_('积分兑换'),
+            1 => app::get('b2c')->_('领取'),
+        ),
+        'default' => '0',
+        'required' => true,
+        'label' => '获取方式',
+        'edittable' => '',
+        'width' => 110,
+        'comment' => '优惠券获取方式',
+        'in_list' => true,
+        'default_in_list' => true,
+        'filterdefault' => true,
+    ),
     'cpns_type' =>
     array (
       'type' =>
@@ -135,9 +152,21 @@ $db['coupons']=array (
     array (
       'type' => 'number',
       'default' => NULL,
-      'label' => app::get('b2c')->_('最大兑换数量'),
+      'label' => app::get('b2c')->_('每人最大兑换数量'),
       'width' => 110,
-      'comment' => app::get('b2c')->_('最大兑换数量'),
+      'comment' => app::get('b2c')->_('每人最大兑换数量'),
+      'editable' => false,
+      'in_list' => true,
+      'default_in_list' => false,
+      'filterdefault'=>true,
+    ),
+    'cpns_max_receive_num' =>
+    array (
+      'type' => 'number',
+      'default' => 0,
+      'label' => app::get('b2c')->_('最大领取数量'),
+      'width' => 110,
+      'comment' => app::get('b2c')->_('最大领取数量'),
       'editable' => false,
       'in_list' => true,
       'default_in_list' => true,

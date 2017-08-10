@@ -610,9 +610,11 @@ EOF;
         }
         if($type=='goods'){
             $mod = app::get('b2c')->model('goods');
+            $product_obj = app::get('b2c')->model('products');
             foreach($mod->getList('goods_id,name',array('name'=>$keywords)) as $k=>$r){
+                $product_info = $product_obj->getRow('product_id',array('goods_id'=>$r['goods_id']));
                 $list[] = array(
-                    'url'=>app::get('site')->router()->gen_url(array('app'=>'b2c','ctl'=>'site_product','full'=>1,'act'=>'index','arg'=>$r['goods_id']))
+                    'url'=>app::get('site')->router()->gen_url(array('app'=>'b2c','ctl'=>'site_product','full'=>1,'act'=>'index','arg'=>$product_info['product_id']))
                     ,'label'=>$r['name']);
             }
             $this->pagedata['list'] = $list;
