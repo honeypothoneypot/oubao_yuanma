@@ -1,0 +1,507 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+<{header}>
+<link rel="stylesheet" href="images/styles.min.css" />
+</head>
+<body>
+<{require file="block/header.html"}>
+<div id="groupbuyBanner" class="groupbuy-banner">
+	<{widgets id="gbb1"}>
+</div>
+<div id="container" class="page-container clearfix">
+	<div class="inner-wrap">
+		<div class="section">
+			<div class="gb-promotion">
+				<ul class="clearfix">
+					<li><{widgets id="gbp1"}></li>
+					<li><{widgets id="gbp2"}></li>
+					<li class="last"><{widgets id="gbp3"}></li>
+				</ul>
+			</div>
+		</div>		
+		<div class="section">
+			<div class="gb-floor-title clearfix" id="gbFloorTitle">
+				<img class="icon" src="images/gb_floor_title01.png" alt="">
+				<h2>限时团购</h2>
+				<div class="gb-countdown" data-time-start="1447382177" data-time-end="1448382177" data-time-now="<{$smarty.now}>">
+			        <p>距离结束还剩:</p>
+			        <div class="fl clearfix">
+			            <span class="moo-d value"></span><span class="unit">天</span>
+			            <span class="moo-h value"></span><span class="unit">时</span>
+			            <span class="moo-m value"></span><span class="unit">分</span>
+			            <span class="moo-s value"></span><span class="unit">秒</span>
+			        </div>
+			    </div>
+			    <script>
+				    (function(){
+				        var timeCount = new Class({
+				            inner: {
+				                date: '.moo-d',
+				                hours: '.moo-h',
+				                minutes: '.moo-m',
+				                seconds: '.moo-s'
+				            },
+				            initialize:function(timeNow,timeEnd,dom,isReload){
+				                this.isReload = isReload || true;
+				                var diff = Math.abs((timeNow.getTime() - timeEnd.getTime())/1000);
+				                var secondDiff = diff % 60;
+				                var minuteDiff = ((diff - secondDiff)/60) % 60;
+				                var hourDiff = (diff - secondDiff  - minuteDiff*60) / 3600;
+				                var dayDiff = parseInt(hourDiff/24);
+				                hourDiff = hourDiff - dayDiff * 24;
+				                var timeDiff = [hourDiff,minuteDiff,secondDiff,dayDiff];
+				                this.s = this.calcTime.periodical(1000,this,{
+				                    time:timeDiff,
+				                    dom:dom
+				                });
+				                if(document.getElement('.desc')){
+				                    this.desc = 10;
+				                    this.d = this.calcDesc.periodical(100,this);
+				                    (function(){$('timer').setStyle('display','block')}).delay(1100);
+				                }
+				            },
+				            addZero: function(timeDiff){
+				                for(var i=0;i<timeDiff.length;i++){
+				                    if(timeDiff[i].toString().length < 2){
+				                        timeDiff[i] = "0" + timeDiff[i].toString();
+				                    }
+				                }
+				                return timeDiff;
+				            },
+				            formatToInt: function(timeDiff){
+				                for(var i=0;i<timeDiff.length;i++){
+				                    timeDiff[i] = parseInt(timeDiff[i]);
+				                }
+				                return timeDiff;
+				            },
+				            judgeTime: function(timeDiff){
+				                if(timeDiff[2]< 0  && timeDiff[1]>0){
+				                    timeDiff[2] = 59;
+				                    timeDiff[1]--;
+				                    return timeDiff;
+				                }else if(timeDiff[2] <0 && timeDiff[1]==0 && timeDiff[0]>0){
+				                    timeDiff[2] = 59;
+				                    timeDiff[1] = 59;
+				                    timeDiff[0]--;
+				                    return timeDiff;
+				                }else if(timeDiff[2]==0 && timeDiff[1]==0 && timeDiff[0]==0){
+				                    clearInterval(this.s);
+				                    if(document.getElement('.desc')){ clearInterval(this.d); document.getElement('.desc').innerHTML = 0; }
+				                    if(this.isReload){
+				                        if(typeOf(this.isReload) == 'function'){
+				                            this.isReload();
+				                        }else{
+				                            location.reload();
+				                        }
+				                    }
+				                    return;
+				                }
+				            },
+				            calcTime: function (obj){
+				                if(!obj.dom) return;
+				                var _timeDiff = obj.time;
+				                this.addZero(_timeDiff);
+				                this.formatToInt(_timeDiff);
+				                _timeDiff[2]--;
+				                this.judgeTime(_timeDiff);
+				                this.addZero(_timeDiff);
+				                var dom = $(obj.dom);
+				                var inner = this.inner;
+				                dom.date = dom.getElement(inner.date);
+				                dom.hours = dom.getElement(inner.hours);
+				                dom.minutes = dom.getElement(inner.minutes);
+				                dom.seconds = dom.getElement(inner.seconds);
+				                if(dom.date) dom.date.innerHTML = _timeDiff[3];
+				                if(dom.seconds) dom.seconds.innerHTML = _timeDiff[2];
+				                if(dom.minutes) dom.minutes.innerHTML = _timeDiff[1];
+				                if(dom.hours) dom.hours.innerHTML = _timeDiff[0];
+				            },
+				            calcDesc:function(){
+				                this.desc--;
+				                document.getElement('.desc').innerHTML = this.desc;
+				                if(this.desc == 0)
+				                    this.desc = 10;
+				            }
+				        });
+				        var wrap = $('gbFloorTitle'),
+				        	detail = wrap.getElement('.gb-countdown'),
+				        	timeNow = new Date(detail.get('data-time-now')*1000),
+				        	timeEnd = new Date(detail.get('data-time-end')*1000);
+				        new timeCount(timeNow, timeEnd, 'gbFloorTitle');
+				        
+				    })()
+				</script>
+			</div>
+			<div class="gb-group">
+				<ul class="clearfix">
+					<li><{widgets id="gbg1"}></li>
+					<li class="last"><{widgets id="gbg2"}></li>
+				</ul>
+			</div>
+			<div class="gb-singel">
+				<ul class="clearfix">
+					<li>
+						<img data-src="images/img295X295_01.jpg" width="295" height="295" alt="">
+						<div class="goods">
+							<div class="mask"></div>
+							<div class="con">
+								<p class="name">进口刚果</p>
+								<p class="info">限时直降滴</p>
+								<p class="price"><b class="cur">&yen;230</b><s>原价930</s></p>
+								<p class="button">立即参团&nbsp;&gt;</p>
+							</div>
+							<a href="#" target="_blank"></a>
+						</div>
+					</li>
+					<li>
+						<img data-src="images/img295X295_01.jpg" width="295" height="295" alt="">
+						<div class="goods">
+							<div class="mask"></div>
+							<div class="con">
+								<p class="name">进口刚果</p>
+								<p class="info">限时直降滴</p>
+								<p class="price"><b class="cur">&yen;230</b><s>原价930</s></p>
+								<p class="button">立即参团&nbsp;&gt;</p>
+							</div>
+							<a href="#" target="_blank"></a>
+						</div>
+					</li>
+					<li>
+						<img data-src="images/img295X295_01.jpg" width="295" height="295" alt="">
+						<div class="goods">
+							<div class="mask"></div>
+							<div class="con">
+								<p class="name">进口刚果</p>
+								<p class="info">限时直降滴</p>
+								<p class="price"><b class="cur">&yen;230</b><s>原价930</s></p>
+								<p class="button">立即参团&nbsp;&gt;</p>
+							</div>
+							<a href="#" target="_blank"></a>
+						</div>
+					</li>
+					<li class="last">
+						<img data-src="images/img295X295_01.jpg" width="295" height="295" alt="">
+						<div class="goods">
+							<div class="mask"></div>
+							<div class="con">
+								<p class="name">进口刚果</p>
+								<p class="info">限时直降滴</p>
+								<p class="price"><b class="cur">&yen;230</b><s>原价930</s></p>
+								<p class="button">立即参团&nbsp;&gt;</p>
+							</div>
+							<a href="#" target="_blank"></a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>	
+		<div class="section">
+			<{widgets id="gba1"}>
+		</div>
+		<div class="section">
+			<div class="gb-floor-title clearfix" id="gbFloorTitle">
+				<img class="icon" src="images/gb_floor_title02.png" alt="">
+				<h2>进口食品团购</h2>
+				<a href="#" class="more">查看更多&nbsp;&gt;</a>
+			</div>	
+			<div class="gb-floor clearfix">
+				<div class="sidebar">
+					<{widgets id="gbs1"}>
+				</div>
+				<div class="main">
+					<div class="gb-goodslist">
+						<ul>
+							<li>
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+							<li>
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+							<li>
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+							<li class="tag">
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+							<li class="tag">
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="gb-floor-title clearfix" id="gbFloorTitle">
+				<img class="icon" src="images/gb_floor_title03.png" alt="">
+				<h2>海产生鲜团购</h2>
+				<a href="#" class="more">查看更多&nbsp;&gt;</a>
+			</div>	
+			<div class="gb-floor clearfix">
+				<div class="sidebar">
+					<{widgets id="gbs2"}>
+				</div>
+				<div class="main">
+					<div class="gb-goodslist">
+						<ul>
+							<li>
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+							<li>
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+							<li>
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+							<li class="tag">
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+							<li class="tag">
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="gb-floor-title clearfix" id="gbFloorTitle">
+				<img class="icon" src="images/gb_floor_title04.png" alt="">
+				<h2>酒水饮品团购</h2>
+				<a href="#" class="more">查看更多&nbsp;&gt;</a>
+			</div>	
+			<div class="gb-floor clearfix">
+				<div class="sidebar">
+					<{widgets id="gbs3"}>
+				</div>
+				<div class="main">
+					<div class="gb-goodslist">
+						<ul>
+							<li>
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+							<li>
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+							<li>
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+							<li class="tag">
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+							<li class="tag">
+								<a href="#" target="_blank"></a>
+								<i class="icon"></i>
+								<div class="img">
+									<img data-src="images/img160X160_01.jpg" alt="">
+								</div>
+								<div class="con">
+									<p class="name">江中牌猴姑酥性饼干盒装720g</p>
+									<div class="num">
+										<p class="price"><span class="cur">&yen;79.90</span><s>&yen;99.00</s></p>
+										<p class="count"><span>5451</span>人已团</p>
+									</div>
+									<div class="button">立即参团&nbsp;&gt;</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	(function(){
+		$$('.gb-singel li').addEvents({
+			'mouseenter':function(){
+				this.addClass('hover');
+				this.getElement('.goods').fade('in');
+			},
+			'mouseleave':function(){
+				this.removeClass('hover');
+				this.getElement('.goods').fade('out');	
+			}
+		});
+		$$('.gb-goodslist li').addEvents({
+			'mouseenter':function(){
+				this.addClass('hover');
+			},
+			'mouseleave':function(){
+				this.removeClass('hover');
+			}
+		});
+	})()
+</script>
+<{require file="block/footer.html"}>
+</body>
+</html>

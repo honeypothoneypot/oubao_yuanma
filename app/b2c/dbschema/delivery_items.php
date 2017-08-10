@@ -5,11 +5,11 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
- 
+
 $db['delivery_items']=array (
-  'columns' => 
+  'columns' =>
   array (
-    'item_id' => 
+    'item_id' =>
     array (
       'type' => 'int unsigned',
       'required' => true,
@@ -18,7 +18,7 @@ $db['delivery_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('序号'),
     ),
-    'delivery_id' => 
+    'delivery_id' =>
     array (
       'type' => 'table:delivery',
       'required' => true,
@@ -26,7 +26,7 @@ $db['delivery_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('发货单号'),
     ),
-	'order_item_id' => 
+	'order_item_id' =>
     array (
       'type' => 'table:order_items',
       'required' => false,
@@ -34,9 +34,9 @@ $db['delivery_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('发货明细订单号'),
     ),
-    'item_type' => 
+    'item_type' =>
     array (
-      'type' => 
+      'type' =>
       array (
         'goods' => app::get('b2c')->_('商品'),
         'gift' => app::get('b2c')->_('赠品'),
@@ -48,7 +48,7 @@ $db['delivery_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('商品类型'),
     ),
-    'product_id' => 
+    'product_id' =>
     array (
       'type' => 'bigint unsigned',
       'required' => true,
@@ -56,20 +56,20 @@ $db['delivery_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('货品ID'),
     ),
-    'product_bn' => 
+    'product_bn' =>
     array (
       'type' => 'varchar(30)',
       'editable' => false,
       'is_title' => true,
       'comment' => app::get('b2c')->_('货品号'),
     ),
-    'product_name' => 
+    'product_name' =>
     array (
       'type' => 'varchar(200)',
       'editable' => false,
       'comment' => app::get('b2c')->_('货品名称'),
     ),
-    'number' => 
+    'number' =>
     array (
       'type' => 'float',
       'required' => true,
@@ -78,6 +78,23 @@ $db['delivery_items']=array (
       'comment' => app::get('b2c')->_('发货数量'),
     ),
   ),
+  'index' =>
+  array (
+    'ind_delivery_id' =>
+    array (
+      'columns' =>
+      array (
+        0 => 'delivery_id',
+      ),
+    ),
+    'ind_order_item_id' =>
+    array (
+      'columns' =>
+      array (
+        0 => 'order_item_id',
+      ),
+    ),
+  ),
   'version' => '$Rev: 40654 $',
-  'comment' => app::get('b2c')->_('发货/退货单明细表'),  
+  'comment' => app::get('b2c')->_('发货/退货单明细表'),
 );

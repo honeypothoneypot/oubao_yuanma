@@ -47,6 +47,7 @@ class b2c_ctl_admin_setting extends desktop_controller{
                 'site.register_valide',
                 'site.login_valide',
                 'site.sms_valide',
+                'site.sms_only_valide',
             ),
            app::get('b2c')->_('积分设置')=>array(
                 'site.get_policy.method',

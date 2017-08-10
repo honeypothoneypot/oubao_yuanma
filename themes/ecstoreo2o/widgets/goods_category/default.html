@@ -1,0 +1,50 @@
+<div class="category-wrap" id="categoryWrap">
+  <a class="category" href="javascript:;">所有商品分类</a>
+  <ul class="category-list">
+    <{assign var="do" value="0"}>
+    <{foreach from=$data.data item=item key=key name=cate}>
+    <li class="item <{if $smarty.foreach.cate.last}>last<{/if}>">
+      <a class="item-link" href="<{$item.url}>" <{if $setting.target_blank=='1'}>target="_blank"<{/if}>><i class="icon<{$smarty.foreach.cate.iteration}>"></i><{$item.cat_name}><em></em></a>
+      <div class="category-sub" style="top:-<{($do++)*53}>px;">
+        <ul>
+            <{foreach from=$item.lv2 item=sub_item key=sub_key}>
+                <li><a href="<{$sub_item.url}>" <{if $setting.target_blank=='1'}>target="_blank"<{/if}>><{$sub_item.cat_name}></a></li>
+            <{/foreach}>
+        </ul>
+      </div>
+    </li>      
+    <{/foreach}>  
+  </ul>
+</div>
+
+<script>
+    (function(){
+        var _timer = null;
+        $('categoryWrap').addEvents({
+            'mouseenter':function(){
+                clearTimeout(_timer);
+                this.getElements('.category-list').setStyle('display','block');
+            },
+            'mouseleave':function(){
+                var _this = this;
+                _timer = setTimeout(function(){
+                    _this.getElements('.category-list').setStyle('display','none');
+                    _this.getElements('.category-sub').setStyle('display','none');
+                    _this.getElements('.category-list .item').removeClass('hover');
+                },200);
+            }
+        });
+        $('categoryWrap').getElements('.category-list .item').each(function(el){
+            el.addEvents({
+                'mouseenter':function(){
+                    this.addClass('hover');
+                    this.getElements('.category-sub').setStyle('display','block');
+                },
+                'mouseleave':function(){
+                    this.removeClass('hover');
+                    this.getElements('.category-sub').setStyle('display','none');  
+                }
+            });
+        });
+    })()
+</script>

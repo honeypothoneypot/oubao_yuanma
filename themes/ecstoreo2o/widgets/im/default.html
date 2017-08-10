@@ -1,0 +1,72 @@
+<!-- 侧边工具条 -->
+<div id="sideTools" class="side-tools">
+    <div class="side-tools-bar">
+        <div class="side-bar">
+            <a href="<{link app=b2c ctl=site_cart act=index}>" class="icon icon-cart"><i></i></a>
+            <a href="<{link app=b2c ctl=site_cart act=index}>" class="text">购物车</a>
+        </div>
+        <div class="side-bar">
+            <a href="<{link app=b2c ctl=site_member act=favorite}>" class="icon icon-fav"><i></i></a>
+            <a href="<{link app=b2c ctl=site_member act=favorite}>" class="text">我的收藏</a>
+        </div>
+        <div class="side-bar">
+            <span class="icon icon-im"><i></i></span>
+            <div class="text text-im">
+                <p><{$setting.titleexp}></p>
+                <{foreach from=$data item=data key=key}>
+                <{if $data.type==1}>
+                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=<{$data.link}>&site=qq&menu=yes" class="qq"><i></i><{$data.info}></a>
+                <{elseif $data.type==2}>
+                <a href="msnim:chat?contact=<{$data.link}>" class="msn"><i></i><{$data.info}></a>
+                <{elseif $data.type==3}>
+                <a target="_blank" href="http://amos.im.alisoft.com/msg.aw?v=2&uid=<{$data.link|escape:'url'}>&site=cntaobao&s=1&charset=utf-8" class="ww"><i></i><{$data.info}></a>
+                <{elseif $data.type==4}>
+                <a target="_blank" href="http://scs1.sh1.china.alibaba.com/msg.atc?v=1&uid=<{$data.link}>" class="at"><i></i><{$data.info}></a>
+                <{elseif $data.type==5}>
+                <a href="callto://<{$data.link}>" class="sk"><i></i><{$data.info}></a>
+                <{elseif $data.type==6}>
+                <a href="javascrip:;" onclick="javascript:window.open('http://b.qq.com/webc.htm?new=0&sid=<{$data.link}>&eid=&o=&q=7&ref='+document.location, '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');" class="yqq"><i></i><{$data.info}></a>
+                <{/if}>
+                <{/foreach}>
+            </div>
+        </div>
+    </div>
+    <div class="side-tools-foot">
+        <div class="side-bar side-bar-back">
+            <a href="javascript:;" class="icon icon-back"><i></i></a>
+            <a href="javascript:;" class="text">返回顶部</a>
+        </div>
+    </div>
+</div>
+<script>
+    (function(){
+        //侧边工具条
+        if(Browser.ie6){
+            $('sideTools').setStyle('top',$(document.body).getScroll().y);
+            window.addEvent('scroll',function(){
+                $('sideTools').setStyle('top',$(document.body).getScroll().y);
+            });
+        }
+        $('sideTools').addEvents({
+            'mouseenter:relay(.side-bar)':function(){
+                var _this = this;
+                this.addClass('side-bar-hover');
+                this.getElement('.text').set('tween', {duration: 150,onComplete:function(){
+                  _this.addClass('side-bar-hover');
+                }});
+                this.getElement('.text').tween('width',120);
+            },
+            'mouseleave:relay(.side-bar)':function(){
+                var _this = this;
+                this.getElement('.text').set('tween', {duration: 150,onComplete:function(){
+                  _this.removeClass('side-bar-hover');
+                }});
+                this.getElement('.text').tween('width',0);
+            },
+            'click:relay(.side-bar-back)':function(){
+                document.body.scrollTop = 0;
+                document.body.scrollTo(0);
+            }
+        });
+    })()
+</script>

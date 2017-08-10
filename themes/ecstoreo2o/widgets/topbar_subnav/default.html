@@ -1,0 +1,42 @@
+<li id="msgBar_<{$widgets_id}>"><a class="topbar topbar1" href="<{link app=b2c ctl=site_member act=inbox}>"><em></em>未读信息<i id="msg_num"></i></a></li>
+<li class="spacer"></li>
+<li><a class="topbar topbar2" href="<{link app=b2c ctl=site_member act=orders}>"><em></em>我的订单</a></li>
+<li class="spacer"></li>
+<li><a class="topbar topbar3" href="<{link app=b2c ctl=site_member act=index}>"><em></em>会员中心</a></li>
+<li class="spacer"></li>
+<li><a class="topbar topbar4" href=""><em></em>帮助中心</a></li>
+<script>
+    var e = Cookie.read('UNAME')?Cookie.read('UNAME'):'';
+    /*
+    new Request({
+        url:'<{link app=b2c ctl=site_passport act=getuname}>',
+        method:'post',
+        onComplete:function(e){
+            */
+            if(e){
+                new Request({
+                  url:'<{link app=b2c ctl=site_member act=get_unreadmsg_num}>',
+                  method:'post',
+                  onComplete:function(e){
+                    rs = parseInt(JSON.decode(e).inbox_num);
+                    $("msg_num").innerHTML = '(' + rs + ')';
+                    if(rs > 0){
+                      $("msgBar_<{$widgets_id}>").setStyle('display','block');
+                      $("msgBar_<{$widgets_id}>").getNext().setStyle('display','block');
+                    }else{
+                      $("msgBar_<{$widgets_id}>").setStyle('display','none');
+                      $("msgBar_<{$widgets_id}>").getNext().setStyle('display','none');
+                    }
+                  }
+                }).send();
+            }
+            else{
+                $("msgBar_<{$widgets_id}>").setStyle('display','none');
+                $("msgBar_<{$widgets_id}>").getNext().setStyle('display','none');
+            }
+            /*
+        },
+        data:''
+    }).send();
+    */
+</script>

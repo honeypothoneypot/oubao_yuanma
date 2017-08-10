@@ -5,11 +5,11 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
- 
+
 $db['delivery']=array (
-  'columns' => 
+  'columns' =>
   array (
-    'delivery_id' => 
+    'delivery_id' =>
     array (
       'type' => 'bigint unsigned',
       'required' => true,
@@ -23,7 +23,7 @@ $db['delivery']=array (
       'in_list' => true,
       'default_in_list' => true,
     ),
-    'order_id' => 
+    'order_id' =>
     array (
       'type' => 'varchar(100)',
       'label' => app::get('b2c')->_('订单号'),
@@ -35,7 +35,7 @@ $db['delivery']=array (
       'in_list' => true,
       'default_in_list' => true,
     ),
-    'delivery_bn' => 
+    'delivery_bn' =>
     array (
       'type' => 'varchar(32)',
       'required' => false,
@@ -50,7 +50,7 @@ $db['delivery']=array (
       'default_in_list' => false,
       'is_title' => false,
     ),
-    'member_id' => 
+    'member_id' =>
     array (
       'type' => 'table:members',
       'label' => app::get('b2c')->_('会员用户名'),
@@ -61,7 +61,7 @@ $db['delivery']=array (
       'in_list' => true,
       'default_in_list' => false,
     ),
-     'money' => 
+     'money' =>
     array (
       'type' => 'money',
       'required' => true,
@@ -73,7 +73,7 @@ $db['delivery']=array (
       'in_list' => true,
       'default_in_list' => true,
     ),
-     'is_protect' => 
+     'is_protect' =>
     array (
       'type' => 'bool',
       'default' => 'false',
@@ -85,7 +85,7 @@ $db['delivery']=array (
       'in_list' => true,
       'default_in_list' => false,
     ),
-        'delivery' => 
+        'delivery' =>
     array (
       'type' => 'table:dlytype',
       'label' => app::get('b2c')->_('配送方式'),
@@ -97,7 +97,7 @@ $db['delivery']=array (
       'is_title' => true,
       'default_in_list' => false,
     ),
-    'logi_id' => 
+    'logi_id' =>
     array (
       'type' => 'varchar(50)',
       'comment' => app::get('b2c')->_('物流公司ID'),
@@ -105,7 +105,7 @@ $db['delivery']=array (
       'label' => app::get('b2c')->_('物流公司ID'),
       'in_list' => false,
     ),
-    'logi_name' => 
+    'logi_name' =>
     array (
       'type' => 'varchar(100)',
       'label' => app::get('b2c')->_('物流公司'),
@@ -116,7 +116,7 @@ $db['delivery']=array (
       'in_list' => true,
       'default_in_list' => true,
     ),
-    'logi_no' => 
+    'logi_no' =>
     array (
       'type' => 'varchar(50)',
       'label' => app::get('b2c')->_('物流单号'),
@@ -128,7 +128,7 @@ $db['delivery']=array (
       'in_list' => true,
       'default_in_list' => true,
     ),
-    'ship_name' => 
+    'ship_name' =>
     array (
       'type' => 'varchar(50)',
       'label' => app::get('b2c')->_('收货人'),
@@ -140,12 +140,12 @@ $db['delivery']=array (
       'in_list' => true,
       'default_in_list' => true,
     ),
-    
-   
 
 
-    
-   'delivery_bn' => 
+
+
+
+   'delivery_bn' =>
     array (
       'type' => 'varchar(32)',
       'required' => false,
@@ -160,7 +160,7 @@ $db['delivery']=array (
       'default_in_list' => false,
       'is_title' => true,
     ),
-    'ship_area' => 
+    'ship_area' =>
     array (
       'type' => 'region',
       'label' => app::get('b2c')->_('收货地区'),
@@ -170,7 +170,7 @@ $db['delivery']=array (
       'filterdefault' => true,
       'in_list' => true,
     ),
-    'ship_addr' => 
+    'ship_addr' =>
     array (
       'type' => 'text',
       'label' => app::get('b2c')->_('收货地址'),
@@ -180,7 +180,7 @@ $db['delivery']=array (
       'filterdefault' => true,
       'in_list' => true,
     ),
-    'ship_zip' => 
+    'ship_zip' =>
     array (
       'type' => 'varchar(20)',
       'label' => app::get('b2c')->_('收货邮编'),
@@ -189,7 +189,7 @@ $db['delivery']=array (
       'filtertype' => 'normal',
       'in_list' => true,
     ),
-    'ship_tel' => 
+    'ship_tel' =>
     array (
       'type' => 'varchar(50)',
       'label' => app::get('b2c')->_('收货人电话'),
@@ -198,7 +198,7 @@ $db['delivery']=array (
       'filtertype' => 'normal',
       'in_list' => true,
     ),
-    'ship_mobile' => 
+    'ship_mobile' =>
     array (
       'type' => 'varchar(50)',
       'label' => app::get('b2c')->_('收货人手机'),
@@ -208,7 +208,7 @@ $db['delivery']=array (
       'filterdefault' => true,
       'in_list' => true,
     ),
-    'ship_email' => 
+    'ship_email' =>
     array (
       'type' => 'varchar(200)',
       'label' => app::get('b2c')->_('收货人Email'),
@@ -217,7 +217,7 @@ $db['delivery']=array (
       'filtertype' => 'normal',
       'in_list' => true,
     ),
-    't_begin' => 
+    't_begin' =>
     array (
       'type' => 'time',
       'label' => app::get('b2c')->_('单据创建时间'),
@@ -227,7 +227,7 @@ $db['delivery']=array (
       'in_list' => true,
       'default_in_list' => true,
     ),
-    't_send' => 
+    't_send' =>
     array (
       'type' => 'time',
       'comment' => app::get('b2c')->_('单据结束时间'),
@@ -235,16 +235,16 @@ $db['delivery']=array (
       'label' => app::get('b2c')->_('单据结束时间'),
       'in_list' => true,
     ),
-    't_confirm' => 
+    't_confirm' =>
     array (
       'type' => 'time',
       'comment' => app::get('b2c')->_('单据确认时间'),
       'editable' => false,
       'label' => app::get('b2c')->_('单据确认时间'),
       'in_list' => true,
-    
+
     ),
-    'op_name' => 
+    'op_name' =>
     array (
       'type' => 'varchar(50)',
       'label' => app::get('b2c')->_('操作员'),
@@ -255,9 +255,9 @@ $db['delivery']=array (
       'in_list' => true,
       'default_in_list' => true,
     ),
-    'status' => 
+    'status' =>
     array (
-      'type' => 
+      'type' =>
       array (
         'succ' => app::get('b2c')->_('成功到达'),
         'failed' => app::get('b2c')->_('发货失败'),
@@ -274,7 +274,7 @@ $db['delivery']=array (
       'label' => app::get('b2c')->_('状态'),
       'in_list' => true,
     ),
-    'memo' => 
+    'memo' =>
     array (
       'type' => 'longtext',
       'label' => app::get('b2c')->_('备注'),
@@ -283,7 +283,7 @@ $db['delivery']=array (
       'filtertype' => 'normal',
       'in_list' => true,
     ),
-    'disabled' => 
+    'disabled' =>
     array (
       'type' => 'bool',
       'default' => 'false',
@@ -293,23 +293,30 @@ $db['delivery']=array (
       'in_list' => false,
     ),
   ),
-  'index' => 
+  'index' =>
   array (
-    'ind_disabled' => 
+    'ind_disabled' =>
     array (
-      'columns' => 
+      'columns' =>
       array (
         0 => 'disabled',
       ),
     ),
-    'ind_logi_no' => 
+    'ind_logi_no' =>
     array (
-      'columns' => 
+      'columns' =>
       array (
         0 => 'logi_no',
       ),
     ),
+    'ind_delivery_bn' =>
+    array (
+      'columns' =>
+      array (
+        0 => 'delivery_bn',
+      ),
+    ),
   ),
   'version' => '$Rev: 43384 $',
-  'comment' => app::get('b2c')->_('发货/退货单表'),  
+  'comment' => app::get('b2c')->_('发货/退货单表'),
 );

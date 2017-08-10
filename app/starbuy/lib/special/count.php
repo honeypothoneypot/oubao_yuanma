@@ -40,31 +40,40 @@ class starbuy_special_count {
     //添加用户购买数量
     public function add_count($member_id, $product_id, $add_count)
     {
-        $special_info = $this->get_special_info($product_id);
+        $isStarLimit  = 'none';
+        $special_info = $this->get_special_info($product_id, 'special_id,`limit`');
         $special_id = $special_info['special_id'];
+        $keyStarBuy = 'starBuy_' . $special_id . '_' . $member_id . '_' . $product_id;
+
+        base_kvstore::instance('cache/expires')->fetch($keyStarBuy, $isStarLimit);
+
+        if('hasbuy' == $isStarLimit){
+            return false;
+        }
 
         $mdl_count_member_buy = app::get('starbuy')->model('count_member_buy');
-        $filter = array(
-            'special_id'=>$special_id,
-            'member_id'=>$member_id,
-            'product_id'=>$product_id,
-        );
-        $sdf = $mdl_count_member_buy->getRow('*', $filter);
-        if($sdf == null)
+        $sql = "update sdb_starbuy_count_member_buy set `count`=`count`+{$add_count} where `product_id`={$product_id} and `member_id`={$member_id} and `special_id`={$special_id}";
+        $mdl_count_member_buy->db->exec($sql);
+        if($mdl_count_member_buy->db->affect_row()==0)
         {
-            $sdf = array(
-                'special_id'=>$special_id,
-                'member_id'=>$member_id,
-                'product_id'=>$product_id,
-                'count'=>$add_count,
-            );
-        }else{
-            $sdf['count'] = $sdf['count'] + $add_count;
+            $sql = "insert into sdb_starbuy_count_member_buy(special_id, product_id, member_id,count) values({$special_id}, {$product_id}, {$member_id}, {$add_count})";
+            $mdl_count_member_buy->db->exec($sql);
         }
-        $ret = $mdl_count_member_buy->save($sdf);
-        return $ret;
+
+        //$filter = array('product_id'=>$product_id, 'special_id'=>$special_id, 'member_id'=>$member_id);
+        //$count_info = $mdl_count_member_buy->getRow('count', $filter);
+        $sql = "SELECT `count` FROM `sdb_starbuy_count_member_buy` WHERE product_id={$product_id} AND special_id={$special_id} AND member_id={$member_id}";
+        $count_info = $mdl_count_member_buy->db->selectrow($sql);
+        if( $count_info['count'] > $special_info['limit'] )
+        {
+            base_kvstore::instance('cache/expires')->store($keyStarBuy, 'hasbuy');
+            return false;
+        }else{
+            return true;
+        }
+
     }
-    
+
     //获取活动信息
     public function get_special_info($product_id, $columns='special_id', $time=null)
     {

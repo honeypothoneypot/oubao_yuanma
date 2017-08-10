@@ -1,0 +1,22 @@
+<div class="floor-slide auto-bind-widget" data-widget-type="Switchable" data-widget-config="{
+    haslrbtn:false,
+    effect:'<{$setting.effectWay}>',
+    triggersBox:'.switchable-triggerBox1',
+    autoplay:<{$setting.autoplay}>,
+
+}">
+    <ol class="switchable-content">
+        <{foreach from=$data.pic item=parent key=parentId}>
+        <li>
+          <a href="<{$parent.linktarget}>" target="_blank">
+            <img src="<{$parent.link}>" title="<{$data.linkinfo}>"/>
+          </a>
+        </li>
+        <{/foreach}>
+    </ol>
+    <ul class="switchable-triggerBox1">
+        <{foreach from=$data.pic item=parent key=parentId}>
+        <li></li> 
+        <{/foreach}> 
+    </ul>
+</div>

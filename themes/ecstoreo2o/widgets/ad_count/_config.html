@@ -1,0 +1,36 @@
+<div class="tableform">
+    <div class="widgetconfig">
+        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tbody><tr>
+                    <th><{t app='b2c'}>倒计时时间：<{/t}></th>
+                    <td><{t app='b2c'}>开始时间<{/t}>
+                        <input type="text" name="ad_count_start" value="<{$setting.ad_count_start}>" style="width:140px"> <{t app='b2c'}>结束时间<{/t}><input type="text" name="ad_count_end" style="width:140px" value="<{$setting.ad_count_end}>">
+                    </td>
+                </tr>
+                <tr>
+                    <th><{t app='b2c'}>图片：<{/t}></th>
+                    <td>
+                        <input type=hidden name="ad_count_pic" value="<{$setting.ad_count_pic}>"><input name='ad_count_pic' class="imgsrc" id="ad_count_pic" value="<{$setting.ad_count_pic}>"><input type=button value="<{t app='b2c'}>上传图片<{/t}>" class="uploadbtn" onclick="addPic()">
+                    </td>
+                </tr>
+                <tr>
+                    <th><{t app='b2c'}>图片描述：<{/t}></th>
+                    <td><input type="text" name="ad_count_text" value="<{$setting.ad_count_text}>"></td>
+                </tr>
+                <tr>
+                    <th><{t app='b2c'}>图片链接：<{/t}></th>
+                    <td><input type="text" name="ad_count_link" value="<{$setting.ad_count_link}>"></td>
+                </tr>
+        </tbody></table>
+    </div>
+</div>
+<script>
+    function addPic(){
+        var url='index.php?app=desktop&act=alertpages&goto='+encodeURIComponent("index.php?app=image&ctl=admin_manage&act=image_broswer&type=big");
+        Ex_Loader('modedialog',function(){
+            return new imgDialog(url,{onCallback:function(image_id,image_src){
+                    $('ad_count_pic').value=image_src;
+            }})	;
+        });
+    }
+</script>

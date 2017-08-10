@@ -3,7 +3,11 @@
   <input name="mini" type="hidden" value="<{$mini_passport}>">
   <ul>
     <li class="form-item">
-      <label for="" class="form-label"><em class="warn">*</em>登录帐号：</label><span class="form-act"><{input type="text" name="pam_account[login_name]" id="" class="action-account-check" placeholder="用户名/邮箱/手机号，最少4个字符" vtype="required" data-caution="请填写登录帐号，最少4个字符" autofocus}><span class="validation-messagebox"></span></span>
+        <{if $site_sms_only_valide == 'true' }>
+        <label for="" class="form-label"><em class="warn">*</em>手机号：</label><span class="form-act"><{input type="text" name="pam_account[login_name]" id="" class="action-account-check" placeholder="请输入11位手机号" vtype="required" data-caution="请输入11位手机号" autofocus}><span class="validation-messagebox"></span></span>
+        <{else}>
+        <label for="" class="form-label"><em class="warn">*</em>登录帐号：</label><span class="form-act"><{input type="text" name="pam_account[login_name]" id="" class="action-account-check" placeholder="用户名/邮箱/手机号，最少4个字符" vtype="required" data-caution="请填写登录帐号，最少4个字符" autofocus}><span class="validation-messagebox"></span></span>
+        <{/if}>
     </li>
     <li class="form-item">
     <label for="" class="form-label"><em class="warn">*</em>密码：</label><span class="form-act"><{input type="password" name="pam_account[login_password]" maxlength="20" placeholder="6-20个字符,请不要输入非法字符" vtype="required&&minLength:6&&maxLength:20" data-caution="请填写密码，6-20个字符&&输入不正确，最少6个字符&&输入不正确，最多20个字符" check='true'}></span>
@@ -65,19 +69,21 @@
     </li>
     <{/foreach}>
     <{if $valideCode == 'true' || $site_sms_valide == 'true' }>
-    <li class="form-item action-verifycode" <{if $valideCode == 'false' && $site_sms_valide == 'true' }> style="display:none" <{/if}> >
+    <li class="form-item action-verifycode" <{if ($valideCode == 'false' && $site_sms_valide == 'true') || $site_sms_only_valide == 'true'}> style="display:none" <{/if}> >
       <label for="" class="form-label"><em class="warn">*</em>验证码：</label>
       <span class="form-act">
         <{input type="vcode" name="signupverifycode" class="verify-input" placeholder="填写验证码" data-caution="请正确填写验证码" key='LOGINVCODE' a_class="lnklike"}>
       </span>
     </li>
     <{/if}>
-    <li class="form-item action-need-verify" style="display:none;">
+
+    <li class="form-item action-need-verify" <{if $site_sms_only_valide != 'true'}> style="display:none" <{/if}> >
       <label for="" class="form-label"><{t}>验证码：<{/t}></label>
       <span class="form-act">
         <{input type="text" name="vcode" id="" class="verify-input"}> <a href="<{link app=b2c ctl=site_passport act=send_vcode_sms}>" class="btn btn-caution action-get-verifycode"><span><span>获取短信验证码</span></span></a>
       </span>
     </li>
+
     <li class="form-item">
       <label for="" class="form-label"></label>
       <span class="form-act">

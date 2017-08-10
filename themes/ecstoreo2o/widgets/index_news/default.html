@@ -1,0 +1,13 @@
+<div class="index-news">
+    <{if $data.__shownode&&$data.node_name}>
+    <div class="title">
+        <h2><{$data.node_name}></h2>
+        <{if !$data.__stripparenturl}>
+        <a href="<{$data.node_url}>">更多&nbsp;&gt;</a>
+        <{/if}>
+    </div>
+    <{/if}>
+    <ul class="news-list">
+        <{$data.__html}>
+    </ul>
+</div>

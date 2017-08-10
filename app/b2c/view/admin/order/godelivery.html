@@ -1,5 +1,7 @@
 <form class="tableform" method='post' action='index.php?app=b2c&ctl=admin_order&act=dodelivery' id="order-delivery-form">
   <input type='hidden' name='order_id' value='<{$order.order_id}>'>
+  <input type='hidden' name='pay_app_id' value='<{$order.payinfo.pay_app_id}>'>
+  <input type='hidden' name='freez_time' value='<{$freez_time}>'>
 
 <{if $order.is_delivery eq "Y"}>
 <div class="division">

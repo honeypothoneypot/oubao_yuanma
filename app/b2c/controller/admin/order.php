@@ -1540,7 +1540,7 @@ class b2c_ctl_admin_order extends desktop_controller{
         $objDlytype = $this->app->model('dlytype');
         $arrDlytype = $objDlytype->dump($this->pagedata['order']['shipping']['shipping_id']);
         $this->pagedata['corp_id'] = $arrDlytype['corp_id'];
-        
+        $this->pagedata['freez_time'] = $this->app->getConf('system.goods.freez.time');
         $this->display('admin/order/godelivery.html');
     }
 

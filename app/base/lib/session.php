@@ -120,7 +120,7 @@ class base_session{
             return true;
         }else{
             try {
-                return $this->_set_session($_SESSION, $this->_sess_expires * 60);
+                return $this->_set_session($_SESSION, $this->_sess_expires * 60 * 24);
             }catch(Exception $e){
 
             }

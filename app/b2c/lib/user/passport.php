@@ -215,6 +215,67 @@ class b2c_user_passport
         return true;
     }//end function
 
+
+    /*
+     * 检查注册账号合法性
+     * */
+    public function check_signup_account_pc_mobile($login_name,&$msg){
+        if( empty($login_name) ){
+            $msg =app::get('b2c')->_('请输入用户名');
+            return false;
+        }
+
+        //获取到注册时账号类型
+        $is_sms_only = $this->app->getConf('site.sms_only_valide');
+        $login_type = $this->get_login_account_type($login_name);
+        if($is_sms_only){
+            if(!preg_match('/^1[34578]{1}[0-9]{9}$/',trim($login_name))){
+                $msg = $this->app->_('请输入11位手机号');
+                return false;
+            }
+        }
+        switch( $login_type ){
+            case 'local':
+                if( strlen(trim($login_name))< 4 ){
+                    $msg = $this->app->_('登录账号最少4个字符');
+                    return false;
+                }
+                elseif( strlen($login_name)>100 ){
+                    $msg = $this->app->_('登录账号过长，请换一个重试');
+                }
+
+                if( is_numeric($login_name) ){
+                    $msg = $this->app->_('登录账号不能全为数字');
+                    return false;
+                }
+
+                if(!preg_match('/^[^\x00-\x2d^\x2f^\x3a-\x3f]+$/i', trim($login_name)) ){
+                    $msg = $this->app->_('该登录账号包含非法字符');
+                    return false;
+                }
+                $message = $this->app->_('该账号已经被占用，请换一个重试');
+                break;
+            case 'email':
+                if(!preg_match('/^(?:[a-z\d]+[_\-\+\.]?)*[a-z\d]+@(?:([a-z\d]+\-?)*[a-z\d]+\.)+([a-z]{2,})+$/i',trim($login_name)) ){
+                    $msg = $this->app->_('邮件格式不正确');
+                    return false;
+                }
+                $message = $this->app->_('该邮箱已被注册，请更换一个');
+                break;
+            case 'mobile':
+                $message = $this->app->_('该手机号已被注册，请更换一个');
+                break;
+        }
+
+        //判断账号是否存在
+        if( $this->is_exists_login_name($login_name) ){
+            $msg = $message;
+            return false;
+        }
+        $msg = $login_type;
+        return true;
+    }//end function
+
     /*
      * 判断前台用户名是否存在
      * */

@@ -297,15 +297,7 @@ class b2c_mdl_goods extends dbeav_model{
             if( !$goodsStatus && !$goods['status'])
                 $goods['status'] = 'false';
         }
-        else{
-            unset($goods['product']);
-            $product_mdl = app::get('b2c')->model('products');
-            $product = $product_mdl->getList('product_id',array('goods_id'=>$goods['goods_id']));
-            foreach($product as $k=>$v){
-                $goods['product'][$k]['name'] = $goods['name'];
-                $goods['product'][$k]['product_id'] = $v['product_id'];
-            }
-        }
+
         unset($goods['spec']);
 
         #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓记录编辑商品日志-start@lujy↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -327,7 +319,18 @@ class b2c_mdl_goods extends dbeav_model{
             }
         }
         #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑记录编辑商品日志-end@lujy↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-
+        $objpro = $this->app->model('products');
+		//@djh有新货品时、或者货品有更新时，更新goods_spec_index关系表
+        if($goods['product']) {
+            $this->createSpecIndex($goods);
+        }else{//读取货品信息（后面的商下架时需要用到）
+        	unset($goods['product']);
+            $product = $objpro->getList('product_id',array('goods_id'=>$goods['goods_id']));
+            foreach($product as $k=>$v){
+                $goods['product'][$k]['name'] = $goods['name'];
+                $goods['product'][$k]['product_id'] = $v['product_id'];
+            }
+        }
         $rs = parent::save($goods,$mustUpdate);
 
         #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓记录编辑商品日志-start@lujy↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -345,14 +348,12 @@ class b2c_mdl_goods extends dbeav_model{
 		//	$this->storekv_product_info($goods['goods_id'],$goods);
 		//}
         //商品下架则相应的货品也要下架 @lujy--start-
+
         if($rs && ($goods['status'] == 'false')){
-            $objpro = $this->app->model('products');
             $objpro->pro_unmarketable($goods['goods_id'],$goods['status']);
         }
         //--end-
-        if($goods['product']) {
-            $this->createSpecIndex($goods);
-        }
+
         if( $goods['goods_id'] ){
             $this->createKvStore( array( 'goods_id'=> $goods['goods_id']) );
             if(kernel::single('b2c_search_goods')->is_search_status()){

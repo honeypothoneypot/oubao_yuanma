@@ -294,6 +294,7 @@ class wap_theme_tmpl_fssave
             'order_index'=>app::get('wap')->_('订单确认页'),
             'splash'=>app::get('wap')->_('信息提示页'),
             'default'=>app::get('wap')->_('默认页'),
+            'active'=>app::get('wap')->_('活动页'),
         );
         return $ctl;
     }

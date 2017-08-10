@@ -239,6 +239,9 @@ class b2c_cart_object_goods implements b2c_interface_cart_object{
             $aSave['is_fastbuy'] = 'true';
         }
 
+        //当次操作清理上次购物车优惠券 modified by zengxinwen
+        kernel::single("b2c_cart_object_coupon")->deleteNow($this->member_ident);
+
         //service 验证当前商品是否可加入购物车
         $arr_cart_goods = array();
         foreach( $this->getAll(false,$is_fastbuy) as $val ) {

@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+<{header}>
+<link rel="stylesheet" href="images/styles.min.css" />
+</head>
+<body>
+<{require file="block/header.html"}>
+<div class="promote-banner">
+	<{widgets id="pb1"}>
+</div>
+<div id="container" class="page-container promote2-container clearfix">
+	<div class="promote-wrap">
+		<div class="promote-floor">
+			<{widgets id="pft1"}>
+            <div class="promote-goods1">
+                <ul class="clearfix">
+                    <li><{widgets id="pfc11"}></li>
+                    <li><{widgets id="pfc12"}></li>
+                </ul>
+            </div>
+			<div class="promote-goods">
+				<{widgets id="pfc1"}>
+			</div>
+		</div>
+		<div class="promote-floor">
+			<{widgets id="pft2"}>
+			<div class="promote-goods">
+				<{widgets id="pfc2"}>
+			</div>
+		</div>
+		<div class="promote-floor">
+			<{widgets id="pft3"}>
+			<div class="promote-goods">
+				<{widgets id="pfc3"}>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	(function(){
+		window.addEvent('domready',function(){
+			$$('.promote-goods .market-price').each(function(el){
+				$(el).set('html',$(el).getElement('i').get('html'));
+				$(el).setStyle('display','block');
+			});
+			$$('.promote-goods li').addEvents({
+				'mouseenter':function(){
+					this.addClass('hover');
+				},
+				'mouseleave':function(){
+					this.removeClass('hover');
+				}
+			});
+		});
+	})()
+</script>
+<{require file="block/footer.html"}>
+</body>
+</html>

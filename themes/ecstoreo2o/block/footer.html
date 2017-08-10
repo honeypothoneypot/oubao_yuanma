@@ -1,0 +1,81 @@
+<!-- 尾部 -->
+<div id="footer" class="page-footer">
+    <div class="footer-serves-wrap">
+        <div class="footer-serves">
+            <dl>
+                <i>优</i>
+                <dt>品质保障</dt>
+                <dd>品质护航 购物无忧</dd>
+            </dl>
+            <dl>
+                <i>七</i>
+                <dt>七天无理由退换货</dt>
+                <dd>为您提供售后无忧保障</dd>
+            </dl>
+            <dl>
+                <i>特</i>
+                <dt>特色服务体验</dt>
+                <dd>为您呈现不一样的服务</dd>
+            </dl>
+            <dl class="last">
+                <i>帮</i>
+                <dt>帮助中心</dt>
+                <dd>您的购物指南</dd>
+            </dl>
+        </div>
+    </div>
+    <div class="footer-nav-wrap">
+        <div class="footer-nav clearfix">
+            <ul class="nav-list">
+                <li>
+                    <{widgets id="helper1"}>
+                </li>
+                <li>
+                    <{widgets id="helper2"}>
+                </li>
+                <li>
+                    <{widgets id="helper3"}>
+                </li>
+                <li>
+                    <{widgets id="helper4"}>
+                </li>
+                <li class="last">
+                    <{widgets id="helper5"}>
+                </li>
+            </ul>
+            <div class="footer-code">
+                <p>手机浏览</p>
+                <img src="images/footer_code.png" alt=""/>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copy">
+        <{footer}>
+    </div>
+</div>
+<{widgets id="fb"}>
+<script>
+    (function(){
+        // var steps = $$(".steps")[0];
+        // if(steps){
+        //     var arrow = steps.getElements(".step-arrow");
+        //     var item = steps.getElements(".step-item");
+        //     arrow.each(function(item){
+        //         item.removeClass('icon');
+        //         item.innerHTML = "";
+        //         if(item.getNext().hasClass('active'))
+        //             item.addClass('active');
+        //     });
+        // }
+        $$('.index-floor').getElements('.floor-goods li').each(function(el){
+            el.addEvents({
+                'mouseenter':function(){
+                    this.addClass('hover');
+                },
+                'mouseleave':function(){
+                    this.removeClass('hover');
+                }
+            });
+        });
+    })()
+</script>

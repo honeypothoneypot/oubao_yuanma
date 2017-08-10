@@ -20,6 +20,10 @@
         <class>content_finder_indexs</class>
     </service>
 	
+     <service id="desktop_finder.content_mdl_actives">
+        <class>content_finder_actives</class>
+     </service>
+
 	<service id="site_router.content">
 		<class>content_service_router</class>
 	</service>

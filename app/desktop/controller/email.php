@@ -5,24 +5,24 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
- 
+
 
 class desktop_ctl_email extends desktop_controller{
     var $workground = 'desktop_ctl_system';
-    
+
      public function __construct($app)
     {
         parent::__construct($app);
         header("cache-control: no-store, no-cache, must-revalidate");
     }
-    
+
     function setting(){
         #print_r($this->app->getConf('email.config.sendway'));exit;
         $this->pagedata['options'] = $this->getOptions();
         $this->pagedata['messengername'] = "messenger";
         $this->display('email/config.html');
     }
-    
+
      function getOptions(){
         return array(
             'sendway'=>array('label'=>app::get('desktop')->_('发送方式'),'type'=>'radio','options'=>array('mail'=>app::get('desktop')->_("使用本服务器发送"),'smtp'=>app::get('desktop')->_("使用外部SMTP发送")),'value'=>$this->app->getConf('email.config.sendway')?$this->app->getConf('email.config.sendway'):"mail"),
@@ -30,16 +30,17 @@ class desktop_ctl_email extends desktop_controller{
             'smtpserver'=>array('label'=>app::get('desktop')->_('smtp服务器地址'),'type'=>'input','value'=>$this->app->getConf('email.config.smtpserver')?$this->app->getConf('email.config.smtpserver'):'mail.domain.com'),
             'smtpport'=>array('label'=>app::get('desktop')->_('smtp服务器端口'),'type'=>'input','value'=>$this->app->getConf('email.config.smtpport')?$this->app->getConf('email.config.smtpport'):'25'),
             'smtpuname'=>array('label'=>app::get('desktop')->_('smtp用户名'),'type'=>'input','value'=>$this->app->getConf('email.config.smtpuname')?$this->app->getConf('email.config.smtpuname'):''),
-            'smtppasswd'=>array('label'=>app::get('desktop')->_('smtp密码'),'type'=>'password','value'=>$this->app->getConf('email.config.smtppasswd')?$this->app->getConf('email.config.smtppasswd'):'')
+            'smtppasswd'=>array('label'=>app::get('desktop')->_('smtp密码'),'type'=>'password','value'=>$this->app->getConf('email.config.smtppasswd')?$this->app->getConf('email.config.smtppasswd'):''),
+            'smtpssl'=>array('label'=>app::get('desktop')->_('SSL加密'),'type'=>'radio','value'=>$this->app->getConf('email.config.smtpssl')?$this->app->getConf('email.config.smtpssl'):'','options' => array('yes' => '启用', 'no' => '不启用'))
         );
     }
-    
+
     function saveCfg(){
        # $this->begin('index.php?app=desktop&ctl=email&act=setting');
        $this->begin();
            foreach($_POST['config'] as $key=>$value){
             $this->app->setConf('email.config.'.$key,$value);
-        } 
+        }
         $this->end(true,app::get('desktop')->_('配置保存成功'));
     }
       function testEmail(){
@@ -48,8 +49,8 @@ class desktop_ctl_email extends desktop_controller{
             $this->pagedata['acceptor']=$_GET['config']['usermail'];
         $this->display('email/testemail.html');
     }
-    
-    
+
+
      function doTestemail(){
         $usermail = $_POST['usermail'];     //发件账户
         $smtpport = $_POST['smtpport'];     //端口号

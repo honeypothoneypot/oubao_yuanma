@@ -22,5 +22,9 @@
             <hidden>false</hidden>
         </default_menu>
 	</module>
-
+    <module id='content' controller='site_active' >
+        <name>active</name>
+        <title>自定义活动页面</title>
+        <disable>false</disable>
+    </module>
 </site>

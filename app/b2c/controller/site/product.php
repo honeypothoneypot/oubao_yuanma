@@ -717,7 +717,6 @@ class b2c_ctl_site_product extends b2c_frontpage{
         $productBasic['brand']['brand_name'] = $goodsBasic['brand']['brand_name'];//商品品牌名称
         $this->brand_name = $goodsBasic['brand']['brand_name'];//seo 品牌名称
         $productBasic['brand']['brand_id'] = $goodsBasic['brand']['brand_id'];//商品品牌ID
-
         //促销
         if(empty($siteMember['member_lv'])){
             $siteMember['member_lv'] = '-1';

@@ -321,7 +321,7 @@
                 this.form.retrieve('rowselected').empty().push('_ALL_');
                 this.tip.fireEvent('_update', 'selectedall').fireEvent('_show');
             }else{
-                this.form.retrieve('rowselected').empty();
+                this.form.retrieve('rowselected').empty().push(100000000);
                 this.form.retrieve('_rowindex',$H()).empty();
                 this.tip.fireEvent('_hide');
             }
@@ -549,6 +549,9 @@
                         /*rowindex Hash*/
                         var frowindex= finder.form.retrieve('_rowindex', $H());
                         this.checked ? frowindex.set(this.value,this.get('rowindex')):frowindex.erase(this.value);
+                        if(frowselected.length==0){
+                            frowselected.empty().push(this.value+10000000);
+                        }
                     }
 
                     if (!this.checked && frowselected.contains('_ALL_')) {

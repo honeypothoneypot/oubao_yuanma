@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <{header}>
+    <link rel="stylesheet" href="images/styles.min.css" />
+</head>
+<body data-lazyload-config="{
+  onAfter:function(img){
+    try{if(img.get('data-img-zoom') == 'true') fixImageSize(img);}catch(e){}
+  }
+}">
+<{require file="block/header.html"}>
+<!-- 首页slide -->
+<div id="indexSlide" class="index-slide">
+    <{widgets id="ms"}>
+</div>
+<!-- 主内容区 -->
+<div id="container" class="page-container clearfix">
+    <div class="inner-wrap">
+        <div class="section clearfix">
+            <div class="sidebar fl">
+                <{widgets id="sl1"}>
+            </div>
+            <div class="clearfix fr">
+                <div class="main fl">
+                    <{widgets id="ss1"}> 
+                </div>
+                <div class="aside fr">
+                    <{widgets id="sr1"}> 
+                </div>
+                <div class="index-orna"></div>
+            </div>
+        </div>
+        <div class="section clearfix">
+            <div class="section-banner">
+                <{widgets id="sb1"}> 
+            </div>
+        </div>
+        <div class="section">
+            <div class="index-floor index-floor1">
+                <{widgets id="ft1"}>
+                <div class="clearfix">
+                    <div class="sidebar fl">
+                        <{widgets id="fc1"}>
+                    </div>
+                    <div class="main fr">
+                        <div class="floor-tab auto-bind-widget" data-widget-type="Tabs" data-widget-config="{eventType:'mouse'}">
+                            <{widgets id="ftt1"}>
+                            <div class="switchable-panel clearfix">
+                                <div class="floor-slide">
+                                    <{widgets id="fs11"}>
+                                </div>
+                                <div class="floor-goods">
+                                    <{widgets id="fg11"}>
+                                </div>
+                                <div class="floor-hots">
+                                    <{widgets id="fh11"}>
+                                </div>
+                            </div>
+                            <div class="switchable-panel" style="display:none;">
+                                <div class="floor-slide">
+                                    <{widgets id="fs12"}>
+                                </div>
+                                <div class="floor-goods">
+                                    <{widgets id="fg12"}>
+                                </div>
+                                <div class="floor-hots">
+                                    <{widgets id="fh12"}>
+                                </div>
+                            </div>
+                            <div class="switchable-panel" style="display:none;">
+                                <div class="floor-slide">
+                                    <{widgets id="fs13"}>
+                                </div>
+                                <div class="floor-goods">
+                                    <{widgets id="fg13"}>
+                                </div>
+                                <div class="floor-hots">
+                                    <{widgets id="fh13"}>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <{widgets id="fb1"}>
+        </div>
+        <div class="section">
+            <div class="index-floor index-floor2">
+                <{widgets id="ft2"}>
+                <div class="clearfix">
+                    <div class="sidebar fl">
+                        <{widgets id="fc2"}>
+                    </div>
+                    <div class="main fr">
+                        <div class="floor-tab auto-bind-widget" data-widget-type="Tabs" data-widget-config="{eventType:'mouse'}">
+                            <{widgets id="ftt2"}>
+                            <div class="switchable-panel clearfix">
+                                <div class="floor-slide">
+                                    <{widgets id="fs21"}>
+                                </div>
+                                <div class="floor-goods">
+                                    <{widgets id="fg21"}>
+                                </div>
+                                <div class="floor-hots">
+                                    <{widgets id="fh21"}>
+                                </div>
+                            </div>
+                            <div class="switchable-panel" style="display:none;">
+                                <div class="floor-slide">
+                                    <{widgets id="fs22"}>
+                                </div>
+                                <div class="floor-goods">
+                                    <{widgets id="fg22"}>
+                                </div>
+                                <div class="floor-hots">
+                                    <{widgets id="fh22"}>
+                                </div>
+                            </div>
+                            <div class="switchable-panel" style="display:none;">
+                                <div class="floor-slide">
+                                    <{widgets id="fs23"}>
+                                </div>
+                                <div class="floor-goods">
+                                    <{widgets id="fg23"}>
+                                </div>
+                                <div class="floor-hots">
+                                    <{widgets id="fh23"}>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <{widgets id="fb2"}>
+        </div>
+        <div class="section">
+            <div class="index-floor index-floor3">
+                <{widgets id="ft3"}>
+                <div class="clearfix">
+                    <div class="sidebar fl">
+                        <{widgets id="fc3"}>
+                    </div>
+                    <div class="main fr">
+                        <div class="floor-tab auto-bind-widget" data-widget-type="Tabs" data-widget-config="{eventType:'mouse'}">
+                            <{widgets id="ftt3"}>
+                            <div class="switchable-panel clearfix">
+                                <div class="floor-slide">
+                                    <{widgets id="fs31"}>
+                                </div>
+                                <div class="floor-goods">
+                                    <{widgets id="fg31"}>
+                                </div>
+                                <div class="floor-hots">
+                                    <{widgets id="fh31"}>
+                                </div>
+                            </div>
+                            <div class="switchable-panel" style="display:none;">
+                                <div class="floor-slide">
+                                    <{widgets id="fs32"}>
+                                </div>
+                                <div class="floor-goods">
+                                    <{widgets id="fg32"}>
+                                </div>
+                                <div class="floor-hots">
+                                    <{widgets id="fh32"}>
+                                </div>
+                            </div>
+                            <div class="switchable-panel" style="display:none;">
+                                <div class="floor-slide">
+                                    <{widgets id="fs33"}>
+                                </div>
+                                <div class="floor-goods">
+                                    <{widgets id="fg33"}>
+                                </div>
+                                <div class="floor-hots">
+                                    <{widgets id="fh33"}>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <{widgets id="fb3"}>
+        </div>
+        <div class="section">
+            <div class="index-floor index-floor4">
+                <{widgets id="ft4"}>
+                <div class="clearfix">
+                    <div class="sidebar floor-hots sidebar-n fl">
+                        <{widgets id="fc4"}>
+                    </div>
+                    <div class="main fr">
+                        <div class="floor-tab floor-slide-n auto-bind-widget" data-widget-type="Tabs" data-widget-config="{eventType:'mouse'}">
+                            <{widgets id="ftt4"}>
+                            <div class="switchable-panel clearfix">
+                                <div class="floor-slide">
+                                    <{widgets id="fs41"}>
+                                </div>
+                            </div>
+                            <div class="switchable-panel" style="display:none;">
+                                <div class="floor-slide">
+                                    <{widgets id="fs42"}>
+                                </div>
+                            </div>
+                            <div class="switchable-panel" style="display:none;">
+                                <div class="floor-slide">
+                                    <{widgets id="fs43"}>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<{require file="block/footer.html"}>
+</body>
+</html>

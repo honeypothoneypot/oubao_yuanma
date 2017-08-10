@@ -5,7 +5,7 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
-  
+
 class desktop_email_emailconf{
 
     function get_emailConfig(){
@@ -15,6 +15,7 @@ class desktop_email_emailconf{
         $aTmp['smtpserver'] = $app->getConf('email.config.smtpserver');
         $aTmp['smtpuname'] = $app->getConf('email.config.smtpuname');
         $aTmp['smtppasswd'] = $app->getConf('email.config.smtppasswd');
+        $aTmp['smtpssl'] = $app->getConf('email.config.smtpssl') ? $app->getConf('email.config.smtpssl') : '';
         $aTmp['sendway'] = $app->getConf('email.config.sendway') ? $app->getConf('email.config.sendway') : 'mail';
         return $aTmp;
     }

@@ -1,0 +1,14 @@
+<div class="floor-category">
+    <ul class="clearfix">
+        <{foreach from=$data.data item=item key=key}>
+            <{if $item.cat_name==$setting.cat_name}>
+                <{foreach from=$item.lv2 item=sub_item key=sub_key}>
+                <li><a href="<{$sub_item.url}>" target="_blank"><{$sub_item.cat_name}></a></li>
+                <{/foreach}>
+            <{/if}>
+        <{/foreach}>
+    </ul>                        
+    <a href=<{$setting.ad_pic_link}> class="banner" target="_blank" title=<{$setting.ad_pic_txt}>>
+        <img src=<{$setting.ad_pic}> alt=<{$setting.ad_pic_txt}>/>
+    </a>
+</div>

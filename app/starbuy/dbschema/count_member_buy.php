@@ -30,4 +30,14 @@ $db['count_member_buy'] = array(
             'comment'=>app::get('starbuy')->_('购买数量'),
         ),
     ),
+    'index' => array(
+        'ind_member_count'=>array(
+            'columns' => array(
+                0 => 'member_id',
+                1 => 'special_id',
+                2 => 'product_id',
+            ),
+            'prefix' =>'UNIQUE',
+        ),
+    ),
 );

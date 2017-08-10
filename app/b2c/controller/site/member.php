@@ -1258,7 +1258,6 @@ class b2c_ctl_site_member extends b2c_frontpage{
      *发送站内信
      * */
     function send_msg(){
-    	
     	//判断当前时间与session时间是否在5秒内
     	if (isset($_SESSION['last_send']) and (time()-$_SESSION['last_send']) <= 5){
     		return false;
@@ -1289,8 +1288,8 @@ class b2c_ctl_site_member extends b2c_frontpage{
                 $_POST['comment_id'] = '';//防止用户修改comment_id
             }
 			
-			//设置session时间
-			$_SESSION['last_send']=time();
+	//设置session时间
+	    $_SESSION['last_send']=time();
 			
             if( $objMessage->send($_POST) ) {
             if($_POST['has_sent'] == 'false'){

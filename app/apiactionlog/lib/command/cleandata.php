@@ -9,9 +9,7 @@ class apiactionlog_command_cleandata extends base_shell_prototype{
 
     function _checkdata(){
         $model_api = app::get('apiactionlog')->model('apilog');
-        //$filter = "select *  from sdb_apiactionlog_apilog WHERE `last_modified` < UNIX_TIMESTAMP()-30*60*60*30";
-        $filter = "delete from sdb_apiactionlog_apilog where `last_modified`< UNIX_TIMESTAMP() -30*60*60*24";
-        //$filter = "delete from sdb_apiactionlog_apilog where `last_modified`<UNIX_TIMESTAMP() >-30*60";
+        $filter = 'delete from sdb_apiactionlog_apilog where last_modified< ' . (time() - 2592000);
         $restul = $model_api->db->exec($filter);
         if($restul['rs']){
             logger::info($restul['sql']);

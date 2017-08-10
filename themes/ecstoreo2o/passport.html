@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+<{header}>
+<link rel="stylesheet" href="images/styles.min.css" />
+</head>
+<body>
+<{require file="block/passport_header.html"}>
+<div id="container" class="page-container clearfix">
+  <div class="inside-wrap">
+    <{main}>
+  </div>
+</div>
+<{require file="block/footer.html"}>
+<script>
+(function(){
+  $("header").addClass('page-header-sm');
+  if($("page_signin")){
+    $("container").addClass("signin-back");
+    $("topbar").dispose();
+  }
+  else{
+    if($$(".signup").length){
+      $$("body").addClass('back-grey');
+      $$(".header-left")[0].grab(new Element("span",{
+        'class':"title",
+        html:"欢迎注册"
+      }));
+      $$('.footer-serves-wrap').dispose();
+    }else if($$(".forgot-steps")){
+      $$(".header-left")[0].grab(new Element("span",{
+        'class':"title",
+        html:"找回密码"
+      }));
+      $$('.footer-serves-wrap').dispose();
+      $$('.footer-nav-wrap').addClass("back-white");
+    }
+    
+  }
+})();
+</script>
+</body>
+</html>

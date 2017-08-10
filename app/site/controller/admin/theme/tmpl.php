@@ -87,7 +87,6 @@ class site_ctl_admin_theme_tmpl extends site_admin_controller
         $data['tmpl_name'] = $this->_request->get_post('tmpl_name');
         $data['tmpl_path'] = $this->_request->get_post('tmpl_path');
         $data['content'] = $this->_request->get_post('content');
-
         if(kernel::single('site_theme_tmpl')->insert_tmpl($data,$msg)){
             $this->end(true, $msg);
         }else{
@@ -123,9 +122,16 @@ class site_ctl_admin_theme_tmpl extends site_admin_controller
         $this->begin();
         $theme = $this->_request->get_get('theme');
         $file_name = $this->_request->get_get('tmpl');
-
+        $tmpl_type = $this->_request->get_get('type');
         if(!$this->check($theme,$msg))   $this->end(false,$msg);
-
+        
+        if($tmpl_type == 'active'){
+            $active = app::get('content')->model('actives');
+            $actives = $active->getList('*',array('tmpl_path'=>$file_name));
+            if(count($actives)>0){
+                $this->end(false,app::get('site')->_('删除失败,模版正在被使用'));
+            }
+        }
         //数据库
         if(kernel::single('site_theme_tmpl')->delete_tmpl($file_name, $theme)){
 

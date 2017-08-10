@@ -21,56 +21,12 @@ class base_charset_default implements base_charset_interface
 
     function utfconvert($strFrom,$charset,$isfromUtf=false){
         if (!trim($strFrom)) return $strFrom;
-        $fileGBU = fopen(dirname(__FILE__).'/default/'.($isfromUtf?'utf2'.$charset:$charset.'2utf').'.dat', "rb");
-        $strBuf = fread($fileGBU, 2);
-        $intCount = ord($strBuf{0}) + 256 * ord($strBuf{1});
-        $strRet = "";
-        $intLen = strlen($strFrom);
-        for ($i = 0; $i < $intLen; $i++) {
-            if (ord($strFrom{$i}) > 127) {
-                $strCurr = substr($strFrom, $i, $isfromUtf?3:2);
-                if($isfromUtf){
-                    $intGB = $this->utf82u($strCurr);
-                }else{
-                    $intGB = hexdec(bin2hex($strCurr));
-                }
-                $intStart = 1;
-                $intEnd = $intCount;
-                while ($intStart < $intEnd - 1) {
-                    $intMid = floor(($intStart + $intEnd) / 2);
-                    $intOffset = 2 + 4 * ($intMid - 1);
-                    fseek($fileGBU, $intOffset);
-                    $strBuf = fread($fileGBU, 2);
-                    $intCode = ord($strBuf{0}) + 256 * ord($strBuf{1});
-                    if ($intGB == $intCode) {
-                        $intStart = $intMid;
-                        break;
-                    }
-                    if ($intGB > $intCode) $intStart = $intMid;
-                    else $intEnd = $intMid;
-                }
-                $intOffset = 2 + 4 * ($intStart - 1);
-                fseek($fileGBU, $intOffset);
-                $strBuf = fread($fileGBU, 2);
-                $intCode = ord($strBuf{0}) + 256 * ord($strBuf{1});
-                if ($intGB == $intCode) {
-                    $strBuf = fread($fileGBU, 2);
-                    if($isfromUtf){
-                        $strRet .= $strBuf{1}.$strBuf{0};
-                    }else{
-                        $intCodeU = ord($strBuf{0}) + 256 * ord($strBuf{1});
-                        $strRet .= $this->u2utf8($intCodeU);
-                    }
-                } else {
-                    $strRet .= "??";
-                }
-                $i+=$isfromUtf?2:1;
-            } else {
-                $strRet .= $strFrom{$i};
-            }
-        }
-        fclose($fileGBU);
-        return $strRet;
+
+        $charsetList = array('zh' => 'GBK//IGNORE', 'ZH' => 'GBK//IGNORE', 'gb' => 'GBK//IGNORE', 'GB' => 'GBK//IGNORE', 'utf' => 'UTF-8', 'UTF' => 'UTF-8', 'utf8' => 'UTF-8', 'UTF8' => 'UTF-8');
+        $inCharset   = $isfromUtf ? 'UTF-8' : 'GBK//IGNORE';
+        $outCharset  = isset($charsetList[$charset]) ? $charsetList[$charset] : $charset;
+
+        return iconv($inCharset, $outCharset, $strFrom);
     }
 
     function u2utf8($c) {
@@ -120,9 +76,9 @@ class base_charset_default implements base_charset_interface
     }
 
 	/**
-	 * �滻utf-8�ַ��bomtou
-	 * @param string ���������ַ�
-	 * @return mixed ������ַ����false
+	 * 替换utf-8字符集的bomtou
+	 * @param string 传入待处理的字符串
+	 * @return mixed 待处理的字符串或者false
 	 */
 	public function replace_utf8bom($str)
 	{
@@ -141,8 +97,8 @@ class base_charset_default implements base_charset_interface
 	}
 
 	/**
-	 * �ж��Ƿ���utf-8�ַ�
-	 * @param string �����ַ�
+	 * 判断是否是utf-8字符集
+	 * @param string 传入字符串
 	 * @return boolean true or false
 	 */
 	public function is_utf8_old($word)

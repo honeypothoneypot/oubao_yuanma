@@ -174,14 +174,14 @@ class ectools_mdl_regions extends dbeav_model{
 
         if (!in_array($arr_region_name[0], $arr_directory_name))
         {
-            //return implode('',$arr_region_name);
-            return $arr_region_name[0].$arr_region_name[1].$arr_region_name[2];
+            return implode('',$arr_region_name);
+            //return $arr_region_name[0].$arr_region_name[1].$arr_region_name[2];
         }
         else
         {
-            //unset($arr_region_name[0]);
-            //return implode('',$arr_region_name);
-            return $arr_region_name[1].$arr_region_name[2];
+            unset($arr_region_name[0]);
+            return implode('',$arr_region_name);
+            //return $arr_region_name[1].$arr_region_name[2];
         }
     }
 }

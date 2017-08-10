@@ -453,6 +453,53 @@ class b2c_ctl_admin_member extends desktop_controller{
         echo $this->fetch('admin/member/page_advance_list.html');
     }
 
+    function detail_coupon($member_id){
+        $app = app::get('b2c');
+        if(!$member_id) return null;
+        $nPage = $_GET['detail_coupon'] ? $_GET['detail_coupon'] : 1;
+        $oCoupon = kernel::single('b2c_coupon_mem');
+        $aData = $oCoupon->get_list_m($member_id,$nPage);
+        if($member_id){
+            $row = $oCoupon->get_list_m($member_id);
+            $count = count($row);
+        }
+        if ($aData) {
+            foreach ($aData as $k => $item) {
+                if ($item['coupons_info']['cpns_status'] !=1) {
+                    $aData[$k]['coupons_info']['cpns_status'] = false;
+                    $aData[$k]['memc_status'] = app::get('b2c')->_('此种优惠券已取消');
+                    continue;
+                }
+
+                $curTime = time();
+                if ($curTime>=$item['time']['from_time'] && $curTime<$item['time']['to_time']) {
+                    if ($item['memc_used_times']<$this->app->getConf('coupon.mc.use_times')){
+                        if ($item['coupons_info']['cpns_status']){
+                            $aData[$k]['memc_status'] = app::get('b2c')->_('可使用');
+                        }else{
+                            $aData[$k]['memc_status'] = app::get('b2c')->_('本优惠券已作废');
+                        }
+                    }else{
+                        $aData[$k]['coupons_info']['cpns_status'] = false;
+                        if($item['disabled'] == 'busy'){
+                            $aData[$k]['memc_status'] = app::get('b2c')->_('使用中');
+                        }else{
+                            $aData[$k]['memc_status'] = app::get('b2c')->_('本优惠券次数已用完');
+                        }
+                    }
+                }else{
+                    $aData[$k]['coupons_info']['cpns_status'] = false;
+                    $aData[$k]['memc_status'] = app::get('b2c')->_('还未开始或已过期');
+                }
+            }
+        }
+        $this->pagedata['coupons'] = $aData;
+        if($_GET['page']) unset($_GET['page']);
+        $_GET['page'] = 'detail_coupon';
+        $this->pagination($nPage,$count,$_GET);
+        echo $this->fetch('admin/member/coupon_list.html');
+    }
+
     public function detail_order($member_id=null)
     {
         if(!$member_id) return null;

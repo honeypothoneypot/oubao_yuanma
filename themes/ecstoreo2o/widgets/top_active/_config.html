@@ -1,0 +1,36 @@
+<div class="tableform">
+    <div class="widgetconfig">
+        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tbody><tr>
+                    <th><{t app='b2c'}>背景色：<{/t}></th>
+                    <td>
+                        <input type="text" name="top_active_bc" value="<{$setting.top_active_bc}>" style="width:40px">
+                    </td>
+                </tr>
+                <tr>
+                    <th><{t app='b2c'}>图片：<{/t}></th>
+                    <td>
+                        <input type=hidden name="top_active" value="<{$setting.top_active}>"><input name='top_active' class="imgsrc" id="top_active" value="<{$setting.top_active}>"><input type=button value="<{t app='b2c'}>上传图片<{/t}>" class="uploadbtn" onclick="addPic()">
+                    </td>
+                </tr>
+                <tr>
+                    <th><{t app='b2c'}>图片描述：<{/t}></th>
+                    <td><input type="text" name="top_active_txt" value="<{$setting.top_active_txt}>"></td>
+                </tr>
+                <tr>
+                    <th><{t app='b2c'}>图片链接：<{/t}></th>
+                    <td><input type="text" name="top_active_link" value="<{$setting.top_active_link}>"></td>
+                </tr>
+        </tbody></table>
+    </div>
+</div>
+<script>
+    function addPic(){
+        var url='index.php?app=desktop&act=alertpages&goto='+encodeURIComponent("index.php?app=image&ctl=admin_manage&act=image_broswer&type=big");
+        Ex_Loader('modedialog',function(){
+            return new imgDialog(url,{onCallback:function(image_id,image_src){
+                    $('top_active').value=image_src;
+            }})	;
+        });
+    }
+</script>

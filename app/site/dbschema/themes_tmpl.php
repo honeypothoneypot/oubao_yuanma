@@ -28,12 +28,22 @@ $db['themes_tmpl']=array (
             'type' => 'varchar(30)',
             'required' => true,
             'comment' => app::get('site')->_('名称'),
+            'label' => app::get('site')->_('名称'),
+            'width' => 150,
+            'order' => 20,
+            'in_list' => true,
+            'default_in_list' => true,
         ),
         'tmpl_path' => 
         array (
             'type' => 'varchar(100)',
             'required' => true,
             'comment' => app::get('site')->_('页面路径'),
+            'label' => app::get('site')->_('页面路径'),
+            'width' => 250,
+            'order' => 30,
+            'in_list' => true,
+            'default_in_list' => true,
         ),
         // 'version' => 
         // array (

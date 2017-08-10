@@ -222,6 +222,7 @@ class b2c_ctl_site_passport extends b2c_frontpage{
 
         //获取会员注册项
         $this->pagedata['attr'] = $this->userPassport->get_signup_attr();
+        $this->pagedata['site_sms_only_valide'] = $this->app->getConf('site.sms_only_valide');
         $this->pagedata['site_sms_valide'] = $this->app->getConf('site.sms_valide');
 
         $this->set_tmpl('passport');
@@ -243,7 +244,12 @@ class b2c_ctl_site_passport extends b2c_frontpage{
 
     //注册的时，检查账号
     public function signup_ajax_check_name(){
-        $flag = $this->userPassport->check_signup_account( trim($_POST['pam_account']['login_name']),$msg );
+
+        if($this->app->getConf('site.sms_only_valide')=="true"){
+            $flag = $this->userPassport->check_signup_account_pc_mobile( trim($_POST['pam_account']['login_name']),$msg );
+        } else{
+            $flag = $this->userPassport->check_signup_account( trim($_POST['pam_account']['login_name']),$msg );
+        }
         if($flag){
             if($msg == 'mobile'){
                 echo json_encode(array('needVerify'=>'true'));exit;

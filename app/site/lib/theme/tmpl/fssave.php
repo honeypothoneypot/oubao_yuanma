@@ -299,6 +299,7 @@ class site_theme_tmpl_fssave
             'order_index'=>app::get('site')->_('订单确认页'),
             'splash'=>app::get('site')->_('信息提示页'),
             'default'=>app::get('site')->_('默认页'),
+            'active'=>app::get('site')->_('活动页'),
         );
         foreach( kernel::servicelist("site.site_theme_tmpl") as $object ) {
             if( method_exists($object,'__get_tmpl_list') ) {

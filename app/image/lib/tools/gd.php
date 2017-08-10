@@ -7,8 +7,7 @@ class image_tools_gd implements image_interface_tool
         $quality  = 80;
         $image_p = imagecreatetruecolor($new_width, $new_height);
         imagealphablending($image_p,true);
-        if($new_width>$width && $new_height>$height)
-        {
+        if($new_width>$width || $new_height>$height){
             $background_color = imagecolorallocate($image_p, 255, 255, 255);
             imagefilledrectangle ( $image_p, 0, 0, $new_width, $new_height, $background_color );
         }

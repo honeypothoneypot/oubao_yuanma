@@ -1,0 +1,5 @@
+<ul class="nav-wrap">
+	<{foreach from=$data item=item key=key}>
+    <li class="nav-item <{if $item.hilight}>on<{/if}>"><a href="<{$item.url}>" <{if $item.target_blank eq 'true'}>target="_blank"<{/if}>><{$item.title}></a></li>
+    <{/foreach}>
+</ul>

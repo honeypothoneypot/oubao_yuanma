@@ -1,0 +1,39 @@
+<div class="tableform widgetconfig">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <th><{t app='b2c'}>楼层所属分类：<{/t}></th>
+            <td>
+                <select  name="cat_name">
+                    <{foreach from=$data.data item=item key=key}>
+                    <option value="<{$item.cat_name}>" <{if $setting.cat_name==$item.cat_name}>selected<{/if}>><{$item.cat_name}></option>
+                    <{/foreach}>
+                </select>    
+            </td>
+        </tr>
+        <tr>
+            <th><{t app='b2c'}>图片：<{/t}></th>
+            <td>
+                <input type=hidden name="ad_pic" value="<{$setting.ad_pic}>"><input name='ad_pic' class="imgsrc" id="ad_pic" value="<{$setting.ad_pic}>"><input type=button value="<{t app='b2c'}>上传图片<{/t}>" class="uploadbtn" onclick="addPic()">
+            </td>
+        </tr>
+        <tr>
+            <th><{t app='b2c'}>图片描述：<{/t}></th>
+            <td><input type="text" name="ad_pic_txt" value="<{$setting.ad_pic_txt}>"></td>
+        </tr>
+        <tr>
+            <th><{t app='b2c'}>图片链接：<{/t}></th>
+            <td><input type="text" name="ad_pic_link" value="<{$setting.ad_pic_link}>"></td>
+        </tr>
+    </table>
+</div>
+<script>
+    function addPic(){
+        var url='index.php?app=desktop&act=alertpages&goto='+encodeURIComponent("index.php?app=image&ctl=admin_manage&act=image_broswer&type=big");
+        Ex_Loader('modedialog',function(){
+            return new imgDialog(url,{onCallback:function(image_id,image_src){
+                    $('ad_pic').value=image_src;
+            }}) ;
+        });
+    }
+</script>
+

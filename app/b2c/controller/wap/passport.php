@@ -212,9 +212,10 @@ class b2c_ctl_wap_passport extends wap_frontpage{
         $b2c_members_model->update($member_data,array('member_id'=>$member_id));
         $this->userObject->set_member_session($member_id);
         $this->bind_member($member_id);
+        kernel::single('pam_lock')->flush_lock($member_id);
         $this->set_cookie('loginName',$_POST['uname'],time()+31536000);//用于记住用户名
         $this->app->model('cart_objects')->setCartNum();
-        kernel::single('pam_lock')->flush_lock($member_id);
+
         $bindOpenId = app::get('pam')->model('bind_tag')->getRow('member_id',array('open_id'=>$_SESSION['weixin_u_openid']));
         $bindMember = app::get('pam')->model('bind_tag')->getRow('member_id',array('member_id'=>$member_id));
         if( $_SESSION['weixin_u_openid'] && !$bindOpenId && !$bindMember ){
@@ -311,12 +312,20 @@ class b2c_ctl_wap_passport extends wap_frontpage{
         }else{
             $ajax_request = false;
         }
-
+		if(kernel::single('b2c_service_vcode')->status() && empty($_POST['pam_account']['verifycode'])){
+            $msg = app::get('b2c')->_('请输入验证码!');
+            $this->splash('failed',null,$msg,'','',true);exit;
+        }
+        if($_POST['pam_account']['verifycode'] && !kernel::single('pam_passport_site_basic')->vcode_verify($_POST['pam_account']['verifycode']) ){
+            $msg = app::get('b2c')->_('验证码错误');
+            $this->splash('failed',null,$msg,'','',true);exit;
+        }
         if(!preg_match("/^1[34578]{1}[0-9]{9}$/",$_POST['pam_account']['login_name'])){
             $msg = app::get('b2c')->_('手机号格式不正确');
             $this->splash('failed',null,$msg,'','',true);exit;
         }
-        $_POST['vcode'] = $_POST['pam_account']['login_password'];
+		$_POST['vcode'] = $_POST['pam_account']['vcode'];
+        //$_POST['vcode'] = $_POST['pam_account']['login_password'];
         $_POST['pam_account']['psw_confirm'] = $_POST['pam_account']['login_password'];
         if( !$this->userPassport->check_signup($_POST,$msg) ){
             $this->splash('failed',null,$msg,'','',true);exit;
@@ -400,49 +409,46 @@ class b2c_ctl_wap_passport extends wap_frontpage{
         $this->page("wap/passport/lost.html");
     }
 
-    /*
-     * 找回密码页面
-     * */
-    public function retrieve(){
-        $this->check_login();
-        $username = $_POST['username'];
-        $member_id = $this->userObject->get_member_id_by_username($username);
+       public function retrieve(){
+           $this->check_login();
+           $username = $_POST['username'];
+           $member_id = $this->userObject->get_member_id_by_username($username);
 
-        if(!$member_id){
-            $url = $this->gen_url(array('app'=>'b2c','ctl'=>'wap_passport','act'=>'lost'));
-            $msg = app::get('b2c')->_('该账号不存在，请检查');
-            $this->splash('failed',$url,$msg);
-        }
+           if(!$member_id){
+               $url = $this->gen_url(array('app'=>'b2c','ctl'=>'wap_passport','act'=>'lost'));
+               $msg = app::get('b2c')->_('该账号不存在，请检查');
+               $this->splash('failed',$url,$msg);
+           }
 
-        $pamMemberData = app::get('pam')->model('members')->getList('*',array('member_id'=>$member_id));
-        foreach($pamMemberData as $row){
-            if($row['login_type'] == 'mobile' && $row['disabled'] == 'false'){
-                $data['mobile'] = $row['login_account'];
-                $verify['mobile'] = true;
-            }
+           $pamMemberData = app::get('pam')->model('members')->getList('*',array('member_id'=>$member_id));
+           foreach($pamMemberData as $row){
+               if($row['login_type'] == 'mobile' && $row['disabled'] == 'false'){
+                   $data['mobile'] = $row['login_account'];
+                   $verify['mobile'] = true;
+               }
 
-            if($row['login_type'] == 'email' && $row['disabled'] == 'false'){
-                $data['email'] = $row['login_account'];
-                $verify['email'] = true;
-            }
+               if($row['login_type'] == 'email' && $row['disabled'] == 'false'){
+                   $data['email'] = $row['login_account'];
+                   $verify['email'] = true;
+               }
 
-            if($row['login_type'] == 'local' && $row['disabled'] == 'false'){
-                $data['local'] = $row['login_account'];
-            }
-        }
+               if($row['login_type'] == 'local' && $row['disabled'] == 'false'){
+                   $data['local'] = $row['login_account'];
+               }
+           }
 
-        if(!$verify['email'] && !$verify['mobile']){
-            $msg = app::get('b2c')->_('由于您并未验证手机或者邮箱，无法自助找回密码，请联系网站客服！');
-            $this->splash('failed',$url,$msg);
-        }
+           if(!$verify['email'] && !$verify['mobile']){
+               $msg = app::get('b2c')->_('由于您并未验证手机或者邮箱，无法自助找回密码，请联系网站客服！');
+               $this->splash('failed',$url,$msg);
+           }
 
-        if($verify['mobile'] || $verify['email']){
-            $this->pagedata['send_status'] = 'true';
-        }
-        $this->pagedata['site_sms_valide'] = $this->app->getConf('site.sms_valide');
-        $this->pagedata['data'] = $data;
-        $this->page("wap/passport/lost2.html");
-    }
+           if($verify['mobile'] || $verify['email']){
+               $this->pagedata['send_status'] = 'true';
+           }
+           $this->pagedata['site_sms_valide'] = $this->app->getConf('site.sms_valide');
+           $this->pagedata['data'] = $data;
+           $this->page("wap/passport/lost2.html");
+       }
 
 
     //发送发送邮件验证码
@@ -549,18 +555,29 @@ class b2c_ctl_wap_passport extends wap_frontpage{
         }
     }
 
+
     public function resetpwd_code(){
         $this->check_login();
         $send_type = $_POST['send_type'];
+        if(isset($_POST['mobile'])){
+            $send_type='mobile';
+        }else if(isset($_POST['email'])){
+            $send_type='email';
+        }
         $userVcode = kernel::single('b2c_user_vcode');
         if( !$vcodeData = $userVcode->verify($_POST[$send_type.'vcode'],$_POST[$send_type],'forgot')){
             $msg = app::get('b2c')->_('验证码错误');
-            $this->splash('failed',null,$msg,'','',true);exit;
+            if($send_type=='email'){
+                $msg = app::get('b2c')->_('邮箱验证码错误');
+            }else{
+                $msg = app::get('b2c')->_('手机验证码错误');
+            }
         }
         $data['key'] = $userVcode->get_vcode_key($_POST[$send_type],'forgot');
         $data['key'] = md5($vcodeData['vcode'].$data['key']);
         $data['account'] = $_POST[$send_type];
         $this->pagedata['data'] = $data;
+		$_SESSION['error_count']['b2c'][$type]=0;
         $this->display('wap/passport/lost3.html');
     }
 
@@ -574,9 +591,9 @@ class b2c_ctl_wap_passport extends wap_frontpage{
             $this->splash('failed',null,$msg,'','',true);exit;
         }
 
-        if( !$this->userPassport->check_passport($_POST['login_password'],$_POST['psw_confirm'],$msg) ){
-            $this->splash('failed',null,$msg,'','',true);exit;
-        }
+          if( !$this->userPassport->check_passport($_POST['login_password'],$_POST['psw_confirm'],$msg) ){
+              $this->splash('failed',null,$msg,'','',true);exit;
+          }
 
         $member_id = $this->userObject->get_member_id_by_username($_POST['account']);
         if( !$this->userPassport->reset_passport($member_id,$_POST['login_password']) ){
@@ -622,4 +639,6 @@ class b2c_ctl_wap_passport extends wap_frontpage{
             $service->logout();
         }
     }
+	
+
 }

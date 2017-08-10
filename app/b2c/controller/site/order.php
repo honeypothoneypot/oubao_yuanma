@@ -77,8 +77,8 @@ class b2c_ctl_site_order extends b2c_frontpage{
 
 
         //判断团购限制数量
-        $starbuy_special_count = kernel::service('special_count_member_buy');
-        if($starbuy_special_count != null){
+        if( app::get('starbuy')->is_actived() ){
+            $starbuy_special_count = kernel::single('starbuy_special_count');
             $starbuy_tmp = $aCart['object']['goods'];
             foreach($starbuy_tmp as $starbuy_goods)
             {
@@ -93,11 +93,11 @@ class b2c_ctl_site_order extends b2c_frontpage{
                 {
                     foreach($special_goods as $tmp_special_goods)
                     {
-                        if($starbuy_special_count->check_count($arrMember['member_id'],$tmp_special_goods['product_id'],$fmt_check_products[$tmp_special_goods['product_id']]) == false){
+                        if( $starbuy_special_count->add_count($arrMember['member_id'],$tmp_special_goods['product_id'],$fmt_check_products[$tmp_special_goods['product_id']]) == false)
+                        {
                             $db->rollback();
                             $this->end(false,app::get('b2c')->_('您的购物车中有商品数量超出了可购买数量，请检查购物车。'), null,true,true);
                         }
-                        $starbuy_special_count->add_count($arrMember['member_id'], $tmp_special_goods['product_id'], $fmt_check_products[$tmp_special_goods['product_id']]);
                     }
                 }
             }

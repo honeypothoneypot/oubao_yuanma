@@ -546,6 +546,7 @@ class b2c_ctl_site_cart extends b2c_frontpage{
             'get' => $arr_args,
             'post' => array('modify_quantity'=>$_POST['modify_quantity']),
         );
+		$arr_args = utils::_RemoveXSS($arr_args);
         $this->pagedata['json_args'] = json_encode($arr_args);
         if($isfastbuy){
             $this->pagedata['is_fastbuy'] = $isfastbuy;
@@ -974,6 +975,11 @@ class b2c_ctl_site_cart extends b2c_frontpage{
             $addr_id = $save_data['addr_id'];
             $this->pagedata['def_addr'] = $save_data;
         }else{
+            //mofified by zengxinwen
+            if(!$member_id){
+                $this->splash('error',null,app::get('b2c')->_('会员未登录'),true);
+            }
+            //end
             $address = json_decode($_POST['address'],true);
             if($address['addr_id']){
                 $def_addr = app::get('b2c')->model('member_addrs')->getList('*',array('addr_id'=>$address['addr_id']));

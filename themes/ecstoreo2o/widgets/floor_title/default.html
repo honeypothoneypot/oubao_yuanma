@@ -1,0 +1,10 @@
+<div class="title">
+    <i></i>
+    <span><{$setting.floor_num}></span>
+    <span><{$setting.cat_name}></span>
+    <{foreach from=$data.data item=item key=key}>
+        <{if $setting.cat_name==$item.cat_name}>
+        <a href=<{$item.url}> target="_blank">更多&nbsp;&gt;</a>
+        <{/if}>
+    <{/foreach}>
+</div>

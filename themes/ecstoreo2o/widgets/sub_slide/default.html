@@ -1,0 +1,24 @@
+<div class="index-banners auto-bind-widget" data-widget-type="Slide" data-widget-config="{
+    autoplay:false,
+    effect:'scrollx',
+    hasTriggers:false,
+    panels:'.slide-item',
+    haslrbtn:true,
+    isFloat:true,
+    viewStep:3
+}">
+    <div class="slide-box">
+        <ul class="slide-list">
+            <{foreach from=$data.pic item=parent key=parentId}>
+            <li class="slide-item">
+              <a href="<{$parent.linktarget}>">
+                <img src="<{$parent.link}>"s title="<{$data.linkinfo}>"/>
+              </a>
+            </li>
+            <{/foreach}>
+        </ul>
+        <div class="prev ax"></div>
+        <div class="next ay"></div>
+    </div>
+   
+</div>

@@ -164,6 +164,12 @@ class b2c_order_delivery extends b2c_order_operation
 
             foreach ($v['order_items'] as &$__arr_order_items)
             {
+                if($sdf['pay_app_id'] == '-1' && $sdf['freez_time'] == '2'){
+                    $objProducts = $this->app->model('products');
+                    $product['freez'] = $__arr_order_items['products']['freez'] - $__arr_order_items['quantity'];
+                    $product['product_id'] = $__arr_order_items['products']['product_id'];
+                    $objProducts->save($product);
+                }
                 $arr_goods = array();
                 if ($__arr_order_items['item_type'] == 'product')
                     $goods_item_type = 'goods';

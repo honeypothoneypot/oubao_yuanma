@@ -387,6 +387,7 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
      * 前台筛选商品ajax调用
      * */
     public function ajax_get_goods(){
+    	$this->pagedata['commentListListnum'] = $this->app->getConf('gallery.comment.time');
         $_POST['cat_id'] = utils::_RemoveXSS($_POST['cat_id']);
         $_POST['virtual_cat_id'] = utils::_RemoveXSS($_POST['virtual_cat_id']);
         $_POST['orderBy'] = utils::_RemoveXSS($_POST['orderBy']);

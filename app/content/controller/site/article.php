@@ -213,9 +213,6 @@ class content_ctl_site_article extends content_controller
             $this->end(false, app::get('content')->_('错误访问!'));
         }
     }
-
-
-
     private function get_seo_info($aInfo, $aPath) {
 
         is_array($info) or $info = array();

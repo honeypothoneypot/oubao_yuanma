@@ -1,0 +1,21 @@
+<div class="tableform widgetconfig">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <th><{t app='b2c'}>楼层序号：<{/t}></th>
+            <td>
+                <input type="text" name="floor_num" value="<{$setting.floor_num}>">
+            </td>
+        </tr>
+        <tr>
+            <th><{t app='b2c'}>楼层所属分类：<{/t}></th>
+            <td>
+                <select  name="cat_name">
+                    <{foreach from=$data.data item=item key=key}>
+                    <option value="<{$item.cat_name}>" <{if $setting.cat_name==$item.cat_name}>selected<{/if}>><{$item.cat_name}></option>
+                    <{/foreach}>
+                </select>    
+            </td>
+        </tr>
+    </table>
+</div>
+

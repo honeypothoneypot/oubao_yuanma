@@ -11,9 +11,10 @@ class wap_frontpage extends wap_controller{
     protected $member = array();
     function __construct(&$app){
         parent::__construct($app);
-        if($_COOKIE['S']['SIGN']['AUTO'] > 0){
+        if($_COOKIE['S']['SIGN']['AUTO'] > 0 || $_POST['site_autologin'] == 'on'){
             $minutes = 14*24*60;
             kernel::single('base_session')->set_sess_expires($minutes);
+            kernel::single('base_session')->set_cookie_expires($minutes);
         }//如果有自动登录，设置session过期时间，单位：分
         if($_COOKIE['S']['SIGN']['REMEMBER'] !== '1'){
             setcookie("S[SIGN][REMEMBER]", null, time() - 3600);

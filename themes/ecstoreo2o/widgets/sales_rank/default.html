@@ -1,0 +1,20 @@
+<div class="sales-rank">
+  <h2><{$setting.block_name}></h2>
+  <div class="list">
+    <ul class="goods-list clearfix">
+      <{foreach from=$data.goodsRows item=row key=gid name=goodsrow}>
+      <li<{if $smarty.foreach.goodsrow.iteration<4}> class="top"<{/if}>>
+          <{assign var=pickey value=$setting.gpic_size|default:'goodsPicS'}>
+          <i><{$smarty.foreach.goodsrow.iteration}></i>
+          <a href="<{$row.goodsLink}>" class="img" target="_blank" title="<{$row.goodsName}>">
+              <img data-src="<{$row[$pickey]}>" alt="<{$row.goodsName}>" data-img-zoom="true"/>
+          </a>
+          <div class="con">
+              <p class="name"><a href="<{$row.goodsLink}>" target="_blank" title="<{$row.goodsName}>"><{$row.goodsName}></a></p>
+              <p class="price"><{$row.goodsSalePrice|cur}></p>
+          </div>
+      </li>
+      <{/foreach}>
+    </ul>
+  </div>
+</div>

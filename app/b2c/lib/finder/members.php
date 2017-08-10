@@ -15,6 +15,7 @@ class b2c_finder_members{
 	var $detail_order;
 	var $detail_msg;
 	var $detail_remark;
+    var $detail_coupon;
 	var $column_editbutton;
     var $pagelimit = 10;
 
@@ -31,6 +32,7 @@ class b2c_finder_members{
 		$this->detail_order = app::get('b2c')->_('订单');
 		$this->detail_msg = app::get('b2c')->_('站内信');
 		$this->detail_remark = app::get('b2c')->_('会员备注');
+        $this->detail_coupon = app::get('b2c')->_('优惠券');
 		$this->column_editbutton = app::get('b2c')->_('操作');
 		$this->column_uname = app::get('b2c')->_('用户名');
 		$this->column_email = app::get('b2c')->_('EMAIL');
@@ -335,6 +337,53 @@ class b2c_finder_members{
         return $render->fetch('admin/member/order.html');
     }
 
+    function detail_coupon($member_id){
+        $app = app::get('b2c');
+        if(!$member_id) return null;
+        $nPage = $_GET['detail_coupon'] ? $_GET['detail_coupon'] : 1;
+        $oCoupon = kernel::single('b2c_coupon_mem');
+        $aData = $oCoupon->get_list_m($member_id,$nPage);
+        if($member_id){
+            $row = $oCoupon->get_list_m($member_id);
+            $count = count($row);
+        }
+        if ($aData) {
+            foreach ($aData as $k => $item) {
+                if ($item['coupons_info']['cpns_status'] !=1) {
+                    $aData[$k]['coupons_info']['cpns_status'] = false;
+                    $aData[$k]['memc_status'] = app::get('b2c')->_('此种优惠券已取消');
+                    continue;
+                }
+
+                $curTime = time();
+                if ($curTime>=$item['time']['from_time'] && $curTime<$item['time']['to_time']) {
+                    if ($item['memc_used_times']<$this->app->getConf('coupon.mc.use_times')){
+                        if ($item['coupons_info']['cpns_status']){
+                            $aData[$k]['memc_status'] = app::get('b2c')->_('可使用');
+                        }else{
+                            $aData[$k]['memc_status'] = app::get('b2c')->_('本优惠券已作废');
+                        }
+                    }else{
+                        $aData[$k]['coupons_info']['cpns_status'] = false;
+                        if($item['disabled'] == 'busy'){
+                            $aData[$k]['memc_status'] = app::get('b2c')->_('使用中');
+                        }else{
+                            $aData[$k]['memc_status'] = app::get('b2c')->_('本优惠券次数已用完');
+                        }
+                    }
+                }else{
+                    $aData[$k]['coupons_info']['cpns_status'] = false;
+                    $aData[$k]['memc_status'] = app::get('b2c')->_('还未开始或已过期');
+                }
+            }
+        }
+        $render = $app->render();
+        $render->pagedata['coupons'] = $aData;
+        if($_GET['page']) unset($_GET['page']);
+        $_GET['page'] = 'detail_coupon';
+        $render->pagedata['pager']= $this->controller->pagination($nPage,$count,$_GET);
+        return $render->fetch('admin/member/coupon_list.html');
+    }
 
     function detail_msg($member_id){
         if(!$member_id) return null;
@@ -438,6 +487,11 @@ class b2c_finder_members{
                 'detail_remark'=>array(
 					'href'=>'javascript:void(0);',
                     'submit'=>'index.php?'.utils::http_build_query($arr).'&finderview=detail_remark&id='.$row['member_id'].'&_finder[finder_id]='.$_GET['_finder']['finder_id'],'label'=>app::get('b2c')->_('会员备注'),
+                    'target'=>'tab',
+                ),
+                'detail_coupon'=>array(
+                    'href'=>'javascript:void(0);',
+                    'submit'=>'index.php?'.utils::http_build_query($arr).'&finderview=detail_coupon&id='.$row['member_id'].'&_finder[finder_id]='.$_GET['_finder']['finder_id'],'label'=>app::get('b2c')->_('优惠券'),
                     'target'=>'tab',
                 ),
             ),
