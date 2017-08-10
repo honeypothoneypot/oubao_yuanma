@@ -117,8 +117,7 @@ class desktop_view_input{
 
         $tmp_filter = $params['filter']?$params['filter']:null;
         $count = $o->count($tmp_filter);
-        //有默认值的话（$params['value']），不返回空的select字符串，生成正常的input_object
-        if( !$params['value'] && $count<=$params['breakpoint']&&!$params['multiple']&&$params['select']!='checkbox'){
+        if($count<=$params['breakpoint']&&!$params['multiple']&&$params['select']!='checkbox'){
             if(strpos($textcol,'@')===false){
                 $list = $o->getList($key.','.$textcol,$tmp_filter);
                 if(!$list[0]) $type=array();

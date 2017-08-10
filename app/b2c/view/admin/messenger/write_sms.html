@@ -21,8 +21,9 @@
 
 <h4><{t}>信息内容<{/t}></h4>( 不能含有成对的【】)
     <div class="division messager-main">
- <{input type="textarea" style=" width:91%;" rows="10" name="content" vtype="required" onkeyup="javascript:this.getNext('.notice-word').getElement('span').set('html',this.value.length);"}>
- <div class='notice-word' style=" width:91%;">已输入<span>0</span>个字符
+      <input type="hidden" id="setSmsSignLen" value="<{$setSmsSignLen}>" />
+ <{input type="textarea" style=" width:91%;" rows="10" name="content" vtype="required" onkeyup="javascript:this.getNext('.notice-word').getElement('span').set('html',this.value.length+parseInt($('setSmsSignLen').getValue()));"}>
+ <div class='notice-word' style=" width:91%;">已输入<span><{$setSmsSignLen}></span>个字符<label class="red">(包括短信签名内容)</label>
 	<span style='float:right;'>67字/条;如超过，将累计条数</span>
  </div>
  </div>

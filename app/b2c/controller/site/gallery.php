@@ -205,8 +205,14 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
         if ( empty($cat_id) ) {
             $screen = array();
         }
+        if( $filter['virtual_cat_id'] ){
+            $vcat_filter = $this->_merge_vcat_filter($filter['virtual_cat_id'],array());//合并虚拟分类条件
+            $filter = array_merge($filter,$vcat_filter);
+        }
         $screen['cat_id'] = $cat_id;
         $cat_id = $cat_id ?  $cat_id : $this->pagedata['show_cat_id'];
+        $cat_id = $cat_id ?  $cat_id : $filter['cat_id'];
+
         //搜索时的分类
         if(!$screen['cat_id'] && count($this->pagedata['catArr']) > 1){
             $searchCat = app::get('b2c')->model('goods_cat')->getList('cat_id,cat_name',array('cat_id'=>$this->pagedata['catArr']));
@@ -268,6 +274,7 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
                 }
             }
             $brands = app::get('b2c')->model('brand')->getList('brand_id,brand_name',array('brand_id'=>$brand_ids,'disabled'=>'false'));
+
             //是否已选择
             foreach($brands as $b_k=>$row){
                 // 在用in_array前验证$filter['brand_id']是否时数组
@@ -434,7 +441,9 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
                     if($f_k == 'cat_id' || $f_k == 'orderBy' || $f_k == 'showtype' || $f_k == 'is_store' || $f_k == 'page'){
                         $params[$f_k] = $arrfilter[1];
                     }else{
-                        $params[$f_k][] = $arrfilter[1];
+                        if( $arrfilter[1] ){
+                            $params[$f_k][] = $arrfilter[1];
+                        }
                     }
                 }
             }
@@ -607,7 +616,7 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
         if($goodsData && $total ===false){
            $total = $goodsModel->count($filter);
         }
-        $this->pagedata['total'] =  $total;
+        $this->pagedata['total'] =  $total ? $total:0;
         $pagetotal= $this->pagedata['total'] ? ceil($this->pagedata['total']/$pageLimit) : 1;
         $max_pagetotal = $this->app->getConf('gallery.display.pagenum');
         $max_pagetotal = $max_pagetotal ? $max_pagetotal : 100;

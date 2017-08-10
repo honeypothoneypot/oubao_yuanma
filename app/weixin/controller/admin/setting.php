@@ -24,9 +24,9 @@ class weixin_ctl_admin_setting extends desktop_controller{
         $share_page = array(
             'index'=>app::get('b2c')->_('首页'),
             'gallery-index'=>app::get('b2c')->_('商品列表页'),
-            'product-index'=>app::get('b2c')->_('商品详情页'),
-            'article-index'=>app::get('b2c')->_('文章页'),
-            'article-list'=>app::get('b2c')->_('文章列表页'),
+//            'product-index'=>app::get('b2c')->_('商品详情页'),
+//            'article-index'=>app::get('b2c')->_('文章页'),
+//            'article-list'=>app::get('b2c')->_('文章列表页'),
         );
         $this->pagedata['setting'] = $setting;
         $this->pagedata['share_page'] = $share_page;

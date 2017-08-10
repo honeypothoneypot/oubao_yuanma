@@ -74,6 +74,9 @@ define('WAP_THEME_DIR', ROOT_DIR.'/wap_themes');
 # define('SESS_NAME', 's'); // used as cookie name
 # define('SESS_CACHE_EXPIRE', 60); // expires after n minutes
 
+//base_cache_expires，开启后需要 ./cmd update
+#define('BASE_CACHE_EXPIRES', 'KVSTORE');
+
 // 前台禁ip
 # define('BLACKLIST', '10.0.0.0/24 192.168.0.1/24');
 

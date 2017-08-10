@@ -65,8 +65,11 @@ if( $('id_new_bn') ) {
                     <th><em class="red">*</em><{t}>预售商品：<{/t}></th>
                     <td>
                         <div class="fl">
-                        <{if !$goods.goods_id}>
+                        <{if !$ruleInfo.goods_id || $prepareNums}>
                            <{input name="goods_id" type="object" object=goods breakpoint=0   app=b2c cols="name"  filter=$filter  callback='_callback_prepare' value=$ruleInfo.goods_id textcol="name" view="b2c:admin/goods/rows.html"}>  <{help}><{t}>您必须选择无库存也可销售的商品作为预售商品<{/t}><{/help}>
+                        <{else}>
+                        <{input type="text" id="id_name"  required="true" vtype='required' value=$goodsName }>
+                        <input type="hidden" value="<{$ruleInfo.goods_id}>" id="list_datas" name="goods_id">
                         <{/if}>
                         </div>
                     </td>

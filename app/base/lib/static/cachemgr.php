@@ -488,8 +488,20 @@ class cachemgr
         $vary_list = array();
         if(self::$_vary_list_froce_mysql===true || $force===true){
             $rows = kernel::database()->select('SELECT UPPER(`type`) AS `type`, UPPER(`name`) AS `name`, `expire` FROM sdb_base_cache_expires', true);
-            foreach($rows AS $row){
-                $vary_list[$row['type']][$row['name']] = $row['expire'];
+            if(defined('BASE_CACHE_EXPIRES')){
+                foreach($rows AS $row){
+                    base_kvstore::instance('cache/cache_expires')->fetch($row['name'], $result);
+                    if(empty($result)){
+                        base_kvstore::instance('cache/cache_expires')->store($row['name'], $row);
+                        $vary_list[$row['type']][$row['name']] = $row['expire'];
+                    }else{
+                        $vary_list[$result['type']][$result['name']] = $result['expire'];
+                    }
+                }
+             }else{ 
+                foreach($rows AS $row){
+                    $vary_list[$row['type']][$row['name']] = $row['expire'];
+                }
             }
         }else{
             base_kvstore::instance('cache/expires')->fetch('vary_list', $vary_list);

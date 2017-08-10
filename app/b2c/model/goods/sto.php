@@ -45,7 +45,6 @@ class b2c_mdl_goods_sto extends dbeav_model{
     }
 
     function getList($cols='*', $filter=array(), $offset=0, $limit=-1, $orderby=null){
-        logger::info('sto getList filter:'.var_export($filter,1));
         $data = $this->get_sto_goods($filter,$offset,$limit,$orderby);
         return $data;
     }

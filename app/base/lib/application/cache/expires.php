@@ -26,6 +26,10 @@ class base_application_cache_expires extends base_application_prototype_filepath
                     app::get('base')->model('cache_expires')->replace($data,
                         array('type'=>$data['type'],'app'=>$data['app'],'name'=>$data['name'])
                         );
+                    if(defined('BASE_CACHE_EXPIRES')){
+                        $array = array('expire'=>time(),'type'=>'DB','name'=>$data['name'],'app'=>$data['app']);
+                        base_kvstore::instance('cache/cache_expires')->store($data['name'], $array);
+                    }
                 }
                 break;
             }

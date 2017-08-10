@@ -248,6 +248,9 @@ class preparesell_ctl_admin_preparesell extends desktop_controller
             'marketable'=>'true',
             'nostore_sell'=>1
         );
+        $this->pagedata['prepareNums'] = app::get('b2c')->model('goods')->count($this->pagedata['filter']);
+
+        $this->pagedata['goodsName'] = $arr[0]['name'];
         $this->pagedata['return_url'] = app::get('desktop')->router()->gen_url(array('app'=>'preparesell', 'ctl'=>'admin_preparesell', 'act'=>'get_goods_info'));
         $this->pagedata['callback_ajax_url'] = app::get('desktop')->router()->gen_url(array('app'=>'preparesell', 'ctl'=>'admin_preparesell', 'act'=>'get_goods_spec'));
         if($preparesell['begin_time'] <= time() && time() <= $preparesell['end_time_final']  && $preparesell['status'] == 'true' )

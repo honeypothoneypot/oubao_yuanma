@@ -29,22 +29,24 @@ class content_ctl_wap_article extends wap_frontpage
                     //title keywords description
                     $this->get_seo_info($detail['bodys'], $aPath);
                     unset($aPath);
+                    /**
                     if($this->weixin_share_page == null)
                         $this->weixin_share_page = array();
                     if(in_array('article-index', $this->weixin_share_page)){
-                        $this->pagedata['from_weixin'] = $this->from_weixin;
-                        $this->pagedata['weixin']['appid'] = $this->weixin_a_appid;
-                        $this->pagedata['weixin']['imgUrl'] = base_storager::image_path(app::get('weixin')->getConf('weixin_basic_setting.weixin_logo'));
-                        $this->pagedata['weixin']['linelink'] = app::get('wap')->router()->gen_url(array('app'=>'content','ctl'=>'wap_article','act'=>'index','arg0'=>$article_id, 'full'=>1));
-                        $this->pagedata['weixin']['shareTitle'] = $this->pagedata['title'];
-                        $this->pagedata['weixin']['descContent'] = $this->pagedata['description'];
+                    **/
+                    $this->pagedata['from_weixin'] = $this->from_weixin;
+                    $this->pagedata['weixin']['appid'] = $this->weixin_a_appid;
+                    $this->pagedata['weixin']['imgUrl'] = base_storager::image_path(app::get('weixin')->getConf('weixin_basic_setting.weixin_logo'));
+                    $this->pagedata['weixin']['linelink'] = app::get('wap')->router()->gen_url(array('app'=>'content','ctl'=>'wap_article','act'=>'index','arg0'=>$article_id, 'full'=>1));
+                    $this->pagedata['weixin']['shareTitle'] = $this->pagedata['title'];
+                    $this->pagedata['weixin']['descContent'] = $this->pagedata['description'];
 
-                        //微信内置js调用
-                        $wechat = kernel::single('weixin_wechat');
-                        $signPackage = $wechat->getSignPackage();
-                        $this->pagedata['signPackage'] = $signPackage;
-                        //end
-                    }
+                    //微信内置js调用
+                    $wechat = kernel::single('weixin_wechat');
+                    $signPackage = $wechat->getSignPackage();
+                    $this->pagedata['signPackage'] = $signPackage;
+                    //end
+                    //}
                     switch($detail['indexs']['type'])
                     {
                         case 1:
@@ -185,20 +187,18 @@ class content_ctl_wap_article extends wap_frontpage
            $view = 'wap/article/list.html';
         }
         if(is_null($this->weixin_share_page)) $this->weixin_share_page = array();
-        if(in_array('article-list', $this->weixin_share_page)){
-            $this->pagedata['from_weixin'] = $this->from_weixin;
-            $this->pagedata['weixin']['appid'] = $this->weixin_a_appid;
-            $this->pagedata['weixin']['imgUrl'] = base_storager::image_path(app::get('weixin')->getConf('weixin_basic_setting.weixin_logo'));
-            $this->pagedata['weixin']['linelink'] = app::get('wap')->router()->gen_url(array('app'=>'content','ctl'=>'wap_article','act'=>'l','arg0'=>$art_list_id, 'full'=>1));
-            $this->pagedata['weixin']['shareTitle'] = $this->pagedata['title'];
-            $this->pagedata['weixin']['descContent'] = $this->pagedata['description'];
+        $this->pagedata['from_weixin'] = $this->from_weixin;
+        $this->pagedata['weixin']['appid'] = $this->weixin_a_appid;
+        $this->pagedata['weixin']['imgUrl'] = base_storager::image_path(app::get('weixin')->getConf('weixin_basic_setting.weixin_logo'));
+        $this->pagedata['weixin']['linelink'] = app::get('wap')->router()->gen_url(array('app'=>'content','ctl'=>'wap_article','act'=>'l','arg0'=>$art_list_id, 'full'=>1));
+        $this->pagedata['weixin']['shareTitle'] = $this->pagedata['title'];
+        $this->pagedata['weixin']['descContent'] = $this->pagedata['description'];
 
-            //微信内置js调用
-            $wechat = kernel::single('weixin_wechat');
-            $signPackage = $wechat->getSignPackage();
-            $this->pagedata['signPackage'] = $signPackage;
-            //end
-        }
+        //微信内置js调用
+        $wechat = kernel::single('weixin_wechat');
+        $signPackage = $wechat->getSignPackage();
+        $this->pagedata['signPackage'] = $signPackage;
+        //end
         $this->page($view);
     }
 

@@ -523,6 +523,8 @@ class importexport_data_b2c_goods {
 
         if($goods_id){
             $save_data['goods_id'] = $goods_id;
+            //清空货品表$goods_id
+            app::get('b2c')->model('products')->delete(array('goods_id' => $goods_id));
         }
         return $save_data;
     }

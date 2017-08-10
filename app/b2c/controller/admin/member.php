@@ -232,6 +232,10 @@ class b2c_ctl_admin_member extends desktop_controller{
             $this->pagedata['noMobile'] = $account;
         }
 
+        $setSmsSign = app::get('b2c')->getConf('setSmsSign');
+        $setSmsSign = '【'.$setSmsSign['sign'].'】';
+        $setSmsSignLen = mb_strlen(urldecode(trim($setSmsSign)),'utf-8');
+        $this->pagedata['setSmsSignLen'] = $setSmsSignLen;
         $this->pagedata['mobile_number'] = json_encode($mobile_number);
         $this->page('admin/messenger/write_sms.html');
     }

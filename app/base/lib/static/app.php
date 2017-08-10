@@ -153,6 +153,10 @@ class app{
         $now = time();
         $db = kernel::database();
         $db->exec('REPLACE INTO sdb_base_cache_expires (`type`, `name`, `app`, `expire`) VALUES ("CONF", "'.$vary_name.'", "'.$this->app_id.'", ' .$now. ')', true);
+        if(defined('BASE_CACHE_EXPIRES')){
+            $array = array('expire'=>$now,'type'=>'CONF','name'=>$vary_name,'app'=>$this->app_id);
+            base_kvstore::instance('cache/cache_expires')->store($vary_name, $array);
+        }
         if($db->affect_row()){
             cachemgr::set_modified('CONF', $vary_name, $now);
             syscache::instance('setting')->set_last_modify();

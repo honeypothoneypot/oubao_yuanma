@@ -169,20 +169,20 @@ class b2c_ctl_wap_product extends wap_frontpage{
 #            }
 #        }
 
-        if(in_array('product-index', $this->weixin_share_page)){
-            $this->pagedata['from_weixin'] = $this->from_weixin;
-            $this->pagedata['weixin']['appid'] = $this->weixin_a_appid;
-            $this->pagedata['weixin']['imgUrl'] = base_storager::image_path($this->pagedata['page_product_basic']['image_default_id']);
-            $this->pagedata['weixin']['linelink'] = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_product','act'=>'index','arg0'=>$productId, 'full'=>1));
-            $this->pagedata['weixin']['shareTitle'] = $this->title;
-            $this->pagedata['weixin']['descContent'] = $this->pagedata['page_product_basic']['brief'];
+//        if(in_array('product-index', $this->weixin_share_page)){
+        $this->pagedata['from_weixin'] = $this->from_weixin;
+        $this->pagedata['weixin']['appid'] = $this->weixin_a_appid;
+        $this->pagedata['weixin']['imgUrl'] = base_storager::image_path($this->pagedata['page_product_basic']['image_default_id']);
+        $this->pagedata['weixin']['linelink'] = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_product','act'=>'index','arg0'=>$productId, 'full'=>1));
+        $this->pagedata['weixin']['shareTitle'] = $this->title;
+        $this->pagedata['weixin']['descContent'] = $this->pagedata['page_product_basic']['brief'];
 
-            //微信内置js调用
-            $wechat = kernel::single('weixin_wechat');
-            $signPackage = $wechat->getSignPackage();
-            $this->pagedata['signPackage'] = $signPackage;
-            //end
-        }
+        //微信内置js调用
+        $wechat = kernel::single('weixin_wechat');
+        $signPackage = $wechat->getSignPackage();
+        $this->pagedata['signPackage'] = $signPackage;
+        //end
+        //        }
         $this->page('wap/product/index.html');
     }
 

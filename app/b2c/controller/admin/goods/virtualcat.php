@@ -95,6 +95,10 @@ class b2c_ctl_admin_goods_virtualcat extends desktop_controller{
         $cat['virtualcat_template'] = $_POST['virtualcat_template'];
         $cat['filter'] = $_POST['adjunct']['items'][0];
 
+        //filter在post中有2个名字。好坑。。。
+        if( !$cat['filter'] && $_POST['adjunct']['items']['p'] ){
+            $cat['filter'] = $_POST['adjunct']['items']['p'];
+        }
         /*判断价格区间从低到高填写*/
         parse_str($cat['filter'],$tmpfilter);
         if($tmpfilter['pricefrom']>$tmpfilter['priceto']){

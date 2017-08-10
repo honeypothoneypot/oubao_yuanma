@@ -516,6 +516,14 @@ EOF;
             'force-update-app'=>array('title'=>'强制更新应用程序'),
         );
     function command_update(){
+        if(defined('BASE_CACHE_EXPIRES')){
+            //把base_cache_expire 同步到kv中
+            $rows = kernel::database()->select('SELECT UPPER(`type`) AS `type`, UPPER(`name`) AS `name`, `expire` FROM sdb_base_cache_expires', true);
+            foreach($rows AS $row){
+                $result=array('expire'=>time(),'type'=>$row['type'],'name'=>$row['name'],'app'=>$row['app']);
+                base_kvstore::instance('cache/cache_expires')->store($row['name'], $result);
+            }
+         }
         $options = $this->get_options();
         if($options['sync'] || $options['sync-only']){
             kernel::single('base_application_manage')->sync();

@@ -42,9 +42,17 @@ class base_db_connections extends base_db_abstract implements base_interface_db
             if($pos===0){
                 $table = substr($table, strlen($this->prefix));
             }//todo: 真实表名
-            $this->exec('UPDATE sdb_base_cache_expires SET expire = "' . $now . '" WHERE type = "DB" AND name = "' . $table . '"', true);
-            if($this->affect_row()){
+            if(defined('BASE_CACHE_EXPIRES')){
+                preg_match ("/([A-Z]*)_/", $table, $m);
+                $app_id = strtolower($m[1]);
+                $array = array('expire'=>$now,'type'=>'DB','name'=>$table,'app'=>$app_id);
+                base_kvstore::instance('cache/cache_expires')->store($table, $array);
                 cachemgr::set_modified('DB', $table, $now);
+            }else{
+                $this->exec('UPDATE sdb_base_cache_expires SET expire = "' . $now . '" WHERE type = "DB" AND name = "' . $table . '"', true);
+                if($this->affect_row()){
+                    cachemgr::set_modified('DB', $table, $now);
+                }
             }
         }
 

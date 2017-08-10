@@ -26,6 +26,9 @@ class base_kvstore_mysql extends base_kvstore_abstract implements base_interface
         $rows = app::get('base')->model('kvstore')->getList('id', array('prefix'=>$this->prefix, 'key'=>$key));
         $data = array('prefix'=>$this->prefix, 'key'=>$key, 'value'=>$value, 'dateline'=>time(), 'ttl'=>$ttl);
         if($rows[0]['id'] > 0){
+            if($this->prefix =='cache/cache_expires'){
+                return true;//cache/cache_expire类型不更新这个表
+            }
             return app::get('base')->model('kvstore')->update($data, array('id'=>$rows[0]['id']));
         }else{
             return app::get('base')->model('kvstore')->insert($data);

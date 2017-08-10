@@ -56,15 +56,17 @@ class dbeav_mdl_meta_value_longtext extends dbeav_metavalue{
         $pk_id = $pk[0];
         $aSql = "SELECT * FROM ".$this->table." WHERE pk = ".$pk_id ." AND mr_id = ".$mr_id;
         $result = $this->db->select($aSql);
+        $value = (is_array($value)?serialize($value):$value);
+        $value = base_db_tools::quotevalue($this->db,$value,'serialize');
         if($result){
         $sql = "
         UPDATE ".$this->table."
-        SET value='".(is_array($value)?serialize($value):$value)."'
+        SET value=".$value."
         WHERE pk
         IN (".implode(',',$pk).") AND mr_id = ".$mr_id;
         }
         else{
-            $sql = "INSERT INTO ".$this->table."(mr_id,pk,value) VALUES('$mr_id','$pk_id','".(is_array($value)?serialize($value):$value)."')";
+            $sql = "INSERT INTO ".$this->table."(mr_id,pk,value) VALUES('$mr_id','$pk_id',".$value.")";
         }
         $this->db->exec($sql);
     }
