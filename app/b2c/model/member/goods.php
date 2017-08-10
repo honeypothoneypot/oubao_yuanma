@@ -37,17 +37,26 @@ class b2c_mdl_member_goods extends dbeav_model{
 
 //检查邮箱重复登记货品
 
-    function check_gnotify($aData){
+    function check_gnotify($aData,&$msg=''){
         $goods_id = $aData['item'][0]['goods_id'];
         $product_id = $aData['item'][0]['product_id'];
         $email = $aData['email'];
-        $aData = $this->getList('gnotify_id',array('goods_id' => $goods_id,'product_id' => $product_id,'email' => $email));
-        if(count($aData)>0){
-            return true;
+        $cellphone = $aData['cellphone'];
+        if(!empty($email)){
+          $aData = $this->getList('gnotify_id',array('goods_id' => $goods_id,'product_id' => $product_id,'email' => $email));
+          if(count($aData)>0){
+            $msg='邮箱不能重复登记';
+              return true;
+          }
         }
-        else{
-            return false;
+        if(!empty($cellphone)){
+          $aData = $this->getList('gnotify_id',array('goods_id' => $goods_id,'product_id' => $product_id,'cellphone' => $cellphone));
+          if(count($aData)>0){
+              $msg='手机号不能重复登记';
+              return true;
+          }
         }
+        return false;
     }
 
 

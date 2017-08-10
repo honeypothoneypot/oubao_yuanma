@@ -761,7 +761,7 @@ var goodsSpecTree = new Klass({
 });
 
 function getUniqueID(str) {
-    return hex_md5(str).substr(0, 10);
+    return 'a'+hex_md5(str).substr(0, 10);
 }
 
 if(opener && opener.$('new_goods_spec') && opener.$('new_goods_spec').value){

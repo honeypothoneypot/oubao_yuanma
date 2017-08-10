@@ -103,6 +103,10 @@ function calculate(){
    <tr>
     <th><{t}>订单获得积分：<{/t}></th>
     <td><{input id="idtotal_score" class='item itemrow' name=score_g type="unsigned" size=10 value=$order.score_g}></td>
+    <th><{t}>该订单已使用积分<{/t}></th>
+    <td><input id="score_u" name=score_u value="<{$order.score_u}>" disabled="disabled"></td>
+    
+    <td><input id="idscore_u" name='score_u' class='item itemrow' value="<{$order.score_u}>" type='hidden'></td>
 </td>
   </tr>
 </table>

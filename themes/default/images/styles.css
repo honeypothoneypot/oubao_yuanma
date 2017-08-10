@@ -444,3 +444,5 @@ html{min-width: 990px;}
 .minicart-info .btn-tocart { display: inline-block; line-height: 25px; margin-top: 10px; }
 
 /* /导航栏购物车挂件 */
+
+.lnk{ color: rgb(0, 51, 102);font-weight: bolder; text-decoration: underline; }

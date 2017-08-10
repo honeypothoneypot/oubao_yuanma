@@ -432,7 +432,19 @@ class b2c_ctl_site_passport extends b2c_frontpage{
         if($type == 'reset' && !$this->userPassport->check_signup_account( trim($email),$msg )){
             $this->splash('failed',null,$msg,true);
         }
-
+        //前台邮箱120秒验证
+        $model_email_send=$this->app->model('email_send');
+        $result=$model_email_send->getRow('send_time',array('email'=>$email));
+        if(!empty($result)){
+            $time=time()-$result['send_time'];
+            if($time<120){
+                $time=120-$time;
+                $msg = app::get('b2c')->_('不能连续发送邮件,请等待'.$time.'秒');
+                $this->splash('failed',null,$msg,true);
+            }
+        }
+        $result=array('email'=>$email,'send_time'=>time());
+        $model_email_send->save($result);
         $userVcode = kernel::single('b2c_user_vcode');
         if($email){
             $vcode = $userVcode->set_vcode($email,$type,$msg);

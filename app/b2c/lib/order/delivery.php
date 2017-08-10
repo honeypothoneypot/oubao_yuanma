@@ -604,10 +604,17 @@ class b2c_order_delivery extends b2c_order_operation
         else
             $stage = '0';
 
+        $get_point_interval_time=$this->app->getConf("site.get_point_interval_time");
+        if($get_point_interval_time>0){
+            $reason='pay';
+        }else{
+            $reason='delivery';
+        }
+
         // 扣除积分，使用积分
         $obj_reducte_point = kernel::service('b2c_member_point_reducte');
         if ($stage)
-            $is_change_point = $obj_reducte_point->change_point($sdf_order['member_id'], 0 - intval($sdf_order['score_u']), $msg, 'order_pay_use', 1, $stage, $sdf['order_id'], $controller->user->user_id, 'pay');
+            $is_change_point = $obj_reducte_point->change_point($sdf_order['member_id'], 0 - intval($sdf_order['score_u']), $msg, 'order_pay_use', 1, $stage, $sdf['order_id'], $controller->user->user_id, $reason);
 
         if (!$is_change_point)
         {
@@ -624,7 +631,7 @@ class b2c_order_delivery extends b2c_order_operation
         // 获得积分
         $obj_add_point = kernel::service('b2c_member_point_add');
         if ($stage)
-            $obj_add_point->change_point($sdf_order['member_id'], intval($sdf_order['score_g']), $msg, 'order_pay_get', 2, $stage, $sdf['order_id'], $controller->user->user_id, 'pay');
+            $obj_add_point->change_point($sdf_order['member_id'], intval($sdf_order['score_g']), $msg, 'order_pay_get', 2, $stage, $sdf['order_id'], $controller->user->user_id, $reason);
 
         //取得发货的具体信息，add by hujianxin
         $message_part1 = "";

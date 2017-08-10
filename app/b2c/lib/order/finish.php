@@ -58,11 +58,18 @@ class b2c_order_finish extends b2c_api_rpc_request
         {  
             $stage = '0';
         }
+        $get_point_interval_time=$this->app->getConf("site.get_point_interval_time");
+        if($get_point_interval_time>0){
+            $reason='pay';
+        }else{
+            $reason='finish';
+        }
+
         
         // 获得积分
         $obj_add_point = kernel::service('b2c_member_point_add');
         if ($stage)
-            $obj_add_point->change_point($sdf_order['member_id'], intval($sdf_order['score_g']), $msg, 'order_pay_get', 2, $stage, $sdf['order_id'], $controller->user->user_id, 'pay');
+            $obj_add_point->change_point($sdf_order['member_id'], intval($sdf_order['score_g']), $msg, 'order_pay_get', 2, $stage, $sdf['order_id'], $controller->user->user_id, $reason);
             
         // 扣除积分，使用积分
         $policy_stage = $this->app->getConf("site.consume_point.stage");
@@ -77,7 +84,7 @@ class b2c_order_finish extends b2c_api_rpc_request
         
         $obj_reducte_point = kernel::service('b2c_member_point_reducte');
         if ($stage)
-            $obj_reducte_point->change_point($sdf_order['member_id'], 0 - intval($sdf_order['score_u']), $msg, 'order_pay_use', 1, $stage, $sdf['order_id'], $controller->user->user_id, 'pay');
+            $obj_reducte_point->change_point($sdf_order['member_id'], 0 - intval($sdf_order['score_u']), $msg, 'order_pay_use', 1, $stage, $sdf['order_id'], $controller->user->user_id, $reason);
         
         // 更新退款日志结果        
         $objorder_log = $this->app->model('order_log');

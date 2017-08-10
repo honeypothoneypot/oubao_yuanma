@@ -6,7 +6,7 @@
 <tr id='<{$key}>'>
   <th><{$item.label}></th>
   <td>
-    <{if $item.type=="radio"}>
+    <{if $item.type=="desktop_radio"}>
         <{input type=$item.type options=$item.options name="config[{$key}]" value=$item.value onclick="methodchange(this.value);"}>
     <{elseif $item.type=="password"}>
         <{input type=$item.type options=$item.options name="config[{$key}]" value=$item.value onKeyup="setHidden(this.value);"}>

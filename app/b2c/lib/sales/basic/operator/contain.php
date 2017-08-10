@@ -80,7 +80,12 @@ class b2c_sales_basic_operator_contain implements b2c_interface_sales_operator
  
             case '!()':
 	       if(!is_array($value)) $value=explode(',',$value);
-               return in_array($validate,$value);
+              $flag=in_array($validate,$value);
+              if($flag==false){
+                return true;
+              }else{
+                return false;
+              }
        		break; 
                 //if(is_array($value)) return !in_array($validate,$value);
                 //$flag = strpos($validate,$value);

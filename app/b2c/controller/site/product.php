@@ -1188,9 +1188,10 @@ class b2c_ctl_site_product extends b2c_frontpage{
         $ret = $objProducts->getList('product_id',array('product_id' => $_POST['item'][0]['product_id'],'goods_id' => $_POST['item'][0]['goods_id']));
         if(!$ret) $this->splash('failed', $back_url, app::get('b2c')->_('参数错误'),true);
         $member_goods = $this->app->model('member_goods');
-        if($member_goods->check_gnotify($_POST)){
-            $this->splash('failed',$back_url,app::get('b2c')->_('不能重复登记'),true);
-        }else{
+        if($member_goods->check_gnotify($_POST,$msg)){
+            $this->splash('failed',$back_url,app::get('b2c')->_($msg),true);
+        }
+        else{
             $userObject = kernel::single('b2c_user_object');
             $member_id = $userObject->get_member_id();
             if($member_goods->add_gnotify($member_id?$member_id:null,$_POST['item'][0]['goods_id'],$_POST['item'][0]['product_id'],$_POST['email'],$_POST['cellphone'])){

@@ -47,6 +47,7 @@ class b2c_ctl_admin_products extends desktop_controller{
             $this->pagedata['selection_spec'] = $result['selection_spec'];
             $products = $this->getProducts($goods_id);
 
+
             $active = $this->_pre_recycle_spec($goods_id,$products);
             $this->pagedata['activeSpec'] = $active['activeSpec'];//不能删除的规格(有活动订单)
         }
@@ -302,7 +303,8 @@ class b2c_ctl_admin_products extends desktop_controller{
      * */
     private function get_unique_id($spec){
         $str = implode(';',$spec);
-        return substr(md5($str),0,10);
+        //return substr(md5($str),0,10);
+        return 'a'.substr(md5($str),0,10);
     }
 
     /*
@@ -503,7 +505,21 @@ class b2c_ctl_admin_products extends desktop_controller{
         }
 	//@djh 编辑页面返回规格数据和货品数据
         $returnData['product'] = $productsData;
-        $returnData['selectionSpec']=$selectionSpec['spec'];
+        //$returnData['selectionSpec']=$selectionSpec['spec'];
+        //规格重新排序
+        $temp_selectionSpec=array();
+        foreach($selectionSpec['spec'] as $key=>$spec_val){
+            $specValueData = $this->app->model('spec_values')->getList('spec_value_id',array('spec_id'=>$key),0,-1,array('p_order','asc'));
+            foreach($specValueData as $spec_value){
+                foreach($spec_val as $spec_key=>$val){
+                    if($spec_value['spec_value_id']==$val['spec_value_id']){
+                        $temp_selectionSpec[$key][$spec_key]=$val;
+                        break;
+                    }
+                }
+            }
+        }
+        $returnData['selectionSpec']=$selectionSpec['spec']=$temp_selectionSpec;
         //更新商品数据
         $goodsFlag = $this->_update_goods($goods_id,$productsData,$selectionSpec['spec']);
         if(!$goodsFlag){
@@ -634,6 +650,7 @@ class b2c_ctl_admin_products extends desktop_controller{
                 unset($products[$uid]);
                 continue;
             }
+
             $tmpProducts[$uid]['product_id'] = $row['product_id'];
             $tmpProducts[$uid]['bn'] = $row['bn'];
             $tmpProducts[$uid]['weight'] = $row['weight'];

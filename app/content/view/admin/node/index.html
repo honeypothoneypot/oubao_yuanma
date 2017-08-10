@@ -53,7 +53,7 @@
                         <{/if}>
                         <{/if}>
                         
-                        <a href="index.php?app=content&ctl=admin_node&act=edit&node_id=<{$item.node_id}>" target="dialog::{title:'<{t}>编辑<{/t}>',width:.7,height:.8}"><{$item.node_name|t:'content'}></a></div>
+                        <a href="index.php?app=content&ctl=admin_node&act=edit&node_id=<{$item.node_id}>" target="dialog::{title:'<{t}>编辑<{/t}>',width:.7,height:.8}" class="titles"><{$item.node_name|t:'content'}></a></div>
           
                 </td>
                <td width="20%" style="text-align:left; vertical-align:top">&nbsp;&nbsp;&nbsp;&nbsp; <span class="quiet"><{$item.node_pagename}></span></td>
@@ -75,7 +75,7 @@
                               <span class="opt"><a target="_blank" href="index.php?app=content&ctl=admin_article_detail&act=add&node_id=<{$item.node_id}>&type=1"><{img src="bundle/btn_add.gif" border="0" alt=$___content="在此文章类目下添加文章"|t:'content'  app='desktop'}><{t}>添加文章<{/t}></a></span>
                            </div>
                          <div class="span-auto">
-                                <span class="opt lnk" onClick="new Dialog('index.php?app=content&ctl=admin_node&act=edit&node_id=<{$item.node_id}>', {title:'<{t}>编辑<{/t}>',width:.7,height:.8})"><{img src="bundle/editcate.gif" border="0" alt=$___content="编辑"|t:'content'   app='desktop'}><{t}>编辑<{/t}></span>
+                                <span class="opt lnk bian" onClick="new Dialog('index.php?app=content&ctl=admin_node&act=edit&node_id=<{$item.node_id}>', {title:'<{t}>编辑<{/t}>',width:.7,height:.8})"><{img src="bundle/editcate.gif" border="0" alt=$___content="编辑"|t:'content'   app='desktop'}><{t}>编辑<{/t}></span>
                            </div>
                          <div class="span-auto">
                                <span class="opt lnk" onclick="deleteRow('index.php?app=content&ctl=admin_node&act=remove&node_id=<{$item.node_id}>',event)"><{img src="bundle/delecate.gif" border="0" alt=$___content="删除"|t:'content'  app='desktop'}><{t}>删除<{/t}></span>
@@ -106,6 +106,17 @@
 
 </form>
 <script>
+function Index(o){
+    var par=o.getParent();
+    var sib = par.getChildren();
+    for(var i=0;i<sib.length;i++){
+        if(sib[i]==o){sib=null;return i;}
+    }
+}
+  $$(".bian").addEvent("click",function(){
+    var parent = $(this).getParent(".clear_cat");
+    window.parentIds = Index(parent);
+  })
 
 function deleteRow(act,event){
 e=$(new Event(event).stop().target);

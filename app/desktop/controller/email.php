@@ -25,7 +25,7 @@ class desktop_ctl_email extends desktop_controller{
     
      function getOptions(){
         return array(
-            'sendway'=>array('label'=>app::get('desktop')->_('发送方式'),'type'=>'radio','options'=>array('mail'=>app::get('desktop')->_("使用本服务器发送"),'smtp'=>app::get('desktop')->_("使用外部SMTP发送")),'value'=>$this->app->getConf('email.config.sendway')?$this->app->getConf('email.config.sendway'):"mail"),
+            'sendway'=>array('label'=>app::get('desktop')->_('发送方式'),'type'=>'desktop_radio','options'=>array('mail'=>app::get('desktop')->_("使用本服务器发送"),'smtp'=>app::get('desktop')->_("使用外部SMTP发送")),'value'=>$this->app->getConf('email.config.sendway')?$this->app->getConf('email.config.sendway'):"mail"),
             'usermail'=>array('label'=>app::get('desktop')->_('发信人邮箱'),'type'=>'input','value'=>$this->app->getConf('email.config.sendway')?$this->app->getConf('email.config.usermail'):'yourname@domain.com'),
             'smtpserver'=>array('label'=>app::get('desktop')->_('smtp服务器地址'),'type'=>'input','value'=>$this->app->getConf('email.config.smtpserver')?$this->app->getConf('email.config.smtpserver'):'mail.domain.com'),
             'smtpport'=>array('label'=>app::get('desktop')->_('smtp服务器端口'),'type'=>'input','value'=>$this->app->getConf('email.config.smtpport')?$this->app->getConf('email.config.smtpport'):'25'),
@@ -39,7 +39,7 @@ class desktop_ctl_email extends desktop_controller{
        $this->begin();
            foreach($_POST['config'] as $key=>$value){
             $this->app->setConf('email.config.'.$key,$value);
-        } 
+        }
         $this->end(true,app::get('desktop')->_('配置保存成功'));
     }
       function testEmail(){

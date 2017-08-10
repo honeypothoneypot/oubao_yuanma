@@ -1586,10 +1586,10 @@ class b2c_ctl_admin_order extends desktop_controller{
             $obj_delivery_time = app::get('b2c')->model('order_delivery_time');
             $arr_delivery_time = array('order_id'=>$sdf['order_id'],'delivery_time'=>time()+10*24*3600);
             $obj_delivery_time->save($arr_delivery_time);
-            $obj_coupon = kernel::single("b2c_coupon_order");
-            if( $obj_coupon ){
-                $obj_coupon->use_c($sdf['order_id']);
-            }
+            //$obj_coupon = kernel::single("b2c_coupon_order");
+            //if( $obj_coupon ){
+            //    $obj_coupon->use_c($sdf['order_id']);
+            //}
             if($arr_order['source'] == 'penker'){
                 $logi_name = $oCorp->getRow('name',array('corp_id'=>$sdf['logi_id']));
                 $express_info = array(
@@ -1827,10 +1827,10 @@ class b2c_ctl_admin_order extends desktop_controller{
             {
                 $order_object->modifyActive($sdf['order_id']);
             }
-            $obj_coupon = kernel::single("b2c_coupon_order");
-            if( $obj_coupon ){
-                $obj_coupon->use_c($sdf['order_id']);
-            }
+            //$obj_coupon = kernel::single("b2c_coupon_order");
+            //if( $obj_coupon ){
+            //    $obj_coupon->use_c($sdf['order_id']);
+            //}
             $this->end(true, app::get('b2c')->_('完成订单成功！'));
         }
         else
@@ -2592,7 +2592,6 @@ class b2c_ctl_admin_order extends desktop_controller{
     {
         $_POST['user_id'] = $this->user->user_id;
         $_POST['account']['login_name'] = $this->user->user_data['account']['login_name'];
-
         /** 检查订单是否可以被操作 **/
         $obj_order_check = kernel::single('b2c_order_checkorder');
         if (!$obj_order_check->checkfor_order_update($_POST, $msg))
@@ -2600,6 +2599,7 @@ class b2c_ctl_admin_order extends desktop_controller{
             header('Content-Type:text/jcmd; charset=utf-8');
             echo '{error:"'.$msg.'",_:null}';exit;
         }
+
 
         $arr_data = $this->_process_fields($_POST);
         $obj_order = $this->app->model('orders');
@@ -2710,6 +2710,13 @@ class b2c_ctl_admin_order extends desktop_controller{
             'email'=>$sdf['ship_email'],
             'area'=>$sdf['ship_area']
         );
+        if(!empty($sdf['score_u'])){
+            $site_point_deductible_value = app::get('b2c')->getConf('site.point_deductible_value');
+            $objMath = kernel::single('ectools_math');
+            $_POST['score_u_money'] = $objMath->number_multiple(array($sdf['score_u'], $site_point_deductible_value));
+        }else{
+            $_POST['score_u_money'] ='0.000';
+        }
 
         $sdf['tax_title'] = $sdf['tax_company'];
         $sdf['weight'] = $sdf['weight'];

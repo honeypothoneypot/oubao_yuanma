@@ -633,7 +633,12 @@ class b2c_ctl_admin_goods extends desktop_controller{
     }
 
     function nextQrcode(){
-        $filter = $_POST;
+        $filter=array();
+        foreach($_POST as $key=>$val){
+            if(is_numeric($key)){
+                $filter['goods_id'][]=$val;
+            }
+        }
         $goods = $this->app->model('goods');
         $goodsList = $goods->getList('goods_id',$filter,intval($_POST['present_id']),1);
 

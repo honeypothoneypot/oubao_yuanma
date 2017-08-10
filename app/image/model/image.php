@@ -265,4 +265,18 @@ class image_mdl_image extends dbeav_model{
         }
 		return $this->delete(array('image_id'=>$image_id,'storage'=>'filesystem'));
 	}
+
+    public function pre_delete($data){
+        if ($data){
+            if (file_exists(ROOT_DIR.'/'.$data['url']))
+                @unlink(ROOT_DIR.'/'.$data['url']);
+            if (file_exists(ROOT_DIR.'/'.$tmp['l_url']))
+                @unlink(ROOT_DIR.'/'.$tmp['l_url']);
+            if (file_exists(ROOT_DIR.'/'.$tmp['m_url']))
+                @unlink(ROOT_DIR.'/'.$tmp['m_url']);
+            if (file_exists(ROOT_DIR.'/'.$tmp['s_url']))
+                @unlink(ROOT_DIR.'/'.$tmp['s_url']);
+        }
+        return true;
+    }
 }

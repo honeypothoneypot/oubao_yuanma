@@ -298,4 +298,29 @@ class desktop_view_input{
         return $render->fetch('editor/syntax_highlighter.html');
     }
 
+    function input_desktop_radio($params){
+        $params['type'] = 'radio';
+        $options = $params['options'];
+        $value = $params['value'];
+        unset($params['options'],$params['value']);
+        $input_tpl = utils::buildTag($params,'input ',true);
+        $id_base = $params['id'];
+        $htmls = array();
+        $i = 1;
+        foreach($options as $k=>$item){
+            $id = $id_base.'-'.($i++);
+            if($value==$k){
+                $html = str_replace('/>',' value="'.htmlspecialchars($k).'" checked="checked" />',$input_tpl);
+            }else{
+                $html = str_replace('/>',' value="'.htmlspecialchars($k).'" />',$input_tpl);
+            }
+            $html = str_replace('id="'.$id_base.'"', 'id="'.$id.'"', $html);
+            $htmls[]= $html.'<label for="'.$id.'">'.htmlspecialchars($item).'</label>';
+        }
+        $params['separator'] = $params['separator']?$params['separator']:'<br>';
+        $return = implode($params['separator'],$htmls);
+
+        return $return;
+    }
+
 }

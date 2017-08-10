@@ -430,8 +430,8 @@ class b2c_order_update extends b2c_api_rpc_request
             $aDataTmp['shipping']['cost_protect'] = $aData['cost_protect'];
             $rate = $obj_orders->dump($orderid, 'cur_rate,discount,pmt_order,pmt_goods');
             $aData['discount'] = $this->objMath->number_minus(array($aData['discount'], $rate['discount']));
-            $aDataTmp['total_amount'] = $this->objMath->number_plus(array($itemsFund, $aData['cost_freight'], $aData['cost_protect'], $aData['cost_payment'], $aData['cost_tax'], $rate['discount'], $aData['discount'], -$rate['pmt_order']));
-			if ($aDataTmp['total_amount'] < 0)
+            $aDataTmp['total_amount'] = $this->objMath->number_plus(array($itemsFund, $aData['cost_freight'], $aData['cost_protect'], $aData['cost_payment'], $aData['cost_tax'], $rate['discount'], $aData['discount'], -$rate['pmt_order'],-$aData['score_u_money']));
+            if ($aDataTmp['total_amount'] < 0)
 				$aDataTmp['total_amount'] = 0;
             $aDataTmp['weight'] = $item_weight ? $item_weight : 0;
             $aDataTmp['discount'] = $this->objMath->number_plus(array($rate['discount'], $aData['discount']));
