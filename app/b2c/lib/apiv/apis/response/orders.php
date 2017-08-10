@@ -462,8 +462,13 @@ class b2c_apiv_apis_response_orders
                 );
                 $log_id = $objorder_log->save($sdf_order_log);
 
+                //订单只有三种状态（active、dead、finish），订单状态变更都需要更新优惠券的使用状态
+                $obj_coupon = kernel::single("b2c_coupon_order");
+                if( $obj_coupon ){
+                    $obj_coupon->use_c($sdf['order_bn']);
+                }
                 //ajx  添加当同时联通了crm和ocs或erp时，ocs或erp取消订单时触发取消接口同步到crm
-                if($order_object = kernel::service('b2c_order_rpc_async')){                                                                                     
+                if($order_object = kernel::service('b2c_order_rpc_async')){
                     $order_object->modifyActive($sdf['order_bn']);
                 }
                 //ajx end
@@ -753,6 +758,13 @@ class b2c_apiv_apis_response_orders
 
                 if ($objOrder->update($sdf_order, array('order_id'=>$sdf['order_bn'])))
                 {
+                    //订单支付或发货后，更新优惠卷状态
+                    if( $sdf_order['ship_status'] != '0' || $sdf_order['pay_status'] != '0' ){
+                        $obj_coupon = kernel::single("b2c_coupon_order");
+                        if( $obj_coupon ){
+                            $obj_coupon->use_c($sdf['order_bn']);
+                        }
+                    }
                     $is_save = true;
                     $arr_order_object = json_decode($sdf['orders'], 1);
 
@@ -1086,6 +1098,13 @@ class b2c_apiv_apis_response_orders
 
                         if ($is_save)
                         {
+                            //订单发货后，更新优惠卷状态
+                            if( $order_ship_status != '0' ){
+                                $obj_coupon = kernel::single("b2c_coupon_order");
+                                if( $obj_coupon ){
+                                    $obj_coupon->use_c($sdf['order_bn']);
+                                }
+                            }
                             $db->commit($transaction_status);
                         }
                         else

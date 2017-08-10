@@ -1621,7 +1621,7 @@ class b2c_cart_object_goods implements b2c_interface_cart_object{
 
 
 
-    public function get_update_num( $data,$ident ) {
+    public function get_update_num( $data,$ident,$adjunct) {
         $o_currency = kernel::single('ectools_mdl_currency');
 
 		$system_money_decimals = app::get('b2c')->getConf('system.money.decimals');
@@ -1643,11 +1643,27 @@ class b2c_cart_object_goods implements b2c_interface_cart_object{
                     }
                 }
             } else {
-                $goods_data = array(
-                    'buy_price'=>$o_currency->changer_odr($row['obj_items']['products'][0]['price']['buy_price']*$row['quantity'],$_COOKIE["S"]["CUR"],false,false,$system_money_decimals,$system_money_operation_carryset),
-                    'consume_score'=>(float)($row['obj_items']['products'][0]['gain_score']*$row['quantity']),
-                    'discount' => $o_currency->changer_odr($row['discount_amount_prefilter'] + ($row['obj_items']['products'][0]['price']['price'] - $row['obj_items']['products'][0]['price']['member_lv_price'])*$row['quantity']),
-                );
+                if($adjunct['quantity']){
+                    $goods_data = array(
+                        'buy_price'=>$o_currency->changer_odr($row['obj_items']['products'][0]['price']['buy_price']*$row['quantity'],$_COOKIE["S"]["CUR"],false,false,$system_money_decimals,$system_money_operation_carryset),
+                        'consume_score'=>(float)($row['obj_items']['products'][0]['gain_score']*$row['quantity']),
+                        'discount' => $o_currency->changer_odr($row['discount_amount_prefilter'] + ($row['obj_items']['products'][0]['price']['price'] - $row['obj_items']['products'][0]['price']['member_lv_price'])*$row['quantity']),
+                    );
+                }else{
+                    foreach ($adjunct['adjunct'][0] as $key => $value) {
+                        $good_id = $key;
+                        $good_quantity =$value['quantity'];
+                    }
+                    foreach($row['adjunct'] as $key => $value){
+                        if($good_id == $value['product_id']){
+                            $goods_data = array(
+                                'buy_price'=>$o_currency->changer_odr($value['price']['price']*$good_quantity),
+                                'consume_score'=>(float)($value['gain_score']*$good_quantity),
+                                'discount' => $o_currency->changer_odr(($value['json_price']['price'] - $value['price']['price'])*$good_quantity),
+                            );
+                        }
+                    }
+                }
                 return $goods_data;
             }
         }

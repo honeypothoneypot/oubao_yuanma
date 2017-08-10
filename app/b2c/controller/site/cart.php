@@ -1302,8 +1302,7 @@ class b2c_ctl_site_cart extends b2c_frontpage{
                 //应该判断是否实现了接口
                 if( !method_exists( $object,'get_update_num' ) ) continue;
                 if( !method_exists( $object,'get_type' ) ) continue;
-
-                $this->pagedata['edit_ajax_data'] = $object->get_update_num( $aCart['object'][$object->get_type()],$this->update_obj_ident );
+                $this->pagedata['edit_ajax_data'] = $object->get_update_num( $aCart['object'][$object->get_type()],$this->update_obj_ident,$aData['modify_quantity'][$this->update_obj_ident['ident']]);
                 if( $this->pagedata['edit_ajax_data'] ) {
                     //$this->pagedata['edit_ajax_data'] = json_encode( $this->pagedata['edit_ajax_data'] );
                     if( $object->get_type()=='goods' ) {

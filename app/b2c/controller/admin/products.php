@@ -430,7 +430,6 @@ class b2c_ctl_admin_products extends desktop_controller{
 
         //处理规格数据
         $selectionSpec = $this->_pre_process_spec($_POST['spec']);
-
         //处理货品数据
         $productsData = $this->_pre_process_products($_POST['products'],$selectionSpec); //selectionSpec传引用过滤未生成货品的规格
 
@@ -452,6 +451,8 @@ class b2c_ctl_admin_products extends desktop_controller{
             }
 
             $returnData['product'] = $productsData;
+            $returnData['selectionSpec']=$selectionSpec['spec'];
+
             echo json_encode(array('result'=>'success', 'data'=>$returnData, 'msg'=>app::get('b2c')->_( '操作成功' )));
             exit;
         }
@@ -589,7 +590,6 @@ class b2c_ctl_admin_products extends desktop_controller{
             //更新商品
             $flag = $this->app->model('goods')->update($saveData,array('goods_id'=>$goods_id));
         }
-
         kernel::single('weixin_qrcode')->update_goods_qrcode($goods_id);
 
         #sphinx delta
@@ -643,9 +643,12 @@ class b2c_ctl_admin_products extends desktop_controller{
             //过滤POST提交的spec，选中规格但未生成货品,则过滤掉 |
             foreach($row['spec_desc']['spec_private_value_id'] as $specId=>$spec_private_value_id)
             {
+
                 if( $spec['spec'][$specId][$spec_private_value_id] ){
                     $tmpSpec['spec'][$specId][$spec_private_value_id] = $spec['spec'][$specId][$spec_private_value_id];
                     $tmpSpec['spec'][$specId][$spec_private_value_id]['spec_value'] = $row['spec_desc']['spec_value'][$specId];
+                    $tmpSpec['spec'][$specId][$spec_private_value_id]['spec_image'] = $spec['spec'][$specId][$spec_private_value_id]['spec_image'];
+                    $tmpSpec['spec'][$specId][$spec_private_value_id]['spec_goods_images'] = $spec['spec'][$specId][$spec_private_value_id]['spec_goods_images'];
                 }else{
                     //多个货品，但是提交过来的规格数据缺失
                     $spec_value_id = $row['spec_desc']['spec_value_id'][$specId];

@@ -490,7 +490,7 @@ class b2c_ctl_admin_goods extends desktop_controller{
 
 
         $haserror = false;
-
+        $msg = false;
         switch( $_POST['updateAct'] ){
             case 'uniformPrice':
             if( is_numeric($_POST['updateName'][$_POST['updateType']]) ){ //修改会员价
@@ -509,12 +509,16 @@ class b2c_ctl_admin_goods extends desktop_controller{
                 break;
 
             case 'uniformStore':
-                $oPro->batchUpdateByOperator( $filter['goods_id'], 'sdb_b2c_products', 'store' ,$_POST['set'][$_POST['updateType']], $_POST['operator'][$_POST['updateType']], $_POST['fromName'][$_POST['updateType']] );
+                if(!$oPro->batchUpdateByOperator( $filter['goods_id'], 'sdb_b2c_products', 'store' ,$_POST['set'][$_POST['updateType']], $_POST['operator'][$_POST['updateType']], $_POST['fromName'][$_POST['updateType']] )){
+                    $msg = '商品数量不能少于冻结库存数量';
+                }
                 $oPro->synchronizationStore($filter['goods_id']);
                 break;
 
             case 'differenceStore':
-                $oPro->batchUpdateStore( $_POST['store'] );
+                if(!$oPro->batchUpdateStore( $_POST['store'] )){
+                    $msg = '商品数量不能少于冻结库存数量';
+                }
                 $oPro->synchronizationStore(array_keys($_POST['store']));
                 break;
 
@@ -562,6 +566,9 @@ class b2c_ctl_admin_goods extends desktop_controller{
         }
         ini_set('track_errors','1');
         restore_error_handler();
+        if($msg){
+            $this->end(false, $msg);
+        }
         if(!$haserror){
             $this->end(true, app::get('b2c')->_('保存成功'));
         }else{

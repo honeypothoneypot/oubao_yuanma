@@ -119,7 +119,7 @@ class image_ctl_admin_manage extends desktop_controller
 		$this->_set_tag($image_id);
 		if($callback = $_REQUEST['callbackfunc']){
 
-			$_return = "<script>try{parent.$callback('$image_id','$image_src')}catch(e){}</script>";
+			$_return = "<script>if(!parent.window.modedialogInstance){parent.window.opener.image={id:'$image_id',src:'$image_src'};parent.window.close();}else{try{parent.$callback('$image_id','$image_src')}catch(e){}}</script>";
 
 		}
 

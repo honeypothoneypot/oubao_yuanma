@@ -127,6 +127,15 @@
                             target.value=image_src;
                     }});
                 });
+                var timeid;
+                timeid = setInterval(function(){
+                  console.log("daa");
+                  var image = window.image;
+                  if(image !== undefined){
+                    target.value=image.src;
+                    clearInterval(timeid);
+                  }
+                }, 1000);
             }
 
         })();

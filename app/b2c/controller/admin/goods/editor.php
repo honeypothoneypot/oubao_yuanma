@@ -317,6 +317,7 @@ class b2c_ctl_admin_goods_editor extends desktop_controller{
         if(isset($_POST['spec_load'])){
             $this->end(false,app::get('b2c')->_( '规格未加载完毕' ));
         }
+
         //当设置商品为无库存也可销售时，该商品是否有冻结库存。
         //若有冻结库存，商品不可以被设置为无库存也可销售。
         if( $_POST['goods']['nostore_sell'] == 1 )
@@ -494,6 +495,17 @@ class b2c_ctl_admin_goods_editor extends desktop_controller{
         }
 
         $_POST['goods'] = $goods;
+
+        if(isset($_POST['new_goods_spec']) && $_POST['new_goods_spec']) {
+             $temp_spec = json_decode($_POST['new_goods_spec'],1);
+            if(isset($temp_spec['selectionSpec']) && $temp_spec['selectionSpec']){
+                $saveData = array(
+                    'spec_desc' => $temp_spec['selectionSpec'],
+                );
+                $this->app->model('goods')->update($saveData,array('goods_id'=>$goods['goods_id']));
+            }
+        }
+
         $goodsServiceList = kernel::servicelist("goods.action.save");
         foreach( $goodsServiceList as $aGoodsService ){
             if(!$aGoodsService->save( $_POST, $error_msg )){

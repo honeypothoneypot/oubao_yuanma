@@ -144,7 +144,7 @@
         <{/if}>
       </div>
       <div class="promotion-tags">
-      <{if $goods.promotion_tags && $env.conf.b2c.gallery.display.promotion == 'true'}>
+      <{if !$goods.products.promotion_type_name && $goods.promotion_tags && $env.conf.b2c.gallery.display.promotion == 'true'}>
         <{foreach from=$goods.promotion_tags item=pTag}>
         <span class="tag"><{$pTag.tag_name}></span>
         <{/foreach}>

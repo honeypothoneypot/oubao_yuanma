@@ -249,11 +249,31 @@ class b2c_mdl_products extends dbeav_model{
             $sql = 'UPDATE '.$tableName.' SET '.$updateName.' = 0 WHERE '.( strstr($tableName, ',')?' a.goods_id = b.goods_id AND a.':'' ).' goods_id IN ('.implode(',',$goods_id).') AND '.$updateName.' IS NOT NULL AND '.( $fromName?$fromName:$updateName ).'<='.floatval($updateValue);
             $this->db->exec($sql);
 
+            if($tableName == 'sdb_b2c_products' && $updateName== 'store'){
+                foreach ($goods_id as $key => $value) {
+                    $products = app::get('b2c')->model('products')->getList('store,freez',array('goods_id'=>$value));
+                    foreach($products as $product){
+                        if($product['freez'] > $product['store'] - $updateValue){
+                            return false;
+                        }
+                    }
+                }
+            }
+
             $sql = 'UPDATE '.$tableName.' SET '.$updateName.' = '.( $fromName?$fromName:$updateName ).' '.$operator.' '.floatval($updateValue).' WHERE '.( strstr($tableName, ',')?' a.goods_id = b.goods_id AND a.':'' ).' goods_id IN ('.implode(',',$goods_id).') AND '.$updateName.' IS NOT NULL AND '.( $fromName?$fromName:$updateName ).'>'.floatval($updateValue);
             $this->db->exec($sql);
 
-
         }else{
+            if($tableName == 'sdb_b2c_products' && $updateName== 'store'){
+                foreach ($goods_id as $key => $value) {
+                    $products = app::get('b2c')->model('products')->getList('freez',array('goods_id'=>$value));
+                    foreach($products as $product){
+                        if($product['freez'] > $updateValue){
+                            return false;
+                        }
+                    }
+                }
+            }
             if(empty($updateValue) && $updateValue !== '0'){
                 $sql = 'UPDATE '.$tableName.' SET '.$updateName.' = NULL  WHERE '.( strstr($tableName, ',')?' a.goods_id = b.goods_id AND a.':'' ).' goods_id IN ('.implode(',',$goods_id).') ';
             }else{
@@ -276,6 +296,10 @@ class b2c_mdl_products extends dbeav_model{
         foreach( $store as $goods ){
             foreach( $goods as $proId => $pstore ){
             	$pstore = trim($pstore);
+                $product = app::get('b2c')->model('products')->getList('freez',array('product_id'=>$proId));
+                if($product[0]['freez'] > $pstore){
+                    return false;
+                }
                 if($pstore === '0'){
                     $this->db->exec('UPDATE sdb_b2c_products SET store = 0 WHERE product_id = '.intval($proId));
                 }elseif(empty($pstore)){
