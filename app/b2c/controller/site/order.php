@@ -28,6 +28,8 @@ class b2c_ctl_site_order extends b2c_frontpage{
 
     public function create()
     {
+        //删除异常优惠券
+        $this->app->model('coupons')->deleteCart($arrMember['member_id']);
         /**
          * 取到扩展参数,用来判断是否是团购立即购买，团购则不判断登录（无注册购买情况下）
          */

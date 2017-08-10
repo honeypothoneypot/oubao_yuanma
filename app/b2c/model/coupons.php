@@ -104,6 +104,11 @@ var $idColumn = 'cpns_id'; //表示id的列
                     if( isset($arr_mem_coupon) && $arr_mem_coupon['memc_used_times'] ) {
                         return false;
                     }
+                    $cur_member_id = kernel::single('b2c_user_object')->get_member_id();
+                    if( isset($arr_mem_coupon['member_id']) && $cur_member_id != $arr_mem_coupon['member_id'] ){
+                        $msg = app::get('b2c')->_('此优惠券已被其他会员获得');
+                        return false;
+                    }
                     return true;
                 } else {
                     //trigger_error(__('B优惠券验证失败'), E_USER_WARNING);
@@ -131,6 +136,42 @@ var $idColumn = 'cpns_id'; //表示id的列
             return true;
         }
     }
+    /**
+     * 验证购物车内的优惠券
+     * @params $couponCode
+     * @return bool
+     */
+    function checkCart($couponCode){
+        //验证购物车，避免优惠券重复使用
+        $obj_ident = 'coupon_'.$couponCode;
+        $cart_objects = $this->app->model('cart_objects');
+        $sql = sprintf('select obj_ident from '.$cart_objects->table_name(true).' where obj_ident ="%s"',$obj_ident);
+        $result = $cart_objects->db->select($sql);
+        if( $result ){
+            $cart_coupon = $result[0];
+            if( isset($cart_coupon['obj_ident']) && $cart_coupon['obj_ident'] ){
+                return false;
+            }
+        }
+        return true;
+    }
+    /**
+     * 删除购物车异常优惠券
+     * @parmas $member_id
+     */
+    function deleteCart($member_id){
+        $cart_objects = $this->app->model('cart_objects');
+        $sql_query = sprintf('select obj_ident,member_ident from '.$cart_objects->table_name(true).' where member_id = %d and obj_type="coupon"',$member_id);
+        $cart_coupons = $cart_objects->db->select($sql_query);
+        if( $cart_coupons ){
+            //删除obj_ident相同，member_ident和当前回去不同的优惠券
+            foreach( $cart_coupons as $value ){
+                $sql_del = sprintf('delete from '.$cart_objects->table_name(true).' where obj_ident ="%s" and member_ident <> "%s"',$value['obj_ident'],$value['member_ident']);
+                $cart_objects->db->exec($sql_del);
+            }
+        }
+    }
+
     /**
      * 验证B类优惠券加密位是否正确
      * @param $aCoupon

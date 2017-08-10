@@ -257,10 +257,11 @@ class b2c_ctl_site_cart extends b2c_frontpage{
                             );
                             echo json_encode($arr_json_data);exit;
                         }else{
+                            $error_msg = $msg;
                             $ident = 'coupon_'.$aData['coupon'];
                             $this->app->model('cart_objects')->remove_object('coupon', $ident, $msg);
                             $url = array('app'=>'b2c', 'ctl'=>'site_cart','act'=>'checkout');
-                            $this->splash('error',$url,'优惠券使用失败！',true);
+                            $this->splash('error',$url,'优惠券使用失败！'.$error_msg,true);
                         }
 
                     }

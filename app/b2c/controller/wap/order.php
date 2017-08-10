@@ -27,6 +27,7 @@ class b2c_ctl_wap_order extends wap_frontpage{
 
     public function create()
     {
+        $this->app->model('coupons')->deleteCart($arrMember['member_id']);
         /**
          * 取到扩展参数,用来判断是否是团购立即购买，团购则不判断登录（无注册购买情况下）
          */

@@ -119,7 +119,8 @@ class b2c_cart_object_coupon implements b2c_interface_cart_object{
 	public function add_object($aData, &$msg='', $append=true)
 	{
         $objIdent = $this->_generateIdent($aData);
-        $aCouponRule = $this->app->model('coupons')->getCouponByCouponCode($aData['coupon']);
+        $obj_coupons = $this->app->model('coupons');
+        $aCouponRule = $obj_coupons->getCouponByCouponCode($aData['coupon']);
         $arr = $this->app->model('sales_rule_order')->getList( '*',array('rule_id'=>$aCouponRule[0]['rule_id']) );
         $usedCoupon = $this->getAll();
 
@@ -157,6 +158,13 @@ class b2c_cart_object_coupon implements b2c_interface_cart_object{
                 return false;
             }
         }
+
+        $status = $obj_coupons->checkCart($aData['coupon']);
+        if( !$status ){
+			$msg = app::get('b2c')->_('该优惠券已经被使用！');
+			return false;
+        }
+
         $aSave = array(
 		   'obj_ident'    => $objIdent,
 		   'member_ident' => $this->member_ident,
