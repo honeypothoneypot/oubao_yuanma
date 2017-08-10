@@ -27,6 +27,9 @@ class ectools_payment_select
         $payment_cfg = app::get('ectools')->model('payment_cfgs');
         $currency = app::get('ectools')->model('currency');
         $payments = array();
+        if( $is_backend ){
+            $platform[] = 'iswap';
+        }
         $arrPayments = $payment_cfg->getList('*', array('status' => 'true', 'platform'=>$platform, 'is_frontend' => true));
         $arrDefCurrency = $currency->getDefault();
         if (!$sdf['cur_code'])
@@ -64,7 +67,8 @@ class ectools_payment_select
                     unset($arrPayments[$key]);
                     continue;
                 }
-                if ( strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') == false && ($payment['app_id'] == 'wxpay' || $payment['app_id'] == 'wxpayjsapi' )) {
+
+                if ( !$is_backend && strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') == false && ($payment['app_id'] == 'wxpay' || $payment['app_id'] == 'wxpayjsapi' )) {
                     unset($arrPayments[$key]);
                     continue;
                 }

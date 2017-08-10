@@ -24,7 +24,10 @@ class b2c_view_input{
     function input_goodsfilter($params){
 
         $render = new base_render(app::get('b2c'));
-
+        //编辑商品新添默认的key值避免二次编辑才生效
+        if(!empty($params['value']['input_key'])){
+            $render->pagedata['key'] = $params['value']['input_key'];
+        }
         $obj_type = app::get('b2c')->model('goods_type');
 
         $input_name = $params['name'];
@@ -41,6 +44,7 @@ class b2c_view_input{
                 'domid' => substr(md5(rand(0,time())),0,6),
                 'name' =>$input_name
         );
+
         $type_id = '_ANY_';
         $params['value'] = $value;
         if($params['value']['type_id']) $type_id = $params['value']['type_id'];

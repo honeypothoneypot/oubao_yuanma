@@ -29,7 +29,7 @@
 
 <script>
 (function(){
-    // var lazy=new LazyLoad();
+     var lazy=new LazyLoad();
     var im = $('im_<{$widgets_id}>');
     var imMain = $('im_main_<{$widgets_id}>');
     var timer;
@@ -37,7 +37,7 @@
         'mouseenter':function(){
             clearTimeout(timer);
             imMain.setStyle('display','block');
-            // lazy.loadCustomLazyData(imMain,'textarea');
+             lazy.loadCustomLazyData(imMain,'textarea');
         },
         'mouseleave':function(){
             timer = function(){imMain.setStyle('display','none');}.delay(1000);

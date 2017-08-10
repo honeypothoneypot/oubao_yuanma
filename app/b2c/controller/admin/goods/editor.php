@@ -829,7 +829,11 @@ class b2c_ctl_admin_goods_editor extends desktop_controller{
 
     function doAddGrp($goodsid){
         $this->pagedata['adjunct'] =array('name'=>$_POST['name'],'type'=>$_POST['type']);
-        $this->pagedata['key'] = time();
+        $key = time();
+        $this->pagedata['key'] = $key;
+        if($_POST['type']=='filter'){
+            $this->pagedata['adjunct']['items'] =array('name'=>$_POST['name'],'type'=>$_POST['type'],'input_key'=>$key);
+        }
         //过滤下架商品,过滤商品本身（配件）@lujy
         $this->pagedata['adjgoods_filter'] = array('goods_id|noequal'=>$goodsid,'marketable'=>'true');
         $this->display('admin/goods/detail/adj/row.html');

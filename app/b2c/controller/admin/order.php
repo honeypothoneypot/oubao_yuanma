@@ -958,7 +958,7 @@ class b2c_ctl_admin_order extends desktop_controller{
         }
 
         $opayment = app::get('ectools')->model('payment_cfgs');
-        $this->pagedata['payment'] = $opayment->getList('*', array('status' => 'true', 'platform'=>array('iscommon','ispc'), 'is_frontend' => true));
+        $this->pagedata['payment'] = $opayment->getList('*', array('status' => 'true', 'platform'=>array('iscommon','ispc','iswap'), 'is_frontend' => true));
         if (!$aORet['member_id'])
         {
             if ($this->pagedata['payment'])
@@ -2414,11 +2414,7 @@ class b2c_ctl_admin_order extends desktop_controller{
         $objPayment = app::get('ectools')->model('payment_cfgs');
 
         // 后台编辑订单判断订单来源显示对应来源可选支付方式
-        if($aOrder['source']=='wap'){
-            $filter = array('status' => 'true', 'platform'=>array('iscommon','iswap'), 'is_frontend' => true);
-        }else{
-            $filter = array('status' => 'true', 'platform'=>array('iscommon','ispc'), 'is_frontend' => true);
-        }
+        $filter = array('status' => 'true', 'platform'=>array('iscommon','ispc','iswap'), 'is_frontend' => true);
         $aRet = $objPayment->getList('*', $filter);
         if (!$aORet['member_id'])
         {
