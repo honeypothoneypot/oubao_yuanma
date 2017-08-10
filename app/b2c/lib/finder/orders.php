@@ -948,7 +948,11 @@ class b2c_finder_orders{
             $row['status'] = $arr_order['status'];
         }
         $render->pagedata['arr_link'] = $arr_link;
-        $render->pagedata['is_active'] = ($row['status'] == 'active') ? 'true' : 'false';
+        if($row['status'] == 'active' || $row['status'] == 'complete'){
+            $render->pagedata['is_active'] = 'true';
+        }else{
+            $render->pagedata['is_active'] = 'false';
+        }
         $render->pagedata['finder_id'] = $_GET['_finder']['finder_id'];
         $render->pagedata['handle_title'] = app::get('b2c')->_('处理订单');
         return $render->fetch('admin/actions.html');

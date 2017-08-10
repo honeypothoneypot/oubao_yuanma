@@ -99,6 +99,22 @@
                             <{/if}>
                             <{/if}>
                         </div>
+                        <{if $order.status != 'dead' && $order.ship_status =="1" && $order.received_status =='0'}>
+                        <div class="t-r">
+                            <a href="javascript:void(0);" onclick="return receive('<{$order.url}>')">
+                               确认收货
+                                <i class="arr right"></i>
+                            </a>
+                        </div>
+                        <{/if}>
+                        <{if $order.status != 'dead' && $order.ship_status =="2" && $order.received_status =='0'}>
+                        <div class="t-r">
+                            <a style="color:#999;cursor:default;" href="javascript:void(0);">
+                               确认收货
+                                <i class="arr right"></i>
+                            </a>
+                        </div>
+                        <{/if}>
                         <div class="t-r">
                             <a href="<{link app=b2c ctl="wap_member" act="orderdetail" arg0=$order.order_id}>">
                                 查看订单
@@ -182,3 +198,29 @@
     </div>
 </div>
 <{wap_pagers data=$pager}>
+<script>
+function receive(url){
+    var xmlHttp;
+    try{
+        xmlHttp=new XMLHttpRequest();        
+    }catch(e){
+        try{
+            xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+        }catch(e){
+            try{
+                xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }catch(e){
+                return false;
+            }
+        }
+    }
+    xmlHttp.open('post',url);
+    xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+            alert('已完成收货');
+            location.reload();
+        }
+    }
+        xmlHttp.send(null);
+}
+</script>

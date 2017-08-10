@@ -31,7 +31,7 @@ class b2c_ctl_admin_goods_editor extends desktop_controller{
     function _editor($type_id){
         $cat = $this->app->model('goods_cat');
         $this->pagedata['cats'] = $cat->getMapTree(0,'');
-        $this->pagedata['goodsbn_display_switch'] = ($this->app->getConf('goodsbn.display.switch') == 'true');
+        $this->pagedata['productsbn_display_switch'] = ($this->app->getConf('productsbn.display.switch') == 'true');
         $objGtype = $this->app->model('goods_type');
         $this->pagedata['gtype'] = $objGtype->getList('*','',0,-1);
         if( !$this->pagedata['gtype'] ){

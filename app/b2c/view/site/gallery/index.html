@@ -46,7 +46,11 @@
             <dt class="filter-entries-label"><{t}>分类<{/t}>：</dt>
             <dd class="filter-entries-values">
               <{foreach from=$screen.cat item=cat_row}>
-              <span class="filter-item"><a href="<{link app=b2c ctl=site_gallery act=index arg0=$cat_row.cat_id}>?<{if $filter.virtual_cat_id}>virtual_cat_id=<{$filter.virtual_cat_id}><{/if}><{if $filter.search_keywords.0}>scontent=n,<{$filter.search_keywords.0}><{/if}>" class="handle action-cat-filter"><{$cat_row.cat_name}></a></span>
+                <{if $filter.virtual_cat_id ||$filter.search_keywords.0}>
+                    <span class="filter-item"><a href="<{link app=b2c ctl=site_gallery act=index arg0=$cat_row.cat_id}>?<{if $filter.virtual_cat_id}>virtual_cat_id=<{$filter.virtual_cat_id}><{/if}><{if $filter.search_keywords.0}>scontent=n,<{$filter.search_keywords.0}><{/if}>" class="handle action-cat-filter"><{$cat_row.cat_name}></a></span>
+                <{else}>
+                    <span class="filter-item"><a href="<{link app=b2c ctl=site_gallery act=index arg0=$cat_row.cat_id}>" class="handle action-cat-filter"><{$cat_row.cat_name}></a></span>
+                <{/if}>
               <{/foreach}>
             </dd>
           </dl>

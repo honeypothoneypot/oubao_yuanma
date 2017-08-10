@@ -9,6 +9,11 @@
     <schedule>5 * * * *</schedule>
     <enabled>true</enabled>
   </cron>
+  <cron id="b2c_tasks_order_delivery">
+    <description>自动确认收货</description>s
+    <schedule>5 * * * *</schedule>
+    <enabled>true</enabled>
+  </cron>
 <!--   <cron id="b2c_tasks_archive">
   <description>归档订单相关单据</description>
   <schedule>*/5 * * * *</schedule>

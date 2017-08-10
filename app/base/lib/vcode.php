@@ -45,6 +45,9 @@ class base_vcode {
         }else{
             base_kvstore::instance('vcode')->fetch($key,$vcode);
         }
+        if(empty($value)){
+            return false;
+        }
         if( $vcode == strval($value) ){
             return true;
         }

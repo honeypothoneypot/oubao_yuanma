@@ -228,10 +228,11 @@ class b2c_ctl_site_member extends b2c_frontpage{
 
             }
         }
-
+        foreach ($aData['data'] as $key => $value) {
+            $aData['data'][$key]['url'] = $this->gen_url(array('app'=>'b2c','ctl'=>"site_member",'act'=>"receive",'arg0'=>$value['order_id']));;
+        }
         $this->get_order_details($aData, 'member_latest_orders');//--177sql 优化点
         $this->pagedata['orders'] = $aData['data'];
-
         //收藏列表
         $obj_member = $this->app->model('member_goods');
         $aData_fav = $obj_member->get_favorite($this->app->member_id,$this->member['member_lv'],$page=1,$num=4);//201sql
@@ -247,7 +248,6 @@ class b2c_ctl_site_member extends b2c_frontpage{
         //输出
         $this->pagedata['member'] = $this->member;
         $this->set_tmpl('member');
-//        echo '<pre>';var_dump($this->pagedata);exit();
         $this->output();
     }
 
@@ -425,6 +425,9 @@ class b2c_ctl_site_member extends b2c_frontpage{
 
             }
         }
+        foreach ($aData['data'] as $key => $value) {
+            $aData['data'][$key]['url'] = $this->gen_url(array('app'=>'b2c','ctl'=>"site_member",'act'=>"receive",'arg0'=>$value['order_id']));;
+        }
 
         $this->pagedata['orders'] = $aData['data'];
 
@@ -459,6 +462,9 @@ class b2c_ctl_site_member extends b2c_frontpage{
                     $aData['data'][$k]['goods_items'][$k2]['product']['thumbnail_pic'] = $imageDefault['S']['default_image'];
                 }
             }
+        }
+        foreach ($aData['data'] as $key => $value) {
+            $aData['data'][$key]['url'] = $this->gen_url(array('app'=>'b2c','ctl'=>"site_member",'act'=>"receive",'arg0'=>$value['order_id']));;
         }
         $this->pagedata['orders'] = $aData['data'];
 
@@ -831,7 +837,6 @@ class b2c_ctl_site_member extends b2c_frontpage{
             }
         }
         $this->pagedata['order'] = $sdf_order;
-
         $order_items = array();
         $gift_items = array();
         $this->get_order_detail_item($sdf_order,'member_order_detail');
@@ -1012,6 +1017,9 @@ class b2c_ctl_site_member extends b2c_frontpage{
         $membersData = kernel::single('b2c_user_object')->get_members_data(array('members'=>'member_lv_id'));
         $aData = kernel::single('b2c_member_fav')->get_favorite($this->app->member_id,$membersData['members']['member_lv_id'],$nPage);
         $imageDefault = app::get('image')->getConf('image.set');
+        foreach ($aData['data'] as $key => $value) {
+            $aData['data'][$key]['url'] = $this->gen_url(array('app'=>'b2c','ctl'=>"site_member",'act'=>"receive",'arg0'=>$value['order_id']));;
+        }
         $aProduct = $aData['data'];
         foreach($aProduct as $k=>$v){
             if($v['nostore_sell']){
@@ -1065,6 +1073,9 @@ class b2c_ctl_site_member extends b2c_frontpage{
                 $this->splash('success',$url,app::get('b2c')->_('成功移除！'),true);
             }
             $aData = kernel::single('b2c_member_fav')->get_favorite($this->app->member_id,$this->member['member_lv'],$current_page);
+            foreach ($aData['data'] as $key => $value) {
+                $aData['data'][$key]['url'] = $this->gen_url(array('app'=>'b2c','ctl'=>"site_member",'act'=>"receive",'arg0'=>$value['order_id']));;
+            }
             $aProduct = $aData['data'];
 
             $oImage = app::get('image')->model('image');
@@ -1750,7 +1761,9 @@ class b2c_ctl_site_member extends b2c_frontpage{
         $this->path[] = array('title'=>app::get('b2c')->_('会员中心'),'link'=>$this->gen_url(array('app'=>'b2c', 'ctl'=>'site_member', 'act'=>'index','full'=>1)));
         $this->path[] = array('title'=>app::get('b2c')->_('到货通知'),'link'=>'#');
         $GLOBALS['runtime']['path'] = $this->path;
-
+        foreach ($aData['data'] as $key => $value) {
+            $aData['data'][$key]['url'] = $this->gen_url(array('app'=>'b2c','ctl'=>"site_member",'act'=>"receive",'arg0'=>$value['order_id']));;
+        }
         $membersData = kernel::single('b2c_user_object')->get_members_data(array('members'=>'member_lv_id'));
         $oMem = $this->app->model('member_goods');
         $aData = $oMem->get_gnotify($this->app->member_id,$membersData['members']['member_lv_id'],$nPage);
@@ -1858,7 +1871,6 @@ class b2c_ctl_site_member extends b2c_frontpage{
     }
 
     /**
-    /*
      * 重新购买
      * @param  int  $order_id [description]
      * @param  boolean $archive  [description]
@@ -2173,7 +2185,7 @@ class b2c_ctl_site_member extends b2c_frontpage{
             $this->splash('error','',"订单取消失败",true);
         }
     }
-
+    
     public function signin(){
         $site_checkout_login_point_open = $this->app->getConf('site.checkout.login_point.open');
         $site_login_point_num = $this->app->getConf('site.login_point.num');
@@ -2208,6 +2220,39 @@ class b2c_ctl_site_member extends b2c_frontpage{
         }else{
             $msg = '签到失败';
             $this->splash('error','',$msg,true);
+        }
+    }
+    
+    function receive($order_id){
+        $arrMember = kernel::single('b2c_user_object')->get_current_member();
+        $mdl_order = app::get('b2c')->model('orders');
+        $sdf_order_member_id = $mdl_order->getRow('member_id', array('order_id'=>$order_id));
+        $sdf_order_member_id['member_id'] = (int) $sdf_order_member_id['member_id'];
+        if($sdf_order_member_id['member_id'] != $arrMember['member_id'])
+        {
+            $this->splash('error',null,'请勿操作别人的收货',true);exit;
+        }else{
+            $arr_updates = array('order_id'=>$order_id,'received_status' =>'1','received_time'=>time());
+            $mdl_order->save($arr_updates);
+            $delivery_mdl = app::get('b2c')->model('order_delivery_time');
+            $delivery_mdl->delete(array('order_id' => $order_id));
+            $orderLog = $this->app->model("order_log");
+            $log_text = serialize($log_text);
+            $sdf_order_log = array(
+                'rel_id' => $order_id,
+                'op_id' => $arrMember['member_id'],
+                'op_name' => (!$arrMember['member_id']) ? app::get('b2c')->_('顾客') : $arrMember['uname'],
+                'alttime' => time(),
+                'bill_type' => 'order',
+                'behavior' => 'receive',
+                'result' => 'SUCCESS',
+                'log_text' => '用户已确认收货！',
+            );
+            if($orderLog->save($sdf_order_log)){
+                $this->splash('success',null,'已完成收货',true);exit;
+            }else{
+                $this->splash('error',null,'收货失败',true);exit;
+            }
         }
     }
 }

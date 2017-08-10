@@ -11,6 +11,7 @@ class desktop_finder_builder_prototype{
 
     public $plimit_in_sel = array(100,50,20,10);
     public $has_tag = 1;
+    public $has_received_time = 1;
     public $title = '列表';
     public $object_method = array(
             'count'=>'count',   //获取数量的方法名
@@ -101,6 +102,7 @@ class desktop_finder_builder_prototype{
 
         $this->object = app::get($object_app)->model($object_name);
         $this->has_tag = $this->object->has_tag;
+        $this->has_received_time = $this->object->has_received_time;
         $this->dbschema = $this->object->schema;
         $this->main();
     }
@@ -151,6 +153,8 @@ class desktop_finder_builder_prototype{
             //标签列
             if($this->has_tag)
                 $this->addon_columns[] = array(kernel::single('desktop_finder_tagcols'),'column_tag');
+            if($this->has_received_time)
+                $this->addon_columns[] = array(kernel::single('desktop_finder_receivedcols'),'column_received');
             foreach($this->addon_columns as $k=>$function){
                 $func['type'] = 'func';
                 $func['width'] = $function[0]->{$function[1].'_width'}?$function[0]->{$function[1].'_width'}:$default_with;

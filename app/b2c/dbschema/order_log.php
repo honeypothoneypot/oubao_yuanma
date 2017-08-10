@@ -5,7 +5,7 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
- 
+
 $db['order_log']=array (
   'columns' => 
   array (
@@ -85,8 +85,10 @@ $db['order_log']=array (
         'payments' => app::get('b2c')->_('支付'),
         'refunds' => app::get('b2c')->_('退款'),
         'delivery' => app::get('b2c')->_('发货'),
+        'receive' =>app::get('b2c')->_('收货'),
         'reship' => app::get('b2c')->_('退货'),
-        'finish' => app::get('b2c')->_('完成'),
+        'complete' => app::get('b2c')->_('完成'),
+        'finish' => app::get('b2c')->_('归档'),
         'cancel' => app::get('b2c')->_('取消'),
       ),
       'default' => 'payments',
@@ -134,3 +136,4 @@ $db['order_log']=array (
   'version' => '$Rev: 46974 $',
   'comment' => app::get('b2c')->_('订单日志表'),
 );
+

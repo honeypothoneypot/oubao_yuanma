@@ -27,7 +27,11 @@
             <{/foreach}>
             </td>
             <td class="price"><{$item.total_amount|cur_odr:$item.currency:false:true}></td>
+            <{if $item.is_afterrec}>
             <td class="actions"><a href="<{link app=aftersales ctl=site_member act=add arg0=$item.order_id}>"><{t}>申请售后服务<{/t}></a></td>
+            <{else}>
+            <td class="actions"><{t}>已申请售后<{/t}></td>
+            <{/if}>
           </tr>
           <{/foreach}>
           <{else}>

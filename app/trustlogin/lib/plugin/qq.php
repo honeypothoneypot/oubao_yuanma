@@ -141,8 +141,8 @@ class trustlogin_plugin_qq implements trustlogin_interface_trust
         $userdata['openid'] = $userinfo['openid'];
         $userdata['realname'] = $userinfo['realname'];
         $userdata['nickname'] = $userinfo['nickname'];
-        $userdata['avatar'] = $userinfo['figureurl_2'];
-        $userdata['url'] = $userinfo['figureurl'];
+        $userdata['avatar'] = $userinfo['figureurl'];
+        $userdata['url'] = $userinfo['figureurl_2'];
         //$userdata['birthday'] = $userinfo['year'];
         $userdata['gender'] = $userinfo['gender'];
         $userdata['address'] = $userinfo['province'].'/'.$userinfo['city'];

@@ -5,7 +5,6 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
-
 $db['orders']=array (
   'columns' =>
   array (
@@ -90,6 +89,23 @@ $db['orders']=array (
       'in_list' => true,
       'default_in_list' => true,
     ),
+    'received_status' =>
+    array (
+      'type' =>
+      array (
+        0 => app::get('b2c')->_('未收货'),
+        1 => app::get('b2c')->_('已收货'),
+      ),
+      'default' => '0',
+      'required' => true,
+      'label' => app::get('b2c')->_('收货状态'),
+      'width' => 75,
+      'editable' => false,
+      'filtertype' => 'yes',
+      'filterdefault' => true,
+      'in_list' => true,
+      'default_in_list' => true,
+    ),
     'is_delivery' =>
     array (
       'type' => 'tinybool',
@@ -102,6 +118,18 @@ $db['orders']=array (
     array (
       'type' => 'time',
       'label' => app::get('b2c')->_('下单时间'),
+      'width' => 110,
+      'editable' => false,
+      'filtertype' => 'time',
+      'filterdefault' => true,
+      'in_list' => true,
+      'default_in_list' => true,
+      'orderby' => true,
+    ),
+    'received_time' =>
+    array (
+      'type' => 'time',
+      'label' => app::get('b2c')->_('收货时间'),
       'width' => 110,
       'editable' => false,
       'filtertype' => 'time',

@@ -46,14 +46,11 @@
         <th><{t}>商品名称：<{/t}></th>
         <td><{input type="text" id="id_gname" name="goods[name]" required="true" vtype='required' value=$goods.name style="width:60%"}><em><font color="red">*</font></em></td>
       </tr>
-      <{if $goodsbn_display_switch}>
+
       <tr>
         <th><{t}>商品编号：<{/t}></th>
         <td><{input type="text" name="goods[bn]" value=$goods.bn }></td>
       </tr>
-      <{else}>
-      <input type='hidden' name="goods[bn]" value="<{$goods.bn}>">
-      <{/if}>
 
       <tr>
         <th><{t}>商品关键词：<{/t}></th>

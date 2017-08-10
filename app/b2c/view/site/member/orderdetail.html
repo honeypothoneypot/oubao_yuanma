@@ -7,12 +7,12 @@
         <div class="member-order-desc">
           <{t}>订单号<{/t}>：<i class="text-warn"><{$order.order_id}></i>
           <{t}>订单金额<{/t}>：<i class="text-warn"><{$order.total_amount|cur_odr:$order.currency}></i>
-          <{t}>订单状态<{/t}>：<b><{if $order.status == 'dead'}><{t}>已作废<{/t}><{elseif $order.status == 'finish'}><{t}>已完成<{/t}><{else}><{if $order.pay_status == '0'}><{t}>未付款<{/t}><{elseif $order.pay_status == '1'}><{t}>已支付<{/t}><{elseif $order.pay_status == '2'}><{t}>已付款至担保方<{/t}><{elseif $order.pay_status == '3'}><{t}>部分付款<{/t}><{elseif $order.pay_status == '4'}><{t}>部分退款<{/t}><{else}><{t}>全额退款<{/t}><{/if}> <{if $order.ship_status == '0'}><{t}>[未发货]<{/t}><{elseif $order.ship_status == '1'}><{t}>已发货<{/t}><{elseif $order.ship_status == '2'}><{t}>部分发货<{/t}><{elseif $order.ship_status == '3'}><{t}>部分退货<{/t}><{else}><{t}>已退货<{/t}><{/if}><{/if}></b>
+          <{t}>订单状态<{/t}>：<b><{if $order.status == 'dead'}><{t}>已作废<{/t}><{elseif $order.received_status == '1'}><{t}>已完成<{/t}><{else}><{if $order.pay_status == '0'}><{t}>未付款<{/t}><{elseif $order.pay_status == '1'}><{t}>已支付<{/t}><{elseif $order.pay_status == '2'}><{t}>已付款至担保方<{/t}><{elseif $order.pay_status == '3'}><{t}>部分付款<{/t}><{elseif $order.pay_status == '4'}><{t}>部分退款<{/t}><{else}><{t}>全额退款<{/t}><{/if}> <{if $order.ship_status == '0'}><{t}>[未发货]<{/t}><{elseif $order.ship_status == '1'}><{t}>已发货<{/t}><{elseif $order.ship_status == '2'}><{t}>部分发货<{/t}><{elseif $order.ship_status == '3'}><{t}>部分退货<{/t}><{else}><{t}>已退货<{/t}><{/if}><{/if}></b>
         </div>
 
         <div class="member-order-actions">
           <{if $order.payinfo.pay_app_id != '-1'}>
-          <{if ($order.pay_status == '0' || $order.pay_status == '3') && $order.status != 'dead' && $order.status != 'finish'}>
+          <{if ($order.pay_status == '0' || $order.pay_status == '3') && $order.status != 'dead' && $order.received_status != '1'}>
           <{if $order.payinfo.pay_app_id != 'offline'}>
           <!--普通商品 -->
           <{if $prepare.prepare_type != 'prepare'}>
@@ -75,7 +75,7 @@
           <{/if}>
         </div>
         <div class="caption"order>
-          <{if $order.status=='finish'}>
+          <{if $order.received_status=='1'}>
             <{t}>订单已经处理完成。<{/t}>
           <{elseif $order.status=='dead'}>
             <{t}>订单已经作废。<{/t}>
@@ -130,7 +130,7 @@
                   <td class="icon step-arrow">&#x28;</td>
                   <td class="step-item step-3 <{if $order.ship_status == '1'}>active<{/if}>"><span><q class="icon">&#x50;</q><i>3</i>发货</span></td>
                   <td class="icon step-arrow">&#x28;</td>
-                  <td class="step-item step-4 <{if $order.status == 'finish'}>active<{/if}>"><span><q class="icon">&#x50;</q><i>4</i>订单完成</span></td>
+                  <td class="step-item step-4 <{if $order.received_status == '1'}>active<{/if}>"><span><q class="icon">&#x50;</q><i>4</i>确认收货</span></td>
                 <{/if}>
               </tr>
             </tbody>

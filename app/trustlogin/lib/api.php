@@ -71,6 +71,7 @@ class trustlogin_api
         }
 
         $objtrustlogin = new $class_name($objShopApp);
+        if(! $objtrustlogin instanceof trustlogin_interface_trust) exit('Plugin Error');
         //返回数据
         $ret = $objtrustlogin->$method($arrQueryStrs);
         if(!$ret)

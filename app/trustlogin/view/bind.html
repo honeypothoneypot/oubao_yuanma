@@ -1,7 +1,7 @@
 <div class="trust-login-tips">绑定账号（绑定后可使用现有账号登录）</div>
 <form action="<{link app=trustlogin ctl=trustlogin_trust act=check_login}>" method="post">
 <div class="trust-login-skip">
-    没有账号？您可以很快的注册一个账号，或者
+    <div>hi~<span>&nbsp;&nbsp;<{$realname}></span><span>&nbsp;&nbsp;<img src="<{$avatar}>" class="handle-show"/></span>&nbsp;&nbsp;</div>没有账号？您可以很快的注册一个账号，或者
     <input  type="hidden" name="data"  value="<{$data.data}>">
     <input  type="hidden" name="type"  value="<{$data.type}>">
     <input  type="hidden" name="skip"  value="jump">

@@ -9,6 +9,7 @@
 
 class b2c_mdl_orders extends dbeav_model{
     var $has_tag = true;
+    var $has_received_time = true;
     var $defaultOrder = array('createtime','DESC');
     var $has_many = array(
         'order_objects'=>'order_objects',

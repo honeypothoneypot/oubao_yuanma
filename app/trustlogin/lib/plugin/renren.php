@@ -104,8 +104,8 @@ class trustlogin_plugin_renren implements trustlogin_interface_trust
         $userdata['openid'] = $userinfo['id'];
         $userdata['realname'] = $userinfo['name'];
         $userdata['nickname'] = $userinfo['screen_name'];
-        $userdata['avatar'] = $userinfo['avatar'][0];
-        $userdata['url'] = $userinfo['avatar'][1];
+        $userdata['avatar'] = $userinfo['avatar'][0]['url'];
+        $userdata['url'] = $userinfo['avatar'][1]['url'];
         //$userdata['birthday'] = $userinfo['year'];
         $userdata['gender'] = $userinfo['basicInformation']['sex'];
         $userdata['address'] = $userinfo['basicInformation']['homeTown'];

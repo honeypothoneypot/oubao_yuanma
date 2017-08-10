@@ -231,8 +231,10 @@ var DatePickers = new Class({
     caption: function(navigation) {
         // start by assuming navigation is allowed
         navigation = navigation || {
+            supper_prev: { 'month': true, 'year': true },
             prev: { 'month': true, 'year': true },
-            next: { 'month': true, 'year': true }
+            next: { 'month': true, 'year': true },
+            supper_next: { 'month': true, 'year': true }
         };
 
         var caption = new Element('caption');
@@ -240,12 +242,21 @@ var DatePickers = new Class({
         var prev = new Element('a.prev', {html:'&lsaquo;'}); // <
         var next = new Element('a.next', {html:'&rsaquo;'}); // >
 
+        var supper_prev = new Element('a.supper_prev', {html:'&lsaquo;&lsaquo;'}); // <
+        var supper_next = new Element('a.supper_next', {html:'&rsaquo;&rsaquo;'}); // >
         var year = new Element('span.year').inject(caption);
+        if (navigation.supper_prev.year) {
+            supper_prev.clone().addEvent('click', function() {
+                this.navigate('y', -10);
+            }.bind(this)).inject(year);
+        }
+
         if (navigation.prev.year) {
             prev.clone().addEvent('click', function() {
                 this.navigate('y', -1);
             }.bind(this)).inject(year);
         }
+
         new Element('span.name', {
             html: this.curFullYear + this.options.year,
             events: {
@@ -259,6 +270,11 @@ var DatePickers = new Class({
         if (navigation.next.year) {
             next.clone().addEvent('click', function() {
                 this.navigate('y', 1);
+            }.bind(this)).inject(year);
+        }
+        if (navigation.supper_next.year) {
+            supper_next.clone().addEvent('click', function() {
+                this.navigate('y', 10);
             }.bind(this)).inject(year);
         }
         var month = new Element('span.month').inject(caption);

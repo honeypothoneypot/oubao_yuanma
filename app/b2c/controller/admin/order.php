@@ -27,8 +27,8 @@ class b2c_ctl_admin_order extends desktop_controller{
 
     public function index(){
         if($_GET['action'] == 'export') $this->_end_message = '导出订单';
+        $group[] = array('label'=>app::get('b2c')->_('设置收货时间'),'icon'=>'download.gif','target'=>'dialog','submit'=>'index.php?app=b2c&ctl=admin_order&act=changeDeliveryTime');
         $this->finder('b2c_mdl_orders',array(
-
             'title'=>app::get('b2c')->_('订单列表'),
             'allow_detail_popup'=>true,
             'base_filter'=>array('order_refer'=>'local','disabled'=>'false'),
@@ -37,6 +37,7 @@ class b2c_ctl_admin_order extends desktop_controller{
                             array('label'=>app::get('b2c')->_('添加订单'),'href'=>'index.php?app=b2c&ctl=admin_order&act=addnew','target'=>'_blank','icon'=>'sss.ccc'),
                             array('label'=>app::get('b2c')->_('打印样式'),'target'=>'_blank','href'=>'index.php?app=b2c&ctl=admin_order&act=showPrintStyle'),
                             array('label'=>app::get('b2c')->_('打印选定订单'),'submit'=>'index.php?app=b2c&ctl=admin_order&act=toprint','target'=>'_blank'),
+                            array('label'=>app::get('b2c')->_('自动确认收货时间'),'icon'=>'batch.gif','group'=>$group),
                         ),'use_buildin_set_tag'=>true,'use_buildin_recycle'=>false,'use_buildin_filter'=>true,'use_view_tab'=>true,
             ));
     }
@@ -140,7 +141,7 @@ class b2c_ctl_admin_order extends desktop_controller{
                 $show_menu[$k]['filter'] = $v['filter']?$v['filter']:null;
                 if($k==$_GET['view']){
                     $show_menu[$k]['newcount'] = true;
-                    $show_menu[$k]['addon'] = $mdl_order->count($v['filter']);
+                    $show_menu[$k]['addon'] = $mdl_order->count(array_merge($_POST,$v['filter']));
                 }
                 $show_menu[$k]['href'] = 'index.php?app=b2c&ctl=admin_order&act=index&view='.($k).(isset($_GET['optional_view'])?'&optional_view='.$_GET['optional_view'].'&view_from=dashboard':'');
             }elseif(($_GET['view_from']=='dashboard')&&$k==$_GET['view']){
@@ -578,6 +579,7 @@ class b2c_ctl_admin_order extends desktop_controller{
                         $image_default_id = $arrGoods['image_default_id'] ? $arrGoods['image_default_id'] : '';
 
                         $gItems[$k]['addon'] = unserialize($item['addon']);
+
                         if ($item['addon'] && unserialize($item['addon']))
                         {
                             $gItems[$k]['minfo'] = unserialize($item['addon']);
@@ -1546,7 +1548,7 @@ class b2c_ctl_admin_order extends desktop_controller{
         else $_POST['order_id'] = $order_id;
 
         $sdf = $_POST;
-
+        $sdf['logi_no'] = trim($sdf['logi_no']);
         $sdf['opid'] = $this->user->user_id;
         $sdf['opname'] = $this->user->user_data['account']['login_name'];
         $this->begin();
@@ -1564,6 +1566,9 @@ class b2c_ctl_admin_order extends desktop_controller{
             if($order_object = kernel::service('b2c_order_rpc_async')){
                 $order_object->modifyActive($sdf['order_id']);
             }
+            $obj_delivery_time = app::get('b2c')->model('order_delivery_time');
+            $arr_delivery_time = array('order_id'=>$sdf['order_id'],'delivery_time'=>time()+10*24*3600);
+            $obj_delivery_time->save($arr_delivery_time);
             $this->end(true, app::get('b2c')->_('发货成功'));
         }
         else
@@ -2723,5 +2728,59 @@ class b2c_ctl_admin_order extends desktop_controller{
             $this->end(true,app::get('b2c')->_('恢复默认值成功'));
         else
             $this->end(false,$msg);
+    }
+    /**
+    *修改自动确认收货时间
+    *
+    *
+    *
+    */
+    public function changeDeliveryTime(){
+        if(count($_POST['order_id']) <=3){
+            $mdl_order = $this->app->model('orders');
+            $mdl_order_delivery_time = $this->app->model('order_delivery_time');
+            $order_obj = array();
+            foreach($_POST['order_id'] as $val){
+                $sdf_order = $mdl_order->getRow('*',array('order_id'=>$val));
+                $sdf_order_delivery_time = $mdl_order_delivery_time->getRow('*',array('order_id'=>$val));
+                $sdf_order['delivery_time'] = $sdf_order_delivery_time['delivery_time'];
+                if($sdf_order['ship_status'] != 1){
+                    $this->begin();
+                    $this->end(false,app::get('b2c')->_('订单未完成发货操作'));exit;
+                }elseif($sdf_order['received_status'] == 1){
+                    $this->begin();
+                    $this->end(false,app::get('b2c')->_('订单已确认收货'));exit;
+                }
+                $order_obj[] = $sdf_order;
+            }
+            $this->pagedata['orders'] = $order_obj;
+            $this->display('admin/order/change_delivery_time.html');
+        }else{
+            $this->begin();
+            $this->end(false,app::get('b2c')->_('请为订单单独修改收货时间'));exit;
+        }
+    }
+    public function saveDeliveryTime(){
+        if(is_numeric($_POST['add_delivery_time'])){
+            $mdl_order_delivery_time = $this->app->model('order_delivery_time');
+            foreach($_POST['order_id'] as $val){
+                $sdf_order_delivery_time = $mdl_order_delivery_time->getRow('*',array('order_id'=>$val));
+                if(empty($sdf_order_delivery_time['delivery_time'])){
+                    $sdf_order_delivery_time['order_id'] = $val;
+                    $sdf_order_delivery_time['delivery_time'] = time() + $_POST['add_delivery_time']*24*3600;
+                }else{
+                    $sdf_order_delivery_time['delivery_time']+= $_POST['add_delivery_time']*24*3600;
+                }
+                if(!($mdl_order_delivery_time->save($sdf_order_delivery_time))){
+                    $this->begin();
+                    $this->end(false,app::get('b2c')->_('存储出错'));exit;
+                }
+            }
+            $this->begin();
+            $this->end(true, app::get('b2c')->_('保存成功'));
+        }else{
+            $this->begin();
+            $this->end(false,app::get('b2c')->_('您所输入的数字有误'));
+        }
     }
 }

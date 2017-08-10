@@ -13,16 +13,21 @@ class logisticstrack_ctl_admin_tracker extends desktop_controller{
     }
 
     public function index(){
+        base_kvstore::instance('ome/bind/hqepay')->fetch('ome_bind_hqepay', $is_ome_bind_hqepay);
         if($_POST){
             $system_order_tracking = $_POST['system_order_tracking'];
-            $kuaidi100Key = trim($_POST['kuaidi100Key']);
+            //$kuaidi100Key = trim($_POST['kuaidi100Key']);
             app::get('b2c')->setConf('system.order.tracking',$system_order_tracking);
-            app::get('logisticstrack')->setConf('kuaidi100Key',$kuaidi100Key);
+            //app::get('logisticstrack')->setConf('kuaidi100Key',$kuaidi100Key);
             $this->pagedata['system_order_tracking'] = $system_order_tracking;
-            $this->pagedata['kuaidi100Key'] = $kuaidi100Key;
+            //$this->pagedata['kuaidi100Key'] = $kuaidi100Key;
         }else{
             $this->pagedata['system_order_tracking'] = app::get('b2c')->getConf('system.order.tracking');
-            $this->pagedata['kuaidi100Key'] = app::get('logisticstrack')->getConf('kuaidi100Key');
+            //$this->pagedata['kuaidi100Key'] = app::get('logisticstrack')->getConf('kuaidi100Key');
+        }
+        if($this->pagedata['system_order_tracking'] && !$is_ome_bind_hqepay){
+            $logi = kernel::single('logisticstrack_service_hqepay');
+            $logi->bind();
         }
         $this->page('admin/setting.html');
     }
@@ -34,7 +39,6 @@ class logisticstrack_ctl_admin_tracker extends desktop_controller{
 
         if ( logisticstrack_puller::pull_logi($deliveryid, $data) ) {
             $this->pagedata['logi'] = $data['data'];
-            $this->pagedata['logi_source'] = $data['source'];
         } else {
             $this->pagedata['logi_error'] = $data['msg'];
         }

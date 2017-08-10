@@ -250,7 +250,9 @@ class b2c_ctl_wap_member extends wap_frontpage{
 
             }
         }
-
+        foreach ($aData['data'] as $key => $value) {
+            $aData['data'][$key]['url'] = $this->gen_url(array('app'=>'b2c','ctl'=>"wap_member",'act'=>"receive",'arg0'=>$value['order_id']));;
+        }
         $this->pagedata['orders'] = $aData['data'];
 
         $arr_args = array($pay_status);
@@ -704,7 +706,6 @@ class b2c_ctl_wap_member extends wap_frontpage{
                 $this->pagedata['prepare']=$pre_order;
             }
         }
-
         //echo '<pre>';print_r($prepare_order);exit();
         $this->page('wap/member/orderdetail.html');
     }
@@ -1379,6 +1380,38 @@ class b2c_ctl_wap_member extends wap_frontpage{
         {
             $db->rollback();
             $this->splash('failed',$error_url,"订单取消失败",true);
+        }
+    }
+    function receive($order_id){
+        $arrMember = kernel::single('b2c_user_object')->get_current_member();
+        $mdl_order = app::get('b2c')->model('orders');
+        $sdf_order_member_id = $mdl_order->getRow('member_id', array('order_id'=>$order_id));
+        $sdf_order_member_id['member_id'] = (int) $sdf_order_member_id['member_id'];
+        if($sdf_order_member_id['member_id'] != $arrMember['member_id'])
+        {
+            return '请勿操作别人的收货';
+        }else{
+            $arr_updates = array('order_id'=>$order_id,'received_status' =>'1','received_time'=>time());
+            $mdl_order->save($arr_updates);
+            $delivery_mdl = app::get('b2c')->model('order_delivery_time');
+            $delivery_mdl->delete(array('order_id' => $order_id));
+            $orderLog = $this->app->model("order_log");
+            $log_text = serialize($log_text);
+            $sdf_order_log = array(
+                'rel_id' => $order_id,
+                'op_id' => $arrMember['member_id'],
+                'op_name' => (!$arrMember['member_id']) ? app::get('b2c')->_('顾客') : $arrMember['uname'],
+                'alttime' => time(),
+                'bill_type' => 'order',
+                'behavior' => 'receive',
+                'result' => 'SUCCESS',
+                'log_text' => '用户已确认收货！',
+            );
+            if($orderLog->save($sdf_order_log)){
+                $this->splash('success',null,'已完成收货',true);exit;
+            }else{
+                $this->splash('error',null,'收货失败',true);exit;
+            }
         }
     }
 }

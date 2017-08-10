@@ -104,6 +104,7 @@ class trustlogin_passport_trust{
         $data['addr'] = $result['data']['data']['address'];
         $data['sex'] = $this->gender($result['data']['data']['gender']);
         $data['trust_name'] = $result['login_account']?$result['login_account']:' ';
+        $data['regtime'] = time();
         return $data;
     }
     //设置绑定信息的数据处理方法
@@ -228,6 +229,7 @@ class trustlogin_passport_trust{
         $data['addr'] = $result['data']['address'];
         $data['sex'] = $this->gender($result['data']['gender']);
         $data['trust_name'] = empty($result['data']['realname'])?$result['data']['nickname']:$result['data']['realname'];
+        $data['regtime'] = time();
         return $data;
     }
     //绑定现有信息的数据处理方法

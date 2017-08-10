@@ -6,9 +6,12 @@ class apiactionlog_router_request{
         $mdl_apilog = app::get('apiactionlog')->model('apilog');
         if(is_array($apilog_ids)){
             foreach($apilog_ids as $k=>$id){
-                $row = $mdl_apilog->getList('*',array('apilog'=>$id,'status|in'=>array('fail','sending'),'api_type'=>'request'));
-                return $this->_request($row[0]);
-            }
+	 			$row = $mdl_apilog->getList('*',array('apilog_id'=>$id,'status|in'=>array('fail','sending'),'api_type'=>'request'));
+	 			foreach($row as $val){
+	 				$msg = $this->_request($val);
+	 			}
+	 		}
+	 		return $msg;
         }else{
                 $row = $mdl_apilog->getList('*',array('apilog'=>$apilog_ids,'status|in'=>array('fail','sending'),'api_type'=>'request'));
                 return $this->_request($row[0]);

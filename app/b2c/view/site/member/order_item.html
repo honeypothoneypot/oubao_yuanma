@@ -113,7 +113,12 @@
           <span><span><{t}>支付尾款时间已过,请联系管理员进行退款<{/t}></span></span>
           <{/if}>
         <{/if}>
-
+        <{if $order.status != 'dead' && $order.status != 'finish' && $order.ship_status =="1" && $order.received_status =='0'}>
+          <a href="javascript:void(0);" class="btn btn-import" onclick="return receive('<{$order.url}>')"><span><span><{t}>确认收货<{/t}></span></span></a>
+        <{/if}>
+        <{if $order.status != 'dead' && $order.status != 'finish' && $order.ship_status =="2" && $order.received_status =='0'}>
+        <a href="javascript:void(0);" class="btn btn-import disabled" onclick="error_show()"><span><span><{t}>确认收货<{/t}></span></span></a>
+        <{/if}>
 
         <i class="separator"></i><a href="<{link app=b2c ctl=site_member act=orderdetail arg0=$order.order_id arg1=$archive}>"><{t}>查看订单<{/t}></a>
 
@@ -208,3 +213,33 @@
   </tbody>
   <{/if}>
 </table>
+<script>
+function receive(url){
+  var pingRequest = new Request({ 
+    method: "post", 
+    url:    url, 
+    onSuccess:  function(rs){
+      rs = JSON.decode(rs);
+      if(rs){
+        if(rs.error){
+          Dialog.alert(rs.error);
+          return false;
+        }else{
+          Dialog.alert(rs.success, {
+            onClose: function() {
+              location.reload();
+            }
+          });
+          return true;
+        }
+      }else{
+        return false;
+      }
+    }, 
+    }); 
+  pingRequest.send("url="+ url);
+}
+function error_show(){
+  Dialog.alert("亲，您的商品还没发完呢");
+}
+</script>

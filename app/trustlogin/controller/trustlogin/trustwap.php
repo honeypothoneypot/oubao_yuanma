@@ -105,6 +105,9 @@ class trustlogin_ctl_trustlogin_trustwap extends wap_frontpage{
     public function bind_login()
     {
         $data = $_POST;
+        $userinfo = json_decode(urldecode($data['data']),true);
+        $realname = $userinfo['data']['nickname'] ? $userinfo['data']['nickname'] : $userinfo['data']['realname'];
+        $avatar = $userinfo['data']['avatar'];
 
         if(!$data)
         {
@@ -114,6 +117,8 @@ class trustlogin_ctl_trustlogin_trustwap extends wap_frontpage{
          //是否开启验证码
         $this->pagedata['show_varycode'] = kernel::single('b2c_service_vcode')->status();
         $this->pagedata['data'] = $data;
+        $this->pagedata['realname'] = $realname;
+        $this->pagedata['avatar'] = $avatar;
         $this->set_tmpl('passport');
         $this->page('wapbind.html');
     }

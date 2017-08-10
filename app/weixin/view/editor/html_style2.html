@@ -60,14 +60,14 @@
       var link = "<{$params.link}>";
       var customurl = "<{$params.url}>";
       if( customurl ){
-          B="<a href='"+ customurl +"' target='_blank'>";
+          B="<a target='_blank' href='"+ customurl +"'>";
           A="</a>";
           textareaEditor_<{$id}>.wrapSelection(B,A);
       }else{
         new Dialog(link,{title:'<{t}><{$params.title}><{/t}>',height:200,
           onShow:function(){
             this.dialog.store('callback',function(url){
-              B="<a href='"+ url +"' target='_blank'>";
+              B="<a target='_blank' href='"+ url +"'>";
               A="</a>";
               textareaEditor_<{$id}>.wrapSelection(B,A);
             });

@@ -271,7 +271,7 @@ $setting = array(
 'comment.submit_hidden_notice.buy'=>array('type'=>SET_T_STR,'default'=>'','desc'=>app::get('b2c')->_('商品评论(经验),发布权限')),
 
 'goodsbn.display.switch'=>array('type'=>SET_T_BOOL,'default'=>true,'desc'=>app::get('b2c')->_('是否启用货品编号')),
-'productsbn.display.switch'=>array('type'=>SET_T_BOOL,'default'=>false,'desc'=>app::get('b2c')->_('是否启用商品编号')),
+'productsbn.display.switch'=>array('type'=>SET_T_BOOL,'default'=>true,'desc'=>app::get('b2c')->_('是否启用商品编号')),
 'goodsprop.display.position'=>array('type'=>SET_T_ENUM,'default'=>'1','options'=>array('1'=>app::get('b2c')->_('仅商品价格上方'),'2'=>app::get('b2c')->_('仅商品详情中'),'0'=>app::get('b2c')->_('两处同时显示')),'desc'=>app::get('b2c')->_('属性显示位置')),
 'storeplace.display.switch'=>array('type'=>SET_T_BOOL,'default'=>true,'desc'=>app::get('b2c')->_('是否使用商品货位')),
 'system.location'=>array('type'=>SET_T_STR,'default'=>'mainland'),

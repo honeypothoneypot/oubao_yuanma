@@ -281,6 +281,12 @@ class base_db_model implements base_interface_model{
      * @return void
      */
     public function delete($filter){
+        $delete_filter=$this->filter($filter);
+        if($delete_filter==='1'){
+            $sql = 'DELETE FROM `'.$this->table_name(1).'` where '.$this->filter($filter);
+            logger::info ("ecstore__delete_sql:".$sql);
+            return false;
+        }
         $sql = 'DELETE FROM `'.$this->table_name(1).'` where '.$this->filter($filter);
         if($this->db->exec($sql, $this->skipModifiedMark)){
             return true;

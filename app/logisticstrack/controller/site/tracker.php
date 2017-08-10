@@ -21,7 +21,6 @@ class logisticstrack_ctl_site_tracker extends site_controller{
         header('Content-Type: text/html; charset=UTF-8');
         if ( logisticstrack_puller::pull_logi($deliveryid, $data) ) {
             $this->pagedata['logi'] = $data['data'];
-            $this->pagedata['logi_source'] = $data['source'];
         } else {
             $this->pagedata['logi_error'] = $data['msg'];
         }
