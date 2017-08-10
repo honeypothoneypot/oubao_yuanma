@@ -128,6 +128,18 @@ class pointprofessional_point_change
                 $site_point_expried_method = $this->app_b2c->getConf('site.point_expried_method');
                 if ($site_point_expired == 'true')
                 {
+                    //如果积分过期方式是按照日期，且过期的时间小于等于1990-01-01的时间戳,大于0。则积分过期时间为0
+                    if( $site_point_expried_method == '1' && $rows[0]['expiretime'] <= 631123200 && $rows[0]['expiretime'] > 0 ){
+                        $rows[0]['expiretime'] = 0;
+                        $obj_member_lv->update(array('expiretime'=>strtotime($default_expired)),array('member_lv_id'=>$sdf_member['member_lv']['member_group_id']));
+                    }
+
+                    //如果积分过期方式是按照长度，且过期的时间大于1990-01-01的时间戳。则积分过期时间为0
+                    if( $site_point_expried_method == '2' && $rows[0]['expiretime'] > 631123200 ){
+                        $rows[0]['expiretime'] = 0;
+                        $obj_member_lv->update(array('expiretime'=>$default_expired),array('member_lv_id'=>$sdf_member['member_lv']['member_group_id']));
+                    }
+
                     switch ($site_point_expried_method)
                     {
                         case '1':

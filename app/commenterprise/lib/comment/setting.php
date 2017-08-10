@@ -27,10 +27,12 @@ class commenterprise_comment_setting{
         app::get('b2c')->setConf('goods.point.status',$_POST['comment_point_status']);
         app::get('b2c')->setConf('member_point',$_POST['member_point']);
         $model = app::get('b2c')->model('comment_goods_type');
-        $row = $model->getList('type_id',array(),0,1,'type_id desc');
-        $last_id = $row[0]['type_id'];
-        $model->delete(array());
-        //
+        $row = $model->getList('type_id',array());
+        foreach( $row as $value ){
+            $filter['type_id'][] = $value['type_id'];
+        }
+        $model->delete($filter);
+
         $newdata=array();
         foreach ($aData['point_type_name'] as $key => $value) {
             if($aData['total_point'] == $key){

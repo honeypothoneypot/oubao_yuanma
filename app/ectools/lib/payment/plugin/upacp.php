@@ -365,14 +365,25 @@ final class ectools_payment_plugin_upacp extends ectools_payment_app implements 
     public function getPulbicKeyByCertId($certId) {
         // 证书目录
 
-        $filePath = ROOT_DIR . "/app/ectools/lib/payment/plugin/upacp/" . "UpopRsaCert.cer";
-        if ($this->getCertIdByCerPath ( $filePath ) == $certId) {
-            return  $this->getPublicKey ( $filePath );
-         }
-         else
-         {
-             return null;
-         }
+        $filePath_root = ROOT_DIR . "/app/ectools/lib/payment/plugin/upacp";
+
+        $handle = opendir ( $filePath_root );
+        if ($handle) {
+            while ( $file = readdir ( $handle ) ) {
+                clearstatcache ();
+                $filePath = $filePath_root . '/' . $file;
+                if (is_file ( $filePath )) {
+                    if (pathinfo ( $file, PATHINFO_EXTENSION ) == 'cer') {
+                        if ($this->getCertIdByCerPath ( $filePath ) == $certId) {
+                            closedir ( $handle );
+                            return $this->getPublicKey ( $filePath );
+                        }
+                    }
+                }
+            }
+        } 
+        closedir ( $handle );
+        return null;
 
     }
 

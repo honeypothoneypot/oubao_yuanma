@@ -1650,18 +1650,27 @@ class b2c_cart_object_goods implements b2c_interface_cart_object{
                         'discount' => $o_currency->changer_odr($row['discount_amount_prefilter'] + ($row['obj_items']['products'][0]['price']['price'] - $row['obj_items']['products'][0]['price']['member_lv_price'])*$row['quantity']),
                     );
                 }else{
+                    $good_quantity = 0;
                     foreach ($adjunct['adjunct'][0] as $key => $value) {
                         $good_id = $key;
                         $good_quantity =$value['quantity'];
                     }
-                    foreach($row['adjunct'] as $key => $value){
-                        if($good_id == $value['product_id']){
-                            $goods_data = array(
-                                'buy_price'=>$o_currency->changer_odr($value['price']['price']*$good_quantity),
-                                'consume_score'=>(float)($value['gain_score']*$good_quantity),
-                                'discount' => $o_currency->changer_odr(($value['json_price']['price'] - $value['price']['price'])*$good_quantity),
-                            );
+                    if($row['adjunct']){
+                        foreach($row['adjunct'] as $key => $value){
+                            if($good_id == $value['product_id']){
+                                $goods_data = array(
+                                    'buy_price'=>$o_currency->changer_odr($value['price']['price']*$good_quantity),
+                                    'consume_score'=>(float)($value['gain_score']*$good_quantity),
+                                    'discount' => $o_currency->changer_odr(($value['json_price']['price'] - $value['price']['price'])*$good_quantity),
+                                );
+                            }
                         }
+                    }else{
+                        $goods_data = array(
+                            'buy_price'=>'￥0.00',
+                            'consume_score'=>'0',
+                            'discount' => '￥0.00',
+                        );
                     }
                 }
                 return $goods_data;

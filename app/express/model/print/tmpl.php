@@ -50,7 +50,7 @@ class express_mdl_print_tmpl extends dbeav_model
             'date_y'=>app::get('express')->_('当日日期-年'),
             'date_m'=>app::get('express')->_('当日日期-月'),
             'date_d'=>app::get('express')->_('当日日期-日'),
-            'order_print'=>app::get('express')->_('订单条码'),
+            #'order_print'=>app::get('express')->_('订单条码'),
             'order_id'=>app::get('express')->_('订单-订单号'),
             'order_price'=>app::get('express')->_('订单总金额'),
             'order_weight'=>app::get('express')->_('订单物品总重量'),

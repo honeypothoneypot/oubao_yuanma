@@ -22,7 +22,7 @@ class desktop_finder_apps{
         $install_btn = '<button class="btn" type="button" onclick="Ex_Loader(\'cmdrunner\',function(){appmgr([\'install\']).run(\''.$app_id.'\')});"><span><span class="c-green">'.app::get('desktop')->_('安装').'</span></span></button>';
         
         $locked_app_ids = app::get('base')->model('apps')->get_locked_app_ids();
-        
+
         if(in_array($app_id,$locked_app_ids)){
             $pause_btn = '<button type="button" class="btn disabled"><span><span class="c-disabled">'.app::get('desktop')->_('停用').'</span></span></button>';
             $active_btn = '<button type="button" class="btn disabled"><span><span class="c-disabled">'.app::get('desktop')->_('启用').'</span></span></button>';
@@ -65,6 +65,10 @@ class desktop_finder_apps{
 
             case 'paused':
             $output .= $active_btn;
+            break;
+
+            case 'installing':
+            $output .='<!--<span class="c-gray">'.app::get('desktop')->_('已安装').'</span><span>&nbsp;</span>--><button onclick="Ex_Loader(\'cmdrunner\',function(){appmgr([\'uninstall\']).run(\''.$app_id.'\')});" class="btn" type="button"><span><span class="c-blue">'.app::get('desktop')->_('安装失败，请卸载重装').'</span></span></button>';
             break;
         }
         return $output;

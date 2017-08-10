@@ -364,15 +364,24 @@ final class wap_payment_plugin_wapupacp extends ectools_payment_app implements e
 
     public function getPulbicKeyByCertId($certId) {
         // 证书目录
-
-        $filePath = ROOT_DIR . "/app/wap/lib/payment/plugin/wapupacp/" . "UpopRsaCert.cer";
-        if ($this->getCertIdByCerPath ( $filePath ) == $certId) {
-            return  $this->getPublicKey ( $filePath );
-         }
-         else
-         {
-             return null;
-         }
+        $filePath_root = ROOT_DIR . "/app/wap/lib/payment/plugin/wapupacp";
+        $handle = opendir ( $filePath_root );
+        if ($handle) {
+            while ( $file = readdir ( $handle ) ) {
+                clearstatcache ();
+                $filePath = $filePath_root . '/' . $file;
+                if (is_file ( $filePath )) {
+                    if (pathinfo ( $file, PATHINFO_EXTENSION ) == 'cer') {
+                        if ($this->getCertIdByCerPath ( $filePath ) == $certId) {
+                            closedir ( $handle );
+                            return $this->getPublicKey ( $filePath );
+                        }
+                    }
+                }
+            }
+        } 
+        closedir ( $handle );
+        return null;
 
     }
 

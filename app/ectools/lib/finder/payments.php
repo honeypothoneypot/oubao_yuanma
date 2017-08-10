@@ -50,10 +50,16 @@ class ectools_finder_payments{
                 $render->pagedata['payments'] = $sdf_payment;
                 if (isset($render->pagedata['payments']['op_id']) && $render->pagedata['payments']['op_id'])
                 {
-                    $arr_pam['login_name'] = kernel::single('b2c_user_object')->get_member_name(null,$render->pagedata['payments']['op_id']); 
-                    if(!$arr_pam['login_name']){
+                    //线下支付 操作员从sdb_pam_account表中读取
+                    if( $render->pagedata['payments']['pay_type'] == 'offline' ){
                         $obj_pam = app::get('pam')->model('account');
-                        $arr_pam = $obj_pam->dump(array('account_id' => $render->pagedata['payments']['op_id']), 'login_name');    
+                        $arr_pam = $obj_pam->dump(array('account_id' => $render->pagedata['payments']['op_id']), 'login_name');
+                    }else{
+                        $arr_pam['login_name'] = kernel::single('b2c_user_object')->get_member_name(null,$render->pagedata['payments']['op_id']);
+                        if(!$arr_pam['login_name']){
+                            $obj_pam = app::get('pam')->model('account');
+                            $arr_pam = $obj_pam->dump(array('account_id' => $render->pagedata['payments']['op_id']), 'login_name');
+                        }
                     }
                     $render->pagedata['payments']['op_id'] = $arr_pam['login_name'] ? $arr_pam['login_name'] : '-';
                 }

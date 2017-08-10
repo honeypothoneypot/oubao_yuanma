@@ -219,12 +219,18 @@ class b2c_order_create extends b2c_api_rpc_request
                         $product_id = explode('_',$key);
                         if($product_id[2]){
                             foreach ($arr_pmts_items as $arr_pmts_items_goods) {
-                                $order_data['order_pmt'][] = array(
+                                // 如果多个商品有多个优惠方式，根据【商品促销规则id、促销类型、订单id】累加优惠金额
+                                $index = $arr_pmts_items_goods['rule_id'].'_'.$type.'_'.$order_data['order_id'];
+                                $discount_amount = floatval($arr_pmts_items_goods['discount_amount']);
+                                if( isset($order_data['order_pmt'][$index]) ){
+                                    $discount_amount += $order_data['order_pmt'][$index]['pmt_amount'] ;
+                                }
+                                $order_data['order_pmt'][$index] = array(
                                     'pmt_id' => $arr_pmts_items_goods['rule_id'],
                                     'order_id' => $order_data['order_id'],
                                     'product_id' => $product_id[2],
                                     'pmt_type' => $type,
-                                    'pmt_amount' => floatval($arr_pmts_items_goods['discount_amount']),
+                                    'pmt_amount' => $discount_amount,
                                     'pmt_memo' => $arr_pmts_items_goods['name'],
                                     'pmt_tag' => $arr_pmts_items_goods['desc_tag'],
                                     'pmt_describe' => $arr_pmts_items_goods['desc'],

@@ -49,6 +49,20 @@ class b2c_ctl_admin_member_lv extends desktop_controller{
             {
                 $site_point_expired = $this->app->getConf('site.point_expired');
                 $site_point_expried_method = $this->app->getConf('site.point_expried_method');
+                $site_point_expired_value = $this->app->getConf('site.point_expired_value');
+
+                //如果积分过期方式是按照长度，且过期的时间大于1990-01-01的时间戳。则积分过期时间改成控制面板内设置的值
+                if( $site_point_expried_method == '2' && $aLv['expiretime'] > 631123200 ){
+                    $this->pagedata['lv']['expiretime'] = $site_point_expired_value;
+                    $mem_lv->update(array('expiretime'=>$site_point_expired_value),array('member_lv_id'=>$member_lv_id));
+                }
+
+                //如果积分过期方式是按照日期，且过期的时间小于等于1990-01-01的时间戳,大于0。则积分过期时间改成控制面板内设置的值
+                if( $site_point_expried_method == '1' && $aLv['expiretime'] <= 631123200 && $aLv['expiretime'] > 0 ){
+                    $this->pagedata['lv']['expiretime'] = $site_point_expired_value;
+                    $mem_lv->update(array('expiretime'=>strtotime($site_point_expired_value)),array('member_lv_id'=>$member_lv_id));
+                }
+
                 foreach ($obj_ext_fields as $obj_ext_service)
                 {
                     $this->pagedata['ext_html'] = $obj_ext_service->get_html($site_point_expired, $site_point_expried_method, $this->pagedata['lv']);

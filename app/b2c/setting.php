@@ -338,7 +338,7 @@ $setting = array(
 
 'site.point_expried_method' => array('type'=>SET_T_ENUM,'default'=>'1','desc'=>app::get('b2c')->_('积分过期方式'),'options'=>array('1'=>app::get('b2c')->_('设置过期结束时间'),'2'=>app::get('b2c')->_('设置过期时间长度')),'helpinfo'=>'<span class=\'notice-inline\'>'.app::get('b2c')->_('若选择“设置过期结束时间”请按时间格式输入结束时间').'</span>', 'class'=>'site-point-expired site-get_policy-method_cancel','id'=>'site-point-expried-method','javascript'=>'if ($("site-point-expried-method").getValue() =="1"){$$(".site-point-expried-method").set("vtype","date");}else{$$(".site-point-expried-method").set("vtype","number");}$("site-point-expried-method").addEvent("change",function(e){var _el = e.target || e;if ($(_el).getValue() == "1"){$$(".site-point-expried-method").set("vtype","date");}else{$$(".site-point-expried-method").set("vtype","number");}});'),
 
-'site.point_expired_value' => array('type'=>SET_T_STR,'default'=>'0','desc'=>app::get('b2c')->_('设置积分过期的值'),'vtype'=>'required','helpinfo'=>'<span class=\'notice-inline\'>'.app::get('b2c')->_('过期结束时间格式为Y-M-d/过期间隔时间的最小单位为天')."</span>", 'class'=>'site-point-expired site-get_policy-method_cancel'),
+'site.point_expired_value' => array('type'=>SET_T_STR,'default'=>'0','desc'=>app::get('b2c')->_('设置积分过期的值'),'vtype'=>'required','helpinfo'=>'<span class=\'notice-inline\'>'.app::get('b2c')->_('过期结束时间格式为Y-M-d/过期间隔时间的最小单位为天,<sapn class=\'red\'>若您更改了积分过期的方式，请前往“会员”—“会员等级”中依次修改各个会员的积分过期时间')."</span></span>", 'class'=>'site-point-expired site-get_policy-method_cancel'),
 
 'site.point_max_deductible_method' => array('type'=>SET_T_ENUM,'default'=>'1','desc'=>app::get('b2c')->_('下订单抵扣金额'),'options'=>array('1'=>app::get('b2c')->_('每一笔订单最大的抵扣金额。'),'2'=>app::get('b2c')->_('每一笔订单最大的抵扣比例。')),'class'=>'site-get_policy-method_cancel'),
 

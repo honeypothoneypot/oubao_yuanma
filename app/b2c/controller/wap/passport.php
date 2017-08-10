@@ -360,6 +360,17 @@ class b2c_ctl_wap_passport extends wap_frontpage{
                     $obj_policy ->referrals_member($_SESSION['referrals_code'],$member_id);
                 }
             }
+
+            //微信免登处理
+            if( $_SESSION['weixin_u_openid'] ){
+                $bindWeixinData = array(
+                    'member_id' => $member_id,
+                    'open_id' => $_SESSION['weixin_u_openid'],
+                    'tag_name' => $_SESSION['weixin_u_nickname'],
+                    'createtime' => time()
+                );
+                $flag = app::get('pam')->model('bind_tag')->save($bindWeixinData);
+            }
             /*end*/
             $data['member_id'] = $member_id;
             $data['uname'] = $saveData['pam_account']['login_account'];

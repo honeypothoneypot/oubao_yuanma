@@ -493,7 +493,15 @@ class b2c_ctl_admin_products extends desktop_controller{
             }
         }
         #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑记录管理员操作日志@lujy↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+        //编辑新增的货品不会产生规格，重新获取保存的规则，进行更新
+        $oProduct = $this->app->model('products');
+        foreach($productsData as $key=> $val){
+            if($val['product_id']=='new' && !empty($val['bn'])){
 
+                $result= $oProduct->getRow('product_id',array('bn'=>$val['bn']));
+                $productsData[$key]['product_id']=$result['product_id'];
+            }
+        }
         //更新商品数据
         $goodsFlag = $this->_update_goods($goods_id,$productsData,$selectionSpec['spec']);
         if(!$goodsFlag){

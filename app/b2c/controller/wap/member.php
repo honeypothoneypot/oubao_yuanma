@@ -752,26 +752,24 @@ class b2c_ctl_wap_member extends wap_frontpage{
         $this->pagedata['def_cur_sign'] = $arr_def_cur['cur_sign'];
 
         $aData = array();
-        $openid = '';
         foreach($aOld as $val){
             if(($val['app_id']!='deposit') && ($val['app_id']!='offline') ){
 				if( (substr($val['app_id'], 0, 5) == 'wxpay') ){
+                    // 微信支付必须要openid，为了避免二次失效，保存在session['wechat_openid']中
 					if( strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') == false || $val['app_id'] == 'wxpay'){
 						continue;
-					}else if( !$opendid ){
-						$wxpayjsapi_conf = app::get('ectools')->getConf('weixin_payment_plugin_wxpayjsapi');
-						$wxpayjsapi_conf = unserialize($wxpayjsapi_conf);
-						if(!$_GET['code'])
-						{
-							$return_url = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_member','act'=>'deposit','full'=>1));
-							$appId_to_get_code = trim($wxpayjsapi_conf['setting']['appId']);
-							kernel::single('weixin_wechat')->get_code($appId_to_get_code, $return_url);
-						}else{
-							$code = $_GET['code'];
-							$openid = kernel::single('weixin_wechat')->get_openid_by_code($wxpayjsapi_conf['setting']['appId'], $wxpayjsapi_conf['setting']['Appsecret'], $code);
-							if($openid == null)
-								$this->splash('failed', 'back',  app::get('b2c')->_('获取openid失败'));
-						}
+					}else{
+                        $weixin_openid = kernel::single('weixin_openid');
+                        //自定义菜单中的须授权页面打开时有openid，此处设置session
+                        if( $_SESSION['weixin_u_openid'] ){
+                            $weixin_openid->set_openid_by_session($_SESSION['weixin_u_openid']);
+                        }else{
+                            // 微信支付
+                             $return_url = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_member','act'=>'deposit','full'=>1));
+                            if( !$weixin_openid->check($return_url, $msg) ){
+                                $this->splash('failed', 'back',  $msg);
+                            }
+                        }
 					}
 				}
 				$aData[] = $val;
@@ -779,10 +777,6 @@ class b2c_ctl_wap_member extends wap_frontpage{
         }
 
         $this->pagedata['form_action'] = $this->gen_url(array('app'=>'b2c','ctl'=>'wap_paycenter','act'=>'dopayment','arg0'=>'recharge'));
-        if(isset($openid) && $openid != null )
-        {
-            $this->pagedata['form_action'] = $this->pagedata['form_action'].'?openid='.$openid;
-        }
         $this->pagedata['total'] = $this->member['advance'];
         $this->pagedata['payments'] = $aData;
         $this->pagedata['member_id'] = $this->app->member_id;
