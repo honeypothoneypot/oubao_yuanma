@@ -307,10 +307,13 @@ class gift_ctl_site_gift extends gift_frontpage{
     /*
      * 赠品列表页获取基本数据条件设置
      * */
-    private function _get_lists_gift_filter(){
+    private function _get_lists_gift_filter($cat_id=0){
         //获取条件
         $filter['marketable'] = 'true'; //已发布的赠品
         $filter['goods_type'] = array('gift','normal'); //指定类型
+        if($cat_id>0){
+            $filter['cat_id']= $cat_id;
+        }
         #$filter['to_time|than'] = time();
         $this->app->model('goods')->unuse_filter_default( false );
         return $filter;
@@ -319,7 +322,7 @@ class gift_ctl_site_gift extends gift_frontpage{
     /*
      * 赠品列表页
      * */
-    public function lists($page=1) {
+    public function lists($page=1,$cat_id=0) {
         //面包屑
         $aPath = array(array('link'=>'true','title'=>'赠品列表页'));
         $GLOBALS['runtime']['path'] = $aPath;
@@ -329,7 +332,7 @@ class gift_ctl_site_gift extends gift_frontpage{
         $this->pagedata['setting'] = $setting;
 
         //条件
-        $filter = $this->_get_lists_gift_filter();
+        $filter = $this->_get_lists_gift_filter($cat_id);
         $pageLimit = 20;//默认为20条
 
         //当前页数据
@@ -344,7 +347,7 @@ class gift_ctl_site_gift extends gift_frontpage{
         $this->pagedata['pager'] = array(
             'current'=>$page,
             'total'=>ceil($count/$pageLimit),
-            'link'=>$this->gen_url(array('app'=>'gift', 'ctl'=>'site_gift', 'act'=>'lists','args'=>array($token=time()))),
+            'link'=>$this->gen_url(array('app'=>'gift', 'ctl'=>'site_gift', 'act'=>'lists','args'=>array($token=time(),$cat_id))),
             'token'=>$token
         );
 

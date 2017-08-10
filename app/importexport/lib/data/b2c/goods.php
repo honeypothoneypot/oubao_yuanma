@@ -317,8 +317,12 @@ class importexport_data_b2c_goods {
         $spec = array();
         foreach( $arr_spec_info as $spec_val ){
             $spec_name = explode('：',$spec_val);
-            $spec[] = $spec_name[1];
-
+            if(count($spec_name)>2){
+                unset($spec_name['0']);
+                $spec[] = implode('：',$spec_name);
+            }else{
+                $spec[] = $spec_name[1];
+            }
         }
         return implode('|',$spec);
     }

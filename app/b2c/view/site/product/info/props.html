@@ -23,6 +23,22 @@
       <{/if}>
       <{/foreach}>
       <{/if}>
+
+     <{if $page_product_basic.promotion_type == 'prepare'}>
+      <tr>
+        <td class="label"><div class="text-nowrap"><{t}>支付订金开始时间<{/t}>：</div></td>
+        <td width="45%"><{$page_product_basic.prepare.begin_time|cdate:SDATE_STIME}></td>
+        <td class="label"><{t}>支付订金结束时间<{/t}>：</td>
+        <td width="45%"><{$page_product_basic.prepare.end_time|cdate:SDATE_STIME}></td>
+      </tr>
+      <tr>
+        <td class="label"><div class="text-nowrap"><{t}>支付尾款开始时间<{/t}>：</div></td>
+        <td width="45%"><{$page_product_basic.prepare.begin_time_final|cdate:SDATE_STIME}></td>
+        <td class="label"><{t}>支付尾款结束时间<{/t}>：</td>
+        <td width="45%"><{$page_product_basic.prepare.end_time_final|cdate:SDATE_STIME}></td>
+      </tr>
+      <{/if}>
+
     </tbody>
   </table>
 </div>

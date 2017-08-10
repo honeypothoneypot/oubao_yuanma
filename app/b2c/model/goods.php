@@ -319,10 +319,12 @@ class b2c_mdl_goods extends dbeav_model{
             }
         }
         #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑记录编辑商品日志-end@lujy↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
         $objpro = $this->app->model('products');
 		//@djh有新货品时、或者货品有更新时，更新goods_spec_index关系表
+        $createSpecIndex=0;
         if($goods['product']) {
-            $this->createSpecIndex($goods);
+            $createSpecIndex=1;
         }else{//读取货品信息（后面的商下架时需要用到）
         	unset($goods['product']);
             $product = $objpro->getList('product_id',array('goods_id'=>$goods['goods_id']));
@@ -332,6 +334,10 @@ class b2c_mdl_goods extends dbeav_model{
             }
         }
         $rs = parent::save($goods,$mustUpdate);
+        //新添的商品需要先保存，然后再创建createSpecIndex
+        if($createSpecIndex) {
+            $this->createSpecIndex($goods);
+        }
 
         #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓记录编辑商品日志-start@lujy↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
         if($obj_operatorlogs = kernel::service('operatorlog.goods')){
@@ -383,6 +389,7 @@ class b2c_mdl_goods extends dbeav_model{
     }
 
     function createSpecIndex($goods){
+
         $oSpecIndex = $this->app->model('goods_spec_index');
         $oSpecIndex->delete( array('goods_id'=>$goods['goods_id']) );
         foreach( $goods['product'] as $pro ){
@@ -395,6 +402,26 @@ class b2c_mdl_goods extends dbeav_model{
                         'goods_id' => $goods['goods_id'],
                         'product_id' => $pro['product_id'],
                     );
+                    //新添的商品没有传入product_id需要从获取表中获取
+                    if(empty($pro['product_id'])){
+                        if(!isset($goods_products) || empty($goods_products)){
+                            $objpro = $this->app->model('products');
+                            $goods_products=$objpro->getList('product_id,spec_desc',array('goods_id'=>$goods['goods_id']));
+                        }
+                        if(is_array($goods_products)){
+                            foreach($goods_products as $val){
+                                if($val['spec_desc']['spec_value_id']==$specValueId){
+                                    $data = array(
+                                        'type_id' => $goods['type']['type_id'],
+                                        'spec_id' => $specId,
+                                        'spec_value_id' => $specValueId,
+                                        'goods_id' => $goods['goods_id'],
+                                        'product_id' => $val['product_id'],
+                                    );
+                                }
+                            }
+                        }
+                    }
                     $oSpecIndex->save($data);
                 }
             }

@@ -605,6 +605,19 @@ EOF;
         }
     }
 
+    function modifier_strip_tags($string){
+        $string = trim($string);
+        $string = strip_tags($string,""); //清除HTML如<br />等代码
+        $string = str_replace("\n", "", str_replace(" ", "", $string));//去掉空格和换行
+        $string = str_replace("\t","",$string); //去掉制表符号
+        $string = str_replace("\r\n","",$string); //去掉回车换行符号
+        $string = str_replace("\r","",$string); //去掉回车
+        $string = str_replace("\"","",$string); //去掉双引号
+        $string = str_replace("'","",$string); //去掉单引号
+        $string = trim($string);
+        return $string;
+    }
+
     function utftrim($str){
         $found = false;
         for($i=0;$i<4&&$i<strlen($str);$i++)

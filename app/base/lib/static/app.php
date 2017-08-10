@@ -26,6 +26,8 @@ class app{
         $this->public_app_dir = PUBLIC_DIR.'/app/'.$app_id;
 
 		$this->res_url = kernel::get_app_statics_host_url().'/'.$app_id.'/statics';
+        //favicon.ico 统一到site目录
+        $this->favicon = kernel::get_app_statics_host_url().'/'.'site'.'/statics';
 		$this->res_full_url = kernel::get_app_statics_host_url().'/'.$app_id.'/statics';
 		$this->lang_url = kernel::get_app_statics_host_url().'/'.$app_id.'/lang';
 		$this->lang_full_url = kernel::get_app_statics_host_url().'/'.$app_id.'/lang';

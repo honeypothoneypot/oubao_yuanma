@@ -179,8 +179,10 @@ ptSlider.on('touchstart', function(e) {
   });
 
   $('#J_all_sku .close').on('tap',function(e){
-    $('#J_all_sku').addClass('hide');
-    $('#J_sel_sku').removeClass('hide');
+    setTimeout(function(){
+      $('#J_all_sku').addClass('hide');
+      $('#J_sel_sku').removeClass('hide');
+    },400)
   });
 
   $('#J_all_price').on('tap',function(e){

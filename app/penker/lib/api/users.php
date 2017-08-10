@@ -67,7 +67,7 @@ class penker_api_users{
         exit();
     }
     private function gen_cookie($guide_identity){
-        $path = kernel::base_url().'/index.php/wap/';
+        $path = kernel::base_url().'/';
         if( !$_COOKIE['penker'] ){
             setcookie('penker','true',0,$path);
         }

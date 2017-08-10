@@ -5,7 +5,7 @@
 <{foreach from=$data item=item key=key }>
 <ul>
   <li class="c-cat-depth-1">
-    <a href="<{link app=gift ctl=site_gift act=lists arg0=$item.link}>"><{$item.cat_name}></a>
+    <a href="<{link app=gift ctl=site_gift act=lists arg0=1 arg1=$item.link}>"><{$item.cat_name}></a>
   <{if $item.sub && $setting.showson=="enable"}>
   <ul>
     <{foreach from=$item.sub item=sData key=sKey }>

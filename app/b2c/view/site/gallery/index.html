@@ -677,7 +677,15 @@ Module.gallery.show.addEvents({
         });
     }
 });
-
+var fnRegName = function(){
+    var goodsName = $$(".goods-name");
+    for(var i = 0 ; i < goodsName.length ; i++){
+      var innerText = goodsName[i].innerText ;
+      innerText.replace(/[\“\”\"\'\‘\’]/ig,'');
+      goodsName[i].getChildren().innerHTML = innerText;
+    }
+};
+//fnRegName();
 Module.gallery.compare.addEvents({
     'click:relay(.action-unfold-compare)': function(e) {
         openCompare();
