@@ -12,8 +12,12 @@ class importexport_data_b2c_orders {
      * @return array $row 修改过后的数据
      */
     public function get_content_row($row){
-        $login_name = app::get('pam')->model('members')->get_operactor_name($row['member_id']);
-        $row['member_id'] = $login_name;
+        $order_member = app::get('b2c')->model('orders')->getRow('member_id',array('order_id'=>$row['order_id']));
+        $member_id = $order_member['member_id'];
+        if($row['member_id'] == $member_id){
+            $login_name = app::get('pam')->model('members')->get_operactor_name($row['member_id']);
+            $row['member_id'] = $login_name;
+        }
         if($row['payment'] == '-1'){
             $row['payment'] = app::get('importexport')->_('货到付款');
         }

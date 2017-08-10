@@ -50,7 +50,7 @@ final class weixin_payment_plugin_wxpay extends ectools_payment_app implements e
     /**
      * @var array 扩展参数
      */
-    public $supportCurrency = array("CNY"=>"01");
+    public $supportCurrency = array("CNY"=>"CNY");
 
 
 

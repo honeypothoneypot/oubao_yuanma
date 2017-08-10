@@ -32,7 +32,10 @@ class starbuy_tasks_specialremind extends base_task_abstract implements base_int
                     $class = "starbuy_tasks_sendmsg";
                     system_queue::instance()->publish($class, $class, $value);
                 }
-                app::get('starbuy')->model('special_remind')->delete($value);
+                //app::get('starbuy')->model('special_remind')->delete($value);
+            }
+            foreach($special as $key=>$val){
+                app::get('starbuy')->model('special_remind')->delete(array('remind_id'=>$val['remind_id']));
             }
 
         }

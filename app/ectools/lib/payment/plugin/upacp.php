@@ -46,7 +46,7 @@ final class ectools_payment_plugin_upacp extends ectools_payment_app implements 
      * @var string 当前支付方式所支持的平台
      */
     public $platform = 'ispc';
-    public $supportCurrency = array("CNY"=>"01");
+    public $supportCurrency = array("CNY"=>"CNY");
     public $sdk_front_trans_url = 'https://gateway.95516.com/gateway/api/frontTransReq.do';
     public $version = '5.0.0';
 

@@ -47,6 +47,13 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
             $virtual_cat_id = $request_params[5] ? $request_params[5] : intval($_GET['virtual_cat_id']);
         }
         $params = $this->filter_decode($tmp_filter,$cat_id,$virtual_cat_id);
+        if(!empty($virtual_cat_id)){
+            $v_filter=$this->_vcat_filter($virtual_cat_id,array());
+            if(count($v_filter)){
+                $params['filter'] = array_merge_recursive($params['filter'],$v_filter);
+                $params['params']=array_merge_recursive($params['params'],$v_filter);
+            }
+        }
 		$page = $params['page']?$params['page']:$page;
         $this->pagedata['filter'] = $params['params'];
         $goodsData = $this->get_goods($params['filter'],$page,$params['orderby']);
@@ -514,6 +521,19 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
         }
         $filter = array_merge_recursive($filter,$vcatFilters);
         return $filter;
+    }
+
+    private function _vcat_filter($virtual_cat_id){
+        $v_filter=$this->_merge_vcat_filter($virtual_cat_id,array());
+        $vcat_filter=array();
+        if(count($v_filter['props'])){
+            foreach($v_filter['props'] as $k => $val ){
+                if(count($val) && $val['0'] != '_ANY_'){
+                    $vcat_filter['p_'.$k] =$val;
+                }
+            }
+        }
+        return $vcat_filter;
     }
 
      /* 根据条件返回搜索到的商品

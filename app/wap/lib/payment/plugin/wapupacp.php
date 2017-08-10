@@ -46,7 +46,7 @@ final class wap_payment_plugin_wapupacp extends ectools_payment_app implements e
      * @var string 当前支付方式所支持的平台
      */
     public $platform = 'iswap';
-    public $supportCurrency = array("CNY"=>"01");
+    public $supportCurrency = array("CNY"=>"CNY");
     public $sdk_front_trans_url = 'https://gateway.95516.com/gateway/api/frontTransReq.do';
     public $version = '5.0.0';
 

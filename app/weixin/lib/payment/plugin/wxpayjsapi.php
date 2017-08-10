@@ -50,7 +50,7 @@ final class weixin_payment_plugin_wxpayjsapi extends ectools_payment_app impleme
     /**
      * @var array 扩展参数
      */
-    public $supportCurrency = array("CNY"=>"01");
+    public $supportCurrency = array("CNY"=>"CNY");
 
     public $init_url = 'https://api.mch.weixin.qq.com/pay/unifiedorder?';
 
