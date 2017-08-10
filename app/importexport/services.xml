@@ -8,6 +8,9 @@
     <service id="importexport.b2c_mdl_goods">
         <class>importexport_data_b2c_goods</class>
     </service>
+    <service id="importexport.b2c_mdl_goods_erp">
+        <class>importexport_data_b2c_goods_erp</class>
+    </service>
     <service id="importexport.b2c_mdl_orders">
         <class>importexport_data_b2c_orders</class>
     </service>

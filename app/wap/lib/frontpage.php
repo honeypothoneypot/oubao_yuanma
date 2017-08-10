@@ -98,17 +98,17 @@ class wap_frontpage extends wap_controller{
             'members'=> 'member_id,member_lv_id,cur,lang',
         );
         $userObject = kernel::single('b2c_user_object');
+        $cookie_expires = $userObject->cookie_expires ? time() + $userObject->cookie_expires * 60 : 0;
         $data = $userObject->get_members_data($columns);
         $secstr = kernel::single('b2c_user_passport')->gen_secret_str($member_id, $data['account']['login_name'], $data['account']['login_password']);
         $login_name = $userObject->get_member_name($data['account']['login_name']);
         $this->cookie_path = kernel::base_url().'/';
         #$this->set_cookie('MEMBER',$secstr,0);
-        $this->set_cookie('loginName',$login_name,time()+31536000);
-        $this->set_cookie('UNAME',$login_name,0);
-        $this->set_cookie('MLV',$data['members']['member_lv_id'],0);
-        $this->set_cookie('CUR',$data['members']['cur'],0);
-        $this->set_cookie('LANG',$data['members']['lang'],0);
-        $this->set_cookie('S[MEMBER]',$member_id,0);
+        $this->set_cookie('UNAME',$login_name,$cookie_expires);
+        $this->set_cookie('MLV',$data['members']['member_lv_id'],$cookie_expires);
+        $this->set_cookie('CUR',$data['members']['cur'],$cookie_expires);
+        $this->set_cookie('LANG',$data['members']['lang'],$cookie_expires);
+        $this->set_cookie('S[MEMBER]',$member_id,$cookie_expires);
     }
 
     public function _check_verify_member($member_id=0)

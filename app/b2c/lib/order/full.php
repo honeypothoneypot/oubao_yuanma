@@ -155,6 +155,14 @@ class b2c_order_full{
             $arr_data['buyer_email'] = $aMember['account']['email'];
             $arr_data['buyer_zip'] = $aMember['members']['zip'];
             $arr_data['buyer_id'] = intval($sdf['member_id']);
+            /*如果发现用户名为空，赋值用户名*/
+            if(empty($arr_data['buyer_uname'])){
+                if(!empty($arr_data['buyer_mobile'])){
+                    $arr_data['buyer_uname'] = $arr_data['buyer_mobile'];
+                }else{
+                    $arr_data['buyer_uname'] = $arr_data['buyer_email'];
+                }
+            }
         }
         else
         {

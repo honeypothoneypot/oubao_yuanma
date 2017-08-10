@@ -60,6 +60,12 @@ class b2c_ctl_admin_goods extends desktop_controller{
             'icon'=>'batch.gif',
             'group'=>$group,
          );
+        $custom_actions[] = array(
+            'label'=>app::get('b2c')->_('导出(ERP格式)'),
+            'icon'=>'download.gif',
+            'submit'=>'index.php?app=importexport&ctl=admin_export&act=export_view&_params[app]=b2c&_params[mdl]=b2c_mdl_goods&_params[suffix]=erp&action=export',
+            'target'=>"dialog::{width:400,height:170,title:'导出'}"
+        );
 
         $actions_base['title'] = app::get('b2c')->_('商品列表');
         $actions_base['actions'] = $custom_actions;

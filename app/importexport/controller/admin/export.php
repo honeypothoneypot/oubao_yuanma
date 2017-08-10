@@ -51,6 +51,7 @@ class importexport_ctl_admin_export extends importexport_controller{
             'filetype' => $_POST['filetype'],
             'policy' => $this->queue_policy(),
             'key'=> $_POST['key'],
+            'suffix'=> $params['suffix'],
         );
         system_queue::instance()->publish('importexport_tasks_runexport', 'importexport_tasks_runexport', $queue_params);
         app::get('importexport')->model('task')->create_task('export',$_POST);

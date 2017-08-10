@@ -94,7 +94,12 @@ class importexport_controller extends desktop_controller{
     public function view_filter($filter,$params){
         $ctl_class = $filter['app'].'_ctl_'.$filter['ctl'];
         $mdl_class = $params['app'].'_mdl_'.$params['mdl'];
-        $_POST['view'] = $filter['_finder']['in_pager'] -1;
+        if( !isset($filter['view']) ){
+            $_POST['view'] = $filter['_finder']['in_pager'] -1;
+        }else
+        {
+            $_POST['view'] = $filter['view'];
+        }
 
         $view_filter = $this->get_view_filter($ctl_class,$mdl_class);
 

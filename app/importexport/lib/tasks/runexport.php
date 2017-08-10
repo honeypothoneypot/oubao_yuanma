@@ -21,7 +21,11 @@ class importexport_tasks_runexport extends base_task_abstract implements base_in
         }
 
         //实例化导出数据类
-        $dataObj = kernel::single('importexport_data_object',$params['model']);
+        if( isset($params['suffix']) && $params['suffix'] ){
+            $dataObj = kernel::single('importexport_data_object_other',array('model'=>$params['model'],'suffix'=>$params['suffix']));
+        }else{
+            $dataObj = kernel::single('importexport_data_object',$params['model']);
+        }
         //实例化导出文件类型类
         $filetypeObj = kernel::single('importexport_type_'.$params['filetype']);
 
