@@ -32,7 +32,8 @@ final class chinapay_payment_plugin_chinapay extends ectools_payment_app impleme
         $this->callback_url  = app::get('site')->router()->gen_url(array('app'=>'chinapay','ctl'=>'site_request','act'=>'index','full'=>1));
         $this->servercallback_url = app::get('site')->router()->gen_url(array('app'=>'chinapay','ctl'=>'site_request','act'=>'serverCallback','full'=>1));
         
-        $this->submit_url = 'https://payment.ChinaPay.com/pay/TransGet';
+        //$this->submit_url = 'https://payment.ChinaPay.com/pay/TransGet';//旧地址
+        $this->submit_url = 'https://payment.chinapay.com/CTITS/payment/TransGet';//新地址
         if(defined('CHINAPAY')){
 		    $this->submit_url = "http://payment-test.ChinaPay.com/pay/TransGet";//测试
         }

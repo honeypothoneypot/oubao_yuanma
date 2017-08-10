@@ -538,7 +538,7 @@ class b2c_ctl_wap_gallery extends wap_frontpage{
      * @params string $orderby 排序
      * @return array
      * */
-    public function get_goods($filter,$page=1,$orderby){
+    public function get_goods($filter,$page=1,$orderby,&$pagedata=false){
         $goodsObject = kernel::single('b2c_goods_object');
         $goodsModel = app::get('b2c')->model('goods');
         $siteMember = $this->get_current_member();
@@ -632,6 +632,9 @@ class b2c_ctl_wap_gallery extends wap_frontpage{
                     }
                 }
             }
+        }
+        if(!empty($pagedata)){
+            $pagedata=$this->pagedata;
         }
         $goodsData = $this->get_goods_point($gids,$goodsData);
         return $goodsData;

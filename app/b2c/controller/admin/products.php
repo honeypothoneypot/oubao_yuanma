@@ -472,9 +472,9 @@ class b2c_ctl_admin_products extends desktop_controller{
         if($deleteProductsId){
             $this->_delete_products($deleteProductsId);
         }
-
         $db = kernel::database();
         $db->beginTransaction();
+
         //编辑的货品进行更新，新增的货品进行新增
         $flag = $this->_save_products($goods_id,$productsData);
         if(!$flag){
@@ -661,8 +661,8 @@ class b2c_ctl_admin_products extends desktop_controller{
             $tmpProducts[$uid]['status'] = $row['status'];
             $tmpProducts[$uid]['price']['price']['price'] = $row['price'];
             $tmpProducts[$uid]['price']['cost']['price'] = $row['cost'];
-            $tmpProducts[$uid]['price']['mktprice']['price'] = $row['mktprice'];
-            $tmpProducts[$uid]['spec_desc'] = $row['spec_desc'];
+	    $tmpProducts[$uid]['price']['mktprice']['price'] =  ($row['mktprice']==='' || $row['mktprice']===NULL) ?NULL:$row['mktprice'];
+	    $tmpProducts[$uid]['spec_desc'] = $row['spec_desc'];
             if($row['member_lv_price']){
                 $tmpProducts[$uid]['price']['member_lv_price'] = $row['member_lv_price'];
             }

@@ -60,8 +60,8 @@ class b2c_ctl_wap_brand extends wap_frontpage{
         $oSearch = $this->app->model('search');
         $params = $this->filter_decode($tmp_filter,$brand_id);
         $this->pagedata['filter'] = $params['params'];
-        $goodsData = kernel::single('b2c_ctl_wap_gallery')->get_goods($params['filter'],$page,$params['orderby']);
-
+        $pagedata=true;
+        $goodsData = kernel::single('b2c_ctl_wap_gallery')->get_goods($params['filter'],$page,$params['orderby'],$pagedata);
         $screen = $this->brand_screen($brand_id);
         $this->pagedata['screen'] = $screen['screen'];
         $this->pagedata['showtype'] = $params['showtype'];
@@ -73,7 +73,8 @@ class b2c_ctl_wap_brand extends wap_frontpage{
         $this->path[] = array('title'=>app::get('b2c')->_('品牌专区'),'link'=>$this->gen_url(array('app'=>'b2c', 'ctl'=>'wap_brand', 'act'=>'showlist','full'=>1)));
         $this->path[] = array('title'=>$result['brand_name'],'link'=>'#');
         $GLOBALS['runtime']['path'] = $this->path;
-
+        $this->pagedata['page']=$pagedata['page'];
+        $this->pagedata['pager']=$pagedata['pager'];
         $this->pagedata['link'] = $this->gen_url('gallery',$this->app->getConf('gallery.default_view'),array('',$oSearch->encode(array('brand_id'=>array($brand_id)))));
         $seo_info = $brandModel->dump($brand_id,'seo_info');
         if(!isset($seo_info['seo_info'])){

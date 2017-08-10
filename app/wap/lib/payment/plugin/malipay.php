@@ -415,6 +415,13 @@ final class wap_payment_plugin_malipay extends ectools_payment_app implements ec
             $ret['bank'] = app::get('wap')->_('手机支付宝');
             $ret['pay_account'] = app::get('wap')->_('付款帐号');
             $ret['currency'] = 'CNY';
+            if($recv['total_fee']===NULL){
+                $tool_payments=app::get('ectools')->model('payments');
+                $result=$tool_payments->getRow('cur_money',array('payment_id'=>$ret['payment_id']));
+                $recv['total_fee']=$result['cur_money'];
+                //计算支付金额
+            }
+
             $ret['money'] = $recv['total_fee'];
             $ret['paycost'] = '0.000';
             $ret['cur_money'] = $recv['total_fee'];

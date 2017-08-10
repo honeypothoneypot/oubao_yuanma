@@ -30,7 +30,7 @@ class b2c_ctl_admin_member extends desktop_controller{
             $custom_actions[] =  array('label'=>app::get('b2c')->_('群发站内信'),'submit'=>'index.php?app=b2c&ctl=admin_member&act=send_msg','target'=>'dialog::{title:\''.app::get('b2c')->_('群发站内信').'\',width:500,height:350}');
         }
         if($this->has_permission('send_sms')){
-            $custom_actions[] =  array('label'=>app::get('b2c')->_('群发短信'),'submit'=>'index.php?app=b2c&ctl=admin_member&act=send_sms','target'=>'dialog::{title:\''.app::get('b2c')->_('群发短信').'\',width:500,height:350}');
+            $custom_actions[] =  array('label'=>app::get('b2c')->_('群发短信'),'submit'=>'index.php?app=b2c&ctl=admin_member&act=send_sms','target'=>'dialog::{title:\''.app::get('b2c')->_('群发短信').'\',width:500,height:590}');
         }
 
         $actions_base['title'] = app::get('b2c')->_('会员列表');
@@ -234,7 +234,7 @@ class b2c_ctl_admin_member extends desktop_controller{
 
         $setSmsSign = app::get('b2c')->getConf('setSmsSign');
         $setSmsSign = '【'.$setSmsSign['sign'].'】';
-        $setSmsSignLen = mb_strlen(urldecode(trim($setSmsSign)),'utf-8');
+        $setSmsSignLen = mb_strlen(urldecode(trim($setSmsSign)),'utf-8')+4;
         $this->pagedata['setSmsSignLen'] = $setSmsSignLen;
         $this->pagedata['mobile_number'] = json_encode($mobile_number);
         $this->page('admin/messenger/write_sms.html');
@@ -268,7 +268,7 @@ class b2c_ctl_admin_member extends desktop_controller{
        {
             $this->end(false,app::get('b2c')->_('不能含有非法字符'));
         }
-
+        $_POST['content'].="退订回N";
        foreach($mobile_number as $m){
            $params = array(
                'mobile_number' => implode(',',(array)$m),
