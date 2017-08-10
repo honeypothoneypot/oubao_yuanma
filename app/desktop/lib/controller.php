@@ -528,11 +528,12 @@ EOF;
 
         //自定义筛选器
         $filter = app::get('desktop')->model('filter');
+        $filter_info = unserialize($_POST['filter']);
         $_filter = array(
                 'model'=>$object_name,
-                'app'  =>$_POST['app'],
-                'ctl'  =>$_POST['ctl'],
-                'act'  =>$_POST['act'],
+                'app'  =>$filter_info['app'],
+                'ctl'  =>$filter_info['ctl'],
+                'act'  =>$filter_info['act'],
                 'user_id'  => $this->user->user_id,
             );
         $rows = $filter->getList('*',$_filter,0,-1,'create_time asc');

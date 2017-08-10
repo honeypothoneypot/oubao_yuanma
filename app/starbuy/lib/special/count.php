@@ -148,7 +148,9 @@ class starbuy_special_count {
                 }
             }
         }
-
+         if(empty($fmt_special_goods)){
+           return null;
+         }
         $special_goods=array();
         foreach ($fmt_special_goods  as $key=>$special){
             foreach($special as $val){

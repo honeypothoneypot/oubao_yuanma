@@ -59,6 +59,10 @@ class importexport_data_object{
             $idColumn = $id;
         }
 
+        if( isset($filter['_DTIME_']) && $filter['_DTIME_'] ){
+            $this->model->filter_use_like = true;
+        }
+
         $tmpfilter = $this->model->getList($idColumn,$filter);
         foreach( $tmpfilter as $row )
         {

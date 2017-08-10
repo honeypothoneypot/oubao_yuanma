@@ -1286,7 +1286,7 @@ class b2c_ctl_wap_product extends wap_frontpage{
         if(empty($filter["member_id"])){
             echo 0;exit;
         }
-        $filter = array('goods_id'=>$goods_id,'type'=>'fav');
+        $filter = array('goods_id'=>$goods_id,'member_id'=>$member['member_id'],'type'=>'fav');
 
         if($this->app->model('member_goods')->getList('gnotify_id',$filter,0,1) ){
             echo 1;exit;
