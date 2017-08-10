@@ -81,7 +81,7 @@ class b2c_messenger_sms{
         if($result==true){
             $update=array('sms_id'=>$sms_id,'status'=>1,'msg'=>$msg);
             $sms_send_log->save($update);
-            $sms_send_log->update(array('sms_id'=>$sms_id),array('status'=>1,'msg'=>$msg));
+            //$sms_send_log->update(array('status'=>1,'msg'=>$msg),array('sms_id'=>$sms_id));
         }else{
             $update=array('sms_id'=>$sms_id,'status'=>0,'msg'=>$msg);
             $sms_send_log->save($update);

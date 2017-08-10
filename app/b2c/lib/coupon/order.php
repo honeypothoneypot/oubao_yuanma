@@ -38,10 +38,9 @@ class b2c_coupon_order {
      * 订单在【支付，发货，完成】后更新优惠券状态未已经使用
      * 取消订单后，且该订单未支付，更新优惠券状态未可用
      **/
-    public function use_c( $order_id = null ) {
+    public function use_c( $order_id = null,$act= null ) {
         if( empty($order_id) ) return false;
         $coupon_data = $this->get_list_order($order_id);
-
         if($coupon_data){
             $status = $this->get_status($order_id);
             $obj_coupon = kernel::single("b2c_coupon_mem");
@@ -54,6 +53,14 @@ class b2c_coupon_order {
                 $this->cancel_c($order_id);
             }
         }
+        //取消订单的时候，可能是手动填写的优惠劵，没有绑定到用户账户中
+        if(!empty($act) && $act=='cancel' ){
+            $status = $this->get_status($order_id);
+            if( $status == 'false' ){
+                $this->cancel_c($order_id);
+            }
+        }
+
     }
 
     private function get_status($order_id){
@@ -84,7 +91,14 @@ class b2c_coupon_order {
                 $coupons_use_obj->delete(array('cpns_id'=>$val['memc_code']));
             }
         }
+        $coupons_use_obj->delete(array('cpns_id'=>$val['memc_code']));
         $filter = array('order_id'=>$order_id);
+        $user_log=$coupon_user->getList('memc_code',$filter);
+        if(!empty($user_log) ){
+            foreach($user_log as $val){
+                $coupons_use_obj->delete(array('cpns_id'=>$val['memc_code']));
+            }
+        }
         $coupon_user->delete($filter);
         $coupon_ref->delete($filter);
     }

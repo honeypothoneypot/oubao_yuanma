@@ -105,6 +105,16 @@ $db['member_coupon']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('会员优惠券是否当前可用'),
     ),
+    'source' =>
+    array (
+      'type' =>
+      array (
+        0 => app::get('b2c')->_('其他途径获取'),
+        1 => app::get('b2c')->_('积分兑换'),
+        //2 => __('外部优惠券'),
+      ),
+      'default' => '0',
+    ),
   ),
   'index' =>
   array (

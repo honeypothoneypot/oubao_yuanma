@@ -102,7 +102,8 @@ final class ectools_payment_plugin_99bill extends ectools_payment_app {
 			$this->callback_url = preg_replace("|/+|","/", $this->callback_url);
 			$this->callback_url = "https://" . $this->callback_url;
 		}
-        $this->submit_url = 'https://www.99bill.com/gateway/recvMerchantInfoAction.htm';
+        $this->submit_url = 'https://www.99bill.com/gateway/recvMerchantInfoAction.htm';//正式环境
+        //$this->submit_url = "https://sandbox.99bill.com/gateway/recvMerchantInfoAction.htm";//沙箱环境
         $this->submit_method = 'POST';
         $this->submit_charset = 'utf-8';
     }
@@ -114,7 +115,6 @@ final class ectools_payment_plugin_99bill extends ectools_payment_app {
      */
 	public function dopay($payment){
         $merId = $this->getConf('mer_id', __CLASS__);
-        $ikey = $this->getConf('PrivateKey', __CLASS__);//私钥值，商户可上99BILL快钱后台自行设定
         $connecttype = $this->getConf('ConnectType', __CLASS__);
         if ($connecttype){
             $bankId = $payment['payExtend']['bankId'];
@@ -126,7 +126,7 @@ final class ectools_payment_plugin_99bill extends ectools_payment_app {
         $return['bgUrl'] = $this->callback_url;
         $return['version'] = "v2.0";
         $return['language']="1";
-        $return['signType']="1";
+        $return['signType']="4";
         $return['merchantAcctId'] = $merId;
         $return['payerName']=$payment['pay_name'];
         $return['payerContactType']="1";//支付人联系方式类型.固定选择值，目前只能为电子邮件
@@ -143,12 +143,15 @@ final class ectools_payment_plugin_99bill extends ectools_payment_app {
         $return['payType'] = $payType?$payType:"00";
         $return['bankId'] = $bankId?$bankId:'';
         $return['redoFlag'] = 1;//是否重复提交同一个订单
+        $return['pid'] = "";//合作ID
+        //沙箱环境注释掉$return['pid'] = "10017518267"
         $return['pid'] = "10017518267";//合作ID
         foreach($return as $k=>$v){
             if ($v)
                 $str.=$k."=".$v."&";
         }
         $signMsg=strtoupper(md5(substr($str,0,strlen($str)-1)."&key=".$ikey));
+        $signMsg = $this->getSign(substr($str,0,strlen($str)-1));
         $return['signMsg']=$signMsg;
         foreach($return as $key=>$val) {
             $this->add_field($key,$val);
@@ -197,7 +200,6 @@ final class ectools_payment_plugin_99bill extends ectools_payment_app {
         $payResult=trim($in['payResult']);
         $errCode=trim($in['errCode']);
         $signMsg=trim($in['signMsg']);    //获取加密签名串
-        $key=$this->getConf('PrivateKey', __CLASS__);
 
         //生成加密串。必须保持如下顺序。
         $merchantSignMsgVal=$this->appendParam($merchantSignMsgVal, "merchantAcctId",$merchantAcctId);
@@ -218,7 +220,6 @@ final class ectools_payment_plugin_99bill extends ectools_payment_app {
         $merchantSignMsgVal=$this->appendParam($merchantSignMsgVal, "ext2",$ext2);
         $merchantSignMsgVal=$this->appendParam($merchantSignMsgVal, "payResult",$payResult);
         $merchantSignMsgVal=$this->appendParam($merchantSignMsgVal, "errCode",$errCode);
-        $merchantSignMsgVal=$this->appendParam($merchantSignMsgVal, "key",$key);
 
 		$ret = array();
 		$ret['payment_id'] = $in['orderId'];
@@ -235,12 +236,12 @@ final class ectools_payment_plugin_99bill extends ectools_payment_app {
 		$ret['pay_type'] = 'online';
 		$ret['memo'] = '99bill';
 
-        $merchantSignMsg= md5($merchantSignMsgVal);
+        $sign_status = $this->sign_verify($merchantSignMsgVal,$signMsg);
         $paymentId=$orderId;
         $money = $payAmount/100;
         $tradeno = $dealId;
-        ///首先进行签名字符串验证
-        if(strtoupper($signMsg) == strtoupper($merchantSignMsg)){
+
+        if( $sign_status ){
             switch($payResult){
                 case "10":
                     $ret['status'] = 'succ';
@@ -260,7 +261,7 @@ final class ectools_payment_plugin_99bill extends ectools_payment_app {
     /**
      * 支付成功回打支付成功信息给支付网关
      */
-    function ret_result($paymentId,$ret){
+    function ret_result($paymentId){
         $rtnOk=1;
         $rtnUrl = app::get('site')->router()->gen_url(array('app'=>'b2c','ctl'=>'site_paycenter','full'=>1,'act'=>'result_pay','arg'=>$paymentId));
         echo "<result>".$rtnOk."</result><redirecturl>".$rtnUrl."</redirecturl>";
@@ -284,8 +285,20 @@ final class ectools_payment_plugin_99bill extends ectools_payment_app {
                         'type'=>'string',
 						'validate_type' => 'required',
                 ),
-                'PrivateKey'=>array(
-                        'title'=>app::get('ectools')->_('私钥'),
+                'pub_key_file'=>array(
+                        'title'=>app::get('ectools')->_('公钥文件'),
+                        'type'=>'file',
+                        'validate_type'=>'required',
+                        'label'=>app::get('ectools')->_('文件后缀名.cer'),
+                ),
+                'pk_file'=>array(
+                        'title'=>app::get('ectools')->_('私钥文件'),
+                        'type'=>'file',
+						'validate_type' => 'required',
+                        'label'=>app::get('ectools')->_('文件后缀名为.pem'),
+                ),
+                'pk_file_passwd'=>array(
+                        'title'=>app::get('ectools')->_('私钥文件密码'),
                         'type'=>'string',
 						'validate_type' => 'required',
                 ),
@@ -411,6 +424,60 @@ final class ectools_payment_plugin_99bill extends ectools_payment_app {
 
           return $tmp_form;
 
+    }
+
+    /**
+     * 生成签名密钥
+     * @params data string 签名字段
+     * @return signMsg string 签名
+     */
+    private function getSign($data){
+        $pk_file = $this->getConf('pk_file', __CLASS__);
+        $pk_file_passwd = $this->getConf('pk_file_passwd', __CLASS__);
+        $pk_file_path = DATA_DIR . '/cert/payment_plugin_99bill/' . $pk_file;
+        $pub_key_file = $this->getConf('pub_key_file', __CLASS__);
+        $pub_key_file_path = DATA_DIR . '/cert/payment_plugin_99bill/' .$pub_key_file;
+
+        $signMsg = '';
+        if( file_exists($pk_file_path) && file_exists($pub_key_file_path) ){
+            /////////////  RSA 签名计算 ///////// 开始 //
+            $fp = fopen($pk_file_path, "r");
+            $priv_key = fread($fp, filesize($pk_file_path));
+            fclose($fp);
+            $pkeyid = openssl_get_privatekey($priv_key,$pk_file_passwd);
+
+            // compute signature
+            openssl_sign($data, $signMsg, $pkeyid,OPENSSL_ALGO_SHA1);
+
+            // free the key from memory
+            openssl_free_key($pkeyid);
+
+            $signMsg = base64_encode($signMsg);
+            /////////////  RSA 签名计算 ///////// 结束 //
+        }
+        return $signMsg;
+    }
+    /**
+     * 签名验证
+     * @params trans_body string 签名字段
+     * @params mac string 返回的签名信息
+     * @return status bool true/false
+     */
+    private function sign_verify($trans_body,$mac){
+        $pub_key_file = $this->getConf('pub_key_file', __CLASS__);
+        $MAC=base64_decode($mac);
+        $pub_key_file_path = DATA_DIR . '/cert/payment_plugin_99bill/' .$pub_key_file;
+
+        $status = false;
+        if( file_exists($pub_key_file_path) ){
+            $fp = fopen($pub_key_file_path, "r");
+            $cert = fread($fp, 8192);
+            fclose($fp);
+            $pubkeyid = openssl_get_publickey($cert);
+            $status = openssl_verify($trans_body, $MAC, $pubkeyid);
+            openssl_free_key($pubkeyid);
+        }
+        return $status;
     }
 }
 

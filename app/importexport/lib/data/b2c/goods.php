@@ -191,7 +191,8 @@ class importexport_data_b2c_goods {
         $goodsData['type_name'] = $goodsTypeData[0]['name'];
 
         //分类
-        $catDataRow = app::get('b2c')->model('goods_cat')->getRow('cat_id',array('cat_name'=>$row['cat_id']));
+        //$catDataRow = app::get('b2c')->model('goods_cat')->getRow('cat_id',array('cat_name'=>$row['cat_id']));
+        $catDataRow = app::get('b2c')->model('goods')->getRow('cat_id',array('goods_id'=>$row['goods_id']));
         $goodsData['cat_name'] = $this->_get_cat_name($catDataRow['cat_id']);
 
         //品牌

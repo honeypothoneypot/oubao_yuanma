@@ -1538,7 +1538,7 @@ class b2c_ctl_site_member extends b2c_frontpage{
         $memberId = intval($this->app->member_id);//会员id号
         if($memberId){
             $membersData = $this->get_current_member();
-            $cur_coupon_nums = $this->app->model('member_coupon')->count(array('cpns_id'=>$cpnsId,'member_id'=>$memberId));
+            $cur_coupon_nums = $this->app->model('member_coupon')->count(array('cpns_id'=>$cpnsId,'member_id'=>$memberId,'source'=>1));
             $coupons = $this->app->model('coupons');
             $cur_coupon = $coupons->dump($cpnsId);
             if($cur_coupon['cpns_max_num'] > 0 ){  //兼容老数据处理老数据还是无限制兑换
@@ -1806,7 +1806,12 @@ class b2c_ctl_site_member extends b2c_frontpage{
         $limit = $this->pagesize;
         $start = ($nPage-1)*$limit;
         $i = 0;
-        $nogift = $orderItemModel->getList('order_id,product_id',$filter);
+        if(empty($filter)){
+             $nogift = array();
+        }else{
+            $nogift = $orderItemModel->getList('order_id,product_id',$filter);
+        }
+
         if($nogift){
             foreach($nogift as $row){
                 $tmp_nogift_order_id[] = $row['order_id'];
@@ -2301,7 +2306,7 @@ class b2c_ctl_site_member extends b2c_frontpage{
             $url = $this->gen_url(array('app'=>'b2c','ctl'=>'site_member','act'=>'index'));
             $obj_coupon = kernel::single("b2c_coupon_order");
             if( $obj_coupon ){
-                $obj_coupon->use_c($sdf['order_id']);
+                $obj_coupon->use_c($sdf['order_id'],'cancel');
             }
             $db->commit($transaction_status);
             $this->splash('success',$url,"订单取消成功",true);

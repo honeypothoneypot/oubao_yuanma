@@ -1566,6 +1566,10 @@ class b2c_mdl_goods extends dbeav_model{
         return intval($res['num']);
     }
 
+    function save_description($goods_description){
+        $rs = parent::save($goods_description);
+    }
+
 
 	///**
 	// * 商品改造信息从kvstore里面获取的方法

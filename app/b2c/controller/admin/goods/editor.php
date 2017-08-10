@@ -459,10 +459,37 @@ class b2c_ctl_admin_goods_editor extends desktop_controller{
                     foreach($arr_remove_image as $_arr_remove_image)
                         $test = $oImage->delete_image($_arr_remove_image,'goods');
                 }
+                $rebuild_image=array();
                 foreach($goods['images'] as $k=>$v){
                     if(is_array($post_image_id) && !in_array($v['image_id'],$post_image_id)){
+                        $rebuild_image[$v['image_id']]=$oImage->getRow('l_ident',array('image_id'=>$v['image_id']));
                         $test = $oImage->rebuild($v['image_id'],array('S','M','L'),true);
                     }
+                }
+                //替换商品描述新增的图片地址
+                $temp_description=array();
+                if(!empty($rebuild_image)){
+                    $_SESSION['edit_goods_id']=$goods['goods_id'];
+                    foreach($rebuild_image as $key=>$val){
+                        $new_image_url=$oImage->getRow('l_ident',array('image_id'=>$key));
+                        $_SESSION['temp_description'][$key]['old']=$val['l_ident'];
+                        $_SESSION['temp_description'][$key]['new']=$new_image_url['l_ident'];
+                        $_SESSION['temp_description'][$key]['time']=time();
+                    }
+                }
+                if(!empty($_SESSION['temp_description'])){
+                    foreach($_SESSION['temp_description'] as $key=>$val){
+                        if($val['time']<(time()-1800)){
+                            unset($_SESSION['temp_description'][$key]);
+                            continue;
+                        }
+                        $goods['description']=str_replace($val['old'], $val['new'], $goods['description']);
+                        if(!empty($goods['wapintro'])){
+                            $goods['wapintro']=str_replace($val['old'], $val['new'], $goods['wapintro']);
+                        }
+                    }
+                    $edit_description=array('goods_id'=>$goods['goods_id'],'description'=>$goods['description'],'wapintro'=>$godos['wapintro']);
+                    $oGoods->save_description($edit_description);
                 }
             }
             if( (!isset($default_product_id)) || $default_product_id == null){
@@ -494,6 +521,7 @@ class b2c_ctl_admin_goods_editor extends desktop_controller{
             kernel::single('weixin_qrcode')->update_goods_qrcode($goods['goods_id']);
         }
 
+
         $_POST['goods'] = $goods;
 
         if(isset($_POST['new_goods_spec']) && $_POST['new_goods_spec']) {
@@ -512,6 +540,9 @@ class b2c_ctl_admin_goods_editor extends desktop_controller{
                 $this->end(false, $error_msg);
             }
         }
+
+
+
 
         $this->end(true,app::get('b2c')->_('操作成功'),null,array('goods_id'=>$goods['goods_id'] ) );
 

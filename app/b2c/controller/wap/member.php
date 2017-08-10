@@ -1469,7 +1469,7 @@ class b2c_ctl_wap_member extends wap_frontpage{
             $db->commit($transaction_status);
             $url = $this->gen_url(array('app'=>'b2c','ctl'=>'wap_member','act'=>'index'));
             $obj_coupon = kernel::single("b2c_coupon_order");
-            $obj_coupon->use_c($sdf['order_id']);
+            $obj_coupon->use_c($sdf['order_id'],'cancel');
             $this->splash('success',$url,"订单取消成功",true);
         }
         else

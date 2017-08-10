@@ -36,8 +36,10 @@ class b2c_coupon_mem {
         $arr_m_c['member_id'] = $m_id;
         $arr_m_c['memc_used_times'] = 0;
         $arr_m_c['memc_gen_time'] = time();
+        $arr_m_c['source'] = 1;
         $params['cpns_point'] = $arr['cpns_point'];
         $params['memc_code'] = $arr_m_c['memc_code'];
+
         return $this->app->model('member_coupon')->save($arr_m_c);
     }
 

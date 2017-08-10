@@ -1092,7 +1092,7 @@ div.highlight .row-line { border-bottom: 0; }
 .finder-detail .gridlist th, .finder-detail .tableform .gridlist th { border-bottom: 1px solid #d0d2d5; width: auto; padding: 0 3px; word-break: keep-all; }
 .finder-detail table { table-layout: auto; }
 .finder-detail .phone-number{overflow: hidden;width:100%;padding:1px;}
-.finder-detail .phone-number .tab-bd{ float: left; border: 1px solid #333;padding: 3px;margin:-1px 0 0 -1px; }
+.finder-detail .phone-number .tab-bd{ float: left; border: 1px solid #e1e1e1;padding: 3px;margin:-1px 0 0 -1px; }
 
 
 .finder-detail-content { background: white; border: 1px solid #c5d3e3; overflow: hidden; width: 100%; }

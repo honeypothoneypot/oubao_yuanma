@@ -26,54 +26,55 @@ var Shop = <{$shopDefine|default:'null'}>;
 <{/if}>
 </head>
 <body>
-<div id="signupin_tags" class="signupin-tags clearfix">
-  <ul>
-    <li class="active"><a href="<{if $cart_buy}><{link app=b2c ctl=site_cart act=loginBuy}><{else}><{link app=b2c ctl=site_passport act=login}><{/if}>?mini_passport=1">登录</a></li>
-    <li><a href="<{link app=b2c ctl=site_passport act=signup}>?mini_passport=1">注册</a></li>
-  </ul>
-</div>
-<div id="mini_signin" class="signupin-content mini-signin">
-  <{include file='site/passport/signin/member-signin.html'}>
-<{if $login_image_urls.0}>
-  <div id="trust_signin" class="trust-signin">
-    <{foreach from=$login_image_urls item=login_image}>
-    <{$login_image}>
-    <{/foreach}>
-  </div>
-  <{/if}>
-  <{if $login_image_url}>
-  <div id="trust_signin" class="trust-signin">
-    <{foreach from=$login_image_url item=login_image}>
-    <a  target="_blank"   href="<{$login_image.url}>"><img src="<{$login_image.image}>" width="28px" height="28px"></a>
-    <{/foreach}>
-  </div>
-  <{/if}>
-
-</div>
-<script>
-Module = new Module('mini', ['signin']);
-var modname = 'mini.signin';
-var showVcode = <{$show_varycode}>;
-
-if((Browser.ie6 || Browser.ie7) && module.getElement('form').getOuterSize().y > module.getSize().y - module.getPatch('border', 'padding').y) {
-    module.setStyle('position', 'relative');
-}
-</script>
-<script type="text/javascript">
-window.onload = function(){
-  var oXinput = document.querySelectorAll(".x-input");
-  var nXinputLen = oXinput.length;
-  console.log(nXinputLen);
-  for( var i = 0 ; i < nXinputLen ; i++){
-    oXinput[i].onblur = function(){
-      var re=/^[a-zA-Z0-9]*$/;
-      if(!re.test(this.value)){
-        alert("请勿输入非法字符");
-        this.value="";//将最后输入的字符去除
-      }
-    }
-  }
-}
-</script>
+    <div id="signupin_tags" class="signupin-tags clearfix">
+        <ul>
+            <li class="active"><a href="<{if $cart_buy}><{link app=b2c ctl=site_cart act=loginBuy}><{else}><{link app=b2c ctl=site_passport act=login}><{/if}>?mini_passport=1">登录</a></li>
+            <li><a href="<{link app=b2c ctl=site_passport act=signup}>?mini_passport=1">注册</a></li>
+        </ul>
+    </div>
+    <div id="mini_signin" class="signupin-content mini-signin">
+        <{include file='site/passport/signin/member-signin.html'}>
+        <{if $login_image_urls.0}>
+        <div id="trust_signin" class="trust-signin">
+        <{foreach from=$login_image_urls item=login_image}>
+        <{$login_image}>
+        <{/foreach}>
+        </div>
+        <{/if}>
+        <{if $login_image_url}>
+        <div id="trust_signin" class="trust-signin">
+        <{foreach from=$login_image_url item=login_image}>
+            <a  target="_blank"   href="<{$login_image.url}>"><img src="<{$login_image.image}>" width="28px" height="28px"></a>
+        <{/foreach}>
+        </div>
+        <{/if}>
+    </div>
+    <script>
+    Module = new Module('mini', ['signin']);
+        var modname = 'mini.signin';
+        var showVcode = <{$show_varycode}>;
+        if((Browser.ie6 || Browser.ie7) && module.getElement('form').getOuterSize().y > module.getSize().y - module.getPatch('border', 'padding').y) {
+            module.setStyle('position', 'relative');
+        }
+    </script>
+    <script type="text/javascript">
+        window.onload = function(){
+            var oXinput = document.querySelectorAll(".x-input");
+            var nXinputLen = oXinput.length;
+            for( var i = 0 ; i < nXinputLen ; i++){
+                oXinput[i].onblur = function(){
+                    var re = /^[a-zA-Z0-9\u4e00-\u9fa5]+$/;
+                    var mail = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+                    if(this.value != ""){
+                        if(mail.test(this.value)){
+                        }else if(!re.test(this.value)){
+                            alert("请勿输入非法字符");
+                            this.value="";//将最后输入的字符去除
+                        };
+                    };
+                };
+            };
+        };
+    </script>
 </body>
 </html>
