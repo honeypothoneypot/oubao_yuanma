@@ -395,7 +395,7 @@ class b2c_ctl_admin_member extends desktop_controller{
             //获取日志操作管理员名称@lujy--start--
             foreach($data['score']['event'] as $key=>$val){
                 if( $val['status'] == 'false' ){
-                    $operatorInfo = $accountObj->getList('login_name',array('account_id' => $val['operator']));
+                    $operatorInfo = app::get('pam')->model('account')->getList('login_name',array('account_id' => $val['operator']));
                     $data['score']['event'][$key]['operator_name'] = $operatorInfo['0']['login_name'];
                 }else
                 {

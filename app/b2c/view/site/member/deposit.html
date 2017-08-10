@@ -25,7 +25,7 @@
                 <ul class="payment-list">
                   <{foreach from=$payments item="payment" key="key" name="payments"}>
                     <li class="payment-item"><input type="radio" name="payment[pay_app_id]" value="<{$payment.app_id}>" id="for_pay_<{$payment.app_id}>" vtype="onerequired" onchange="show1('<{$payment.app_id}>')" <{if $arr_def_payment.app_id && $arr_def_payment.app_id==$payment.app_id}> checked="checked"<{/if}><{if (!$arr_def_payment || !$is_def_payment_match) && $smarty.foreach.payments.first}> checked="checked"<{/if}>>
-                    <label for="for_pay_<{$payment.app_id}>"><{$payment.app_name}><{if $payment.config.method=="1" || $payment.config.method==""}><{if $payment.fee>0}><{t}> (支付费率: +<{/t}><{$payment.fee*100}>%)<{/if}><{else}><{if $payment.config.fee>0}><{t}> (支付费用: +<{/t}><{$payment.config.fee}>)<{/if}><{/if}></label></li>
+                    <label for="for_pay_<{$payment.app_id}>"><{$payment.app_display_name}><{if $payment.config.method=="1" || $payment.config.method==""}><{if $payment.fee>0}><{t}> (支付费率: +<{/t}><{$payment.fee*100}>%)<{/if}><{else}><{if $payment.config.fee>0}><{t}> (支付费用: +<{/t}><{$payment.config.fee}>)<{/if}><{/if}></label></li>
 
                     <{if $payment.support_bank}>
                     <div class="<{$payment.app_id}>2" style="display:none">

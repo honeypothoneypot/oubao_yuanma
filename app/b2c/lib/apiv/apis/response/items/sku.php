@@ -65,6 +65,7 @@ class b2c_apiv_apis_response_items_sku
                 'market_price'=>$arr['mktprice'],
                 'modified'=>$arr['last_modify'],
                 'cost'=>$arr['cost'],
+                "approve_status"=> ($arr['marketable']=='false') ? "instock" : "onsale",
             );
         }
         

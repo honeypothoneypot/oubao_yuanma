@@ -56,6 +56,16 @@ $db['tag_rel']=array (
       'orderby' => true,
     ),
   ),
+  'index' =>
+    array (
+        'ind_rel_id' =>
+        array (
+            'columns' =>
+            array (
+                0 => 'rel_id',
+            ),
+        ),
+  ),
   'version' => '$Rev$',
   'comment' => app::get('desktop')->_('tag和对象关联表'),
 );

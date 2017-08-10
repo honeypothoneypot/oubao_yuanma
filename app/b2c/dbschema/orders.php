@@ -630,6 +630,13 @@ $db['orders']=array (
             0 => 'order_refer',
             ),
         ),
+    'ind_member_id' =>
+    array (
+        'columns' =>
+        array (
+            0 => 'member_id',
+        ),
+    ),
   ),
   'engine' => 'innodb',
   'version' => '$Rev: 42376 $',

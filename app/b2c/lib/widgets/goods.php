@@ -213,8 +213,8 @@ class b2c_widgets_goods extends b2c_widgets_public {
 
         $filter['price'][0]=$filter['pricefrom'];
         $filter['price'][1]=$filter['priceto'];
-        $filter['name'][0]=$filter['searchname'];
-
+        //$filter['name'][0]=$filter['searchname']; //查找商品名称
+        $filter['search_keywords'][0] = $filter['searchname'];//查找商品名称+商品关键词
         return $filter;
 
     }

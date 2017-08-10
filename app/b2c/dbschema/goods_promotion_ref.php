@@ -128,6 +128,30 @@ $db['goods_promotion_ref'] = array(
             'editable' => false,
             ),
         ),
+     'index' =>
+     array (
+         'ind_from_time' =>
+         array (
+             'columns' =>
+             array (
+                 0 => 'from_time',
+             ),
+         ),
+         'ind_to_time' =>
+         array (
+             'columns' =>
+             array (
+                 0 => 'to_time',
+             ),
+         ),
+         'ind_goods_id' =>
+         array (
+             'columns' =>
+             array (
+                 0 => 'goods_id',
+             ),
+         ),
+     ),
     'comment' => app::get('b2c')->_('商品与商品促销规则'),
 );
 

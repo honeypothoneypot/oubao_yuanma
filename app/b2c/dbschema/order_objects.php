@@ -5,11 +5,11 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
- 
+
 $db['order_objects']=array (
-  'columns' => 
+  'columns' =>
   array (
-    'obj_id' => 
+    'obj_id' =>
     array (
       'type' => 'number',
       'required' => true,
@@ -18,7 +18,7 @@ $db['order_objects']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('订单商品对象ID'),
     ),
-    'order_id' => 
+    'order_id' =>
     array (
       'type' => 'table:orders',
       'required' => true,
@@ -26,7 +26,7 @@ $db['order_objects']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('订单ID'),
     ),
-    'obj_type' => 
+    'obj_type' =>
     array (
       'type' => 'varchar(50)',
       'default' => '',
@@ -34,7 +34,7 @@ $db['order_objects']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('对象类型'),
     ),
-    'obj_alias' => 
+    'obj_alias' =>
     array (
       'type' => 'varchar(100)',
       'default' => '',
@@ -42,7 +42,7 @@ $db['order_objects']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('对象别名'),
     ),
-    'goods_id' => 
+    'goods_id' =>
     array (
       'type' => 'table:goods',
       'required' => true,
@@ -50,20 +50,20 @@ $db['order_objects']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('商品ID'),
     ),
-    'bn' => 
+    'bn' =>
     array (
       'type' => 'varchar(40)',
       'editable' => false,
       'is_title' => true,
       'comment' => app::get('b2c')->_('品牌名'),
     ),
-    'name' => 
+    'name' =>
     array (
       'type' => 'varchar(200)',
       'editable' => false,
       'comment' => app::get('b2c')->_('商品对象名字'),
     ),
-    'price' => 
+    'price' =>
     array (
       'type' => 'money',
       'default' => '0',
@@ -71,7 +71,7 @@ $db['order_objects']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('商品对象单价'),
     ),
-    'amount' => 
+    'amount' =>
     array (
       'type' => 'money',
       'default' => '0',
@@ -79,7 +79,7 @@ $db['order_objects']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('商品对象总金额'),
     ),
-    'quantity' => 
+    'quantity' =>
     array (
       'type' => 'float',
       'default' => 1,
@@ -87,20 +87,20 @@ $db['order_objects']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('商品对象购买量'),
     ),
-    'weight' => 
+    'weight' =>
     array (
       'type' => 'number',
       'editable' => false,
       'comment' => app::get('b2c')->_('总重量'),
     ),
-    'score' => 
+    'score' =>
     array (
       'type' => 'number',
       'editable' => false,
       'comment' => app::get('b2c')->_('获得积分'),
     ),
   ),
-  'index' => 
+  'index' =>
   array (
     'ind_obj_bn' =>
     array (
@@ -108,6 +108,13 @@ $db['order_objects']=array (
             0 => 'bn',
         ),
         'type' => 'hash',
+    ),
+    'ind_order_id' =>
+    array (
+        'columns' =>
+        array (
+            0 => 'order_id',
+        ),
     ),
   ),
   'engine' => 'innodb',

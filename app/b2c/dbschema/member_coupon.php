@@ -5,7 +5,7 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
- 
+
 /**
 * @table member_coupon;
 *
@@ -16,9 +16,9 @@
 */
 
 $db['member_coupon']=array (
-  'columns' => 
+  'columns' =>
   array (
-    'memc_code' => 
+    'memc_code' =>
     array (
       'type' => 'varchar(255)',
       'required' => true,
@@ -27,7 +27,7 @@ $db['member_coupon']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('优惠券code'),
     ),
-    'cpns_id' => 
+    'cpns_id' =>
     array (
       'type' => 'number',
       'required' => true,
@@ -35,7 +35,7 @@ $db['member_coupon']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('会员优惠券ID'),
     ),
-    'member_id' => 
+    'member_id' =>
     array (
       'type' => 'table:members',
       'required' => true,
@@ -44,15 +44,15 @@ $db['member_coupon']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('会员ID'),
     ),
-    'memc_gen_orderid' => 
+    'memc_gen_orderid' =>
     array (
       'type' => 'varchar(15)',
       'editable' => false,
       'comment' => app::get('b2c')->_('优惠券产生订单号'),
     ),
-    'memc_source' => 
+    'memc_source' =>
     array (
-      'type' => 
+      'type' =>
       array (
         'a' => app::get('b2c')->_('全体优惠券'),
         'b' => app::get('b2c')->_('会员优惠券'),
@@ -63,7 +63,7 @@ $db['member_coupon']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('优惠券来源(保留)'),
     ),
-    'memc_enabled' => 
+    'memc_enabled' =>
     array (
       'type' => 'bool',
       'default' => 'true',
@@ -71,20 +71,20 @@ $db['member_coupon']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('留做后用, 可单独取消某些已发放出的优惠券'),
     ),
-    'memc_used_times' => 
+    'memc_used_times' =>
     array (
       'type' => 'mediumint',
       'default' => 0,
       'editable' => false,
       'comment' => app::get('b2c')->_('已使用次数'),
     ),
-    'memc_gen_time' => 
+    'memc_gen_time' =>
     array (
       'type' => 'time',
       'editable' => false,
       'comment' => app::get('b2c')->_('优惠券产生时间'),
     ),
-    'disabled' => 
+    'disabled' =>
     array (
       'type' => array(
         'true' => app::get('b2c')->_('无效'),
@@ -97,7 +97,7 @@ $db['member_coupon']=array (
       'label' => app::get('b2c')->_('无效'),
       'in_list' => false,
     ),
-    'memc_isvalid' => 
+    'memc_isvalid' =>
     array (
       'type' => 'bool',
       'default' => 'true',
@@ -108,13 +108,20 @@ $db['member_coupon']=array (
   ),
   'index' =>
   array (
-    'ind_memc_gen_orderid' =>
-    array (
-      'columns' =>
+      'ind_memc_gen_orderid' =>
       array (
-        0 => 'memc_gen_orderid',
+          'columns' =>
+          array (
+              0 => 'memc_gen_orderid',
+          ),
       ),
-    ),
+      'ind_member_id' =>
+      array (
+          'columns' =>
+          array (
+              0 => 'member_id',
+          ),
+      ),
   ),
   'comment' => app::get('b2c')->_('用户优惠券表'),
 );

@@ -6,7 +6,7 @@
   </cron>
 
 <cron id="starbuy_tasks_cancelorder">
-    <description>取消过期订单</description>
+    <description>取消过期团购订单</description>
     <schedule>0 * * * *</schedule>
     <enabled>false</enabled>
   </cron>

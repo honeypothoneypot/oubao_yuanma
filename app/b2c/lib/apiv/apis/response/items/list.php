@@ -34,7 +34,7 @@ class b2c_apiv_apis_response_items_list
         
         //清理非法字段名称
         $this->clear_fields($sdf['fields']);
-        $sdf['fields'] = $sdf['fields'] ? trim($sdf['fields']) : 'goods_id,bn,name,price,store,last_modify';
+        $sdf['fields'] = $sdf['fields'] ? trim($sdf['fields']) : '*';
         
         $iid_arr = explode(',', $sdf['iids']);
         $iids = array();
@@ -89,6 +89,7 @@ class b2c_apiv_apis_response_items_list
                 "cid"=>floatval($v['category']['cat_id']),
                 "num"=>$v['store'],
                 "status"=> ($v['marketable']=='false') ? "instock" : "onsale",
+                "approve_status"=> ($v['marketable']=='false') ? "instock" : "onsale",
                 "price"=>$v['price'],
                 "unit"=>$v['unit'],
                 "modified"=>$this->format_time($v['last_modify']),
@@ -141,6 +142,7 @@ class b2c_apiv_apis_response_items_list
                     'market_price'=>$arr['mktprice'],
                     'modified'=>$this->format_time($arr['last_modify']),
                     'cost'=>$arr['cost'],
+                    "approve_status"=> ($arr['marketable']=='false') ? "instock" : "onsale",
                 );
             }
         }

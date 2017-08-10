@@ -14,6 +14,9 @@ class starbuy_special_order{
         foreach($order_items as $value){
             $gtimeout = $this->_get_special_goods_timeout($value['product_id'],$value['nums']);
             $timeout = ($timeout == 0 ||$gtimeout < $timeout ) ? $gtimeout : $timeout;
+            if( $timeout ){
+                break;
+            }
         }
         if($timeout){
             $msg = "您的订单中包含活动货品，超过".$timeout."小时后未付款订单将自动关闭，请及时付款";

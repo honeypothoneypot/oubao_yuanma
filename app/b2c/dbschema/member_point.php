@@ -5,11 +5,11 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
- 
+
 $db['member_point']=array (
-  'columns' => 
+  'columns' =>
   array (
-    'id' => 
+    'id' =>
     array (
       'type' => 'number',
       'required' => true,
@@ -18,7 +18,7 @@ $db['member_point']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('积分日志ID'),
     ),
-    'member_id' => 
+    'member_id' =>
     array (
       'type' => 'table:members',
       'required' => true,
@@ -26,7 +26,7 @@ $db['member_point']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('会员ID'),
     ),
-    'point' => 
+    'point' =>
     array (
       'type' => 'int(10)',
       'required' => true,
@@ -34,7 +34,7 @@ $db['member_point']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('积分阶段总结'),
     ),
-     'change_point' => 
+     'change_point' =>
     array (
       'type' => 'int(10)',
       'required' => true,
@@ -42,7 +42,7 @@ $db['member_point']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('改变积分'),
     ),
-    'consume_point' => 
+    'consume_point' =>
     array (
       'type' => 'int(10)',
       'required' => true,
@@ -50,7 +50,7 @@ $db['member_point']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('单笔积分消耗的积分值'),
     ),
-    'addtime' => 
+    'addtime' =>
     array (
       'type' => 'time',
       'required' => true,
@@ -58,7 +58,7 @@ $db['member_point']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('添加时间'),
     ),
-    'expiretime' => 
+    'expiretime' =>
     array (
       'type' => 'time',
       'required' => true,
@@ -66,7 +66,7 @@ $db['member_point']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('过期时间'),
     ),
-    'reason' => 
+    'reason' =>
     array (
       'type' => 'varchar(50)',
       'required' => true,
@@ -75,7 +75,7 @@ $db['member_point']=array (
       'is_title' => true,
       'comment' => app::get('b2c')->_('理由'),
     ),
-    'remark' => 
+    'remark' =>
     array (
       'type' => 'varchar(100)',
       'required' => false,
@@ -84,7 +84,7 @@ $db['member_point']=array (
       'is_title' => true,
       'comment' => app::get('b2c')->_('备注'),
     ),
-    'related_id' => 
+    'related_id' =>
     array (
       'type' => 'bigint unsigned',
       'editable' => false,
@@ -113,7 +113,24 @@ $db['member_point']=array (
       'comment' => app::get('b2c')->_('同步CRM的状态'),
     ),
   ),
+   'index' =>
+     array (
+         'ind_member_id' =>
+         array (
+             'columns' =>
+             array (
+                 0 => 'member_id',
+             ),
+         ),
+         'ind_expiretime' =>
+         array (
+             'columns' =>
+             array (
+                 0 => 'expiretime',
+             ),
+         ),
+   ),
   'engine' => 'innodb',
   'version' => '$Rev: 43105 $',
-  'comment' => app::get('b2c')->_('积分历史日志表'),  
+  'comment' => app::get('b2c')->_('积分历史日志表'),
 );

@@ -79,6 +79,8 @@ class b2c_ctl_admin_setting extends desktop_controller{
                 'site.checkout.hasnight',
                 'site.checkout.shortest',
                 'site.combination.pay',//组合支付
+                'site.trigger_cancelorder', //是否开启取消订单
+                'site.cancelorder_timelimit', //订单创建多少小时后，未支付取消订单
             ),
           app::get('b2c')->_(商品列表页设置)=>array(
                 //'system.category.showgoods',

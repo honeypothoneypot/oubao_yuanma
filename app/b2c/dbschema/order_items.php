@@ -5,11 +5,11 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
- 
+
 $db['order_items']=array (
-  'columns' => 
+  'columns' =>
   array (
-    'item_id' => 
+    'item_id' =>
     array (
       'type' => 'number',
       'required' => true,
@@ -18,7 +18,7 @@ $db['order_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('订单明细ID'),
     ),
-    'order_id' => 
+    'order_id' =>
     array (
       'type' => 'table:orders',
       'required' => true,
@@ -26,7 +26,7 @@ $db['order_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('订单ID'),
     ),
-    'obj_id' => 
+    'obj_id' =>
     array (
       'type' => 'table:order_objects',
       'required' => true,
@@ -34,7 +34,7 @@ $db['order_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('订单明细对应的商品对象ID, 对应到sdb_b2c_order_objects表'),
     ),
-    'product_id' => 
+    'product_id' =>
     array (
       'type' => 'table:products',
       'required' => true,
@@ -43,7 +43,7 @@ $db['order_items']=array (
       'sdfpath' => 'products/product_id',
       'comment' => app::get('b2c')->_('货品ID'),
     ),
-    'goods_id' => 
+    'goods_id' =>
     array (
       'type' => 'table:goods',
       'required' => true,
@@ -51,32 +51,32 @@ $db['order_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('商品ID'),
     ),
-    'type_id' => 
+    'type_id' =>
     array (
       'type' => 'number',
       'editable' => false,
       'comment' => app::get('b2c')->_('商品类型ID'),
     ),
-    'bn' => 
+    'bn' =>
     array (
       'type' => 'varchar(40)',
       'editable' => false,
       'is_title' => true,
       'comment' => app::get('b2c')->_('明细商品的品牌名'),
     ),
-    'name' => 
+    'name' =>
     array (
       'type' => 'varchar(200)',
       'editable' => false,
       'comment' => app::get('b2c')->_('明细商品的名称'),
     ),
-    'cost' => 
+    'cost' =>
     array (
       'type' => 'money',
       'editable' => false,
       'comment' => app::get('b2c')->_('明细商品的成本'),
     ),
-    'price' => 
+    'price' =>
     array (
       'type' => 'money',
       'default' => '0',
@@ -84,7 +84,7 @@ $db['order_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('明细商品的销售价(购入价)'),
     ),
-	'g_price' => 
+	'g_price' =>
     array (
       'type' => 'money',
       'default' => '0',
@@ -93,7 +93,7 @@ $db['order_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('明细商品的会员价原价'),
     ),
-    'amount' => 
+    'amount' =>
     array (
       'type' => 'money',
       'editable' => false,
@@ -107,13 +107,13 @@ $db['order_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('明细商品积分'),
     ),
-    'weight' => 
+    'weight' =>
     array (
       'type' => 'number',
       'editable' => false,
       'comment' => app::get('b2c')->_('明细商品重量'),
     ),
-    'nums' => 
+    'nums' =>
     array (
       'type' => 'float',
       'default' => 1,
@@ -122,7 +122,7 @@ $db['order_items']=array (
       'sdfpath' => 'quantity',
       'comment' => app::get('b2c')->_('明细商品购买数量'),
     ),
-    'sendnum' => 
+    'sendnum' =>
     array (
       'type' => 'float',
       'default' => 0,
@@ -130,15 +130,15 @@ $db['order_items']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('明细商品发货数量'),
     ),
-    'addon' => 
+    'addon' =>
     array (
       'type' => 'longtext',
       'editable' => false,
       'comment' => app::get('b2c')->_('明细商品的规格属性'),
     ),
-    'item_type' => 
+    'item_type' =>
     array (
-      'type' => 
+      'type' =>
       array (
         'product' => app::get('b2c')->_('商品'),
         'pkg' => app::get('b2c')->_('捆绑商品'),
@@ -151,7 +151,7 @@ $db['order_items']=array (
       'comment' => app::get('b2c')->_('明细商品类型'),
     ),
   ),
-  'index' => 
+  'index' =>
   array (
     'ind_item_bn' =>
     array (
@@ -159,6 +159,20 @@ $db['order_items']=array (
             0 => 'bn',
         ),
         'type' => 'hash',
+    ),
+    'ind_obj_id' =>
+    array (
+        'columns' =>
+        array (
+            0 => 'obj_id',
+        ),
+    ),
+    'ind_order_id' =>
+    array (
+        'columns' =>
+        array (
+            0 => 'order_id',
+        ),
     ),
   ),
   'engine' => 'innodb',

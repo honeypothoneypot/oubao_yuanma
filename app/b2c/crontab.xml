@@ -5,8 +5,13 @@
     <enabled>true</enabled>
   </cron>
   <cron id="b2c_tasks_order_cancel">
-    <description>自动取消过期订单</description>
+    <description>自动取消营销过期订单</description>
     <schedule>5 * * * *</schedule>
+    <enabled>true</enabled>
+  </cron>
+  <cron id="b2c_tasks_order_cancel_unpay">
+    <description>取消过期普通订单</description>
+    <schedule>50 * * * *</schedule>
     <enabled>true</enabled>
   </cron>
   <cron id="b2c_tasks_order_delivery">

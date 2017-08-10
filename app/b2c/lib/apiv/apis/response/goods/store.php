@@ -37,13 +37,12 @@ class b2c_apiv_apis_response_goods_store
      */
     public function updateStore(&$sdf, $thisObj)
     {
+        $error_bn = array();
+        $true_bn = array();
 
-        if (!isset($sdf['list_quantity']) || !$sdf['list_quantity'])
-        {
+        if(!isset($sdf['list_quantity']) || !$sdf['list_quantity']){
             $thisObj->send_user_error(app::get('b2c')->_('需要更新的货品的库存不存在！'), array());
-        }
-        else
-        {
+        }else{
             $has_error = false;
             $arr_store = json_decode($sdf['list_quantity'], true);
 
@@ -69,58 +68,48 @@ class b2c_apiv_apis_response_goods_store
                             $arr_product['store'] = $this->objMath->number_plus(array($arr_product_info['quantity'],$arr_product['freez']));
                             $arr_product['last_modify'] = time();
                             $storage_enable = $this->app->getConf('site.storage.enabled');
-                            if (!is_null($arr_product['store']) && $storage_enable != 'true')
-                            {
-
-
+                            if (!is_null($arr_product['store']) && $storage_enable != 'true'){
                                 $is_save = $product->save($arr_product);
                                 if($is_save){
-
                                     $obj_goods->update($arr_goods, array('goods_id' => $arr_goods['goods_id']));
                                 }
-                            }
-                            else
-                            {
+                            }else{
                                 $is_save = true;
                             }
 
-                            if (!$is_save)
-                            {
+                            if( ! $is_save){
                                 $msg = $this->app->_('商品库存更新失败！');
                                 $has_error = true;
 
                                 $fail_products[] = $arr_product_info['bn'];
-
+                                $error_bn[] = $arr_product_info['bn'];
                                 continue;
+                            }else{
+                                $true_bn[] = $arr_product_info['bn'];
                             }
-                        }
-                        else
-                        {
+                        }else{
                             $has_error = true;
-
                             $fail_products[] = $arr_product_info['bn'];
-
+                            $error_bn[] = $arr_product_info['bn'];
                             continue;
                         }
-                    }
-                    else
-                    {
+                    }else{
                         $has_error = true;
                         continue;
                     }
                 }
 
-                if (!$has_error)
-                    return true;
-                else
-                {
+                if( ! $has_error){
+                    $data = array('error_bn'=>$error_bn, 'true_bn'=>$true_bn);
+                    return $data;
+                    //return true;
+                }else{
                     // 更新部分失败.
+                    $data = array('error_bn'=>$error_bn, 'true_bn'=>$true_bn);
                     $fail_products = array('error_response' => $fail_products);
-                    $thisObj->send_user_error(app::get('b2c')->_('更新库存部分失败！'), $fail_products);
+                    $thisObj->send_user_error(app::get('b2c')->_('更新库存部分失败！'), $data);
                 }
-            }
-            else
-            {
+            }else{
                 $thisObj->send_user_error(app::get('b2c')->_('更新的商品的库存信息不存在！'), array());
             }
         }

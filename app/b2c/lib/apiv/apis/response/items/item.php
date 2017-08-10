@@ -71,7 +71,8 @@ class b2c_apiv_apis_response_items_item
             "brand_id"=>floatval($rs['brand']['brand_id']),
             "cid"=>floatval($rs['category']['cat_id']),
             "num"=>$rs['store'],
-            "status"=> ($v['marketable']=='false') ? "instock" : "onsale",
+            "status"=> ($rs['status']=='false') ? "instock" : "onsale",
+            "approve_status"=> ($rs['status']=='false') ? "instock" : "onsale",
             "price"=>$rs['price'],
             "unit"=>$rs['unit'],
             "modified"=>$this->format_time($rs['last_modify']),
@@ -123,6 +124,7 @@ class b2c_apiv_apis_response_items_item
                     'market_price'=>$arr['mktprice'],
                     'modified'=>$this->format_time($arr['last_modify']),
                     'cost'=>$arr['cost'],
+                    "approve_status"=> ($arr['marketable']=='false') ? "instock" : "onsale",
                 );
             }
         }

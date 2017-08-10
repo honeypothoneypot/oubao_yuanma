@@ -68,6 +68,16 @@ $db['members'] = array(
             'comment' => app::get('pam')->_('创建时间'),
         ),
     ),
+    'index' =>
+    array (
+        'ind_login_account' =>
+        array (
+            'columns' =>
+            array (
+                0 => 'login_account',
+            ),
+        ),
+    ),
     'engine' => 'innodb',
     'comment' => app::get('pam')->_('前台会员用户表'),
 );

@@ -119,7 +119,17 @@ $db['member_goods']=array (
         'default' => 'goods',
         'comment' => app::get('b2c')->_('收藏的类型，goods'),
         ),
-  ),
+    ),
+    'index' =>
+    array (
+        'ind_member_id' =>
+        array (
+            'columns' =>
+            array (
+                0 => 'member_id',
+            ),
+        ),
+    ),
   'comment' => app::get('b2c')->_('收藏/缺货登记'),
    'engine' => 'innodb',
    'version' => '$Rev$',

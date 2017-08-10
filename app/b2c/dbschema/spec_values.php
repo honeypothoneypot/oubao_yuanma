@@ -5,11 +5,11 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
- 
+
 $db['spec_values']=array (
-  'columns' => 
+  'columns' =>
   array (
-    'spec_value_id' => 
+    'spec_value_id' =>
     array (
       'type' => 'number',
       'required' => true,
@@ -18,7 +18,7 @@ $db['spec_values']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('规格值ID'),
     ),
-    'spec_id' => 
+    'spec_id' =>
     array (
       'type' => 'table:specification',
       'default' => 0,
@@ -26,7 +26,7 @@ $db['spec_values']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('规格ID'),
     ),
-    'spec_value' => 
+    'spec_value' =>
     array (
       'type' => 'varchar(100)',
       'default' => '',
@@ -35,7 +35,7 @@ $db['spec_values']=array (
       'is_title' => true,
       'comment' => app::get('b2c')->_('规格值'),
     ),
-    'alias' => 
+    'alias' =>
     array (
       'type' => 'varchar(255)',
       'default' => '',
@@ -44,14 +44,14 @@ $db['spec_values']=array (
       'in_list' => true,
       'default_in_list' => true,
     ),
-    'spec_image' => 
+    'spec_image' =>
     array (
       'type' => 'table:image@image',
       'default' => '',
       'editable' => false,
       'comment' => app::get('b2c')->_('规格图片'),
     ),
-    'p_order' => 
+    'p_order' =>
     array (
       'type' => 'number',
       'default' => 50,
@@ -59,6 +59,16 @@ $db['spec_values']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('排序'),
     ),
+  ),
+  'index' =>
+    array (
+        'ind_spec_id' =>
+        array (
+            'columns' =>
+            array (
+                0 => 'spec_id',
+            ),
+        ),
   ),
   'comment' => app::get('b2c')->_('商品规格值表'),
   'version' => '$Rev: 42046 $',

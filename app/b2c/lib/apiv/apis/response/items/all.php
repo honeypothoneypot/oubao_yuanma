@@ -124,6 +124,7 @@ class b2c_apiv_apis_response_items_all
                 //"type"=>"fixed",
                 //"props"=>"颜色=>红色;配置=>全配",
                 "status"=> ($v['marketable']=='false') ? "instock" : "onsale",
+                "approve_status"=> ($v['marketable']=='false') ? "instock" : "onsale",
                 "price"=>$v['price'],
                 "mktprice"=>floatval($v['mktprice']),
                 //"unit"=>"台",

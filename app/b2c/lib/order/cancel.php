@@ -100,7 +100,7 @@ class b2c_order_cancel extends b2c_api_rpc_request
         if ($is_save && $is_unfreeze)
         {
             $objorder_log = $this->app->model('order_log');
-                $cancel_type=array('member'=>'用户作废','shopadmin'=>'管理员作废');
+                $cancel_type=array('member'=>'用户作废','shopadmin'=>'管理员作废','auto'=>'订单支付超时，自动取消');
 			$log_text[] = array(
 					'txt_key'=>'订单取消'.'('.$cancel_type[$sdf['account_type']].')',
 					'data'=>array(

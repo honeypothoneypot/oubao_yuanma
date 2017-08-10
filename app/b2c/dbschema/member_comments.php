@@ -194,6 +194,20 @@ $db['member_comments']=array (
                0 => 'for_comment_id',
            ),
        ),
+       'ind_to_id' =>
+       array (
+           'columns' =>
+           array (
+               0 => 'to_id',
+           ),
+       ),
+       'ind_author_id' =>
+       array (
+           'columns' =>
+           array (
+               0 => 'author_id',
+           ),
+       ),
    ),
 
 );

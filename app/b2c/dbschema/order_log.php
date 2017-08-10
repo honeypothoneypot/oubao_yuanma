@@ -7,9 +7,9 @@
  */
 
 $db['order_log']=array (
-  'columns' => 
+  'columns' =>
   array (
-    'log_id' => 
+    'log_id' =>
     array (
       'type' => 'number',
       'required' => true,
@@ -18,7 +18,7 @@ $db['order_log']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('订单日志ID'),
     ),
-    'rel_id' => 
+    'rel_id' =>
     array (
       'type' => 'bigint unsigned',
       'required' => true,
@@ -26,7 +26,7 @@ $db['order_log']=array (
       'editable' => false,
       'comment' => app::get('b2c')->_('对象ID'),
     ),
-    'op_id' => 
+    'op_id' =>
     array (
       'type' => 'number',//'table:users@desktop',
       'label' => app::get('b2c')->_('操作员'),
@@ -36,7 +36,7 @@ $db['order_log']=array (
       'in_list' => true,
       'comment' => app::get('b2c')->_('操作员ID'),
     ),
-    'op_name' => 
+    'op_name' =>
     array (
       'type' => 'varchar(100)',
       'label' => app::get('b2c')->_('操作人名称'),
@@ -46,7 +46,7 @@ $db['order_log']=array (
       'filterdefault' => true,
       'in_list' => true,
     ),
-    'alttime' => 
+    'alttime' =>
     array (
       'type' => 'time',
       'label' => app::get('b2c')->_('操作时间'),
@@ -57,9 +57,9 @@ $db['order_log']=array (
       'in_list' => true,
       'comment' => app::get('b2c')->_('操作时间'),
     ),
-   'bill_type' => 
+   'bill_type' =>
     array (
-      'type' => 
+      'type' =>
       array (
         'order' => app::get('b2c')->_('订单支付'),
         'recharge' => app::get('b2c')->_('预存款充值'),
@@ -76,9 +76,9 @@ $db['order_log']=array (
       'in_list' => true,
       'comment' => app::get('b2c')->_('操作人员姓名'),
     ),
-    'behavior' => 
+    'behavior' =>
     array (
-      'type' => 
+      'type' =>
       array (
         'creates' => app::get('b2c')->_('创建'),
         'updates' => app::get('b2c')->_('修改'),
@@ -101,9 +101,9 @@ $db['order_log']=array (
       'in_list' => true,
       'comment' => app::get('b2c')->_('日志记录操作的行为'),
     ),
-    'result' => 
+    'result' =>
     array (
-      'type' => 
+      'type' =>
       array (
         'SUCCESS' => app::get('b2c')->_('成功'),
         'FAILURE' => app::get('b2c')->_('失败'),
@@ -117,7 +117,7 @@ $db['order_log']=array (
       'in_list' => true,
       'comment' => app::get('b2c')->_('日志结果'),
     ),
-    'log_text' => 
+    'log_text' =>
     array (
       'type' => 'longtext',
       'editable' => false,
@@ -125,12 +125,22 @@ $db['order_log']=array (
       'default_in_list' => false,
       'comment' => app::get('b2c')->_('操作内容'),
     ),
-    'addon' => 
+    'addon' =>
     array (
       'type' => 'longtext',
       'editable' => false,
       'comment' => app::get('b2c')->_('序列化数据'),
     ),
+  ),
+  'index' =>
+    array (
+        'ind_rel_id' =>
+        array (
+            'columns' =>
+            array (
+                0 => 'rel_id',
+            ),
+        ),
   ),
   'engine' => 'innodb',
   'version' => '$Rev: 46974 $',

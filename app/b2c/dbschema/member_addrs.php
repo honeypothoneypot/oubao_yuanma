@@ -99,6 +99,16 @@ $db['member_addrs']=array (
       'comment' => app::get('b2c')->_('默认地址'),
     ),
   ),
+  'index' =>
+     array (
+         'ind_member_id' =>
+         array (
+             'columns' =>
+             array (
+                 0 => 'member_id',
+             ),
+         ),
+   ),
   'engine' => 'innodb',
   'version' => '$Rev: 42752 $',
   'comment' => app::get('b2c')->_('会员地址表'),

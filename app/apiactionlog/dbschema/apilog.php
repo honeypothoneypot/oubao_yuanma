@@ -47,7 +47,7 @@ $db['apilog'] = array(
             'edtiable' => false,
             'order'=>12,
         ),
-        
+
         'task_name'=>array(
             'type' => 'varchar(255)',
             'editable' => false,
@@ -58,7 +58,7 @@ $db['apilog'] = array(
             'searchtype' => 'has',
             'label' => '任务名称',
             'width' => 150,
-            'panel_id' => 'api_log_finder_top', 
+            'panel_id' => 'api_log_finder_top',
             'order'=>11,
         ),
         'calltime'=>array(
@@ -185,6 +185,13 @@ $db['apilog'] = array(
     ),
     'index' =>
     array (
+        'ind_msg_id' =>
+        array (
+            'columns' =>
+            array (
+                0 => 'msg_id',
+            ),
+        ),
         'ind_status' =>
         array (
             'columns' =>

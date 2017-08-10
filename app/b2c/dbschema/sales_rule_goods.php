@@ -163,6 +163,23 @@ $db['sales_rule_goods'] = array(
             'editable' => false,
             ),
         ),
+    'index' =>
+    array (
+        'ind_from_time' =>
+        array (
+            'columns' =>
+            array (
+                0 => 'from_time',
+            ),
+        ),
+        'ind_to_time' =>
+        array (
+            'columns' =>
+            array (
+                0 => 'to_time',
+            ),
+        ),
+    ),
     'comment' => app::get('b2c')->_('商品促销规则'),
 );
 
