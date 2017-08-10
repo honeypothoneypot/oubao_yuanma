@@ -1540,7 +1540,7 @@ class b2c_ctl_admin_order extends desktop_controller{
         $objDlytype = $this->app->model('dlytype');
         $arrDlytype = $objDlytype->dump($this->pagedata['order']['shipping']['shipping_id']);
         $this->pagedata['corp_id'] = $arrDlytype['corp_id'];
-
+        
         $this->display('admin/order/godelivery.html');
     }
 
@@ -1571,6 +1571,7 @@ class b2c_ctl_admin_order extends desktop_controller{
         $objB2c_delivery = b2c_order_delivery::getInstance($this->app, $this->app->model('delivery'));
         if ($objB2c_delivery->generate($sdf, $this, $message))
         {
+
             if($order_object = kernel::service('b2c_order_rpc_async')){
                 $order_object->modifyActive($sdf['order_id']);
             }

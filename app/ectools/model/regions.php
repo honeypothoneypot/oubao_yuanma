@@ -159,6 +159,7 @@ class ectools_mdl_regions extends dbeav_model{
     
     public function change_regions_data($ship_area='')
     {
+
         if (!$ship_area)
             return '';
         
@@ -170,12 +171,16 @@ class ectools_mdl_regions extends dbeav_model{
             app::get('ectools')->_('上海'),
             app::get('ectools')->_('重庆'),
         );
+
         if (!in_array($arr_region_name[0], $arr_directory_name))
         {
+            //return implode('',$arr_region_name);
             return $arr_region_name[0].$arr_region_name[1].$arr_region_name[2];
         }
         else
         {
+            //unset($arr_region_name[0]);
+            //return implode('',$arr_region_name);
             return $arr_region_name[1].$arr_region_name[2];
         }
     }

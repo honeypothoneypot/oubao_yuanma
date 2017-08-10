@@ -120,7 +120,7 @@ class b2c_user_passport
     public function check_passport($password,$psw_confirm,&$msg){
         $passwdlen = strlen( trim($password) );
 
-        if(!preg_match('/^[^\x00-\x2d^\x2f^\x3a-\x3f]+$/i', trim($login_name)) ){
+        if(!preg_match('/^(([0-9]+)|([a-z]+)|([A-Z]+))*$/i', trim($password)) ){
             $msg = $this->app->_('该登录密码包含非法字符');
             return false;
         }

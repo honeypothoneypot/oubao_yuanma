@@ -178,6 +178,7 @@ class b2c_order_delivery extends b2c_order_operation
                         $__arr_order_items['products']['goods_id'] = $arr_tmp[0]['goods_id'];
                     }
                 }
+
                 $arr_service_goods_type_obj[$goods_item_type]->get_order_object($__arr_order_items['products'], $arr_goods);
                 $__arr_order_items['floatstore'] = $arr_goods['type']['floatstore'];
                 if ($sdf['send'] && array_key_exists($__arr_order_items['item_id'], $sdf['send']))
