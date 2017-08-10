@@ -122,23 +122,43 @@ class desktop_cert_certcheck
 			}
         }
 	    if(!$opencheck || $this->is_internal_ip() || $this->is_demosite()) return ;
+	$kvstore = base_kvstore::instance('ecos');
+
+        $kvstore->fetch('chk_certid_lasttime', $chk_certid_lasttime);
+        if($chk_certid_lasttime && (time()-$chk_certid_lasttime)<86400*7){
+            return ;
+        }
 
 		if($params['type'] === pam_account::get_account_type('desktop'))
 		{
 			$result = $this->check_certid();
+            $kvstore->fetch('chk_certid_errtimes',$chk_certid_errtimes);
+            $chk_certid_errtimes = intval($chk_certid_errtimes) + 1;
+
 			if($result['res'] == 'succ')
 			{
                 if( $result['info']['valid'] ){
                     app::get('desktop')->setConf('activation_code_check', true);
                     if( !app::get('base')->getConf('certificate_code_url') )
                         app::get('base')->setConf('certificate_code_url',kernel::base_url(1));
+                     $kvstore->store('chk_certid_errtimes', 0);
                     return ;
                 }else{
+                    if($chk_certid_errtimes < 5){
+                        $kvstore->store('chk_certid_errtimes',$chk_certid_errtimes);
+                        $kvstore->store('chk_certid_lasttime', time());
+                        return ;
+                     }
                     $this->app->setConf('activation_code','');
                 }
 			}
             else
             {
+                if($chk_certid_errtimes < 5){
+                    $kvstore->store('chk_certid_errtimes',$chk_certid_errtimes);
+                    $kvstore->store('chk_certid_lasttime', time());
+                    return ;
+                }
                 $url = $this->app->base_url(1);
                 $code_url = $url.'index.php?app=desktop&ctl=code&act=error_info_view&result[msg]='.$result['msg'];
                 echo "<script>location.href='".$code_url."'</script>";exit;
@@ -167,7 +187,7 @@ class desktop_cert_certcheck
         if($ip=='127.0.0.1' || $ip=='::1'){
             return true;
         }
-        
+
 		$ip = ip2long($ip);
 		$net_a = ip2long('10.255.255.255') >> 24; //A类网预留ip的网络地址
 		$net_b = ip2long('172.31.255.255') >> 20; //B类网预留ip的网络地址

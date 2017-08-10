@@ -85,9 +85,11 @@ class b2c_ctl_admin_member_gask extends desktop_controller{
         #$this->begin("javascript:finderGroup['411c04.refresh()']");
         $comment_id = $_POST['comment_id'];
         $comment = $_POST['reply_content'];
+
         if($comment_id&&$comment){
             $member_comments = kernel::single('b2c_message_disask');
             $sdf = $member_comments->dump($comment_id);
+            $sdf['uname']= $sdf['author'];
             if($this->app->getConf('comment.display.ask') == 'reply'){
                 $aData = $sdf;
                 $aData['display'] = 'true';
@@ -109,7 +111,7 @@ class b2c_ctl_admin_member_gask extends desktop_controller{
             if($member_comments->send($sdf,'ask')){
                 $comments = $this->app->model('member_comments');
                 $sdf['member_id'] = $sdf['to_id'];
-                $sdf['uname'] = $row['author'];
+                //$sdf['uname'] = $row['author'];
                 $comments->fireEvent('gaskreply',$sdf,$sdf['to_id']);
                 #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓记录管理员操作日志@lujy↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
                 if($obj_operatorlogs = kernel::service('operatorlog.members')){

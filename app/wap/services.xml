@@ -28,6 +28,7 @@
         <class>wap_payment_plugin_wapupacp</class>
         <class>wap_payment_plugin_lakalachuwap</class>
         <class>wap_payment_plugin_lakalacrowap</class>
+        <class>wap_payment_plugin_malipaynew</class>
     </service>
 
     <service id="trustlogin_trustlogin.wap_trustlogin_cfg" optname="登陆插件列表">

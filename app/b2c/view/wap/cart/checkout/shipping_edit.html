@@ -52,10 +52,12 @@
                 </div>
             </div>
             <{if $site_checkout_receivermore_open == 'true'}>
+            <label for="J_del_time">
             <div class="c-g-c">
                 <input type="checkbox" id="J_del_time"/>
                 <label for="J_del_time">送货时间</label>
             </div>
+            </label>
             <div class="c-g del-time hide" style="height:auto">
                 <label class="c-l">时间段</label>
                 <div class="c">
@@ -81,10 +83,12 @@
                 </div>
             </div>
             <{/if}>
+            <label for="def_addr_check">
             <div class="c-g-c">
                 <input type="checkbox" name="def_addr" value="1" id="def_addr_check" />
                 <label for="def_addr_check">设为默认收货地址</label>
             </div>
+            </label>
             <div class="btn-bar">
                 <button type="submit" class="btn" rel="_request">保存地址</button>
             </div>
@@ -93,19 +97,11 @@
 </div>
 <script>
     (function(){
-        $('.c-g-c').bind('click',function(e){
-            if($(this).find('input[type=checkbox]').prop('checked') == false){
-                $(this).find('input[type=checkbox]').prop('checked',true);
-                if($(this).find('#J_del_time').length > 0){
-                    $('.del-time').removeClass('hide');
-                }
-            }else{
-                $(this).find('input[type=checkbox]').prop('checked',false);
-                if($(this).find('#J_del_time').length > 0){
-                    $('.del-time').addClass('hide');
-                }
-            }
+        $("input[type=checkbox]").on("change",function(){
+            if(this.id === "J_del_time")
+                $('.del-time').toggleClass('hide');
         });
+
         $('select[name="day"]').bind('change',function(e){
             if($(this).val()=='special'){
                 $('.special-delivery-day').show();
