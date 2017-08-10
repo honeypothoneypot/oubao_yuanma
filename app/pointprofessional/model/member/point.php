@@ -99,9 +99,7 @@ class pointprofessional_mdl_member_point extends b2c_mdl_member_point
         $real_point = 0;
 
         if($nodes > 0){
-            $point_rpc_object = kernel::single("b2c_apiv_exchanges_request_member_point");
-            $point_data = $point_rpc_object->getActive($member_id);
-            $real_point = $point_data['total'];
+            $real_point = kernel::single("b2c_member_point_contact_crm")->getPoint($member_id);
         }else{
             $site_point_expired = $this->app->getConf('site.point_expired');
             if ($site_point_expired == 'true')

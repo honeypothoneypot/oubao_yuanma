@@ -39,7 +39,7 @@ class desktop_ctl_default extends desktop_controller{
             $title = app::get('desktop')->_('管理后台');
         }
 
-        $title = ecos_cactus('desktop','check_demosite',$title);  
+        $title = ecos_cactus('desktop','check_demosite',$title);
 
         if(is_object($obj) && method_exists($obj, 'title_desc')){
             $title_desc = $obj->title_desc();
@@ -54,6 +54,7 @@ class desktop_ctl_default extends desktop_controller{
         */
         $deploy = kernel::single('base_xml')->xml2array(file_get_contents(ROOT_DIR.'/config/deploy.xml'),'base_deploy');
         $local_has_update = false;
+        $this->pagedata['ec_deploy'] = $deploy;
         if(! ($product_version = app::get('base')->getConf('product_version')) ){
             $local_has_update = true;
             app::get('base')->setConf('product_version', $deploy['product_version']);
@@ -61,7 +62,7 @@ class desktop_ctl_default extends desktop_controller{
             $local_has_update = true;
             app::get('base')->setConf('product_version', $deploy['product_version']);
         }
-        
+
         if( $local_has_update ) {
             $shell_handle = kernel::single('base_shell_loader');
             kernel::$console_output = false;
@@ -284,7 +285,7 @@ class desktop_ctl_default extends desktop_controller{
 	 *
 	 * @return null
 	 */
-    
+
     function status(){
         //set_time_limit(0);
         ob_start();

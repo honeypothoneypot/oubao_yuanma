@@ -5,15 +5,21 @@
 
 
       <tr>
-        <th><{t}>状态：<{/t}></th>
-        <td><label><input type='radio' name='rule[status]' value="1" <{if $rule.status eq 1}>checked="checked"<{/if}>/><{t}>启用<{/t}></label>
-            <label><input type='radio' name='rule[status]' value="0" <{if $rule.status eq 0}>checked="checked"<{/if}>/><{t}>禁用<{/t}></label></td>
+        <th><{t}>会员中心是否显示：<{/t}></th>
+        <td><label><input type='radio' name='rule[status]' value="1" <{if $rule.status eq 1}>checked="checked"<{/if}>/><{t}>显示<{/t}></label>
+            <label><input type='radio' name='rule[status]' value="0" <{if $rule.status eq 0}>checked="checked"<{/if}>/><{t}>不显示<{/t}></label></td>
       </tr>
-
+     <{if $is_bind_crm}>
+      <tr>
+         <th>推荐成功送积分：<{$rule.register_point}></th>
+         <td></td>
+      </tr>
+      <{else}>
       <tr>
          <th><em class="red">*</em><{t}>推荐成功送积分：<{/t}></th>
          <td><{input type="digits" value=$rule.register_point name="rule[register_point]" maxlength="5" size="5"  required="true" vtype='digits' }></td>
       </tr>
+      <{/if}>
 
 </table>
 </div>

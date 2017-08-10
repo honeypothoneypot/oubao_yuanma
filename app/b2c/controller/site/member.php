@@ -196,8 +196,7 @@ class b2c_ctl_site_member extends b2c_frontpage{
         $this->path[] = array('title'=>app::get('b2c')->_('会员中心'),'link'=>$this->gen_url(array('app'=>'b2c', 'ctl'=>'site_member', 'act'=>'index','full'=>1)));
         $GLOBALS['runtime']['path'] = $this->path;
 
-        #会员基本信息
-        $this->member = $userObject->get_current_member();
+        #会员基本信息,已在construct()内获取过。
 
         #获取会员等级
         $obj_mem_lv = $this->app->model('member_lv');
@@ -233,6 +232,7 @@ class b2c_ctl_site_member extends b2c_frontpage{
         }
         $this->get_order_details($aData, 'member_latest_orders');//--177sql 优化点
         $this->pagedata['orders'] = $aData['data'];
+
         //收藏列表
         $obj_member = $this->app->model('member_goods');
         $aData_fav = $obj_member->get_favorite($this->app->member_id,$this->member['member_lv'],$page=1,$num=4);//201sql
@@ -2201,7 +2201,7 @@ class b2c_ctl_site_member extends b2c_frontpage{
 
         if($signin_obj->exists_signin($member_id,$signin_date))
         {
-            $msg = '您今天以及签到过';
+            $msg = '您今天已经签到过';
             $this->splash('error','',$msg,true);
         }
         $data = array(
@@ -2210,11 +2210,9 @@ class b2c_ctl_site_member extends b2c_frontpage{
             'signin_time' => time(),
             'point' => $site_login_point_num
         );
-        $result = $signin_obj->insert($data);
+        $result = kernel::single('b2c_member_signin')->sign($data);
+
         if($result){
-            $mem_point = $this->app->model('member_point');
-            $msg = '签到赠送积分';
-            $mem_point->change_point($member_id,$site_login_point_num,$msg,'signin_score',2,0,$member_id,'charge');
             $msg = '签到成功，获得'.$site_login_point_num.'积分';
             $this->splash('success','',$msg,true);
         }else{

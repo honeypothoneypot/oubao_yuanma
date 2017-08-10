@@ -44,7 +44,7 @@ class pointprofessional_point_change
         $is_delay = false;
         // 取到有效的积分值
         $obj_member_point = $this->app->model('member_point');
-        $real_total_point = $objMember->get_real_point($nMemberId);
+        $real_total_point = $objMember->get_real_point($nMemberId,2);
 
         if ($point<0)
         {
@@ -162,10 +162,7 @@ class pointprofessional_point_change
 
             if($point_id)
             {
-                $member_point_rpc_object = kernel::single("b2c_apiv_exchanges_request_member_point");
-                if($member_point_rpc_object){
-                    $member_point_rpc_object->changeActive($point_id);
-                }
+                kernel::single('b2c_member_point_contact_crm')->pointChange($point_id);
 
                 if ($point<0){
                     $nodes_obj = $this->app_b2c->model('shop');

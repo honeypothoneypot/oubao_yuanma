@@ -171,8 +171,7 @@ class b2c_ctl_wap_member extends wap_frontpage{
 
         if($nodes > 0){
             $getlog_params = array('member_id'=>$this->app->member_id,'page'=>$nPage,'page_size'=>$this->pagesize);
-            $obj_apiv = kernel::single('b2c_apiv_exchanges_request_member_point');
-            $pointlog = $obj_apiv->getlogActive($getlog_params);
+            $pointlog = kernel::single('b2c_member_point_contact_crm')->getPointLog($getlog_params);
 
             $count = $pointlog['total'];
             $aPage = $this->get_start($nPage,$count);
@@ -706,6 +705,7 @@ class b2c_ctl_wap_member extends wap_frontpage{
                 $this->pagedata['prepare']=$pre_order;
             }
         }
+
         //echo '<pre>';print_r($prepare_order);exit();
         $this->page('wap/member/orderdetail.html');
     }

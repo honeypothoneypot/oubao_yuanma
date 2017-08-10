@@ -61,6 +61,7 @@
         <api function='get_member_filter'> 获取会员列表 </api>
         <api function='get_member_lv_list' > 获取到会员等级列表 </api>
         <api function='get_member_coupon' > 获取会员优惠券 </api>
+        <api function='update_member_signin' > 更新会员签到状态 </api>
     </module>
     <!-- 会员相关接口CRM end-->
 
@@ -69,8 +70,19 @@
         <api function='init_point'>初始化会员积分</api>
         <api function='update_point' > 更新会员积分 </api>
     </module>
-    <!-- 积分相关接口 CRM start -->
+    <!-- 积分相关接口 CRM end -->
 
+    <!-- 版本相关接口 CRM start -->
+    <module id='b2c.sysinfo' type='other' class='b2c_apiv_apis_response_sysinfo'>
+        <api function='version'>获取ecstore版本</api>
+    </module>
+
+    <!-- 推荐相关接口 CRM start -->
+    <module id='b2c.referrals' type='other' class='b2c_apiv_apis_response_referrals'>
+        <api function='update'>接收推荐设置接口</api>
+    </module>
+
+    <!-- 积分相关接口 CRM end -->
     <!-- 会员相关接口移动APP start-->
     <module id='b2c.member' type='member' class='b2c_apiv_apis_response_member_passport'>
         <api function='get_encrypt_params'> 获取会员加密密码参数 </api>

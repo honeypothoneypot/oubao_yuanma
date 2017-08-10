@@ -1,3 +1,4 @@
+<{if $check_version.crm.lowest_crm_version}>
 <div class="notice clearfix tableform" id="update_notice">
 <div class="flt">
 <b class="f-14">	【注意事项】因会员接口，积分接口更新，初始化会员积分数据到CRM时，请务必确保绑定的CRM版本不低于2.2.6，否则可能会出现积分数据不统一的状况!</b>
@@ -6,6 +7,7 @@
 	<span class="btn pointer close" onclick="$('update_notice').dispose();"><span><span>知道了</span></span></span>
 </div>
 </div>
+<{/if}>
 
 <div class="notice clearfix tableform" id="browser_notice" style="display:none;">
 <div class="flt">
@@ -31,8 +33,8 @@ void function(){
 			Cookie.write('browser-notice','know',{duration:1});
 		});
 	}
-  if('know'==Cookie.read('update-notice')){
-    $('update_notice').hide();
+   if('know'==Cookie.read('update-notice')){
+   // $('update_notice').hide();
     return;
   }
   $$('#update_notice .close').addEvent('click',function(){
@@ -138,10 +140,8 @@ void function(){
 <{area inject=".mainFoot"}>
 <div class="note clearfix" style="margin-bottom:0;height:20px">
 	 <div class="span-auto">
-         <{t}> 当前版本：<{/t}><{$deploy.product_name}>  V<{$deploy.product_version}>(<{$deploy.business_version}>)
+         <{t}> 当前版本：<{/t}><{$deploy.product_name}>  V<{$deploy.product_version}><{if $deploy.business_version =='commerce_source' }>(onex_source)<{elseif $deploy.business_version =='commerce_standard'}>(onex_standard)<{else}>(<{$deploy.business_version}>)<{/if}>
 		 <a target="command::{title:'<{t}>检查更新<{/t}>'}" class="lnk" style="color:#3367ac" href="index.php?ctl=appmgr&act=fetchindex"><{t}>检查更新<{/t}></a>
-
-
 	  </div>
 	<div class="user-tip frt">
 		<b><{t}>你知道么?<{/t}>&nbsp;&nbsp;&nbsp;&nbsp;</b><span id="dashboard-tip"><{$tip}></span>

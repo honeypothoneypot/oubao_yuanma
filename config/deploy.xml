@@ -2,8 +2,8 @@
 
     <licence file="license.txt" />
 
-    <product_name>ECstore</product_name>
-    <product_version>2.3.37</product_version>
+    <product_name>ONex ECStore</product_name>
+    <product_version>2.3.38</product_version>
     <business_version>source</business_version>
     <publish_version>ecstore</publish_version>
     <product_key>ecos.ecstore2.standard</product_key>
@@ -11,10 +11,10 @@
 
     <installer>
 
-        <title>ECstore 安装</title>
+        <title>ONex ECStore 标准版 安装</title>
 
         <banner><![CDATA[
-            <h1 id="ECstore-ver">ECstore<sup style="color:red;font-size:12px"></sup></h1>
+            <h1 id="ECstore-ver">ONex ECStore 标准版<sup style="color:red;font-size:12px"></sup></h1>
             ]]></banner>
 
         <style><![CDATA[
@@ -141,8 +141,8 @@
         </demodata>
     </demodatas>
 
-    <setting app="desktop" key="banner">ECstore</setting>
-    <setting app="desktop" key="logo">ECstore</setting>
+    <setting app="desktop" key="banner">ONex ECStore 标准版</setting>
+    <setting app="desktop" key="logo">ONex ECStore 标准版</setting>
     <setting app="desktop" key="logo_desc">The future of shopping</setting>
 
 </deploy>

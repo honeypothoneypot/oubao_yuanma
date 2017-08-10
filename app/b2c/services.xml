@@ -1,6 +1,6 @@
 <services>
     <service id="desktop.widgets">
-		<class>b2c_desktop_widgets_workcount</class>
+        <class>b2c_desktop_widgets_workcount</class>
         <class>b2c_desktop_widgets_stats</class>
         <class>b2c_desktop_widgets_exstatistics</class>
     </service>
@@ -377,6 +377,10 @@
         <class>b2c_member_point_reducte</class>
     </service>
 
+    <service id="b2c_member_point_contact_crm">
+        <class>b2c_member_point_contact_crm</class>
+    </service>
+
     <service id="desktop_index_seo">
         <class>b2c_service_desktop_indexseo</class>
     </service>
@@ -479,9 +483,19 @@
         <class>b2c_apiv_exchanges_request_order</class>
     </service>
 
-    <!-- 会会员员积分信息推送到crm路由方法 -->
+    <!-- 会员积分信息推送到crm路由方法 -->
     <service id="b2c_member_point_rpc_async">
         <class>b2c_apiv_exchanges_request_member_point</class>
+    </service>
+
+    <!-- 会员签到信息推送到crm路由方法 -->
+    <service id="b2c_member_signin_rpc_sync">
+        <class>b2c_apiv_exchanges_request_member_signin</class>
+    </service>
+
+    <!-- 获取crm版本号路由方法 -->
+    <service id="b2c_version_rpc_sync">
+        <class>b2c_apiv_exchanges_request_version</class>
     </service>
 
     <!--ecstore 发起推向crm-->
@@ -511,6 +525,12 @@
     </service>
     <service id="apiv_2.0_ecos.taocrm_pointget">
       <class>b2c_apiv_apis_request_member_point_get</class>
+    </service>
+    <service id="apiv_2.0_ecos.taocrm_versiongetcrm">
+      <class>b2c_apiv_apis_request_version_getcrm</class>
+    </service>
+    <service id="apiv_2.0_ecos.taocrm_signinchange">
+      <class>b2c_apiv_apis_request_member_signin_change</class>
     </service>
 
     <!-- 版本控制中的api -->

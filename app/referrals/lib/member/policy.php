@@ -29,7 +29,7 @@ class referrals_member_policy
     public function referrals_member($referrals_code,$member_id)
     {
         $referrals_setting = app::get('referrals')->getConf('register_rule');
-        if( is_array($referrals_setting) && $referrals_setting['status'] == 1 ){
+        if( is_array($referrals_setting)  ){
             $this->referrals_Process($referrals_code,$member_id,$referrals_setting['register_point']);
         }
         else{
@@ -42,19 +42,21 @@ class referrals_member_policy
     {
         $result = $this->b2c_members_model->getRow('member_id',array('referrals_code'=>$referrals_code));
         if(!empty($result['member_id'])){
-            $referrals_member_id=$result['member_id'];
+            $referrals_member_id = $result['member_id'];
             $this->point_change($referrals_member_id,$register_point);
-            $save_data=array(
-                'reference_id' => $referrals_member_id,
-                'register_id' => $member_id,
-                'regtime'     => time(),
-                'register_point' => $register_point
-                );
-            $this->register_record->save($save_data);
         }
         else{
-            return false;
+            $referrals_member_id = 0;
         }
+
+        $save_data=array(
+            'reference_id' => $referrals_member_id,
+            'register_id' => $member_id,
+            'regtime'     => time(),
+            'register_point' => $register_point,
+            'referrals_code' => $referrals_code
+            );
+        $this->register_record->save($save_data);
 
     }
 
@@ -104,6 +106,21 @@ class referrals_member_policy
         }else{
             return false;
         }
+    }
+
+    public function crm_save($points)
+    {
+        if(!is_numeric($points)){
+            return false;
+        }else{
+            $referrals_setting = app::get('referrals')->getConf('register_rule');
+            $referrals_setting['register_point'] = $points;
+            app::get('referrals')->setConf('register_rule',$referrals_setting);
+        }
+        return true;
+
+
+
     }
 
 

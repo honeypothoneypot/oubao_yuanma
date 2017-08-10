@@ -80,7 +80,8 @@ class desktop_ctl_dashboard extends desktop_controller{
         $deploy = kernel::single('base_xml')->xml2array(file_get_contents(ROOT_DIR.'/config/deploy.xml'),'base_deploy');
         
         $this->pagedata['deploy'] = $deploy;
-        
+        $check_version=kernel::single('b2c_version_checkversion')->check_version();
+        $this->pagedata['check_version'] = $check_version;        
 		$this->page('dashboard.html');
     
 	}
@@ -255,5 +256,7 @@ class desktop_ctl_dashboard extends desktop_controller{
             //$this->end(true,app::get('desktop')->_('申请成功'));
         }
     }
+
+
 
 }

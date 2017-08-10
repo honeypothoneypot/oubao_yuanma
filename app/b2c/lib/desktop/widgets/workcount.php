@@ -71,7 +71,7 @@ class b2c_desktop_widgets_workcount implements desktop_interface_widget{
 
         //到货通知
         $member_goods = $this->app->model('member_goods');
-        $goods_notice = $member_goods->count(array('type'=>'sto','status'=>'ready'));
+        $goods_notice = count($member_goods->getlist('*',array('type'=>'sto','status'=>'ready')));
         $render->pagedata['goods_notice'] = intval($goods_notice);
 
         $mdl_orders = $this->app->model('orders');

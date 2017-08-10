@@ -200,16 +200,11 @@ class b2c_mdl_member_point extends dbeav_model{
 		$memo = ($msg) ? $msg : '';
 		if (!$obj_change_point)
 		{
-			$objMember = $this->app->model('members');
-			$row = $objMember->dump($nMemberId,'*');
-			if(!$row) return null;
+            $obj_member_point = app::get('pointprofessional')->model('member_point');
+            $real_total_point = $objMember->get_real_point($nMemberId,2);
 			$falg = 1;
 			if($point<0){
-				/*
-				if(!($this->app->getConf('site.level_point'))){
-					$falg = 0;
-				}*/
-				if($row['score']['total']<-$point){
+				if($real_total_point < abs($point)){
 					$msg = app::get('b2c')->_("积分扣除超过会员已有积分");return false;
 				}
 				else
@@ -224,7 +219,6 @@ class b2c_mdl_member_point extends dbeav_model{
 							// 已经消耗完的积分不在处理.
 							if ($arr_points['change_point'] == $arr_points['consume_point'])
 								continue;
-								
 							if ($arr_points['change_point'] >= $arr_points['consume_point'] + $discount_point)
 							{
 								$arr_points['consume_point'] = $arr_points['consume_point'] + $discount_point;
@@ -269,10 +263,8 @@ class b2c_mdl_member_point extends dbeav_model{
                  $point_id = $this->insert($sdf_point);
 
 				if ($point_id){
-                    $obj_apiv = kernel::single('b2c_apiv_exchanges_request_member_point');
-                    if($obj_apiv){
-                        $obj_apiv->changeActive($point_id);
-                    }
+                    kernel::single('b2c_member_point_contact_crm')->pointChange($point_id);
+
 					$aMemberLv['member_lv_id'] = $this->member_lv_chk($nMemberId,$sdf_member['member_lv']['member_group_id'],$newValue);
 					$memberFilter['member_id'] = $nMemberId;
 					$objMember->update($aMemberLv,$memberFilter);
@@ -396,9 +388,7 @@ class b2c_mdl_member_point extends dbeav_model{
         $real_point = 0;
 
         if($nodes > 0 ){
-            $point_rpc_object = kernel::single("b2c_apiv_exchanges_request_member_point");
-            $point_data = $point_rpc_object->getActive($member_id);
-            $real_point = $point_data['total'];
+            $real_point = kernel::single("b2c_member_point_contact_crm")->getPoint($member_id);
         }else{
             $expired_time = strtotime(date('Y-m-d'));
             // 所有未过期的积分

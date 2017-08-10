@@ -64,7 +64,7 @@ class pointprofessional_mdl_members extends b2c_mdl_members
      * @param int member id
      * @return int 有效积分
      */
-    public function get_real_point($member_id=0)
+    public function get_real_point($member_id=0,$type=1)
     {
         if (!$member_id)
             return 0;
@@ -74,9 +74,7 @@ class pointprofessional_mdl_members extends b2c_mdl_members
         $real_point = 0;
 
         if($nodes > 0 ){
-            $point_rpc_object = kernel::single("b2c_apiv_exchanges_request_member_point");
-            $point_data = $point_rpc_object->getActive($member_id);
-            $real_point = $point_data['total'];
+            $real_point = kernel::single("b2c_member_point_contact_crm")->getPoint($member_id,$type);
         }else{
             // 得到所有有效的可用积分记录
             $obj_member_point = $this->current_app->model('member_point');

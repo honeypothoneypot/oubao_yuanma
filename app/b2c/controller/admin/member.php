@@ -382,8 +382,7 @@ class b2c_ctl_admin_member extends desktop_controller{
 
         if($nodes > 0){
             $getlog_params = array('member_id'=>$member_id,'page'=>$nPage,'page_size'=>10);
-            $obj_apiv = kernel::single('b2c_apiv_exchanges_request_member_point');
-            $pointlog = $obj_apiv->getlogActive($getlog_params);
+            $pointlog = kernel::single('b2c_member_point_contact_crm')->getPointLog($getlog_params);
 
             $count = $pointlog['total'];
             $data['score']['event'] = $pointlog['historys'];

@@ -24,14 +24,14 @@ class referrals_ctl_site_member extends b2c_ctl_site_member
         $this->begin($this->gen_url(array('app' => 'b2c', 'ctl' => 'site_member')));
         $setting = app::get('referrals')->getConf('register_rule');
 
-        if(!is_array($setting) || $setting['status'] !=1  ){
-            $this->end(false, app::get('referrals')->_("推荐注册未开启或者推荐注册应用不存在！"));
+        if(!is_array($setting)){
+            $this->end(false, app::get('referrals')->_("推荐注册应用不存在！"));
         }
         $this->pagedata['setting']=$setting;
         $member_id = $this->app_b2c->member_id;
         $obj_policy = kernel::service("referrals.member_policy");
         if(!is_object($obj_policy)){
-            $this->end(false, app::get('referrals')->_("推荐注册未开启或者推荐注册应用不存在！"));
+            $this->end(false, app::get('referrals')->_("推荐注册应用不存在！"));
         }
         $this->pagedata['setting']= $setting;
         $code = $obj_policy->create_code($member_id);

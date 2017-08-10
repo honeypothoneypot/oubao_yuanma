@@ -24,10 +24,10 @@ class b2c_frontpage extends site_controller{
     function verify_member(){
         $userObject = kernel::single('b2c_user_object');
         if( $this->app->member_id = $userObject->get_member_id() ){
-            $data = $userObject->get_members_data(array('members'=>'member_id'));
+            $data = $this->app->model('members')->getRow('member_id',array('member_id'=>$this->app->member_id));
             if($data){
                 //登录受限检测
-                $res = $this->loginlimit($data['members']['member_id'],$redirect);
+                $res = $this->loginlimit($data['member_id'],$redirect);
                 if($res){
                     $this->redirect($redirect);
                 }else{

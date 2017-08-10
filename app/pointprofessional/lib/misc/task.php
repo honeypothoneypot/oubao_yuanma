@@ -114,7 +114,7 @@ class pointprofessional_misc_task implements base_interface_task{
 						}
 					}
 				}
-				
+
 				$sdf_point = array(
 				  'member_id'=>$arr_task['member_id'],
 				  'point'=>$point_total,
@@ -125,19 +125,16 @@ class pointprofessional_misc_task implements base_interface_task{
 				  'type'=>($arr_task['task_type']=='1') ? '2' : '4',
 				  'related_id'=>($arr_task['related_id']) ? $arr_task['related_id'] : 0,
 				);
-				
+
 				$obj_member_point_task->update(array('status'=>'1'), array('member_id'=>$arr_task['member_id'],'related_id'=>$arr_task['related_id'],'task_type'=>$arr_task['task_type']));
 				/** 防止并发处理 **/
 				if (!$obj_member_point_task->db->affect_row()) continue;
-				$point_id = $obj_member_point->insert($sdf_point);				
-                $member_point_rpc_object = kernel::single("b2c_apiv_exchanges_request_member_point");
-                if($member_point_rpc_object){
-                    $member_point_rpc_object->changeActive($point_id);
-                }
+				$point_id = $obj_member_point->insert($sdf_point);
+                kernel::single('b2c_member_point_contact_crm')->pointChange($point_id);
 			}
 		}
 	}
-	
+
 	/**
 	 * 获得积分的张某书--每一个用户
 	 * @param null

@@ -33,7 +33,7 @@ class b2c_apiv_exchanges_request_member_point extends b2c_apiv_exchanges_request
                 $data['historys'][$key]['change_point']=$pointlog['points'];
                 $data['historys'][$key]['reason']=$pointlog['point_desc'];
             }
-            $data['total'] = $result['total_result'];
+            $data['total'] = $result['total_result'] ? $result['total_result'] : 0 ;
         }
 
         return $data;
@@ -44,8 +44,8 @@ class b2c_apiv_exchanges_request_member_point extends b2c_apiv_exchanges_request
         if($member_id){
             $result = $this->rpc_caller_request($member_id, 'pointget');
             $result = json_decode($result,true);
-            $data['point'] = $result['shop_point_list']['points'];
-            $data['total'] = $result['shop_point_list']['total_point'];
+            $data['point'] = $result['shop_point_list']['points']? $result['shop_point_list']['points']:0;
+            $data['total'] = $result['shop_point_list']['total_point'] ? $result['shop_point_list']['total_point']:0;
         }
 
         return $data;

@@ -11,6 +11,8 @@ class apiactionlog_router_logging{
         'store.point.update'=>'b2c_apiv_apis_request_member_point_change',
         'store.pointlog.get'=>'b2c_apiv_apis_request_member_point_getlog',
         'store.point.get'=>'b2c_apiv_apis_request_member_point_get',
+        'store.member.signin'=>'b2c_apiv_apis_request_member_signin_change',
+        'store.sysinfo.version'=>'b2c_apiv_apis_request_version_getcrm',
     );
 
     public function save_log($service,$method,$data){

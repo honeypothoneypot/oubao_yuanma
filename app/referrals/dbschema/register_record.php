@@ -52,6 +52,15 @@ $db['register_record']=array (
           'editable' => false,
           'comment' => app::get('referrals')->_('推荐人获得的积分'),
         ),
+        'referrals_code' => 
+        array (
+            'type' => 'varchar(32)',
+            'default' => 0,
+            'required' => false,
+           'comment' => app::get('b2c')->_('使用的二维码'),
+        ),
+
+
     ),
 
 );

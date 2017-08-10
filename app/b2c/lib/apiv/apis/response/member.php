@@ -87,9 +87,9 @@ class b2c_apiv_apis_response_member
 
             $data = array();
             $crm_member_id = $params['member_id'];
-            $member = $member_obj->getList('member_id,member_lv_id',array('crm_member_id'=>$crm_member_id));
-            $member_id = $member[0]['member_id'];
-            $member_lv_id = $member[0]['member_lv_id'];
+            $member = $member_obj->getRow('member_id,member_lv_id',array('crm_member_id'=>$crm_member_id));
+            $member_id = $member['member_id'];
+            $member_lv_id = $member['member_lv_id'];
             $aData = $oCoupon->get_list_m($member_id);
             $source = array('a'=>'全体优惠券','b'=>'会员优惠券','c'=>'ShopEx优惠券');
 
@@ -134,6 +134,30 @@ class b2c_apiv_apis_response_member
         return $data;
     }
 
+    /**
+     * 更新会员签到状态接口
+     */
+    public function update_member_signin($params,&$service){
+        $crm_member_id = $params['member_id'];
+
+        if( $crm_member_id ){
+            $member_obj = app::get('b2c')->model('members');
+            $member_signin_obj = app::get('b2c')->model('member_signin');
+
+            $member = $member_obj->getRow('member_id',array('crm_member_id'=>$crm_member_id));
+            $member_id = $member['member_id'];
+            $signin_time = $params['signin_time'];
+            $signin_date = date('Y-m-d',$signin_time);
+
+            if(!$member_signin_obj->exists_signin($member_id,$signin_date)){
+                $data = array('member_id'=>$member_id,'signin_date'=>$signin_date,'signin_time'=>$signin_time);
+                logger::info('signin-data:'.var_export($data,true));
+                $member_signin_obj->insert($data);
+            }
+        }
+
+        return $crm_member_id;
+    }
     private function format_member_data($membersData)
     {
         $userPassport = kernel::single('b2c_user_passport');

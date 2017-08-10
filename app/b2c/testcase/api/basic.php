@@ -157,4 +157,11 @@ $order = array(
 $get_member_coupon = array('member_id'=>'1');
 
 $update_point = array('member_id'=>'1','point'=>'10402');
-$api_params = $get_member_coupon;
+
+$version = array();
+
+$update_member_signin = array('member_id'=>51,'signin_time'=>time());
+
+$referrals = array('status'=>1,'points'=>10);
+
+$api_params = $referrals;

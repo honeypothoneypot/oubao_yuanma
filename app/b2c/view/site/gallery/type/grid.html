@@ -9,7 +9,7 @@
 
           <a <{if $opentype eq 'new_page'}>target="_blank"<{/if}> href="<{link app=starbuy ctl=site_team act=index arg0=$goods.products.product_id arg1=$goods.products.promotion_type_id}>"><img class="action-goods-img" data-src="<{$goods.image_default_id|default:$imageDefault.S.default_image|storager:'s'}>" alt="<{$goods.name}>" style="<{if $imageset.S.width}>max-width:<{$imageset.S.width}>px;<{/if}><{if $imageset.S.height}>max-height:<{$imageset.S.height}>px;<{/if}>"></a>
           <{else}>
-          <a  <{if $opentype eq 'new_page'}>target="_blank"<{/if}>  href="<{link app=b2c ctl=site_product arg0=$goods.products.product_id}>"><img class="action-goods-img" data-src="<{$goods.image_default_id|default:$imageDefault.S.default_image|storager:'s'}>" alt="<{$goods.name}>" style="<{if $imageset.S.width}>max-width:<{$imageset.S.width}>px;<{/if}><{if $imageset.S.height}>max-height:<{$imageset.S.height}>px;<{/if}>"><{$opentype}></a>
+          <a  <{if $opentype eq 'new_page'}>target="_blank"<{/if}>  href="<{link app=b2c ctl=site_product arg0=$goods.products.product_id}>"><img class="action-goods-img" data-src="<{$goods.image_default_id|default:$imageDefault.S.default_image|storager:'s'}>" alt="<{$goods.name}>" style="<{if $imageset.S.width}>max-width:<{$imageset.S.width}>px;<{/if}><{if $imageset.S.height}>max-height:<{$imageset.S.height}>px;<{/if}>"></a>
         <{/if}>
         <{if $goods.tags && $gallery_display_tag_goods == 'true'}>
         <{foreach from=$goods.tags item=tags}>
