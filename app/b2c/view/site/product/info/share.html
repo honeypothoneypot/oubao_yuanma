@@ -59,4 +59,24 @@
   <a href="javascript:void(0);" class="btn btn-rounded btn-faved" rev="_favbtn_" <{if !$page_product_basic.is_fav}> style="display:none;"<{/if}>><span><span><{t}>已收藏<{/t}></span></span></a>
   <{/if}>
 </div>
+<!-- JiaThis Button BEGIN -->
+<script "text/javascript">
+var jiathis_config = {
+  url: ""
+}
+<!-- 重新定义微信分享的url -->
+$$(".jiathis_button_weixin").addEvents({'click':function(e){
+  jiathis_config = {
+    url:"<{$share_wx_url}>"
+  }
+}}
+);
+$$(".jiathis_style_24x24 a[class!=jiathis_button_weixin]").addEvents({'click':function(e){
+  jiathis_config = {
+    url:''
+  }
+}}
+);
+</script>
+<!-- JiaThis Button END -->
 <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>

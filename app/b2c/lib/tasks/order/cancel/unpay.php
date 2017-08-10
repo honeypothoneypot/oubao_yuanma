@@ -19,7 +19,7 @@ class b2c_tasks_order_cancel_unpay extends base_task_abstract implements base_in
         if( $site_trigger_cancelorder == 'true' && $nodes == 0 ){
             $time = time() - $site_cancelorder_timelimit * 60 * 60;
             $starttime = $time - 24 * 60 * 60;
-            $orders = $order_mdl->getList("order_id",array('createtime|bthan'=>$starttime,'createtime|sthan'=>$time,'pay_status'=>'0','status'=>'active','ship_status'=>'0','promotion_type'=>'normal'));
+            $orders = $order_mdl->getList("order_id",array('createtime|bthan'=>$starttime,'createtime|sthan'=>$time,'pay_status'=>'0','status'=>'active','ship_status'=>'0','promotion_type'=>'normal','payment|noequal'=>'-1'));
             $this->cancel_orders($orders);
         }
     }

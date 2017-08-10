@@ -143,6 +143,13 @@ class b2c_ctl_site_product extends b2c_frontpage{
         $this->pagedata['btn_page_list'] = $this->_get_servicelist_by('b2c_products_index_btn');
         $this->pagedata['async_request_list'] = $this->get_body_async_url($productBasic);
 
+        //分享到微信的url
+        $share_wx_url = '';
+        if( app::get('wap')->is_actived() ){
+            $share_wx_url = app::get('wap')->router()->gen_url(array('app'=>'b2c','ctl'=>'wap_product','act'=>'index','full'=>1,'arg0'=>$productId));
+        }
+        $this->pagedata['share_wx_url'] = $share_wx_url;
+
         $GLOBALS['runtime']['path'] = $goodsModel->getPath($goodsId,'');
 
         $this->_set_seo($aGoods);

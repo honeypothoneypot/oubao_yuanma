@@ -180,11 +180,13 @@ class content_ctl_admin_article_detail extends content_admin_controller
                             $service->update($article_id, $post);
                         }
                     }
+                    $value_index = app::get('content')->model('article_indexs')->dump($article_id, '*');
+                    kernel::single('content_article_detail')->store_index_kvstore($article_id,$value_index);
                     $this->end(true, app::get('content')->_('保存成功'));
                 }else{
                     $this->end(false, app::get('content')->_('保存失败'));
-                }                
-            }else{  
+                }
+            }else{
                 $this->end(false, app::get('content')->_('保存失败'));
             }
         }else{
@@ -199,6 +201,8 @@ class content_ctl_admin_article_detail extends content_admin_controller
                             $service->insert($post);
                         }
                     }
+                    $value_index = app::get('content')->model('article_indexs')->dump($post['bodys']['article_id'], '*');
+                    kernel::single('content_article_detail')->store_index_kvstore($post['bodys']['article_id'],$value_index);
                     $this->end(true, app::get('content')->_('添加成功'), null, array('id'=>$post['bodys']['article_id']));
                 }else{
                     $this->end(false, app::get('content')->_('添加失败'));
