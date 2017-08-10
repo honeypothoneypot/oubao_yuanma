@@ -182,10 +182,11 @@ final class weixin_payment_plugin_wxqrpay extends ectools_payment_app implements
         $appid      = trim($this->getConf('appId',    __CLASS__));
         $mch_id     = trim($this->getConf('Mchid',    __CLASS__));
         $key        = trim($this->getConf('Key',      __CLASS__));
-
+	$body=strval( str_replace(' ', '', (isset($payment['body']) && $payment['body']) ? $payment['body'] : app::get('weixin')->_('网店订单') ) );
+        $body=mb_substr($body,0,40,'utf-8');//防止数据过长导致支付失败
         $parameters = array(
             'appid'            => strval($appid),
-            'body'             => strval( str_replace(' ', '', (isset($payment['body']) && $payment['body']) ? $payment['body'] : app::get('weixin')->_('网店订单') ) ),
+            'body'             =>$body,
             'out_trade_no'     => strval( $payment['payment_id'] ),
             'total_fee'        => bcmul($payment['cur_money'],100,0),
             'notify_url'       => strval( $this->notify_url ),

@@ -14,3 +14,13 @@
  	left:62px;
  	top:100px;
  }
+ .page-article .member-messagebox {
+ 	overflow: inherit;
+ }
+.page-article .member-messagebox .member-tabs{
+	width: 100%;
+	overflow: hidden;
+}
+.page-article .member-messagebox .member-tabs a{
+	float: left;
+}

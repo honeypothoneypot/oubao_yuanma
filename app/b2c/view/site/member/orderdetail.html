@@ -12,7 +12,7 @@
 
         <div class="member-order-actions">
           <{if $order.payinfo.pay_app_id != '-1'}>
-          <{if ($order.pay_status == '0' || $order.pay_status == '3') && $order.status != 'dead' && $order.received_status != '1'}>
+          <{if ($order.pay_status == '0' || $order.pay_status == '3') && $order.status != 'dead'  && $order.status != 'finish' && $order.received_status != '1'}>
           <{if $order.payinfo.pay_app_id != 'offline'}>
           <!--普通商品 -->
           <{if $prepare.prepare_type != 'prepare'}>

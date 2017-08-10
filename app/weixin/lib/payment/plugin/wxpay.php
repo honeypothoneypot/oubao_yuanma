@@ -202,11 +202,12 @@ final class weixin_payment_plugin_wxpay extends ectools_payment_app implements e
         // $appSecret  = $this->getConf('appSecret',  __CLASS__); // app支付时使用
         $partnerId  = trim($this->getConf('partnerId',  __CLASS__)); // 财付通商户身份的标识
         $partnerKey = trim($this->getConf('partnerKey', __CLASS__)); // 财付通商户权限密钥 Key
-
+        $body=strval( str_replace(' ', '', (isset($payment['body']) && $payment['body']) ? $payment['body'] : app::get('weixin')->_('网店订单') ) );
+        $body=mb_substr($body,0,40,'utf-8');//防止数据过长导致支付失败
         $price = bcmul($payment['cur_money'],100,0);
 
         $this->add_field("bank_type"          , "WX" );
-        $this->add_field("body"               , strval( str_replace(' ', '', (isset($payment['body']) && $payment['body']) ? $payment['body'] : app::get('weixin')->_('网店订单') ) ) );
+        $this->add_field("body"               , $body );
         $this->add_field("partner"            , strval( $partnerId ) );
         $this->add_field("out_trade_no"       , strval( $payment['payment_id'] ) );
         $this->add_field("total_fee"          , strval( ceil($payment['cur_money'] * 100) ) );

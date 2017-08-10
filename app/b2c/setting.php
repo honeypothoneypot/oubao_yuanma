@@ -69,7 +69,7 @@ $setting = array(
 'site.login_valide'=>array('type'=>SET_T_BOOL,'default'=>'true','desc'=>app::get('b2c')->_('会员登录需输入验证码')),//WZP
 'site.login_type'=>array('type'=>SET_T_ENUM,'default'=>'href','options'=>array('href'=>app::get('b2c')->_('跳转至登录页'),'target'=>app::get('b2c')->_('弹出登录窗口')),'desc'=>app::get('b2c')->_('顾客登录方式')),
 'site.register_valide'=>array('type'=>SET_T_BOOL,'default'=>'true','desc'=>app::get('b2c')->_('会员注册需输入验证码')),
-'site.sms_valide'=>array('type'=>SET_T_BOOL,'default'=>'false','desc'=>app::get('b2c')->_('注册、找回密码、绑定手机发送短信时是否需要验证码')),
+'site.sms_valide'=>array('type'=>SET_T_BOOL,'default'=>'true','desc'=>app::get('b2c')->_('注册、找回密码、绑定手机发送短信时是否需要验证码'),'helpinfo'=>'<span class=\'notice-inline\'>'.app::get('b2c')->_('若客户不开启图文验证码，可能会遭受到短信轰炸攻击。').'</span>'),
 'site.sms_only_valide'=>array('type'=>SET_T_BOOL,'default'=>'false','desc'=>app::get('b2c')->_('是否开启只允许手机号注册')),
 'site.isfastbuy_display'=>array('type'=>SET_T_BOOL,'default'=>'true','desc'=>app::get('b2c')->_('是否显示立即购买')),
 'site.buy.target'=>array('type'=>SET_T_ENUM,'default'=>'3','options'=>array('2'=>app::get('b2c')->_('弹出购物车页面'),'1'=>app::get('b2c')->_('本页跳转到购物车页面'),'3'=>app::get('b2c')->_('不跳转页面，直接加入购物车'),

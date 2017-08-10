@@ -287,7 +287,7 @@ class b2c_ctl_admin_setting extends desktop_controller{
             $$("[name=set[site.sms_valide]]").addEvent("click",function(){
                 var that = this;
                 if(that.value=="false"){
-                    if(!confirm("取消该项会使网站更易受到短信轰炸")){
+                    if(!confirm("取消该项会使网站易受到短信轰炸")){
                         that.checked = "";
                         that.getSiblings("[name=set[site.sms_valide]]")[0].checked = "checked";
                     }

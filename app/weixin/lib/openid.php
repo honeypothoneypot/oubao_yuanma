@@ -25,13 +25,18 @@ class weixin_openid
     {
         $wxpayjsapi_conf = app::get('ectools')->getConf('weixin_payment_plugin_wxpayjsapi');
         $wxpayjsapi_conf = unserialize($wxpayjsapi_conf);
+        $appId_to_get_code = trim($wxpayjsapi_conf['setting']['appId']);
+
         if(!$_GET['code'])
         {
-            $appId_to_get_code = trim($wxpayjsapi_conf['setting']['appId']);
             kernel::single('weixin_wechat')->get_code($appId_to_get_code, $return_url);
         }else{
+            //通过appid，获取到appsecret
+            $bind_info = app::get('weixin')->model('bind')->getRow('appsecret',array('appid'=>$appId_to_get_code));
+            $appsecret= $bind_info['appsecret'];
+
             $code = $_GET['code'];
-            $openid = kernel::single('weixin_wechat')->get_openid_by_code($wxpayjsapi_conf['setting']['appId'], $wxpayjsapi_conf['setting']['Appsecret'], $code);
+            $openid = kernel::single('weixin_wechat')->get_openid_by_code($appId_to_get_code, $appsecret, $code);
             if($openid == null)
             {
                 $msg = "获取openid失败";

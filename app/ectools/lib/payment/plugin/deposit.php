@@ -152,7 +152,7 @@ final class ectools_payment_plugin_deposit extends ectools_payment_app implement
 		//$obj_pay = kernel::single("ectools_pay");
 		$is_payed = 'succ';
         $concurrent=kernel::single("base_concurrent_file");
-        $member_group_id=  'member_group_'.$_SESSION['account']['member']/500;
+        $member_group_id=  'member_group_'.intval($_SESSION['account']['member']/500);
         $concurrent->status($member_group_id);
         if(!$concurrent->check_flock()){
             $concurrent->close_lock();
