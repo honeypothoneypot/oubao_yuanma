@@ -402,13 +402,15 @@ function pay_confirm (el, method) {
               onShow: function(e) {
                   this.content.getElement('[type=submit]').store('_ajax_config', {
                       onSuccess: function(rs) {
-                          if(rs &&!rs[0].error) {
-                              Dialog.confirm('确定用你的预存款帐户支付这笔订单金额 <b class="price"><{if $order.promotion_type!='prepare'}><{$order.cur_money|cur:$order.currency}><{/if}><{if $order.promotion_type=='prepare' && $prepare.preparesell_price==$prepare.promotion_price}><{$order.cur_money|cur:$order.currency}><{/if}><{if $order.promotion_type=='prepare'&& $prepare.nowtime > $prepare.begin_time && $prepare.nowtime < $prepare.end_time && $prepare.preparesell_price<$prepare.promotion_price}><{$prepare.preparesell_price|cur:$order.currency}><{/if}><{if $order.promotion_type=='prepare' && $prepare.nowtime > $prepare.begin_time_final && $prepare.nowtime < $prepare.end_time_final && $prepare.preparesell_price<$prepare.promotion_price}><{$order.total_amount-$prepare.preparesell_price|cur:$order.currency}><{/if}></b> 吗？', function(e){
-                                  if(e){
-                                      $("pay[password]").value = $("pay_password").value;
-                                      el.getParent('form').submit();
-                                  }
-                              });
+                          if(rs && rs[0]) {
+                            if(!rs[0].error) {
+                                Dialog.confirm('确定用你的预存款帐户支付这笔订单金额 <b class="price"><{if $order.promotion_type!='prepare'}><{$order.cur_money|cur:$order.currency}><{/if}><{if $order.promotion_type=='prepare' && $prepare.preparesell_price==$prepare.promotion_price}><{$order.cur_money|cur:$order.currency}><{/if}><{if $order.promotion_type=='prepare'&& $prepare.nowtime > $prepare.begin_time && $prepare.nowtime < $prepare.end_time && $prepare.preparesell_price<$prepare.promotion_price}><{$prepare.preparesell_price|cur:$order.currency}><{/if}><{if $order.promotion_type=='prepare' && $prepare.nowtime > $prepare.begin_time_final && $prepare.nowtime < $prepare.end_time_final && $prepare.preparesell_price<$prepare.promotion_price}><{$order.total_amount-$prepare.preparesell_price|cur:$order.currency}><{/if}></b> 吗？', function(e){
+                                    if(e){
+                                        $("pay[password]").value = $("pay_password").value;
+                                        el.getParent('form').submit();
+                                    }
+                                });
+                            }
                           }
                       }
                   });

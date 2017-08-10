@@ -5,26 +5,26 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
- 
+
 
 /*
  * @package base
  * @copyright Copyright (c) 2010, shopex. inc
  * @author edwin.lzh@gmail.com
- * @license 
+ * @license
  */
 class base_kvstore_filesystem extends base_kvstore_abstract implements base_interface_kvstore_base
 {
 
     public $header = '<?php exit(); ?>';
 
-    function __construct($prefix) 
+    function __construct($prefix)
     {
         $this->prefix= $prefix;
         $this->header_length = strlen($this->header);
     }//End Function
 
-    public function store($key, $value, $ttl=0) 
+    public function store($key, $value, $ttl=0)
     {
         $this->check_dir();
         $data = array();
@@ -42,7 +42,7 @@ class base_kvstore_filesystem extends base_kvstore_abstract implements base_inte
         return false;
     }//End Function
 
-    public function fetch($key, &$value, $timeout_version=null) 
+    public function fetch($key, &$value, $timeout_version=null)
     {
         $file = $this->get_store_file($key);
         if(file_exists($file)){
@@ -68,7 +68,7 @@ class base_kvstore_filesystem extends base_kvstore_abstract implements base_inte
         return false;
     }//End Function
 
-    public function delete($key) 
+    public function delete($key)
     {
         $file = $this->get_store_file($key);
         if(file_exists($file)){
@@ -77,7 +77,7 @@ class base_kvstore_filesystem extends base_kvstore_abstract implements base_inte
         return false;
     }//End Function
 
-    public function recovery($record) 
+    public function recovery($record)
     {
         $this->check_dir();
         $key = $record['key'];
@@ -95,14 +95,14 @@ class base_kvstore_filesystem extends base_kvstore_abstract implements base_inte
         return false;
     }//End Function
 
-    private function check_dir() 
+    private function check_dir()
     {
         if(!is_dir(DATA_DIR.'/kvstore/'.$this->prefix)){
             utils::mkdir_p(DATA_DIR.'/kvstore/'.$this->prefix);
         }
     }//End Function
 
-    private function get_store_file($key) 
+    private function get_store_file($key)
     {
         return DATA_DIR.'/kvstore/'.$this->prefix.'/'.$this->create_key($key).'.php';
     }//End Function

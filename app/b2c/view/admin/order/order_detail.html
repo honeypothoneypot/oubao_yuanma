@@ -344,11 +344,15 @@ $$('.order-ctls button[act]').each(function(btn){
       </tr>
       <tr>
         <th ><{t}>电话：<{/t}></th>
-        <td><{$order.member.pam_account.mobile.login_account}></td>
+        <td><{$order.member.contact.phone.telephone}></td>
       </tr>
       <tr>
         <th ><{t}>地区：<{/t}></th>
         <td ><{$order.member.contact.area}></td>
+      </tr>
+      <tr>
+        <th ><{t}>手机：<{/t}></th>
+        <td ><{$order.member.pam_account.mobile.login_account}></td>
       </tr>
       <!--            <tr>
               <td>Email：</td><td><{$order.member.email}>

@@ -42,7 +42,7 @@ class weixin_message{
     public function get_message($msg_id, $msg_type='text', $urlParams){
         if( empty($msg_id) ) return '';
         //文字消息
-        if( $msg_type == 'text' || $msg_type = "customers"){
+        if( $msg_type == 'text' || $msg_type == "customers"){
             $data = $this->get_msg_text_row($msg_id, $urlParams);
         }else{//图文消息
             $data = $this->get_msg_image_row($msg_id, $urlParams);
