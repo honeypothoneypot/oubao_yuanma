@@ -98,8 +98,50 @@ class b2c_goods_filter extends dbeav_filter{
 
         //规格筛选 mysql中
         if( count( $filter['spec_value_id'])>0 ){
-            $sql = 'SELECT goods_id FROM sdb_b2c_goods_spec_index WHERE spec_value_id IN ( '.implode( ',',$filter['spec_value_id']).' )';
-            $sGoodsId = $object->db->select($sql);
+            //modified by zengxinwen 2016-1-28 多规格筛选取交集
+
+            $sql = 'SELECT spec_value_id,spec_id FROM sdb_b2c_spec_values WHERE spec_value_id IN ( '.implode( ',',$filter['spec_value_id']).' )';
+            $specs = $object->db->select($sql);
+            $tmp = array();
+            foreach($specs as $v){
+                $tmp[$v['spec_id']][]= $v['spec_value_id'];
+            }
+
+            if(count($tmp)==1){
+                //单组规格处理
+                $tmpone = array();
+                foreach($tmp as $v){
+                    $tmpone = $v;
+                }
+                $sql = 'SELECT distinct goods_id FROM sdb_b2c_goods_spec_index WHERE spec_value_id IN ( '.implode( ',',array_values($tmpone)).' )';
+                $sGoodsId = $object->db->select($sql);
+            }else{
+                $goodsIdGroup = array();
+                foreach($tmp as $spec_group){
+                    $sql = 'SELECT distinct goods_id FROM sdb_b2c_goods_spec_index WHERE spec_value_id IN ( '.implode( ',',$spec_group).' )';
+                    $goodsIdGroup[] = $object->db->select($sql);
+                }
+                //多组规格判断取交集
+                if(count($goodsIdGroup)==1){
+                    $sGoodsId = $goodsIdGroup[0];
+                }else{
+                    $arr_all = array();
+                    foreach($goodsIdGroup as $group){
+                        $arr_all = array_merge($arr_all,$group);
+                    }
+                    $arr_tmp = array();
+                    $sGoodsId = array();
+                    foreach($arr_all as $val){
+                        if(in_array($val,$arr_tmp)){
+                            $sGoodsId[] = $val;
+                        }else{
+                            $arr_tmp[] = $val;
+                        }
+                    }
+                }
+            }
+            //modified end....
+            
             $sgid = array();
             foreach( $sGoodsId as $si )
                 $sgid[] = $si['goods_id'];

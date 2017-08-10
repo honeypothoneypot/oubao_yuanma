@@ -26,6 +26,7 @@ var Shop = <{$shopDefine|default:'null'}>;
 <{script src="ui.min.js" app="site" pdir="js_mini"}>
 <{script src="shop.min.js" app="b2c" pdir="js_mini"}>
 <{/if}>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 </head>
 <body style="*height:100%;*overflow:hidden;">
   <div id="signupin_tags" class="signupin-tags clearfix">
@@ -42,6 +43,19 @@ var Shop = <{$shopDefine|default:'null'}>;
 <script>
 Module = new Module('mini', ['signup']);
 var modname = 'mini.signup';
+</script>
+<script type="text/javascript">
+  jQuery(function() {
+    jQuery.noConflict();
+    jQuery(".x-input").blur(function() {
+        var inputval = $(this).val();
+        var re=/^[a-zA-Z0-9]*$/;//只允许输入数字和大小写字母
+        if(!re.test(this.value)){
+        alert("请勿输入非法字符");
+        this.value="";//将最后输入的字符去除
+        }
+    });
+  });
 </script>
 </body>
 </html>

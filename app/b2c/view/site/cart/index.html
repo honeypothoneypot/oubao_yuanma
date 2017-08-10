@@ -349,7 +349,7 @@
         // $('clear_history').addEvent('click', function(){browserStore.clear('history');box.hide();});
         var myName = Cookie.read('UNAME');
         var key = "history_"+myName;
-        browserStore.get(fkey, function(rs) {
+        browserStore.get(key, function(rs) {
             rs = JSON.decode(rs);
             var min = 1;
             if (!rs || rs.length <= min) return box.hide();

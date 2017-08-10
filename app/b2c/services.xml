@@ -39,6 +39,10 @@
         <class>b2c_view_input</class>
     </service>
 
+    <service id="desktop_finder.b2c_mdl_order_abnormal">
+        <class>b2c_finder_order_abnormal</class>
+    </service>
+
     <service id="desktop_finder.b2c_mdl_orders">
         <class>b2c_finder_orders</class>
     </service>

@@ -441,7 +441,7 @@ class b2c_ctl_admin_products extends desktop_controller{
         $returnData['productNum'] = count($productsData);
         $returnData['is_new'] = '1';
 
-        if(!$goods_id){//新增开启规格，数据返回到新增商品页面
+        if(!$goods_id){//新增商品返回新增开启规格的数据
             foreach($_POST['spec'] as $sid=>$row){
                 $returnData['spec'][$sid] = $row;
                 foreach($row['option'] as $k=>$v){
@@ -456,7 +456,6 @@ class b2c_ctl_admin_products extends desktop_controller{
             echo json_encode(array('result'=>'success', 'data'=>$returnData, 'msg'=>app::get('b2c')->_( '操作成功' )));
             exit;
         }
-
         #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓记录管理员操作日志@lujy↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
         if($obj_operatorlogs = kernel::service('operatorlog.goods')){
             $olddata = app::get('b2c')->model('goods')->dump($goods_id,'goods_id',
@@ -502,6 +501,9 @@ class b2c_ctl_admin_products extends desktop_controller{
                 $productsData[$key]['product_id']=$result['product_id'];
             }
         }
+	//@djh 编辑页面返回规格数据和货品数据
+        $returnData['product'] = $productsData;
+        $returnData['selectionSpec']=$selectionSpec['spec'];
         //更新商品数据
         $goodsFlag = $this->_update_goods($goods_id,$productsData,$selectionSpec['spec']);
         if(!$goodsFlag){

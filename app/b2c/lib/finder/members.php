@@ -331,7 +331,7 @@ class b2c_finder_members{
         $render->pagedata['orders'] = $orders;
         if($_GET['page']) unset($_GET['page']);
         $_GET['page'] = 'detail_order';
-        $this->controller->pagination($nPage,$count,$_GET);
+        $render->pagedata['pager']= $this->controller->pagination($nPage,$count,$_GET);
         return $render->fetch('admin/member/order.html');
     }
 
@@ -350,7 +350,7 @@ class b2c_finder_members{
         $render->pagedata['msgs'] =  $row;
         if($_GET['page']) unset($_GET['page']);
         $_GET['page'] = 'detail_msg';
-        $this->controller->pagination($nPage,$count,$_GET);
+        $render->pagedata['pager']= $this->controller->pagination($nPage,$count,$_GET);
         return $render->fetch('admin/member/member_msg.html');
     }
 

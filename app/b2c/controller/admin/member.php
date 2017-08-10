@@ -333,6 +333,8 @@ class b2c_ctl_admin_member extends desktop_controller{
 
   function chkpassword($member_id=null){
     $member = $this->app->model('members');
+      //modified by zengxinwen
+      $_POST=utils::_filter_input($_POST);
     if($_POST){
         $userPassport = kernel::single('b2c_user_passport');
         $this->begin();

@@ -119,6 +119,12 @@ class b2c_user_passport
      */
     public function check_passport($password,$psw_confirm,&$msg){
         $passwdlen = strlen( trim($password) );
+
+        if(!preg_match('/^[^\x00-\x2d^\x2f^\x3a-\x3f]+$/i', trim($login_name)) ){
+            $msg = $this->app->_('该登录密码包含非法字符');
+            return false;
+        }
+
         if($passwdlen<6){
             $msg = $this->app->_('密码长度不能小于6位');
             return false;

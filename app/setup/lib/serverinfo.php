@@ -104,7 +104,6 @@ class setup_serverinfo
             'result'=> $rst,
         );
         if(!$rst)   $allow_install = false;
-
         return array('group'=>'基本需求','key'=>'require','items'=>$items,'type'=>'require','allow_install'=>$allow_install);
     }//End Function
 
@@ -272,7 +271,13 @@ class setup_serverinfo
             );
         }
         */
-        
+        $rst = function_exists('curl_init') ? true : false;
+        $items['curl_init'] = array(
+            'value' => $rst ? '成功' : '需要安装curl_init扩展',
+            'result'=> $rst,
+        );
+        if(!$rst)   $allow_install = false;
+
         if(is_callable('imagecreatetruecolor')){
             try{
                 $image = imagecreatetruecolor(100, 200);

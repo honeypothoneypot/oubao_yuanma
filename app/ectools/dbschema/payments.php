@@ -240,6 +240,16 @@ $db['payments']=array (
       'editable' => false,
       'in_list' => true,
     ),
+    'checked' =>
+    array (
+      'type' =>
+      array (
+        0 => app::get('b2c')->_('未校验订单'),
+        1 => app::get('b2c')->_('已校验订单'),
+      ),
+      'default' => '0',
+      'label' => app::get('b2c')->_('校验订单'),
+    ),
   ),
   'comment' => app::get('ectools')->_('支付记录'),
   'index' => array (

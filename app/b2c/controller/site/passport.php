@@ -130,6 +130,7 @@ class b2c_ctl_site_passport extends b2c_frontpage{
      * */
     public function post_login(){
         //_POST过滤
+        ////modified by zengxinwen 2016-1-21 修改地方 status() 和 set_error_count()传入了 $post['uname']参数
         $post = utils::_filter_input($_POST);
         unset($_POST);
         $userData = array(
@@ -143,16 +144,17 @@ class b2c_ctl_site_passport extends b2c_frontpage{
             $this->splash('failed',null,$msg,true);exit;
         }
 
-        if(kernel::single('b2c_service_vcode')->status() && empty($post['verifycode'])){
+        if(kernel::single('b2c_service_vcode')->status($post['uname']) && empty($post['verifycode'])){
             $msg = app::get('b2c')->_('请输入验证码!');
             $this->splash('failed',null,$msg,true);exit;
         }
 
         $member_id = kernel::single('pam_passport_site_basic')->login($userData,$post['verifycode'],$msg);
+
         if(!$member_id){
             //设置登录失败错误次数 一个小时三次错误后需要自动开启验证码
-            kernel::single('b2c_service_vcode')->set_error_count();
-            $data['needVcode'] = kernel::single('b2c_service_vcode')->status();
+            kernel::single('b2c_service_vcode')->set_error_count($post['uname']);
+            $data['needVcode'] = kernel::single('b2c_service_vcode')->status($post['uname']);
             $this->splash('failed',null,$msg,true,$data);exit;
         }
 
@@ -161,8 +163,8 @@ class b2c_ctl_site_passport extends b2c_frontpage{
 
         $member_data = $b2c_members_model->getList( 'member_lv_id,experience,point', array('member_id'=>$member_id) );
         if(!$member_data){
-            kernel::single('b2c_service_vcode')->set_error_count();
-            $data['needVcode'] = kernel::single('b2c_service_vcode')->status();
+            kernel::single('b2c_service_vcode')->set_error_count($post['uname']);
+            $data['needVcode'] = kernel::single('b2c_service_vcode')->status($post['uname']);
             //在登录认证表中存在记录，但是在会员信息表中不存在记录
             $msg = $this->app->_('登录失败：会员数据存在问题,请联系商家或客服');
             $this->splash('failed',null,$msg,true,$data);exit;
@@ -260,6 +262,8 @@ class b2c_ctl_site_passport extends b2c_frontpage{
      * @return void
      */
     public function create(){
+        //modified by zengxinwen
+        $_POST = utils::_filter_input($_POST);
         if($_POST['response_json'] == 'true'){
             $ajax_request = true;
         }else{

@@ -3,7 +3,7 @@
     <licence file="license.txt" />
 
     <product_name>ONex ECStore</product_name>
-    <product_version>2.3.54</product_version>
+    <product_version>2.3.55</product_version>
     <business_version>source</business_version>
     <publish_version>ecstore</publish_version>
     <product_key>ecos.ecstore2.standard</product_key>

@@ -133,7 +133,10 @@ class image_clip{
 
         self::$tool->watermark($file, $mark_image, $set);
 
-        @unlink($mark_image);
+        //modified 2016-1-20 20:00 zengxinwen
+        if(!is_array($mark_image) && strstr($mark_image,sys_get_temp_dir())){
+            @unlink($mark_image);
+        }
     }
 
     /**

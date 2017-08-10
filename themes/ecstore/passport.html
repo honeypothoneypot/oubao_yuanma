@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
 <{header}>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <link rel="stylesheet" href="images/styles.css" />
 </head>
 <body>
@@ -12,5 +13,18 @@
   </div>
 </div>
 <{require file="block/footer.html"}>
+<script type="text/javascript">
+  jQuery(function() {
+    jQuery.noConflict();
+    jQuery(".x-input").blur(function() {
+        var inputval = $(this).val();
+        var re=/^[a-zA-Z0-9]*$/;//只允许输入数字和大小写字母
+        if(!re.test(this.value)){
+        alert("请勿输入非法字符");
+        this.value="";//将最后输入的字符去除
+        }
+    });
+  });
+</script>
 </body>
 </html>

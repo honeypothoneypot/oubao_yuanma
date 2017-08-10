@@ -19,6 +19,11 @@
     <schedule>5 * * * *</schedule>
     <enabled>true</enabled>
   </cron>
+  <cron id="b2c_tasks_order_check_payment">
+    <description>检查已支付订单是否已经变更订单支付状态</description>s
+    <schedule>55 * * * *</schedule>
+    <enabled>true</enabled>
+  </cron>
 <!--   <cron id="b2c_tasks_archive">
   <description>归档订单相关单据</description>
   <schedule>*/5 * * * *</schedule>

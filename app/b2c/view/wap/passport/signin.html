@@ -41,7 +41,7 @@
 </form>
 <script>
 $('.form .a-account').change(function(e) {
-    if(/^1[3458]\d{9}$/.test(this.value)) {
+    if(/^1[34578]\d{9}$/.test(this.value)) {
         $.post('<{link app=b2c ctl=wap_passport act=login_ajax_account}>', this.name + '=' + this.value, function(rs){
             if(rs) {
                 try{

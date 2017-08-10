@@ -525,8 +525,16 @@ var mceHandler = new Class({
         options = Object.filter(options, function(o) {
             return !! o;
         });
-
         var _this = this;
+        var timeid;
+        timeid = setInterval(function(){
+          var image = window.image;
+          if(image !== undefined){
+            _this.insertImg(image.id, image.src);
+            window.image = undefined;
+            clearInterval(timeid);
+          }
+        }, 1000);
         if ('image' == action) return Ex_Loader('modedialog', function() {
             new imgDialog(url, {
                 onCallback: function(image_id, image_src) {
@@ -581,4 +589,3 @@ var mceHandler = new Class({
         return ret;
     }
 });
-

@@ -84,8 +84,11 @@ class ectools_ctl_payment_cfgs extends desktop_controller{
                             foreach ( $_FILES['setting']['tmp_name'] as $tkey=>$tvalue ) {
                                 if ( is_uploaded_file( $tvalue )) {
                                     if ( $nkey == $tkey ) {
-                                        $destination = DATA_DIR . '/cert/' . $bankName . '/' . $nvalue;
-                                        move_uploaded_file( $tvalue, $destination );
+                                        //modified by zengxinwen 2016-1-21
+                                        if(!strstr($bankName,'../') && !strstr($nvalue,'../')){
+                                            $destination = DATA_DIR . '/cert/' . $bankName . '/' . $nvalue;
+                                            move_uploaded_file( $tvalue, $destination );
+                                        }
                                     }
                                 }
                             }

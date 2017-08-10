@@ -191,7 +191,6 @@ class b2c_ctl_site_member extends b2c_frontpage{
      *会员中心首页
      * */
     public function index() {
-
         $userObject = kernel::single('b2c_user_object');
         //面包屑
         $this->path[] = array('title'=>app::get('b2c')->_('会员中心'),'link'=>$this->gen_url(array('app'=>'b2c', 'ctl'=>'site_member', 'act'=>'index','full'=>1)));
@@ -1734,6 +1733,13 @@ class b2c_ctl_site_member extends b2c_frontpage{
         foreach((array)$sell_logs as $key=>$log_row){
             if(in_array($log_row['order_id'],$tmp_nogift_order_id) && in_array($log_row['product_id'],$tmp_nogift_product_id) ){//剔除赠品,赠品不需要评论
                 if($i >= $start && $i < ($nPage*$limit) ){
+/*从订单表orders中获取时间做为评论页面的购买时间@djh*/
+                $orderLogModel = app::get('b2c')->model('orders');
+                $orderLog=$orderLogModel->getRow('createtime',array('order_id'=>$log_row['order_id']));
+                $log_row['createtime']=$orderLog['createtime'];
+                unset($orderLog);
+/*从订单表orders中获取时间做为评论页面的购买时间@djh*/
+                    	
                     $sell_logs_data[] = $log_row;
                     $gids[] = $log_row['goods_id'];
                 }
@@ -1745,7 +1751,9 @@ class b2c_ctl_site_member extends b2c_frontpage{
         $totalPage = ceil($i/$limit);
         if($nPage > $totalPage) $nPage = $totalPage;
 
-        $this->pagedata['list'] = $sell_logs_data;
+
+
+		$this->pagedata['list'] = $sell_logs_data;
         $this->pagination($nPage,$totalPage,'nodiscuss');
 
         if($gids){

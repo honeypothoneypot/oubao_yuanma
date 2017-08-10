@@ -137,6 +137,13 @@ class b2c_ctl_site_order extends b2c_frontpage{
         }else{
             $shipping = json_decode($_POST['shipping'],true);
             unset($_POST['shipping']);
+            //modified by zengxinwen
+            $obj_shipping = $this->app->model('dlytype');
+            $id_exists = $obj_shipping->dump($shipping['id'], '*');
+            if(empty($shipping['id']) || !$id_exists){
+                $msg .= app::get('b2c')->_("请先确认配送方式")."<br />";
+                $this->end(false, $msg, '',true,true);
+            }
             $_POST['delivery']['shipping_id'] = $shipping['id'];
             $_POST['delivery']['is_protect'][$shipping['id']] = $_POST['is_protect'];
         }

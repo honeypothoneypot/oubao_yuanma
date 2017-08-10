@@ -792,8 +792,6 @@ withBrowserStore(function(browserStore){
             }
         }
         history.unshift(newHst);
-
-        
         browserStore.set(key, JSON.encode(history));
     });
 });

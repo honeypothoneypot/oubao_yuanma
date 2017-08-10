@@ -219,6 +219,8 @@ class b2c_order_update extends b2c_api_rpc_request
                         'object_id' => $object_id,
                     );
                     $aItem['item_id'] = $rows['item_id'];
+                    //modified by zengxinwen add line
+                    $aItem['goods_id'] = $rows['goods_id'];
                     $mdl_order_items->save($aItem);
                 }else{
                     

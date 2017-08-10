@@ -10,6 +10,9 @@
         var box=$('box_<{$widgets_id}>');
         var myName = Cookie.read('UNAME');
         var key = 'history_'+myName;
+        if(myName==null){
+            return false;
+        }
         browserStore.get(key,function(v){
             v=JSON.decode(v);
             if(!v||!v.length)return;

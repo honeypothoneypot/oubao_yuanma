@@ -14,7 +14,8 @@ class pam_lock {
 
     public function increase($username)
     {
-        $username = $this->_username2memberid($username);
+        //modified by zengxinwen 2016-1-21 注释掉了下行代码
+        //$username = $this->_username2memberid($username);
         $key = $this->_pre_key.$username;
         base_kvstore::instance('login_lock')->fetch($key, $times);
         if($times == null)
@@ -29,7 +30,8 @@ class pam_lock {
 
     public function checkusername($username, &$msg)
     {
-        $username = $this->_username2memberid($username);
+        //modified by zengxinwen 2016-1-21 注释掉了下行代码
+        //$username = $this->_username2memberid($username);
         $key = $this->_pre_key . $username;
         base_kvstore::instance('login_lock')->fetch($key, $times);
         if( $times >= $this->_lock_times )

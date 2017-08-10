@@ -166,9 +166,11 @@ class b2c_widgets_goods extends b2c_widgets_public {
         }
 
         if($gids){
-            $productData = $objProduct->getList('goods_id,product_id,marketable',array('goods_id'=>$gids,'is_default'=>'true'));
+            $productData = $objProduct->getList('goods_id,product_id,marketable,price',array('goods_id'=>$gids,'is_default'=>'true'));
             foreach($productData as $k=>$val){
                 $_return['goodsRows'][$val['goods_id']]['products'][] = $val;
+                //modified by zengxinwen
+                $result['goodsRows'][$val['goods_id']]['goodsSalePrice']=$val['price'];
                 $result['goodsRows'][$val['goods_id']]['goodsLink'] = $this->getGoodsLink($val['product_id'],$platform);
             }
         }

@@ -71,6 +71,16 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
                 }
             }
         }
+/*对商品标题进行字符控制*/
+		foreach ($goodsData as $key=>$gData){
+			//echo strlen($goodsData[$key]['name']);exit;
+				if (strlen($gData['name']) > 200){
+					$goodsData[$key]['name']=substr($gData['name'],0,200)."...";
+				}else{
+					$goodsData[$key]['name']=$gData['name'];
+				}
+		}
+/*对商品标题进行字符控制*/
         //echo '<pre>';print_r($goodsData);exit();
         $screen = $this->screen($cat_id,$params['params']);
         $this->pagedata['screen'] = $screen['screen'];

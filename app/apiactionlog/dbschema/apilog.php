@@ -202,11 +202,13 @@ $db['apilog'] = array(
                 1 => 'api_type',
             ),
         ),
-        'ind_calltime' =>
+        'ind_calltime_status_apitype' =>
         array (
             'columns' =>
             array (
                 0 => 'calltime',
+                1 => 'status',
+                2 => 'api_type',
             ),
         ),
         'ind_apilog_api_type_calltime' =>

@@ -39,6 +39,17 @@ class apiactionlog_ctl_admin_apilog extends desktop_controller{
                 );
         }
 
+        if( $status=='sending' ){
+            $actions =
+                array(
+                    array(
+                        'label' => '定时重试',
+                        'icon' => 'add.gif',
+                        'href' => 'index.php?app=apiactionlog&ctl=admin_apilog&act=crontab_retry',
+                        'target' => "dialog::{width:720,height:150,title:'定时重试'}",
+                    ),
+                );
+        }
         $params = array(
             'title'=>$this->title,
             'actions'=> $actions,
@@ -95,5 +106,27 @@ class apiactionlog_ctl_admin_apilog extends desktop_controller{
 
     function batch_retry(){
         $this->retry($_POST, 'batch');
+    }
+
+    /**
+     * 去配置定时重试发起中的接口
+     */
+    function crontab_retry(){
+        $crontab_setting_status = app::get('apiactionlog')->getConf('apiactionlog.crontab_setting.status');
+        $crontab_setting_minute = app::get('apiactionlog')->getConf('apiactionlog.crontab_setting.minute');
+        $this->pagedata['crontab_setting_status'] = $crontab_setting_status?$crontab_setting_status:0;
+        $this->pagedata['crontab_setting_minute'] = $crontab_setting_minute?$crontab_setting_minute:120;
+        $this->page('admin/api_crontab.html');
+    }
+
+    function crontab_setting(){
+        $this->begin();
+        $crontab_setting_status = $_POST['crontab_setting_status'];
+        $crontab_setting_minute = $_POST['crontab_setting_minute'];
+
+        app::get('apiactionlog')->setConf('apiactionlog.crontab_setting.status',$crontab_setting_status);
+        app::get('apiactionlog')->setConf('apiactionlog.crontab_setting.minute',$crontab_setting_minute);
+        $this->end(true,app::get('b2c')->_('保存成功！'));
+        exit;
     }
 }

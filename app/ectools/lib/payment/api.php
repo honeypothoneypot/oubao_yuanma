@@ -78,7 +78,6 @@ class ectools_payment_api
         logger::info("支付返回信息转换之后记录：".var_export($ret,1));
 		// 支付结束，回调服务.
 		if (!isset($ret['status']) || $ret['status'] == '') $ret['status'] = 'failed';
-
 		$obj_payments = app::get('ectools')->model('payments');
 		$sdf = $obj_payments->dump($ret['payment_id'], '*', '*');
 		if ($sdf){
@@ -117,6 +116,16 @@ class ectools_payment_api
 							{
 								logger::error(app::get('ectools')->_('支付失败') . " " . $msg ."\n");
 								$db->rollback();
+                                //添加到异常订单中，同时记录展现
+								$obj_abnormal_orders = app::get('b2c')->model('order_abnormal');
+								foreach($sdf['orders'] as $val){
+									$order_id = $val['rel_id'];
+								}
+				                $abnormal_order['order_id'] = $order_id;
+	                            $abnormal_order['abnormal_type'] = '已支付订单状态未更改';
+	                            $abnormal_order['msg'] = $msg;
+	                            $abnormal_order['updatetime'] = time();
+	                            $obj_abnormal_orders->save($abnormal_order);
 							}
 							else
 							{
@@ -134,11 +143,14 @@ class ectools_payment_api
                     if( $obj_coupon ){
                         $obj_coupon->order_pay_finish($sdf, $ret['status'], 'font',$msg);
                     }
+
+
 					//支付成功给支付网关显示支付信息
 					if(method_exists($payments_bill, 'ret_result')){
 						$payments_bill->ret_result($ret['payment_id']);
 					}
 				}
+
 				break;
 			case 'REFUND_SUCCESS':
 				// 退款成功操作

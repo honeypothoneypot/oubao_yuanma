@@ -9,11 +9,12 @@
  
 class base_httpclient{
 	function __construct(){
-		if(ECAE_MODE==true || HTTPCLIENT_TYPE=='curl'){
+        $this->netcore = kernel::single('base_curl');
+		/*if(ECAE_MODE==true || HTTPCLIENT_TYPE=='curl'){
 			$this->netcore = kernel::single('base_curl');
 		}else{
 			$this->netcore = kernel::single('base_http');
-		}
+		}*/
 	}
     function get($url,$headers=null,$callback=null,$ping_only=false){
         return $this->netcore->action(__FUNCTION__,$url,$headers,$callback,null,$ping_only);
