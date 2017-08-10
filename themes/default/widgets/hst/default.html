@@ -8,7 +8,9 @@
 <script>
     withBrowserStore(function(browserStore){
         var box=$('box_<{$widgets_id}>');
-        browserStore.get('history',function(v){
+        var myName = Cookie.read('UNAME');
+        var key = 'history_'+myName;
+        browserStore.get(key,function(v){
             v=JSON.decode(v);
             if(!v||!v.length)return;
             var html='';
@@ -92,10 +94,12 @@
             if(index<max&&goods['goodsId']==gid)
             return goods['goodsImg']=data;
             });
+            // var myName = Cookie.read('UNAME');
+            // var key = 'history_'+myName;
+            browserStore.set(key, JSON.encode(v));
 
-            browserStore.set('history',JSON.encode(v));
             }}).get({'gids':gid});
             }
 
-            });
-        </script>
+    });
+</script>

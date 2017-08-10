@@ -19,7 +19,11 @@ class pam_passport_site_basic
             $msg = app::get('pam')->_('验证码错误');
             return false;
         }
-
+        $account = app::get('pam')->model('members')->getList('member_id',array('login_account' => $userData['login_account']));
+        if(!$account){
+            $msg = app::get('pam')->_('用户名或密码错误');
+            return false;
+        }
         //判断该账户登陆是否受到限制
         if( !kernel::single('pam_lock')->checkusername($userData['login_account'], $msg) )
         {

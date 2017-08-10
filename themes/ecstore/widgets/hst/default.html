@@ -8,7 +8,9 @@
 <script>
     withBrowserStore(function(browserStore){
         var box=$('box_<{$widgets_id}>');
-        browserStore.get('history', function(rs) {
+        var myName = Cookie.read('UNAME');
+        var key = 'history_'+myName;
+        browserStore.get(key, function(rs) {
             rs = JSON.decode(rs);
             var min = 1;
             if (!rs || rs.length <= min) return box.hide();
@@ -67,7 +69,7 @@
                         if (index >= min && index <= max && goods['goodsId'] == gid) return goods['goodsImg'] = data;
                     });
 
-                    browserStore.set('history', JSON.encode(rs));
+                    browserStore.set(key, JSON.encode(v));
                 }
             }).get({'gids': gid});
         }

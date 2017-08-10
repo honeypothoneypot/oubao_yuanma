@@ -56,7 +56,7 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
                 $params['params']=array_merge_recursive($params['params'],$v_filter);
             }
         }
-		$page = $params['page']?$params['page']:$page;
+        $page = $params['page']?$params['page']:$page;
         $this->pagedata['filter'] = $params['params'];
         $goodsData = $this->get_goods($params['filter'],$page,$params['orderby']);
          //给商品附加预售信息
@@ -474,10 +474,17 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
             $tmp_filter['tag'] = $tmp_filter['gTag'];unset($tmp_filter['gTag']);
         }
 
-        if($tmp_filter['is_store'] == 'on' || app::get('b2c')->getConf('gallery.display.stock_goods') != 'true'){
-            #是否有货
-            $is_store = $params['is_store'];
+        
+        //不显示缺货产品
+        if ($this->app->getConf('gallery.display.stock_goods') != 'true'){
+             $tmp_filter['is_store']='on';
         }
+
+        
+        //if($tmp_filter['is_store'] == 'on' || app::get('b2c')->getConf('gallery.display.stock_goods') != 'true'){
+            #是否有货
+            //$is_store = $params['is_store'];
+        //}
         if($tmp_filter['virtual_cat_id']){
             $tmp_filter = $this->_merge_vcat_filter($tmp_filter['virtual_cat_id'],$tmp_filter);//合并虚拟分类条件
         }
@@ -553,6 +560,7 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
     public function get_goods($filter,$page=1,$orderby){
         $goodsObject = kernel::single('b2c_goods_object');
         $goodsModel = app::get('b2c')->model('goods');
+        $productsModel = app::get('b2c')->model('products');
         $userObject = kernel::single('b2c_user_object');
         $member_id = $userObject->get_member_id();
         if( empty($member_id) ){
@@ -565,6 +573,21 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
         $this->pagedata['pageLimit'] = $pageLimit;
         $total = false;
         $goodsData = $goodsModel->getList('*',$filter,$pageLimit*($page-1),$pageLimit,$orderby,$total);
+        if($filter['is_store'] == 'on'){
+            foreach($goodsData as $key => $value){
+                $products = $productsModel->getlist('product_id,store,freez',array('goods_id'=>$value['goods_id']));
+                $is_store = false;
+                foreach($products as $value){
+                    if($value['store']>$value['freez']){
+                        $is_store = ture;
+                        break;
+                    }
+                }
+                if(!$is_store){
+                    unset($goodsData[$key]);
+                }
+            }
+        }
         if($goodsData && $total ===false){
            $total = $goodsModel->count($filter);
         }
@@ -731,9 +754,9 @@ class b2c_ctl_site_gallery extends b2c_frontpage{
             }
         }
         foreach($goodsData as $key=>$goods_row){
-			if($goods_row['products']['promotion_type']){
-				continue;
-			}
+            if($goods_row['products']['promotion_type']){
+                continue;
+            }
             $goodsData[$key]['promotion_tags'] = $promotion_tags[$goods_row['goods_id']];
         }
         return $goodsData;

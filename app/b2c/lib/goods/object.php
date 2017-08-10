@@ -147,6 +147,16 @@ class b2c_goods_object {
         $orderPromotion = $this->app->model('sales_rule_order')->getList('*',array('status'=>'true','from_time|lthan'=>time(),'to_time|than'=>time(),'rule_type'=>'N'),0,-1,'sort_order ASC');
         if($orderPromotion){
             foreach($orderPromotion as $row) {
+                foreach($row['action_conditions']['conditions'] as $value){
+                    if($value['attribute'] == 'goods_goods_id'){
+                        if(!in_array($goodsId,$value['value'])){
+                            $promotion = false;
+                        }
+                    }
+                }
+                if(isset($promotion)){
+                    continue;
+                }
                 if($platform && strpos($row['apply_platform'],$platform) === false){
                     continue;
                 }

@@ -282,6 +282,15 @@ class b2c_ctl_admin_setting extends desktop_controller{
                         _destination_node.each(function(item){if (item.getNext(".caution") && item.getNext(".caution").hasClass("error")) item.getNext(".caution").remove();});
                     }
                 }
+            });
+            $$("[name=set[site.sms_valide]]").addEvent("click",function(){
+                var that = this;
+                if(that.value=="false"){
+                    if(!confirm("取消该项会使网站更易受到短信轰炸")){
+                        that.checked = "";
+                        that.getSiblings("[name=set[site.sms_valide]]")[0].checked = "checked";
+                    }
+                }
             });';
 
             $this->pagedata['_PAGE_CONTENT'] .= $str_js . '});</script>';

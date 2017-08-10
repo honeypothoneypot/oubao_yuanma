@@ -347,7 +347,9 @@
     withBrowserStore(function(browserStore) {
         var box = $('view_history');
         // $('clear_history').addEvent('click', function(){browserStore.clear('history');box.hide();});
-        browserStore.get('history', function(rs) {
+        var myName = Cookie.read('UNAME');
+        var key = "history_"+myName;
+        browserStore.get(fkey, function(rs) {
             rs = JSON.decode(rs);
             var min = 1;
             if (!rs || rs.length <= min) return box.hide();
@@ -406,8 +408,9 @@
                     rs.map(function(goods, index) {
                         if (index >= min && index <= max && goods['goodsId'] == gid) return goods['goodsImg'] = data;
                     });
-
-                    browserStore.set('history', JSON.encode(rs));
+                    // var myName = Cookie.read('UNAME');
+                    // var key = 'history_'+myName;
+                    browserStore.set(key, JSON.encode(rs));
                 }
             }).get({'gids': gid});
         }

@@ -670,7 +670,13 @@ class b2c_ctl_site_cart extends b2c_frontpage{
         }
 
         $currency = app::get('ectools')->model('currency');
+
         if($this->pagedata['shipping_method']){
+            foreach($this->pagedata['shippings'] as $val){
+                if($val['dt_id'] == $this->pagedata['shipping_method']['shipping_id']){
+                    $this->pagedata['shipping_method']['money'] = $val['money'];
+                }
+            }
             // 是否有默认的支付方式
             $this->pagedata['arr_def_payment'] = (isset($_COOKIE['purchase']['payment']) && $_COOKIE['purchase']['payment']) ? unserialize($_COOKIE['purchase']['payment']) : '';
             /*支付方式列表*/

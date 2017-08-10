@@ -45,6 +45,11 @@
 </div>
 <script>
 
+window.onload = function(){
+  if($('for_pay_alipaygateway').checked === true){
+    show1('alipaygateway');
+  }
+}
 function show1(app_id){
   if(app_id =='alipaygateway'){
     $$('div.alipaygateway2').setStyle('display','block');

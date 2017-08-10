@@ -770,7 +770,9 @@ function toggleText(el, attr) {
 }
 
 withBrowserStore(function(browserStore){
-    browserStore.get('history',function(history){
+    var myName = Cookie.read('UNAME');
+    var key = 'history_'+myName;
+    browserStore.get(key, function(history){
         history=JSON.decode(history);
         if(!history||typeOf(history)!=='array') history=[];
         if(history.length>=40) history.pop();
@@ -791,7 +793,8 @@ withBrowserStore(function(browserStore){
         }
         history.unshift(newHst);
 
-        browserStore.set('history', JSON.encode(history));
+        
+        browserStore.set(key, JSON.encode(history));
     });
 });
 </script>

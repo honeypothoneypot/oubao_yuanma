@@ -1259,6 +1259,12 @@ class b2c_ctl_site_member extends b2c_frontpage{
      *发送站内信
      * */
     function send_msg(){
+    	
+    	//判断当前时间与session时间是否在5秒内
+    	if (isset($_SESSION['last_send']) and (time()-$_SESSION['last_send']) <= 5){
+    		return false;
+    	}
+		
         if(!isset($_POST['msg_to']) || $_POST['msg_to'] == '管理员'){
             $_POST['to_type'] = 'admin';
             $_POST['msg_to'] = 0;
@@ -1283,14 +1289,22 @@ class b2c_ctl_site_member extends b2c_frontpage{
                 //$data['comment_id'] = $_POST['comment_id'];
                 $_POST['comment_id'] = '';//防止用户修改comment_id
             }
+			
+			//设置session时间
+			$_SESSION['last_send']=time();
+			
             if( $objMessage->send($_POST) ) {
             if($_POST['has_sent'] == 'false'){
                 $this->splash('success','reload',app::get('b2c')->_('保存到草稿箱成功'),$_POST['response_json']);
+				//发送成功后释放session
+				unset($_SESSION['last_send']);
             }else{
                 $this->splash('success','reload',app::get('b2c')->_('发送成功'),$_POST['response_json']);
+				unset($_SESSION['last_send']);
             }
             } else {
                 $this->splash('failed',null,app::get('b2c')->_('发送失败'),$_POST['response_json']);
+				unset($_SESSION['last_send']);
             }
         }
         else {
