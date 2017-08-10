@@ -82,7 +82,11 @@ class trustlogin_api
         $trustMdl = app::get('trustlogin')->model('trustinfo');
         $pamMemberMdl = app::get('pam')->model('members');
         $pamAuthMdl = app::get('pam')->model('auth');
-        $checkData = array(
+	    if(preg_match('/wap_trustlogin_/',$ret['data']['trust_source'])){
+            $path=preg_replace('/wap_trustlogin_/','',$ret['data']['trust_source']);
+	        $ret['data']['trust_source']='trustlogin_plugin_'.$path;
+	    }
+	    $checkData = array(
             'openid'=>$ret['data']['openid'],
             'trust_source'=>$ret['data']['trust_source'],
             //'realname'=>$ret['data']['realname'],

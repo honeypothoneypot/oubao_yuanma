@@ -7,7 +7,7 @@
         <menugroup name="微信商城配置">
             <menu controller='admin_bind' action='index' permission='weixin' display='true' order='20'>绑定微信公众号</menu>
             <menu controller='admin_setting' action='index' permission='weixin' display='true' order='30'>基本配置</menu>
-            <menu controller='admin_sso' action='index' permission='weixin' display='true' order='50'>微信账号绑定</menu>
+            <menu controller='admin_sso' action='index' permission='weixin' display='true' order='50'>微信账户绑定配置</menu>
         </menugroup>
         <menugroup name="微信支付">
             <menu controller='admin_business_setting' action='index' permission='weixin' display='true' order='51'>开发配置信息</menu>

@@ -486,7 +486,9 @@ $db['orders']=array (
     array (
       'type' => 'longtext',
       'editable' => false,
+      'label' => app::get('b2c')->_('订单附言'),
       'comment' => app::get('b2c')->_('订单附言'),
+      'in_list' => true,
     ),
     'disabled' =>
     array (
@@ -502,8 +504,8 @@ $db['orders']=array (
     ),
     'mark_type' =>
     array (
-      'type' => 'varchar(2)',
-      'default' => 'b1',
+      'type' => 'varchar(3)',
+      'default' => 'b10',
       'required' => true,
       'label' => app::get('b2c')->_('订单备注图标'),
       'hidden' => true,

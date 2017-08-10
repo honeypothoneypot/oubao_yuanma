@@ -5,7 +5,7 @@
     effect: 'scrolly',
     duration: <{$data.setting.roll_speed}>,
     viewStep: <{$data.setting.steps}>
-}" style="height:<{$data.setting.height|default:40}>px;">
+}" style="height:<{$data.setting.height|default:40}>px; overflow:hidden;">
   <ul class="order-list">
     <{foreach name=outer item=contact from=$data key=key}>
     <{if $key!=='setting'}>

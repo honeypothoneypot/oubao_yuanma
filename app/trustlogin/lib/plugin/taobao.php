@@ -79,7 +79,7 @@ class trustlogin_plugin_taobao implements trustlogin_interface_trust
             $params['code'] = $data['code'];
             $params['state'] = $_SESSION['taobaost'];
             $res = kernel::single('base_httpclient')->post($this->token_url,$params);
-            $result = json_decode($res,true);
+	    $result = json_decode($res,true);
             $result['taobao_user_nick'] = urldecode($result['taobao_user_nick']);
             if ($data['error'])
             {
@@ -87,7 +87,7 @@ class trustlogin_plugin_taobao implements trustlogin_interface_trust
                echo "<h3>msg  :</h3>" . $data['error_description'];
                exit;
             }
-            if($result['taobao_user_id'])
+            if($result['open_uid'])
             {
                 $userdata = $this->getUserInfo($result);
                 $datainfo = array(
@@ -112,7 +112,7 @@ class trustlogin_plugin_taobao implements trustlogin_interface_trust
     
     public function getUserInfo($userinfo)
     {
-        $userdata['openid'] = $userinfo['taobao_user_id'];
+        $userdata['openid'] = $userinfo['open_uid'];
         $userdata['realname'] = $userinfo['taobao_user_nick'];
         $userdata['nickname'] = $userinfo['taobao_user_nick'];
         $userdata['avatar'] = $userinfo['avatar']?$userinfo['avatar']:' ';

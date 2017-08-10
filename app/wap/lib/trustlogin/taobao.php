@@ -72,7 +72,7 @@ class wap_trustlogin_taobao
                echo "<h3>msg  :</h3>" . $data['error_description'];
                exit;
             }
-            if($result['taobao_user_id'])
+            if($result['open_uid'])
             {
                 $userdata = $this->getUserInfo($result);
                 $datainfo = array(
@@ -96,7 +96,7 @@ class wap_trustlogin_taobao
     
     public function getUserInfo($userinfo)
     {
-        $userdata['openid'] = $userinfo['taobao_user_id'];
+        $userdata['openid'] = $userinfo['open_uid'];
         $userdata['realname'] = $userinfo['taobao_user_nick'];
         $userdata['nickname'] = $userinfo['taobao_user_nick'];
         $userdata['avatar'] = $userinfo['avatar']?$userinfo['avatar']:' ';

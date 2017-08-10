@@ -51,11 +51,6 @@ class wap_frontpage extends wap_controller{
                         $this->bind_member($bindTagData['member_id']);
                 }else{
                     $res = kernel::single('weixin_wechat')->get_basic_userinfo($bind['id'],$openid);
-                    $member_id = kernel::single('b2c_user_passport')->create($res,$openid);
-                    if($member_id ){
-                        $this->bind_member($member_id);
-                        $_SESSION['account']['member'] = $member_id;
-                    }
                     $_SESSION['weixin_u_nickname'] = $res['nickname'];
                 }
                 $_SESSION['weixin_u_openid'] = $openid;

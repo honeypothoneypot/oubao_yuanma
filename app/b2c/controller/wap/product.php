@@ -673,7 +673,7 @@ class b2c_ctl_wap_product extends wap_frontpage{
         return $params;
     }
     //价格数据处理
-    function _get_product_price($productId,$aGoods,$member_lv){
+    function _get_product_price($productId,$aGoods,$member_lv=null){
         $goodsPrice = array();
         $objCurrency = app::get('ectools')->model('currency');
         $money_format = json_decode($this->pagedata['money_format'],true);
@@ -694,13 +694,13 @@ class b2c_ctl_wap_product extends wap_frontpage{
             }
             $productMemberPrice['mktprice'] = $objCurrency->changer_odr($productMemberPrice['mktprice'], $_COOKIE['S']['CUR'], true, false, $money_format['decimals'], $money_format['fonttend_decimal_type']);
         }
+
+
+        $setting_member_price = $this->app->getConf('site.member_price_display');//前台是否显示会员价
         $show_member_price=array(1,3,4);
         $userObject = kernel::single('b2c_user_object');
         $siteMember = $userObject->get_current_member();
         $member_lv_id=$siteMember['member_lv'];
-
-
-        $setting_member_price = $this->app->getConf('site.member_price_display');//前台是否显示会员价
         if(in_array($setting_member_price,$show_member_price)){
             //会员价
             $memberLv = app::get('b2c')->model('member_lv')->getList('member_lv_id,name,dis_count');
@@ -717,13 +717,13 @@ class b2c_ctl_wap_product extends wap_frontpage{
                     $productMemberPrice['mlv_price'][$i]['name'] = $memberValue['name'];
                     $productMemberPrice['mlv_price'][$i]['price'] = $tempCustom[$memberValue['member_lv_id']]['price'];
                     $productMemberPrice['mlv_price'][$i]['price'] = $objCurrency->changer_odr($productMemberPrice['mlv_price'][$i]['price'], $_COOKIE['S']['CUR'], true, false, $money_format['decimals'], $money_format['fonttend_decimal_type']);
+                    if($memberValue['member_lv_id'] == $member_lv_id){
+                        $productMemberPrice['the_mlv_price'] = $productMemberPrice['mlv_price'][$i]['price'];
+                    }
                 }else{
                     $productMemberPrice['mlv_price'][$i]['name'] = $memberValue['name'];
                     $productMemberPrice['mlv_price'][$i]['price'] = $aGoods['product']['price'] * $memberValue['dis_count'];
                     $productMemberPrice['mlv_price'][$i]['price'] = $objCurrency->changer_odr($productMemberPrice['mlv_price'][$i]['price'], $_COOKIE['S']['CUR'], true, false, $money_format['decimals'], $money_format['fonttend_decimal_type']);
-                    if($memberValue['member_lv_id'] == $member_lv){
-                        $productMemberPrice['price'] = $productMemberPrice['mlv_price'][$i]['price'];
-                    }
                     if($memberValue['member_lv_id'] == $member_lv_id){
                         $productMemberPrice['the_mlv_price'] = $productMemberPrice['mlv_price'][$i]['price'];
                     }
@@ -1276,11 +1276,18 @@ class b2c_ctl_wap_product extends wap_frontpage{
     }
 
     function is_fav(){
+
         $goods_id = (int)$_POST['goods_id'];
         if(!$goods_id){
             echo 0;exit;
         }
+        $member = $this->get_current_member();
+        $filter["member_id"] =$member['member_id'];
+        if(empty($filter["member_id"])){
+            echo 0;exit;
+        }
         $filter = array('goods_id'=>$goods_id,'type'=>'fav');
+
         if($this->app->model('member_goods')->getList('gnotify_id',$filter,0,1) ){
             echo 1;exit;
         }else{

@@ -199,7 +199,8 @@ class weixin_menus {
         $res ['name'] = $d['menu_name'];
         if($d['content_type']=='msg_url'){
             $res ['type'] = 'view';
-            $res ['url'] = $this->gen_menu_url($bind_id,$d['msg_url']);
+//            $res ['url'] = $this->gen_menu_url($bind_id,$d['msg_url']);
+            $res ['url'] = $d['msg_url'];
         } elseif($d['content_type']=='msg_text'){
             $res ['type'] = 'click';
             $res ['key'] = 'text_'.$d['msg_text'];
@@ -287,7 +288,7 @@ class weixin_menus {
                 'url' => $genurl->gen_url( array( 'app'=>'b2c', 'ctl'=>'wap_passport', 'act'=>'bindstatus', 'full'=>1 ) )
             ),
             'passport-loginbind' => array(
-                'label' => '登录绑定页面',
+                'label' => '微信号绑定页面',
                 'url' => $genurl->gen_url( array( 'app'=>'b2c', 'ctl'=>'wap_passport', 'act'=>'loginbind', 'full'=>1 ) )
             ),
         );

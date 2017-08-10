@@ -615,6 +615,10 @@ class b2c_mdl_orders extends dbeav_model{
     }
     //订单备注图标2011-11-30
     public function modifier_mark_type($row){
+        if($row=='b10'){
+            return '';
+
+        }
         $res_dir = app::get('b2c')->res_url;
         $row = '<img width="20" height="20" src="'.$res_dir.'/remark_icons/'.$row.'.gif">';
         return $row;

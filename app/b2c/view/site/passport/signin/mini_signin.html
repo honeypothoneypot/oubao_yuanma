@@ -44,7 +44,7 @@ var Shop = <{$shopDefine|default:'null'}>;
   <{if $login_image_url}>
   <div id="trust_signin" class="trust-signin">
     <{foreach from=$login_image_url item=login_image}>
-    <a href="<{$login_image.url}>"><img src="<{$login_image.image}>" width="28px" height="28px"></a>
+    <a  target="_blank"   href="<{$login_image.url}>"><img src="<{$login_image.image}>" width="28px" height="28px"></a>
     <{/foreach}>
   </div>
   <{/if}>

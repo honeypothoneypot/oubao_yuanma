@@ -55,6 +55,8 @@ class weixin_ctl_admin_bind extends desktop_controller{
             if( empty($_POST['appid']) ||  empty($_POST['appsecret']) ){
                 $this->end(false, app::get('weixin')->_('服务号的appid和appsecret必填!'));
             }
+            $_POST['appid'] = trim($_POST['appid']);
+            $_POST['appsecret'] = trim($_POST['appsecret']);
         }
 
         $data = $this->bindModel->getRow('id',array('name'=>$_POST['name']));
