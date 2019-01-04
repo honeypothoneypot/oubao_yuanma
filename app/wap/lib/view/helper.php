@@ -75,14 +75,14 @@ class wap_view_helper
             $html .= $footers;
         }
 
-        $html .= app::get('wap')->getConf('wap.foot_edit');
+        // $html .= app::get('wap')->getConf('wap.foot_edit');
 
         $obj = kernel::service('site_footer_copyright');
         if(is_object($obj) && method_exists($obj, 'get')){
             $html .= $obj->get();
         }else{
             if(!defined('WITHOUT_POWERED') || !constant('WITHOUT_POWERED')){
-                $html .= ecos_cactus('wap','wapcopyr',$html);
+                // $html .= ecos_cactus('wap','wapcopyr',$html);
             }
         }
 

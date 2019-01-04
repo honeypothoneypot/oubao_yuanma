@@ -5,38 +5,38 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
- 
 
-class wap_theme_tmpl_fssave 
+
+class wap_theme_tmpl_fssave
 {
 
-    public function get_default($type, $theme) 
+    public function get_default($type, $theme)
     {
         return app::get('wap')->getConf('custom_template_'.$theme.'_'.$type);
     }//End Function
 
-    public function set_default($type, $theme, $value) 
+    public function set_default($type, $theme, $value)
     {
         return app::get('wap')->setConf('custom_template_'.$theme.'_'.$type, $value);
     }//End Function
 
-    public function del_default($type, $theme) 
+    public function del_default($type, $theme)
     {
         return app::get('wap')->setConf('custom_template_'.$theme.'_'.$type, '');
     }//End Function
 
-    public function set_all_tmpl_file($theme) 
+    public function set_all_tmpl_file($theme)
     {
         $row = app::get('wap')->model('themes_tmpl')->select()->columns('tmpl_path')->where('theme = ?', $theme)->instance()->fetch_col();
         return app::get('wap')->setConf('custom_template_'.$theme.'_all_tmpl', $row['tmpl_path']);
     }//End Function
 
-    public function get_all_tmpl_file($theme) 
+    public function get_all_tmpl_file($theme)
     {
         return app::get('wap')->getConf('custom_template_'.$theme.'_all_tmpl');
     }//End Function
 
-    public function tmpl_file_exists($tmpl_file, $theme) 
+    public function tmpl_file_exists($tmpl_file, $theme)
     {
         $all = $this->get_all_tmpl_file($theme);
         $all[] = 'block/header.html';
@@ -48,7 +48,7 @@ class wap_theme_tmpl_fssave
         }
     }//End Function
 
-    public function get_edit_list($theme) 
+    public function get_edit_list($theme)
     {
         $data = app::get('wap')->model('themes_tmpl')->getList('*', array("theme"=>$theme));
         if(is_array($data)){
@@ -61,8 +61,8 @@ class wap_theme_tmpl_fssave
         }
         return $ret;
     }//End Function
-    
-    public function install($theme) 
+
+    public function install($theme)
     {
         $list = array();
         $this->__get_all_files(WAP_THEME_DIR . '/' . $theme, $list, false);
@@ -88,9 +88,9 @@ class wap_theme_tmpl_fssave
                     $file[$file_name][$key]['file']=$file_name.'.html';
                     //$file[$key]['name']=$ctl[$file_name];
                 }
-                
+
                 touch(WAP_THEME_DIR . '/' . $theme . '/' . $file_name . '.html');
-                
+
                 if($type && array_key_exists($type, $ctl)){
                     $array = array(
                         'theme'     => $theme,
@@ -133,7 +133,7 @@ class wap_theme_tmpl_fssave
         }
     }
 
-    public function insert($data) 
+    public function insert($data)
     {
         if(app::get('wap')->model('themes_tmpl')->insert($data)){
             $this->set_all_tmpl_file($data['theme']);
@@ -143,7 +143,7 @@ class wap_theme_tmpl_fssave
         }
     }//End Function
 
-    public function insert_tmpl($data) 
+    public function insert_tmpl($data)
     {
         $dir = WAP_THEME_DIR . '/' . $data['theme'];
         if(!is_dir($dir))   return false;
@@ -185,7 +185,7 @@ class wap_theme_tmpl_fssave
         return false;
     }//End Function
 
-    public function copy_tmpl($tmpl, $theme) 
+    public function copy_tmpl($tmpl, $theme)
     {
         $source = WAP_THEME_DIR . '/' . $theme . '/' . $tmpl;
         if(!is_file($source))   return false;
@@ -216,7 +216,7 @@ class wap_theme_tmpl_fssave
         }
     }//End Function
 
-    public function delete_tmpl_by_theme() 
+    public function delete_tmpl_by_theme()
     {
         //不删除实体文件，只处理数据库和conf
         $datas = app::get('wap')->model('themes_tmpl')->getList('tmpl_path', array('theme'=>$theme));
@@ -225,7 +225,7 @@ class wap_theme_tmpl_fssave
         }
     }//End Function
 
-    public function delete_tmpl($tmpl, $theme) 
+    public function delete_tmpl($tmpl, $theme)
     {
         $source = WAP_THEME_DIR . '/' . $theme . '/' . $tmpl;
         if(!is_file($source))   return false;
@@ -269,15 +269,15 @@ class wap_theme_tmpl_fssave
         $ctl = $this->__get_tmpl_list();
         return $ctl;
     }
-    
-    
-    public function get_list_name($name) 
+
+
+    public function get_list_name($name)
     {
         $name = rtrim(strtolower($name),'.html');
         $ctl = $this->__get_tmpl_list();
         return $ctl[$name];
     }//End Function
-    
+
     private function __get_tmpl_list() {
         $ctl = array(
             'index'=>app::get('wap')->_('首页'),
@@ -295,11 +295,12 @@ class wap_theme_tmpl_fssave
             'splash'=>app::get('wap')->_('信息提示页'),
             'default'=>app::get('wap')->_('默认页'),
             'activity'=>app::get('wap')->_('活动页'),
+            'pos'=>app::get('wap')->_('pos页面'),
         );
         return $ctl;
     }
 
-    public function touch_theme_tmpl($theme) 
+    public function touch_theme_tmpl($theme)
     {
         $rows = app::get('wap')->model('themes_tmpl')->select()->columns('tmpl_path')->where('theme = ?', $theme)->instance()->fetch_all();
         if($rows){
@@ -325,7 +326,7 @@ class wap_theme_tmpl_fssave
     }//End Function
 
 
-    public function touch_tmpl_file($tmpl, $time=null) 
+    public function touch_tmpl_file($tmpl, $time=null)
     {
         if(empty($time))    $time = time();
         $source = WAP_THEME_DIR . '/' . $tmpl;
