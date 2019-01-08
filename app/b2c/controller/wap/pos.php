@@ -38,6 +38,14 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $this->pagedata['mcc'] = $request_params[3];
         $this->page('wap/pos/index.html');
     }
+    public function ajax_get_poslog(){
+        $poslog = $this->app->model('poslog');
+        $lists = $poslog->getList('*',array(),0,10);
+        array_pop($lists);
+        $this->pagedata['poslogs'] = $lists;
+        $view = 'wap/pos/poslog.html';
+        echo $this->fetch($view);
+    }
     public function save(){
         $url = $this->gen_url(array('app'=>'b2c','ctl'=>'wap_pos','act'=>'index','arg0'=>$_POST['name'],'arg1'=>$_POST['pos_type'],'arg2'=>$_POST['bank'],'arg3'=>$_POST['mcc']));
         $_POST['create_time'] = time();

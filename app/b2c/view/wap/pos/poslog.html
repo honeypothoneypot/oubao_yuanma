@@ -1,0 +1,11 @@
+<table>
+	<{foreach from=$poslogs item=poslog}>
+	<tr>
+		<td><{$poslog.name}></td>
+		<td><{$poslog.pos_type}></td>
+		<td><{$poslog.bank}></td>
+		<td><{$poslog.money}></td>
+		<td><{$poslog.create_time|cdate:FDATE_STIME}></td>
+	</tr>
+	<{/foreach}>
+</table>

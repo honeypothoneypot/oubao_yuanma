@@ -93,7 +93,22 @@
 			<input type="number" name="mcc" value="<{$mcc}>">
 		</div>
 		<div class="btn-bar" style="margin-top: 30px;">
-    		<button type="submit" class="btn orange" rel="_request">提交</button>
-  		</div>
+			<button type="submit" class="btn orange" rel="_request">提交</button>
+		</div>
 	</form>
+	<div>
+		历史记录：
+		<div class="poslog">
+			
+		</div>
+	</div>
 </div>
+<script type="text/javascript">
+	(function(){
+		var url = '<{link app=b2c ctl=wap_pos act=ajax_get_poslog}>';
+		$.post(url,'',function(re){
+			$('.poslog').html(re);
+		});
+	})();
+
+</script>
