@@ -140,6 +140,14 @@
         <class>b2c_finder_members</class>
     </service>
 
+    <service id="desktop_finder.b2c_mdl_poslog">
+        <class>b2c_finder_poslog</class>
+    </service>
+
+    <service id="desktop_finder.b2c_mdl_postype">
+        <class>b2c_finder_postype</class>
+    </service>
+
     <service id="desktop_finder_detail_modifier.b2c_mdl_members.default">
             <class>b2c_finder_detail</class>
     </service>
@@ -421,15 +429,15 @@
         <class>b2c_errorpage_display</class>
     </service>
 
-    <!--END-->   
+    <!--END-->
     <service id="desktop_finder.base_mdl_rpcpoll">
         <class>b2c_finder_rpcpolls</class>
     </service>
-    
+
     <service id="b2c_promotion_price">
         <class>b2c_goods_promotion_price</class>
     </service>
-    
+
     <service id="desktop_keyboard_setting">
         <class>b2c_keyboard_initdata</class>
     </service>

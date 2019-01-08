@@ -5,10 +5,11 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
-class b2c_ctl_wap_pos extends wap_controller{
+class b2c_ctl_wap_pos extends wap_frontpage{
     function __construct(&$app){
         $this->set_tmpl('pos');
         parent::__construct($app);
+        $this->verify_member();
     }
 
     /*
