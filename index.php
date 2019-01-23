@@ -2,6 +2,7 @@
 #include("app/serveradm/xhprof.php");
 define('ROOT_DIR',realpath(dirname(__FILE__)));
 require(ROOT_DIR.'/app/base/kernel.php');
+require(ROOT_DIR.'/app/base/pinyin.php');
 kernel::boot();
 
 if(defined("STRESS_TESTING")){

@@ -6,68 +6,47 @@
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
 
-$db['poslog'] = array (
+$db['poscard'] = array (
 	'columns' => array (
-		'id' =>	array (
+		'card_id' => array (
 			'type' => 'number',
 			'required' => true,
 			'pkey' => true,
 			'extra' => 'auto_increment',
-			'label' => app::get('b2c')->_('记录id'),
 			'width' => 110,
 			'editable' => false,
 			'in_list' => true,
 			'default_in_list' => true,
+			'label' => app::get('b2c')->_('信用卡id'),
+			'comment' => app::get('b2c')->_('信用卡id'),
 		),
-		'card_id' => array(
-			'type' => 'number',
+		'name' => array(
+			'type' => 'varchar(128)',
 			'required' => true,
+			'is_title' => true,
 			'in_list' => true,
 			'default_in_list' => true,
 			'filtertype' => 'normal',
-			'label' => app::get('b2c')->_('信用卡'),
-			'comment' => app::get('b2c')->_('信用卡'),
+			'filterdefault' => true,
+			'label' => app::get('b2c')->_('信用卡所属银行'),
+			'comment' => app::get('b2c')->_('信用卡所属银行'),
 		),
-		'postype_id' => array(
-			'type' => 'number',
-			'required' => true,
-			'in_list' => true,
-			'default_in_list' => true,
-			'filtertype' => 'normal',
-			'label' => app::get('b2c')->_('刷卡类型'),
-			'comment' => app::get('b2c')->_('刷卡类型'),
-		),
-		'mcc' => array(
+		'belong_to' => array(
 			'type' => 'varchar(128)',
 			'required' => true,
 			'in_list' => true,
 			'default_in_list' => true,
-			'label' => app::get('b2c')->_('mcc'),
-			'comment' => app::get('b2c')->_('mcc'),
+			'filtertype' => 'normal',
+			'filterdefault' => true,
+			'label' => app::get('b2c')->_('信用卡所属人'),
+			'comment' => app::get('b2c')->_('信用卡所属人'),
 		),
-		'money' => array(
-			'type' => 'money',
-			'required' => true,
+		'card_no' => array(
+			'type' => 'varchar(128)',
 			'in_list' => true,
 			'default_in_list' => true,
-			'label' => app::get('b2c')->_('刷卡金额'),
-			'comment' => app::get('b2c')->_('刷卡金额'),
-		),
-		'feilv' => array(
-			'type' => 'money',
-			'required' => true,
-			'in_list' => true,
-			'default_in_list' => true,
-			'label' => app::get('b2c')->_('费率'),
-			'comment' => app::get('b2c')->_('费率'),
-		),
-		'jiesuan_money' => array(
-			'type' => 'money',
-			'required' => true,
-			'in_list' => true,
-			'default_in_list' => true,
-			'label' => app::get('b2c')->_('结算金额'),
-			'comment' => app::get('b2c')->_('结算金额'),
+			'label' => app::get('b2c')->_('信用卡卡号'),
+			'comment' => app::get('b2c')->_('信用卡卡号'),
 		),
 		'memo' => array(
 			'type' => 'varchar(128)',
@@ -81,6 +60,7 @@ $db['poslog'] = array (
 			'in_list' => true,
 			'default_in_list' => true,
 			'width' => '100',
+			'order' => 17,
 			'filtertype' => 'time',
 			'filterdefault' => true,
 			'label' => app::get('b2c')->_('创建时间'),
@@ -91,28 +71,24 @@ $db['poslog'] = array (
 			'in_list' => true,
 			'default_in_list' => true,
 			'width' => '100',
+			'order' => 18,
 			'label' => app::get('b2c')->_('修改时间'),
 			'comment' => app::get('b2c')->_('修改时间'),
 		),
 	),
 	'index' => array (
-		'ind_card_id' => array (
+		'ind_name' => array (
 			'columns' => array (
-				0 => 'card_id',
+				0 => 'name',
 			),
 		),
-		'ind_postype_id' => array (
+		'ind_belong_to' => array (
 			'columns' => array (
-				0 => 'postype_id',
-			),
-		),
-		'ind_create_time' => array (
-			'columns' => array (
-				0 => 'create_time',
+				0 => 'belong_to',
 			),
 		),
 	),
 	'engine' => 'innodb',
 	'version' => '$Rev: 42376 $',
-	'comment' => app::get('b2c')->_('pos刷卡记录表'),
+	'comment' => app::get('b2c')->_('信用卡列表'),
 );

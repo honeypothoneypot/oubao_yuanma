@@ -152,7 +152,9 @@
     <workground name="POS" id="b2c.wrokground.pos" controller="admin_pos" action="index" order="50">
         <menugroup name="pos">
             <menu controller='admin_pos' action='index' permission='sales' display='true' order='1'>日志列表</menu>
-            <menu controller='admin_pos' action='postype' permission='sales' display='true' order='2'>pos类型</menu>
+            <menu controller='admin_posbrand' action='index' permission='sales' display='true' order='2'>pos机品牌</menu>
+            <menu controller='admin_postype' action='index' permission='sales' display='true' order='3'>pos刷卡类型</menu>
+            <menu controller='admin_poscard' action='index' permission='sales' display='true' order='4'>信用卡列表</menu>
         </menugroup>
     </workground>
     <workground name="营销" id="b2c.wrokground.sale" controller="admin_sales_order" action="index" order="50">

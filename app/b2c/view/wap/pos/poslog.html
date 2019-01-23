@@ -1,11 +1,23 @@
 <table>
+	<tr>
+		<th>姓名</th>
+		<th>银行</th>
+		<th>卡号</th>
+		<th>金额</th>
+		<th>mcc</th>
+		<th>刷卡方式</th>
+		<th>时间</th>
+	</tr>
 	<{foreach from=$poslogs item=poslog}>
 	<tr>
-		<td><{$poslog.name}></td>
-		<td><{$poslog.pos_type}></td>
-		<td><{$poslog.bank}></td>
+		<td><{$poslog.belong_to}></td>
+		<td><{$poslog.bankname}></td>
+		<td><{$poslog.card_no}>-<{$poslog.bankmemo}></td>
 		<td><{$poslog.money}></td>
+		<td><{$poslog.mcc}></td>
+		<td><{$poslog.brandname}>-<{$poslog.sub_name}>-<{$poslog.shuaka_type}></td>
 		<td><{$poslog.create_time|cdate:FDATE_STIME}></td>
 	</tr>
 	<{/foreach}>
 </table>
+<{wap_pagers ajax=true data=$pager}>

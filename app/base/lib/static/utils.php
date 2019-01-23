@@ -696,5 +696,46 @@ class utils{
         }
         return false;
     }
+        /**
+     * array_column() // 不支持低版本;
+     * 以下方法兼容PHP低版本
+    */
+    function _array_column(array $array, $column_key, $index_key=null){
+        $result = array();
+        foreach($array as $arr) {
+            if(!is_array($arr)) continue;
 
+            if(is_null($column_key)){
+                $value = $arr;
+            }else{
+                $value = $arr[$column_key];
+            }
+
+            if(!is_null($index_key)){
+                $key = $arr[$index_key];
+                $result[$key] = $value;
+            }else{
+                $result[] = $value;
+            }
+        }
+        return $result;
+    }
+    /**
+     * 根据传入的数组和数组中值的键值，将对数组的键进行替换
+     *
+     * @param array $array
+     * @param string $key
+     */
+    function array_bind_key($array, $key )
+    {
+        foreach( (array)$array as $value )
+        {
+            if( !empty($value[$key]) )
+            {
+                $k = $value[$key];
+                $result[$k] = $value;
+            }
+        }
+        return $result;
+    }
 }

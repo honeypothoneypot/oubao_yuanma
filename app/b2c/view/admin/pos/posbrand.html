@@ -1,0 +1,189 @@
+<style>
+    .dongtai{
+        /*display: none;*/
+    }
+</style>
+<form method="POST" id='newmember-edit-form' action="index.php?app=b2c&ctl=admin_posbrand&act=save" class="tableform">
+    <input type="hidden" name="posbrand_id" value="<{$info.posbrand_id}>">
+    <input type="hidden" name="create_time" value="<{$info.create_time}>">
+    <input type="hidden" name="sub_delete" value="">
+    <table width="100%" class="need-append">
+            <tr><th><em class="red">*</em><{t}>pos机名称：<{/t}></th>
+                <td><{input type="text" name="name" size="20" vtype="required" value=$info.name }></td>
+            </tr>
+            <tr>
+                <th><em class="red">*</em><{t}>是否含有子品牌：<{/t}></th>
+                <td>
+                    <input type="radio" name="is_havesub" value="0" id="is_havesub0" <{if $info.is_havesub == 0 || !$info.is_havesub}>checked <{/if}>> <label for="is_havesub0">否</label>
+                    <input type="radio" name="is_havesub" value="1" id="is_havesub1" <{if $info.is_havesub == 1}>checked <{/if}> > <label for="is_havesub1">是</label>
+                </td>
+            </tr>
+            <tr class="is_xianshi">
+                <th><{t}>pos商户编号：<{/t}></th>
+                <td><{input type="text" name="merchant_code" value=$info.merchant_code }></td>
+            </tr>
+            <tr class="is_xianshi">
+                <th><{t}>pos法人：<{/t}></th>
+                <td><{input type="text" name="faren" value=$info.faren }></td>
+            </tr>
+            <tr class="is_xianshi">
+                <th><{t}>pos结算银行：<{/t}></th>
+                <td><{input type="text" name="jiesuan_bank" value=$info.jiesuan_bank }></td>
+            </tr>
+            <tr class="is_xianshi">
+                <th><{t}>pos备注：<{/t}></th>
+                <td><{input type="text" name="memo" value=$info.memo }></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="is_xianshi2">
+                    <button type="button" class="tianjian">添加子品牌</button>
+                </td>
+            </tr>
+    </table>
+    <table class="need-append table-dongtai">
+
+    </table>
+</form>
+<div class="table-action"><{button type="submit"  label=$___b2c="保存"|t:'b2c' id='newmember-edit-form-submit'}></div>
+
+<table class="need-append table-init" style="display: none;">
+    <tr>
+        <th>刷卡方式：</th>
+    </tr>
+    <{if $info.is_havesub==0 && $newGroup}>
+        <{foreach from=$newGroup key=type item=item}>
+            <tr style="line-height: 30px;">
+            <td></td>
+            <td class="lsc-td">
+                <input type="hidden" name="<{$item.shuaka_typeOld}>[0][postype_id]" value="<{$item.postype_id}>">
+                <{$item.shuaka_type}>
+            </td>
+            <td>
+                费率: <input type="text" name="<{$item.shuaka_typeOld}>[0][feilv]" style="width: 50px;" value="<{$item.feilv}>">
+            </td>
+            <td>
+                封顶: <input type="text" name="<{$item.shuaka_typeOld}>[0][fengding]" style="width: 50px;" value="<{$item.fengding}>">
+            </td>
+            <td style="padding-left: 10px">
+                <input type="checkbox" name="<{$item.shuaka_typeOld}>[0][is_enable]" id="<{$type}>-0" <{if $item.is_enable}> checked="true" <{/if}>><label for="<{$type}>-0">是否启用</label>
+            </td>
+            </tr>
+        <{/foreach}>
+    <{else}>
+        <{foreach from=$postype key=type item=item}>
+        <tr style="line-height: 30px;">
+            <td></td>
+            <td class="lsc-td">
+                <{$item}>
+            </td>
+            <td>
+                费率: <input type="text" name="<{$type}>[0][feilv]" style="width: 50px;">
+            </td>
+            <td>
+                封顶: <input type="text" name="<{$type}>[0][fengding]" style="width: 50px;">
+            </td>
+            <td style="padding-left: 10px">
+                <input type="checkbox" name="<{$type}>[0][is_enable]" id="<{$type}>-0"><label for="<{$type}>-0">是否启用</label>
+            </td>
+        </tr>
+        <{/foreach}>
+    <{/if}>
+</table>
+
+<script>
+
+    var posbrand_id = jq("input[name=posbrand_id]").val();
+    var url = 'index.php?app=b2c&ctl=admin_posbrand&act=ajaxGetHtml';
+    var flag = 1;
+    //初始没有子品牌的html
+    var initHtml = jq('.table-init').html();
+    var is_havesub = jq("input[name=is_havesub]:checked").val();
+    isXianshi(is_havesub);
+
+    jq("input[name=is_havesub]").on('click',function(event) {
+        var is_havesub = jq(this).val();
+        isXianshi(is_havesub);
+    });
+
+
+    //添加子品牌
+    var flag = 1;
+    var countAlr = jq('.table-dongtai').find('tbody').size();
+    jq('.tianjian').click(function(event) {
+        // jq('.table-init').find('input').each(function(index, el) {
+        //     console.log(jq(initHtml).prop("innerHTML"));
+        // });
+        // console.log(countAlr);
+
+        if (countAlr >1) {
+            flag = countAlr+1;
+        }
+        console.log(flag);
+        jq.post(url, {flag:flag,posbrand_id:0}, function(re) {
+            re = jq.parseJSON(re);
+            jq('.table-dongtai').append(re.html);
+        });
+        flag ++;
+    });
+
+    function isXianshi(is_havesub){
+        jq('input[name=sub_delete]').val('');
+        if(is_havesub == "0"){
+            jq(".is_xianshi").css("display","table-row");
+            jq(".is_xianshi2").css("display","none");
+            jq('.table-dongtai').html(initHtml);
+            // jq.post(url, {flag:0}, function(re) {
+            //     jq('.need-append').last().after(re);
+            // });
+        }
+        if(is_havesub=="1"){
+            jq(".is_xianshi").css("display","none");
+            jq(".is_xianshi2").css("display","table-row");
+            if (posbrand_id) {
+                jq.post(url, {posbrand_id:posbrand_id}, function(re) {
+                    re = jq.parseJSON(re);
+                    if (re.error) {
+                        jq('.table-dongtai').html('');
+                    }else{
+                        jq('.table-dongtai').html(re.html);
+                    }
+                });
+            }else{
+                jq('.table-dongtai').html('');
+            }
+        }
+    }
+
+    (function(){
+        var _form = $('newmember-edit-form');
+        var btn =$('newmember-edit-form-submit');
+        var finder = finderGroup['<{$env.get._finder.finder_id}>'];
+
+        _form.store('target',{
+            onComplete:function(){
+            },
+            onSuccess:function(response){
+                var hash_res_obj = JSON.decode(response);
+                if (hash_res_obj.success != undefined && hash_res_obj.success != "")
+                {
+                    try{
+                        var _dialogIns = btn.getParent('.dialog').retrieve('instance');
+                    }catch(e){}
+
+                    if(_dialogIns)
+                    {
+                        _dialogIns.close();
+                        window.finderGroup['<{$env.get._finder.finder_id}>'].refresh();
+                    }
+                }
+            }
+        });
+
+        btn.addEvent('click',function(){
+            _form.fireEvent('submit',{stop:$empty});
+        });
+    })();
+</script>
+
+

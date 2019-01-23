@@ -1,87 +1,34 @@
 <div class="pos-main">
-	<form action="<{link app=b2c ctl=wap_pos act=save}>" method="post" data-type="ajax">
-		<div class="menu" style="padding-top: 20px;">
+	<form action="<{link app=b2c ctl=wap_pos act=save}>" method="post" data-type="ajax" class="form-log">
+		<div class="menu1" style="padding-top: 20px;">
 			<ul>
 				<li>
-					<input type="radio" name="name" value="lsc" id="lsc" <{if $name=='lsc' }> checked <{elseif $name !='liu'}> checked <{/if}> ><label for="lsc">我的</label>
+					<input type="radio" name="belong_to" value="0" id="belong_to0" checked><label for="belong_to0">全部</label>
 				</li>
 				<li>
-					<input type="radio" name="name" value="liu" id="liu" <{if $name=='liu' }> checked <{/if}> ><label for="liu">刘</label>
+					<input type="radio" name="belong_to" value="lsc" id="lsc" ><label for="lsc">我的</label>
+				</li>
+				<li>
+					<input type="radio" name="belong_to" value="liu" id="liu" ><label for="liu">刘</label>
 				</li>
 			</ul>
 		</div>
 		<div class="clean-both"></div>
 		<div class="menu">
-			<ul>
-				<li>
-					<input type="radio" name="pos_type" value="jinkong" id="jinkong" <{if $pos_type=='jinkong' }> checked <{/if}> ><label for="jinkong">金控</label>
-				</li>
-				<li>
-					<input type="radio" name="pos_type" value="changjietong028" id="changjietong028" <{if $pos_type=='changjietong028' }> checked <{/if}> ><label for="changjietong028">畅捷通0.28</label>
-				</li>
-				<li>
-					<input type="radio" name="pos_type" value="changjietong03" id="changjietong03" <{if $pos_type=='changjietong03' }> checked <{/if}> ><label for="changjietong03">畅捷通0.3</label>
-				</li>
-				<li>
-					<input type="radio" name="pos_type" value="qianbao" id="qianbao" <{if $pos_type=='qianbao' }> checked <{/if}> ><label for="qianbao">钱宝</label>
-				</li>
-				<li>
-					<input type="radio" name="pos_type" value="xiaomage025" id="xiaomage025" <{if $pos_type=='xiaomage025' }> checked <{/if}> ><label for="xiaomage025">小马哥0.25</label>
-				</li>
-				<li>
-					<input type="radio" name="pos_type" value="xiaomage03" id="xiaomage03" <{if $pos_type=='xiaomage03' }> checked <{/if}> ><label for="xiaomage03">小马哥0.3</label>
-				</li>
-				<li>
-					<input type="radio" name="pos_type" value="weixin" id="weixin" <{if $pos_type=='weixin' }> checked <{/if}> ><label for="weixin">微信</label>
-				</li>
-
-				<li>
-					<input type="radio" name="pos_type" value="zhifubao" id="zhifubao" <{if $pos_type=='zhifubao' }> checked <{/if}> ><label for="zhifubao">支付宝</label>
-				</li>
+			刷卡机品牌：
+			<ul class="ajax-posbrand">
 			</ul>
 		</div>
 		<div class="clean-both"></div>
-		<div class="menu3">
-			<ul>
-				<li>
-					<input type="radio" name="bank" value="jiaotong" id="jiaotong" <{if $bank=='jiaotong' }> checked <{/if}> ><label for="jiaotong">交通银行</label>
-				</li>
-				<li>
-					<input type="radio" name="bank" value="zhongxin" id="zhongxin" <{if $bank=='zhongxin' }> checked <{/if}> ><label for="zhongxin">中信银行</label>
-				</li>
-				<li>
-					<input type="radio" name="bank" value="zhongguo" id="zhongguo" <{if $bank=='zhongguo' }> checked <{/if}> ><label for="zhongguo">中国银行</label>
-				</li>
-				<li>
-					<input type="radio" name="bank" value="zhaoshang" id="zhaoshang" <{if $bank=='zhaoshang' }> checked <{/if}>><label for="zhaoshang">招商银行</label>
-				</li>
-				<li>
-					<input type="radio" name="bank" value="guangda" id="guangda" <{if $bank=='guangda' }> checked <{/if}> ><label for="guangda">光大银行</label>
-				</li>
-				<li>
-					<input type="radio" name="bank" value="gongshang" id="gongshang" <{if $bank=='gongshang' }> checked <{/if}> ><label for="gongshang">工商银行</label>
-				</li>
-				<li>
-					<input type="radio" name="bank" value="shanghai" id="shanghai" <{if $bank=='shanghai' }> checked <{/if}> ><label for="shanghai">上海银行</label>
-				</li>
-				<li>
-					<input type="radio" name="bank" value="guangfa" id="guangfa" <{if $bank=='guangfa' }> checked <{/if}> ><label for="guangfa">广发银行</label>
-				</li>
-				<li>
-					<input type="radio" name="bank" value="xingye" id="xingye" <{if $bank=='xingye' }> checked <{/if}> ><label for="xingye">兴业银行</label>
-				</li>
-				<li>
-					<input type="radio" name="bank" value="minsheng" id="minsheng" <{if $bank=='minsheng' }> checked <{/if}> ><label for="minsheng">民生银行</label>
-				</li>
-				<li>
-					<input type="radio" name="bank" value="pingan" id="pingan" <{if $bank=='pingan' }> checked <{/if}> ><label for="pingan">平安银行</label>
-				</li>
-				<li>
-					<input type="radio" name="bank" value="jianshe" id="jianshe" <{if $bank=='jianshe' }> checked <{/if}> ><label for="jianshe">建设银行</label>
-				</li>
-				<li>
-					<input type="radio" name="bank" value="pufa" id="pufa" <{if $bank=='pufa' }> checked <{/if}> ><label for="pufa">浦发银行</label>
-				</li>
+		<div class="menu">
+			刷卡方式：
+			<ul class="ajax-postype">
+			</ul>
+		</div>
+		<div class="clean-both"></div>
+		<div class="menu">
+			银行卡：
+			<ul class="ajax-poscard">
 			</ul>
 		</div>
 		<div class="clean-both"></div>
@@ -93,22 +40,126 @@
 			<input type="number" name="mcc" value="<{$mcc}>">
 		</div>
 		<div class="btn-bar" style="margin-top: 30px;">
-			<button type="submit" class="btn orange" rel="_request">提交</button>
+			<button type="button" class="btn orange" id="tijiao" rel="_request">提交</button>
 		</div>
 	</form>
 	<div>
 		历史记录：
 		<div class="poslog">
-			
+
 		</div>
 	</div>
 </div>
 <script type="text/javascript">
-	(function(){
-		var url = '<{link app=b2c ctl=wap_pos act=ajax_get_poslog}>';
-		$.post(url,'',function(re){
-			$('.poslog').html(re);
+	jq(function(){
+		var belong_to = jq('input[name=belong_to]:checked').val();
+		if (belong_to != 0) {
+			getPosCard(belong_to);
+		}
+		//ajax获取刷卡机品牌
+		var urlPosBrand = '<{link app=b2c ctl=wap_pos act=ajaxGetPosBrand}>';
+		jq.post(urlPosBrand, {}, function(re) {
+			jq('.ajax-posbrand').html(re);
 		});
-	})();
+		var t = {};
+		t.num =1;
+		//根据品牌ajax获取刷卡类型
+		jq(document).on('change','input[name=posbrand_id]', function(event) {
+			var posbrand_id = jq(this).val();
+			//ajax获取刷卡方式
+			var urlPosType = '<{link app=b2c ctl=wap_pos act=ajaxGetPosType}>';
+			jq.post(urlPosType,{posbrand_id:posbrand_id},function(re){
+				jq('.ajax-postype').html(re);
+			});
+		}).on('change', 'input[name=belong_to]', function(event) {//ajax获取信用卡列表
+			//清空选中的卡id
+			$('input[name=card_id]:checked').val('');
+			var belong_to = jq(this).val();
+			getPosCard(belong_to);
+			filterLogs($('.poslog'),t);
+		}).on('change', 'input[name=card_id]', function(event) {//ajax获取日志列表-根据卡号
+			var card_id = jq(this).val();
+			filterLogs($('.poslog'),t);
+		});
 
+		//ajax获取日志
+		filterLogs($('.poslog'));
+	});
+	//获取信用卡列表
+	function getPosCard(belong_to){
+		var url = '<{link app=b2c ctl=wap_pos act=ajaxGetPosCard}>';
+		jq.post(url,{belong_to:belong_to},function(re){
+			jq('.ajax-poscard').html(re);
+		});
+	}
+	//ajax提交表单
+	jq('#tijiao').on('click', function(event) {
+		event.preventDefault();
+		//获得已选中刷卡方式的费率
+		var feilv = jq('input[name=postype_id]:checked').data('feilv');
+		//获得已选中刷卡方式的封顶
+		var fengding = jq('input[name=postype_id]:checked').data('fengding');
+		jq(this).attr("disabled","true");
+		var url = '<{link app=b2c ctl=wap_pos act=save}>';
+		jq.post(url, jq('.form-log').serialize()+'&feilv='+feilv+'&fengding='+fengding, function(re) {
+			re =  JSON.parse(re);
+			alert(re.msg);
+			if (re.success) {
+				//清空金额
+				jq('input[name=money]').val('');
+				filterLogs($('.poslog'));
+			}
+			jq('#tijiao').removeAttr('disabled');
+		});
+	});
+	//ajax获取记录-翻页
+	var page = 1;
+	$('.poslog').on('click',function(e){
+		var t = $(e.target);
+		if(t.hasClass('flip')){
+			if(t.hasClass('next'))t.num = parseInt(page)+1;
+			if(t.hasClass('prev'))t.num = parseInt(page)-1;
+			filterLogs($(this),t);
+			return false;
+		}
+	}).on('change','select',function(){
+		var t = $(this.options[this.selectedIndex]);
+		if(t.hasClass('flip')){
+			t.num = parseInt(t.attr('page'));
+			filterLogs($('.poslog'),t);
+		}
+	});
+
+	//获取记录
+	function filterLogs(e,t){
+		var p = 'page=';
+    	var belong_to = 'belong_to=';
+		var belong_to_val = $('input[name=belong_to]:checked').val();
+
+    	var card_id = 'card_id=';
+		var card_id_val = $('input[name=card_id]:checked').val();
+
+		if(t&&t.num){
+	        p += t.num;
+			page = t.num;
+    	}else{
+    		p='';
+    	}
+    	if (belong_to_val) {
+    		belong_to += belong_to_val;
+    	}else{
+    		belong_to='';
+    	}
+    	if (card_id_val) {
+    		card_id += card_id_val;
+    	}else{
+    		card_id='';
+    	}
+
+		var params = [p,belong_to,card_id].filter(function(d){ return d;}).join('&');
+  		var url = '<{link app=b2c ctl=wap_pos act=ajax_get_poslog}>';
+		$.post(url, params, function(re){
+			$(e).html(re);
+		});
+	}
 </script>

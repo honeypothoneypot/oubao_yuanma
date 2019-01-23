@@ -1,0 +1,5 @@
+<{foreach from=$lists item=item}>
+    <li>
+        <input type="radio" name="card_id" value="<{$item.card_id}>" id="poscard<{$item.card_id}>" <{if $item.card_id==$card_id }> checked <{/if}> ><label for="poscard<{$item.card_id}>"><{$item.name}>-<{$item.card_no}>-<{$item.memo}></label>
+    </li>
+<{/foreach}>

@@ -1,0 +1,5 @@
+<{foreach from=$lists item=item}>
+    <li>
+        <input type="radio" name="posbrand_id" value="<{$item.posbrand_id}>" id="posbrand<{$item.posbrand_id}>" <{if $item.posbrand_id==$posbrand_id }> checked <{/if}> ><label for="posbrand<{$item.posbrand_id}>"><{$item.name}></label>
+    </li>
+<{/foreach}>

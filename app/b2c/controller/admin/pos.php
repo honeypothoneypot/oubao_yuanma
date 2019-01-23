@@ -24,15 +24,10 @@ class b2c_ctl_admin_pos extends desktop_controller{
     }
     public function logedit($id){
         $obj_pos = app::get('b2c')->model('poslog');
-        $info = $obj_pos->getRow('*',array('id'=>$id));
-        $this->pagedata['id'] = $info['id'];
-        $this->pagedata['name'] = $info['name'];
-        $this->pagedata['pos_type'] = $info['pos_type'];
-        $this->pagedata['bank'] = $info['bank'];
-        $this->pagedata['money'] = $info['money'];
-        $this->pagedata['mcc'] = $info['mcc'];
-        $this->pagedata['memo'] = $info['memo'];
-        $this->pagedata['create_time'] = $info['create_time'];
+        $filter['id'] = $id;
+        $info = $obj_pos->getLog($filter);
+        $info = $info[0];
+        $this->pagedata['info'] = $info;
         $this->display('admin/pos/logadd.html');
     }
     public function logsave(){
@@ -40,6 +35,13 @@ class b2c_ctl_admin_pos extends desktop_controller{
         // 创建时间
         foreach ($data['_DTIME_'] as $val) {
             $temp[] = $val['from_time'];
+        }
+        //计算结算金额
+        if ($data['fengding']>0) {
+            $data['jiesuan_money'] = $data['money']-$data['fengding'];
+        }else{
+            $jiesuan = $data['money']*(1-$data['feilv']/100);
+            $data['jiesuan_money'] = substr(sprintf("%.3f",$jiesuan),0,-1);
         }
         $data['create_time'] = strtotime($data['from_time'].' '. implode(':', $temp));
         unset($data['_DTYPE_TIME'],$data['_DTIME_'],$data['from_time']);
@@ -53,35 +55,35 @@ class b2c_ctl_admin_pos extends desktop_controller{
         $this->end(true, app::get('b2c')->_('保存成功！'));
     }
 
-    public function postype(){
-        $actions_base['title'] = app::get('b2c')->_('pos类型列表');
-        $custom_actions[] = array('label'=>'添加','href'=>'index.php?app=b2c&ctl=admin_pos&act=posTypeAdd','target'=>"dialog::{title:'添加pos机',width:460,height:460}");
-        $actions_base['actions'] = $custom_actions;
-        $actions_base['use_buildin_filter'] = true;
-        $actions_base['use_view_tab'] = true;
-        $this->finder('b2c_mdl_postype',$actions_base);
+    //获取pos机品牌
+    public function ajaxGetPosBrand(){
+        $mdlBrand = app::get('b2c')->model('posbrand');
+        $lists = $mdlBrand->getList('posbrand_id,name',array());
+        $this->pagedata['posbrand_id'] = $_POST['posbrand_id'];
+        $this->pagedata['lists'] = $lists;
+        $view = 'admin/pos/ajaxGetPosBrand.html';
+        echo $this->fetch($view);
     }
 
-    public function posTypeAdd($postype){
-        $this->display('admin/pos/postypeadd.html');
+    //获取刷卡方式
+    public function ajaxGetPosType(){
+        $posbrand_id = $_POST['posbrand_id'];
+        $mdlType = $this->app->model('postype');
+        $lists = $mdlType->getList('postype_id,sub_name,shuaka_type,feilv,fengding',array('posbrand_id'=>$posbrand_id));
+        $this->pagedata['lists'] = $lists;
+        $this->pagedata['postype_id'] = $_POST['postype_id'];
+        $view = 'admin/pos/ajaxGetPosType.html';
+        echo $this->fetch($view);
     }
 
-    public function postypesave(){
-        $this->begin();
-        $obj_postype = app::get('b2c')->model('postype');
-        $data = $_POST;
-        $data['create_time'] = time();
-        $obj_postype->save($data);
-        $this->end(true, app::get('b2c')->_('添加成功！'));
-    }
-
-    public function postypeedit($postype){
-        $obj_postype = app::get('b2c')->model('postype');
-        $info = $obj_postype->getRow('*',array('pos_type'=>$postype));
-        $this->pagedata['pos_type'] = $info['pos_type'];
-        $this->pagedata['name'] = $info['name'];
-        $this->pagedata['feilv'] = $info['feilv'];
-        $this->pagedata['memo'] = $info['memo'];
-        $this->display('admin/pos/postypeadd.html');
+    //获取信用卡列表
+    public function ajaxGetPosCard(){
+        $belong_to = $_POST['belong_to'];
+        $mdlCard = $this->app->model('poscard');
+        $lists = $mdlCard->getList('card_id,name,belong_to,card_no,memo',array('belong_to'=>$belong_to));
+        $this->pagedata['card_id'] = $_POST['card_id'];
+        $this->pagedata['lists'] = $lists;
+        $view = 'admin/pos/ajaxGetPosCard.html';
+        echo $this->fetch($view);
     }
 }

@@ -1,43 +1,104 @@
-<form method="POST" id='newmember-edit-form' action="index.php?app=b2c&ctl=admin_pos&act=postypesave" class="tableform">
-    <table width="100%" >
-            <tr><th><em class="red">*</em><{t}>pos机名称：<{/t}></th><td><{input type="text" name="name" size="20" vtype="required" value=$name }><span></span></td></tr>
-            <tr><th><em class="red">*</em><{t}>pos机代号：<{/t}></th><td><{input type="text" name="pos_type" size="20" vtype="required" value=$pos_type }></td></tr>
-            <tr><th><em class="red">*</em><{t}>费率：<{/t}></th><td><{input type="text" name="feilv" size="20" vtype="required" value=$feilv }></td></tr>
-            <tr><th><{t}>备注：<{/t}></th><td><{input type='text' name='memo' value=$memo }></td></tr>
-    </table>
+<form method="POST" id='newmember-edit-form' action="index.php?app=b2c&ctl=admin_postype&act=save" class="tableform">
+    <input type="hidden" name="postype_id" value="<{$info.postype_id}>">
+	<table width="100%" >
+			<tr>
+				<th><em class="red">*</em><{t}>pos机名称：<{/t}></th>
+				<td>
+					<{input type="select" name="posbrand_id" nulloption="1" vtype="required" rows=$brands valueColumn="posbrand_id" labelColumn="name" value=$info.posbrand_id}>
+				</td>
+			</tr>
+			<tr>
+				<th><em class="red">*</em><{t}>刷卡方式：<{/t}></th>
+				<td>
+					<select name="shuaka_type">
+	      				<{foreach from=$postype key=key item=item}>
+	        			<option value='<{$key}>' <{if $info.shuaka_typeOld==$key}>selected<{/if}> ><{$item}></option>
+	      				<{/foreach}>
+      				</select>
+				</td>
+			</tr>
+			<tr class="is_xianshi">
+				<th><{t}>副名称：<{/t}></th>
+				<td><{input type="text" name="sub_name" size="20" value=$info.sub_name }></td>
+			</tr>
+			<tr>
+				<th><em class="red">*</em><{t}>费率：<{/t}></th>
+				<td><{input type="text" name="feilv" size="20" vtype="required" value=$info.feilv }></td>
+			</tr>
+			<tr class="is_xianshi">
+				<th><{t}>pos商户编号：<{/t}></th>
+				<td><{input type="text" name="merchant_code" value=$info.merchant_code }></td>
+			</tr>
+			<tr class="is_xianshi">
+				<th><{t}>pos法人：<{/t}></th>
+				<td><{input type="text" name="faren" size="20" value=$info.faren }></td>
+			</tr>
+			<tr class="is_xianshi">
+				<th><{t}>pos结算银行：<{/t}></th>
+				<td><{input type="text" name="jiesuan_bank" size="20" value=$info.jiesuan_bank }></td>
+			</tr>
+			<tr class="is_xianshi">
+				<th><{t}>二维码登录账号：<{/t}></th>
+				<td><{input type="text" name="logon_name" size="20" value=$info.logon_name }></td>
+			</tr>
+			<tr class="is_xianshi">
+				<th><{t}>二维码登录密码：<{/t}></th>
+				<td><{input type="text" name="logon_password" value=$info.logon_password }></td>
+			</tr>
+			<tr>
+				<th><{t}>备注：<{/t}></th>
+				<td><{input type="text" name="memo" value=$info.memo }></td>
+			</tr>
+	</table>
 </form>
 <div class="table-action"><{button type="submit"  label=$___b2c="保存"|t:'b2c' id='newmember-edit-form-submit'}></div>
 
 <script>
-    (function(){
-        var _form = $('newmember-edit-form');
-        var btn =$('newmember-edit-form-submit');
-        var finder = finderGroup['<{$env.get._finder.finder_id}>'];
+	jq(function(){
+		var is_ErCode = "<{$info.is_ErCode}>";
+        if (is_ErCode==0) {
+            jq(".is_xianshi").css("display","none");
+        }else{
+            jq(".is_xianshi").css("display","table-row");
+        }
+		jq("select[name='posbrand_id']").change(function(e) {
+			var checkText=jq(this).find("option:selected").text();  //获取Select选择的Text
+			if (checkText.indexOf('二维码')!='-1') {
+				jq('.is_xianshi').css("display","table-row");
+			}else{
+				jq('.is_xianshi').css("display","none");
+			}
+		});
+	});
+	(function(){
+		var _form = $('newmember-edit-form');
+		var btn =$('newmember-edit-form-submit');
+		var finder = finderGroup['<{$env.get._finder.finder_id}>'];
 
-        _form.store('target',{
-            onComplete:function(){
-            },
-            onSuccess:function(response){
-                var hash_res_obj = JSON.decode(response);
-                if (hash_res_obj.success != undefined && hash_res_obj.success != "")
-                {
-                    try{
-                        var _dialogIns = btn.getParent('.dialog').retrieve('instance');
-                    }catch(e){}
+		_form.store('target',{
+			onComplete:function(){
+			},
+			onSuccess:function(response){
+				var hash_res_obj = JSON.decode(response);
+				if (hash_res_obj.success != undefined && hash_res_obj.success != "")
+				{
+					try{
+						var _dialogIns = btn.getParent('.dialog').retrieve('instance');
+					}catch(e){}
 
-                    if(_dialogIns)
-                    {
-                        _dialogIns.close();
-                        window.finderGroup['<{$env.get._finder.finder_id}>'].refresh();
-                    }
-                }
-            }
-        });
+					if(_dialogIns)
+					{
+						_dialogIns.close();
+						window.finderGroup['<{$env.get._finder.finder_id}>'].refresh();
+					}
+				}
+			}
+		});
 
-        btn.addEvent('click',function(){
-            _form.fireEvent('submit',{stop:$empty});
-        });
-    })();
+		btn.addEvent('click',function(){
+			_form.fireEvent('submit',{stop:$empty});
+		});
+	})();
 </script>
 
 

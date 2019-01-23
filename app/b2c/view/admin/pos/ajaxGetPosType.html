@@ -1,0 +1,5 @@
+<{foreach from=$lists item=item}>
+    <li>
+        <input type="radio" name="postype_id" value="<{$item.postype_id}>" id="postype<{$item.postype_id}>" data-feilv="<{$item.feilv}>" data-fengding="<{$item.fengding}>" <{if $item.postype_id==$postype_id }> checked <{/if}> ><label for="postype<{$item.postype_id}>"><{$item.sub_name}>-<{$item.shuaka_type}>-<{if $item.fengding>0}><{$item.fengding}><{else}><{$item.feilv}><{/if}></label>
+    </li>
+<{/foreach}>

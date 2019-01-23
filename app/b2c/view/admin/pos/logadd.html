@@ -7,11 +7,17 @@
             margin-bottom: 10px;
             border-bottom: 1px dashed #000;
         }
+        .menu1 ul li{
+            float:left; /* 向左漂移，将竖排变为横排 */
+            padding-left: 10px;
+            margin-bottom: 10px;
+            width: 20%;
+        }
         .menu ul li{
             float:left; /* 向左漂移，将竖排变为横排 */
             padding-left: 10px;
             margin-bottom: 10px;
-            width: 120px;
+            width: 42%;
         }
         .menu3 ul li{
             float:left; /* 向左漂移，将竖排变为横排 */
@@ -23,110 +29,109 @@
             height: 40px;
             border:1px solid #000000;
         }
+        .poslog table td{
+            border:1px solid #F00;
+            padding: 3px;
+        }
     </style>
-<form method="POST" id='newmember-edit-form' action="index.php?app=b2c&ctl=admin_pos&act=logsave" class="tableform">
-    <input type="text" name="id" value="<{$id}>" >
-    <div class="menu" style="padding-top: 20px;">
+<div class="pos-main">
+    <form action="index.php?app=b2c&ctl=admin_pos&act=logsave" method="post" id='newmember-edit-form' class="tableform">
+    <input type="text" name="id" value="<{$info.id}>" >
+        <div class="menu1" style="padding-top: 20px;">
             <ul>
                 <li>
-                    <input type="radio" name="name" value="lsc" id="lsc" <{if $name=='lsc' }> checked <{elseif $name !='liu'}> checked <{/if}> ><label for="lsc">我的</label>
+                    <input type="radio" name="belong_to" value="lsc" id="lsc" <{if $info.belong_to=='lsc'}> checked <{/if}> ><label for="lsc">我的</label>
                 </li>
                 <li>
-                    <input type="radio" name="name" value="liu" id="liu" <{if $name=='liu' }> checked <{/if}> ><label for="liu">刘</label>
+                    <input type="radio" name="belong_to" value="liu" id="liu" <{if $info.belong_to=='liu'}> checked <{/if}> ><label for="liu">刘</label>
                 </li>
             </ul>
         </div>
         <div class="clean-both"></div>
         <div class="menu">
-            <ul>
-                <li>
-                    <input type="radio" name="pos_type" value="jinkong" id="jinkong" <{if $pos_type=='jinkong' }> checked <{/if}> ><label for="jinkong">金控</label>
-                </li>
-                <li>
-                    <input type="radio" name="pos_type" value="changjietong028" id="changjietong028" <{if $pos_type=='changjietong028' }> checked <{/if}> ><label for="changjietong028">畅捷通0.28</label>
-                </li>
-                <li>
-                    <input type="radio" name="pos_type" value="changjietong03" id="changjietong03" <{if $pos_type=='changjietong03' }> checked <{/if}> ><label for="changjietong03">畅捷通0.3</label>
-                </li>
-                <li>
-                    <input type="radio" name="pos_type" value="qianbao" id="qianbao" <{if $pos_type=='qianbao' }> checked <{/if}> ><label for="qianbao">钱宝</label>
-                </li>
-                <li>
-                    <input type="radio" name="pos_type" value="xiaomage025" id="xiaomage025" <{if $pos_type=='xiaomage025' }> checked <{/if}> ><label for="xiaomage025">小马哥0.25</label>
-                </li>
-                <li>
-                    <input type="radio" name="pos_type" value="xiaomage03" id="xiaomage03" <{if $pos_type=='xiaomage03' }> checked <{/if}> ><label for="xiaomage03">小马哥0.3</label>
-                </li>
-                <li>
-                    <input type="radio" name="pos_type" value="weixin" id="weixin" <{if $pos_type=='weixin' }> checked <{/if}> ><label for="weixin">微信</label>
-                </li>
-
-                <li>
-                    <input type="radio" name="pos_type" value="zhifubao" id="zhifubao" <{if $pos_type=='zhifubao' }> checked <{/if}> ><label for="zhifubao">支付宝</label>
-                </li>
+            刷卡机品牌：
+            <ul class="ajax-posbrand">
             </ul>
         </div>
         <div class="clean-both"></div>
-        <div class="menu3">
-            <ul>
-                <li>
-                    <input type="radio" name="bank" value="jiaotong" id="jiaotong" <{if $bank=='jiaotong' }> checked <{/if}> ><label for="jiaotong">交通银行</label>
-                </li>
-                <li>
-                    <input type="radio" name="bank" value="zhongxin" id="zhongxin" <{if $bank=='zhongxin' }> checked <{/if}> ><label for="zhongxin">中信银行</label>
-                </li>
-                <li>
-                    <input type="radio" name="bank" value="zhongguo" id="zhongguo" <{if $bank=='zhongguo' }> checked <{/if}> ><label for="zhongguo">中国银行</label>
-                </li>
-                <li>
-                    <input type="radio" name="bank" value="zhaoshang" id="zhaoshang" <{if $bank=='zhaoshang' }> checked <{/if}>><label for="zhaoshang">招商银行</label>
-                </li>
-                <li>
-                    <input type="radio" name="bank" value="guangda" id="guangda" <{if $bank=='guangda' }> checked <{/if}> ><label for="guangda">光大银行</label>
-                </li>
-                <li>
-                    <input type="radio" name="bank" value="gongshang" id="gongshang" <{if $bank=='gongshang' }> checked <{/if}> ><label for="gongshang">工商银行</label>
-                </li>
-                <li>
-                    <input type="radio" name="bank" value="shanghai" id="shanghai" <{if $bank=='shanghai' }> checked <{/if}> ><label for="shanghai">上海银行</label>
-                </li>
-                <li>
-                    <input type="radio" name="bank" value="guangfa" id="guangfa" <{if $bank=='guangfa' }> checked <{/if}> ><label for="guangfa">广发银行</label>
-                </li>
-                <li>
-                    <input type="radio" name="bank" value="xingye" id="xingye" <{if $bank=='xingye' }> checked <{/if}> ><label for="xingye">兴业银行</label>
-                </li>
-                <li>
-                    <input type="radio" name="bank" value="minsheng" id="minsheng" <{if $bank=='minsheng' }> checked <{/if}> ><label for="minsheng">民生银行</label>
-                </li>
-                <li>
-                    <input type="radio" name="bank" value="pingan" id="pingan" <{if $bank=='pingan' }> checked <{/if}> ><label for="pingan">平安银行</label>
-                </li>
-                <li>
-                    <input type="radio" name="bank" value="jianshe" id="jianshe" <{if $bank=='jianshe' }> checked <{/if}> ><label for="jianshe">建设银行</label>
-                </li>
-                <li>
-                    <input type="radio" name="bank" value="pufa" id="pufa" <{if $bank=='pufa' }> checked <{/if}> ><label for="pufa">浦发银行</label>
-                </li>
+        <div class="menu">
+            刷卡方式：
+            <ul class="ajax-postype">
+            </ul>
+            <input type="text" name="feilv" value="">
+            <input type="text" name="fengding" value="">
+
+        </div>
+        <div class="clean-both"></div>
+        <div class="menu">
+            银行卡：
+            <ul class="ajax-poscard">
             </ul>
         </div>
         <div class="clean-both"></div>
         <div>
             创建时间：
-            <{input type="time" value=$create_time vtype="required" name="from_time"}>
+            <{input type="time" value=$info.create_time vtype="required" name="from_time"}>
         </div>
         <div class="pos-input">
-            ¥&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：<input type="text" name="money" value="<{$money}>">
+            ¥&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：<input type="text" name="money" value="<{$info.money}>">
             备注：
-            <input type="text" name="memo" value="<{$memo}>"><br>
+            <input type="text" name="memo" value="<{$info.memo}>"><br>
             mcc：
-            <input type="number" name="mcc" <{if $mcc }> value="<{$mcc}>" <{else}> value="0" <{/if}> >
+            <input type="number" name="mcc" value="<{$info.mcc}>">
         </div>
-</form>
-<div class="table-action"><{button type="submit"  label=$___b2c="保存"|t:'b2c' id='newmember-edit-form-submit'}></div>
+        <div class="table-action"><{button type="submit"  label=$___b2c="保存"|t:'b2c' id='newmember-edit-form-submit'}></div>
+    </form>
+</div>
+<script type="text/javascript">
 
+    var posbrand_id_already = '<{$info.posbrand_id}>';
+    var postype_id_already = '<{$info.postype_id}>';
+    var card_id_already = '<{$info.card_id}>';
 
-<script>
+    jq(function(){
+        //ajax获取刷卡机品牌
+        var urlPosBrand = 'index.php?app=b2c&ctl=admin_pos&act=ajaxGetPosBrand';
+        jq.post(urlPosBrand, {posbrand_id:posbrand_id_already}, function(re) {
+            jq('.ajax-posbrand').html(re);
+        });
+
+        //获取刷卡方式
+        ajaxGetPosType(posbrand_id_already,postype_id_already);
+
+        //获取信用卡列表
+        var belong_to = jq('input[name=belong_to]:checked').val();
+        if (belong_to != 0) {
+            console.log(card_id_already);
+            getPosCard(belong_to,card_id_already);
+        }
+
+        jq(document).on('change','input[name=posbrand_id]', function(event) {
+            var posbrand_id = jq(this).val();
+            ajaxGetPosType(posbrand_id);
+        }).on('change', 'input[name=belong_to]', function(event) {//ajax获取信用卡列表
+            //清空选中的卡id
+            jq('input[name=card_id]:checked').val('');
+            var belong_to = jq(this).val();
+            getPosCard(belong_to);
+        })
+    });
+    //获取刷卡方式
+    function ajaxGetPosType(posbrand_id,postype_id_already){
+        //ajax获取刷卡方式
+        var urlPosType = 'index.php?app=b2c&ctl=admin_pos&act=ajaxGetPosType';
+        jq.post(urlPosType,{posbrand_id:posbrand_id,postype_id:postype_id_already},function(re){
+            jq('.ajax-postype').html(re);
+        });
+    }
+    //获取信用卡列表
+    function getPosCard(belong_to,card_id){
+        var url = 'index.php?app=b2c&ctl=admin_pos&act=ajaxGetPosCard';
+        jq.post(url,{belong_to:belong_to,card_id:card_id},function(re){
+            jq('.ajax-poscard').html(re);
+        });
+    }
+
     (function(){
         var _form = $('newmember-edit-form');
         var btn =$('newmember-edit-form-submit');
@@ -153,11 +158,15 @@
         });
 
         btn.addEvent('click',function(){
+            //获得已选中刷卡方式的费率
+            var feilv = jq('input[name=postype_id]:checked').data('feilv');
+            jq('input[name=feilv]').val(feilv);
+            //获得已选中刷卡方式的封顶
+            var fengding = jq('input[name=postype_id]:checked').data('fengding');
+            jq('input[name=fengding]').val(fengding);
             _form.fireEvent('submit',{stop:$empty});
 
         });
 
     })();
 </script>
-
-

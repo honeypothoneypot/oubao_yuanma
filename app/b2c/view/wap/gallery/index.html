@@ -108,9 +108,6 @@
 
     $.post(url, params, function(re){
         $($('.J-tab .panel')[t.index()]).html(re);
-
-        var reg = new RegExp(location.hash || location.href, 'i');
-        window.history.pushState({url: location.href, html: container.innerHTML}, null, location.href.replace(reg, '#' + params));
     });
   }
 

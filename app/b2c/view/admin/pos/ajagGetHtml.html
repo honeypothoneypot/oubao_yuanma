@@ -1,0 +1,136 @@
+<{if $newGroup}>
+<{foreach from=$newGroup key=key item=item1}>
+<tbody>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td><button type="button" class="delete-table" >删除</button></td>
+		</tr>
+		<tr class="is_xianshi">
+			<th><{t}>副名称：<{/t}></th>
+			<td><input type="text" name="sub_name[<{$key}>]" value="<{$item1.0.sub_name}>"></td>
+		</tr>
+		<tr class="is_xianshi">
+			<th><{t}>pos法人：<{/t}></th>
+			<td><input type="text" name="sub_faren[<{$key}>]" value="<{$item1.0.faren}>"></td>
+		</tr>
+		<tr class="is_xianshi">
+			<th><{t}>pos结算银行：<{/t}></th>
+			<td><input type="text" name="sub_jiesuan_bank[<{$key}>]" value="<{$item1.0.jiesuan_bank}>"></td>
+		</tr>
+		<tr class="is_xianshi">
+			<th><{t}>二维码登录账号：<{/t}></th>
+			<td><input type="text" name="logon_name[<{$key}>]" value="<{$item1.0.logon_name}>"></td>
+		</tr>
+		<tr class="is_xianshi">
+			<th><{t}>二维码登录密码：<{/t}></th>
+			<td><input type="text" name="logon_password[<{$key}>]" value="<{$item1.0.logon_password}>"></td>
+		</tr>
+		<tr>
+			<th><{t}>备注：<{/t}></th>
+			<td><input type="text" name="sub_memo[<{$key}>]" value="<{$item1.0.memo}>"></td>
+		</tr>
+		<tr>
+			<th>刷卡方式：</th>
+		</tr>
+		<{foreach from=$item1 key=ke item=item2}>
+		<tr style="line-height: 30px;">
+
+			<td>
+				<input type="hidden" name="delete-postype_id" value="<{$item2.postype_id}>">
+				<input type="hidden" name="<{$item2.shuaka_typeOld}>[<{$key}>][postype_id]" value="<{$item2.postype_id}>">
+			</td>
+			<td class="lsc-td">
+				<{$item2.shuaka_type}>
+			</td>
+			<td>
+				费率: <input type="text" name="<{$item2.shuaka_typeOld}>[<{$key}>][feilv]" value="<{$item2.feilv}>" style="width: 50px;" >
+			</td>
+			<td>
+				封顶: <input type="text" name="<{$item2.shuaka_typeOld}>[<{$key}>][fengding]" value="<{$item2.fengding}>" style="width: 50px;" >
+			</td>
+			<td style="padding-left: 10px">
+				<input type="checkbox" name="<{$item2.shuaka_typeOld}>[<{$key}>][is_enable]" id="<{$item2.shuaka_typeOld}>-<{$key}>" <{if $item2.is_enable}> checked="true" <{/if}> ><label for="<{$item2.shuaka_typeOld}>-<{$key}>">是否启用</label>
+			</td>
+		</tr>
+		<{/foreach}>
+</tbody>
+<{/foreach}>
+<{else}>
+<tbody>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td><button type="button" class="delete-table">删除</button></td>
+		</tr>
+		<tr class="is_xianshi">
+			<th><{t}>副名称：<{/t}></th>
+			<td><input type="text" name="sub_name[<{$flag}>]"></td>
+		</tr>
+		<tr class="is_xianshi">
+			<th><{t}>pos法人：<{/t}></th>
+			<td><input type="text" name="sub_faren[<{$flag}>]"></td>
+		</tr>
+		<tr class="is_xianshi">
+			<th><{t}>pos结算银行：<{/t}></th>
+			<td><input type="text" name="sub_jiesuan_bank[<{$flag}>]"></td>
+		</tr>
+		<tr class="is_xianshi">
+			<th><{t}>二维码登录账号：<{/t}></th>
+			<td><input type="text" name="logon_name[<{$flag}>]"></td>
+		</tr>
+		<tr class="is_xianshi">
+			<th><{t}>二维码登录密码：<{/t}></th>
+			<td><input type="text" name="logon_password[<{$flag}>]"></td>
+		</tr>
+		<tr>
+			<th><{t}>备注：<{/t}></th>
+			<td><input type="text" name="sub_memo[<{$flag}>]" ></td>
+		</tr>
+		<tr>
+			<th>刷卡方式：</th>
+		</tr>
+		<{foreach from=$postype key=type item=item}>
+		<tr style="line-height: 30px;">
+			<td></td>
+			<td class="lsc-td">
+				<{$item}>
+			</td>
+			<td>
+				费率: <input type="text" name="<{$type}>[<{$flag}>][feilv]" style="width: 50px;">
+			</td>
+			<td>
+				封顶: <input type="text" name="<{$type}>[<{$flag}>][fengding]" style="width: 50px;">
+			</td>
+			<td style="padding-left: 10px">
+				<input type="checkbox" name="<{$type}>[<{$flag}>][is_enable]" id="<{$type}>-<{$flag}>"><label for="<{$type}>-<{$flag}>">是否启用</label>
+			</td>
+		</tr>
+		<{/foreach}>
+</tbody>
+<{/if}>
+<script>
+	//删除
+	jq('.delete-table').click(function(event) {
+		// jq(this).find('input[name=delete-postype_id]').each(function(index, el) {
+		// 	console.log(jq(el).val());
+		// });
+		var sub_delete = jq('input[name=sub_delete]').val();
+		jq(this).parents('tbody').find('input[name=delete-postype_id]').each(function(index, el) {
+			var postype_id = jq(el).val();
+			if (postype_id) {
+				postype_id = postype_id + '-';
+				sub_delete += postype_id;
+			}
+		});
+		jq('input[name=sub_delete]').val(sub_delete);
+		console.log(sub_delete);
+		// var deleteflag = jq(this).data('deleteflag');
+		// if (typeof(deleteflag) != "undefined") {
+		// 	console.log(deleteflag);
+		// }
+		jq(this).parents('tbody').remove();
+	});
+</script>
