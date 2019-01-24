@@ -1,11 +1,11 @@
 <div class="content" style="margin-top: 20px;">
 	<div class="demos">
 		<label for="appDate">开始日期</label>
-		<input value="" class="" readonly="readonly" name="timefrom" id="appDate" type="text">
+		<input value="" class="" readonly="readonly" name="timefrom" id="appDate" type="text" onchange="timeChange();">
 	</div>
 	<div class="demos">
 		<label for="appDate2">结束日期</label>
-		<input value="" class="" readonly="readonly" name="timeto" id="appDate2" type="text">
+		<input value="" class="" readonly="readonly" name="timeto" id="appDate2" type="text" onchange="timeChange();">
 	</div>
 </div>
 <div class="pos-main">
@@ -95,6 +95,9 @@
 		//ajax获取日志
 		filterLogs($('.poslog'));
 	});
+	function timeChange(){
+		filterLogs($('.poslog'));
+	}
 	//获取信用卡列表
 	function getPosCard(belong_to){
 		var url = '<{link app=b2c ctl=wap_pos act=ajaxGetPosCard}>';
@@ -155,10 +158,13 @@
 		//参数-时间范围
 		var timefrom = $('input[name=timefrom]').val();
 		var timeto = $('input[name=timeto]').val();
-		if (timefrom>timeto) {
-			alert('开始时间不能大于结束时间');
-			return false;
+		if (timefrom && timeto) {
+			if (timefrom>timeto) {
+				alert('开始时间不能大于结束时间');
+				return false;
+			}
 		}
+
 		if(t&&t.num){
 	        p += t.num;
 			page = t.num;
