@@ -1,3 +1,13 @@
+<div class="content" style="margin-top: 20px;">
+	<div class="demos">
+		<label for="appDate">开始日期</label>
+		<input value="" class="" readonly="readonly" name="timefrom" id="appDate" type="text">
+	</div>
+	<div class="demos">
+		<label for="appDate2">结束日期</label>
+		<input value="" class="" readonly="readonly" name="timeto" id="appDate2" type="text">
+	</div>
+</div>
 <div class="pos-main">
 	<form action="<{link app=b2c ctl=wap_pos act=save}>" method="post" data-type="ajax" class="form-log">
 		<div class="menu1" style="padding-top: 20px;">
@@ -133,12 +143,22 @@
 	//获取记录
 	function filterLogs(e,t){
 		var p = 'page=';
+
+		//参数-所属人
     	var belong_to = 'belong_to=';
 		var belong_to_val = $('input[name=belong_to]:checked').val();
 
+		//参数-卡号
     	var card_id = 'card_id=';
 		var card_id_val = $('input[name=card_id]:checked').val();
 
+		//参数-时间范围
+		var timefrom = $('input[name=timefrom]').val();
+		var timeto = $('input[name=timeto]').val();
+		if (timefrom>timeto) {
+			alert('开始时间不能大于结束时间');
+			return false;
+		}
 		if(t&&t.num){
 	        p += t.num;
 			page = t.num;
@@ -155,8 +175,18 @@
     	}else{
     		card_id='';
     	}
+    	if (timefrom) {
+    		timefrom ='from_time='+timefrom;
+    	}else{
+    		timefrom = '';
+    	}
+    	if (timeto) {
+    		timeto ='to_time='+timeto;
+    	}else{
+    		timeto = '';
+    	}
 
-		var params = [p,belong_to,card_id].filter(function(d){ return d;}).join('&');
+		var params = [p,belong_to,card_id,timefrom,timeto].filter(function(d){ return d;}).join('&');
   		var url = '<{link app=b2c ctl=wap_pos act=ajax_get_poslog}>';
 		$.post(url, params, function(re){
 			$(e).html(re);

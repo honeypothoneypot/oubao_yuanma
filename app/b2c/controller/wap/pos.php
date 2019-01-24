@@ -73,8 +73,8 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $filter['belong_to'] = $_POST['belong_to'];
         $filter['card_id'] = $_POST['card_id'];
         $filter['postype_id'] = $_POST['postype_id'];
-        $filter['from_time'] = $_POST['from_time'];
-        $filter['to_time'] = $_POST['to_time'];
+        $filter['from_time'] = strtotime($_POST['from_time']);
+        $filter['to_time'] = $_POST['to_time']?strtotime($_POST['to_time'])+86400:'';
         $lists = $poslog->getLog($filter,$pageLimit*($page-1),$pageLimit);
         //刷卡方式
         $mdlType = $this->app->model('postype');

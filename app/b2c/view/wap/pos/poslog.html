@@ -1,3 +1,4 @@
+<{if $poslogs}>
 <table>
 	<tr>
 		<th>姓名</th>
@@ -21,3 +22,6 @@
 	<{/foreach}>
 </table>
 <{wap_pagers ajax=true data=$pager}>
+<{else}>
+暂无数据
+<{/if}>
