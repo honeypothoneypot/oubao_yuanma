@@ -75,11 +75,11 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $filter['postype_id'] = $_POST['postype_id'];
         $filter['from_time'] = strtotime($_POST['from_time']);
         $filter['to_time'] = $_POST['to_time']?strtotime($_POST['to_time'])+86400:'';
-        $lists = $poslog->getLog($filter,$pageLimit*($page-1),$pageLimit);
+        $ret = $poslog->getLog($filter,$pageLimit*($page-1),$pageLimit);
         //刷卡方式
         $mdlType = $this->app->model('postype');
         $postype = $mdlType->getPostype();
-        foreach ($lists as $key => &$value) {
+        foreach ($ret['lists'] as $key => &$value) {
             $value['shuaka_type'] = $postype[$value['shuaka_type']];
             if ($value['belong_to']=='lsc') {
                 $value['belong_to'] = '蔺苏川';
@@ -97,7 +97,8 @@ class b2c_ctl_wap_pos extends wap_frontpage{
             'total'=>$pagetotal,
             'link' =>$this->gen_url(array('app'=>'b2c', 'ctl'=>'wap_pos','act'=>'ajax_get_poslog')),
         );
-        $this->pagedata['poslogs'] = $lists;
+        $this->pagedata['poslogs'] = $ret;
+        $this->pagedata['total'] = $total;
         $view = 'wap/pos/poslog.html';
         echo $this->fetch($view);
     }

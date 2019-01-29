@@ -63,10 +63,14 @@ class b2c_mdl_poslog extends dbeav_model{
 		}
 		$sql.=" ORDER BY a.create_time DESC LIMIT {$offset},{$limit}";
 		$datas = kernel::database()->select($sql);
-		// $count = count($datas);
-		// $return['list'] = $datas;
-		// $return['count'] = $count;
-		return $datas;
+		$moneySum = array_sum(array_map(create_function('$val', 'return $val["money"];'), $datas));
+		$jiesuan_moneySum = array_sum(array_map(create_function('$val', 'return $val["jiesuan_money"];'), $datas));
+		$lixiSum = bcsub($moneySum,$jiesuan_moneySum,2);
+		$ret['lists'] = $datas;
+		$ret['moneySum'] = $moneySum;
+		$ret['jiesuan_moneySum'] = $jiesuan_moneySum;
+		$ret['lixiSum'] = $lixiSum;
+		return $ret;
 	}
 
 	public function getCount($filter){

@@ -1,4 +1,12 @@
-<{if $poslogs}>
+<{if $poslogs.lists}>
+<table>
+	<tr>
+		<td>记录总数：<{$total}>(条)</td>
+		<td>总金额：<{$poslogs.moneySum|cur_odr}></td>
+		<td>结算总金额：<{$poslogs.jiesuan_moneySum|cur_odr}></td>
+		<td>利息：<{$poslogs.lixiSum|cur_odr}></td>
+	</tr>
+</table>
 <table>
 	<tr>
 		<th>姓名</th>
@@ -9,7 +17,7 @@
 		<th>刷卡方式</th>
 		<th>时间</th>
 	</tr>
-	<{foreach from=$poslogs item=poslog}>
+	<{foreach from=$poslogs.lists item=poslog}>
 	<tr>
 		<td><{$poslog.belong_to}></td>
 		<td><{$poslog.bankname}></td>
