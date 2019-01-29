@@ -36,6 +36,7 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $this->pagedata['pos_type'] = $request_params[1];
         $this->pagedata['bank'] = $request_params[2];
         $this->pagedata['mcc'] = $request_params[3];
+        $this->pagedata['time'] = time();
         $this->page('wap/pos/index.html');
     }
     public function save(){
