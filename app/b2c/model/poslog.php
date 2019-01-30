@@ -125,6 +125,7 @@ class b2c_mdl_poslog extends dbeav_model{
 					array_push($counts, $arrPu);
 				}
 			}
+			ksort($tongji);
 			$tongji = array_merge($tongji, $tongji1);
 			$tongji = implode('<br/>', $tongji);
 		}
