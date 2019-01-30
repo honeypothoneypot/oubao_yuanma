@@ -26,7 +26,7 @@ class b2c_ctl_admin_pos extends desktop_controller{
         $obj_pos = app::get('b2c')->model('poslog');
         $filter['id'] = $id;
         $info = $obj_pos->getLog($filter);
-        $info = $info[0];
+        $info = $info['lists'][0];
         $this->pagedata['info'] = $info;
         $this->display('admin/pos/logadd.html');
     }

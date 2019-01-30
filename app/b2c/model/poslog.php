@@ -67,15 +67,12 @@ class b2c_mdl_poslog extends dbeav_model{
 		$jiesuan_moneySum = array_sum(array_map(create_function('$val', 'return $val["jiesuan_money"];'), $datas));
 		$lixiSum = bcsub($moneySum,$jiesuan_moneySum,2);
 		$ret['lists'] = $datas;
-		$ret['moneySum'] = $moneySum;
-		$ret['jiesuan_moneySum'] = $jiesuan_moneySum;
-		$ret['lixiSum'] = $lixiSum;
 		return $ret;
 	}
 
 	public function getCount($filter){
 		$sql = "SELECT
-					COUNT(a.id) as count
+					COUNT(a.id) as count,SUM(a.money) as moneySum,SUM(a.jiesuan_money) as jiesuan_moneySum,(SUM( a.money ) - SUM( a.jiesuan_money )) as lixiSum,d.posbrand_id,d.name
 				FROM  sdb_b2c_poslog AS a
 				LEFT JOIN sdb_b2c_poscard AS b ON a.card_id = b.card_id
 				LEFT JOIN sdb_b2c_postype AS c ON a.postype_id  = c.postype_id
@@ -95,8 +92,47 @@ class b2c_mdl_poslog extends dbeav_model{
 		if ($filter['to_time']) {
 			$sql.=" AND a.create_time <={$filter['to_time']}";
 		}
-		$datas = kernel::database()->select($sql);
-		$count = $datas[0]['count'];
-		return $count;
+		$sql.=" GROUP BY d.posbrand_id ORDER BY count DESC";
+		//获取所有品牌：
+		$brands = app::get('b2c')->model('posbrand')->getList('posbrand_id,name');
+
+		$countsSum = 0;
+		$moneySum = 0;
+		$jiesuan_moneySum = 0;
+		$lixiSum = 0;
+
+		$counts = kernel::database()->select($sql);
+		$tongji = '';
+		$a = 0;
+		if ($counts) {
+			foreach ($brands as $key => $brand) {
+				foreach ($counts as $ke => $value) {
+					if ($value['posbrand_id'] == $brand['posbrand_id']) {
+						$al[] = $value['posbrand_id'];
+
+						$countsSum += $value['count'];
+						$moneySum += $value['moneySum'];
+						$jiesuan_moneySum += $value['jiesuan_moneySum'];
+						$lixiSum += $value['lixiSum'];
+						$tongji[$ke] = $value['name'].'-'.$value['count'].'次';
+					}
+				}
+				if (!in_array($brand['posbrand_id'], $al)) {
+					$arrPu['count'] = 0;
+					$arrPu['name'] = $brand['name'];
+					$arrPu['count'] = 0;
+					$tongji1[] = $brand['name'].'-'.'0次';
+					array_push($counts, $arrPu);
+				}
+			}
+			$tongji = array_merge($tongji, $tongji1);
+			$tongji = implode('<br/>', $tongji);
+		}
+		$rets['countsSum']=$countsSum;
+		$rets['moneySum']=$moneySum;
+		$rets['jiesuan_moneySum']=$jiesuan_moneySum;
+		$rets['lixiSum']=$lixiSum;
+		$rets['tongji']=$tongji;
+		return $rets;
 	}
 }

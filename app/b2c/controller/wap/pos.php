@@ -88,8 +88,8 @@ class b2c_ctl_wap_pos extends wap_frontpage{
                 $value['belong_to'] = '刘艳';
             }
         }
-        $total = $poslog->getCount($filter);//总数
-
+        $counts = $poslog->getCount($filter);//统计的总数-条数、金额、结算金额、利息、次数等
+        $total = $counts['countsSum'];//总数
         $pagetotal= $total ? ceil($total/$pageLimit) : 1;//总页数
         $this->pagedata['page'] = $page;
         //分页
@@ -100,6 +100,7 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         );
         $this->pagedata['poslogs'] = $ret;
         $this->pagedata['total'] = $total;
+        $this->pagedata['counts'] = $counts;
         $view = 'wap/pos/poslog.html';
         echo $this->fetch($view);
     }

@@ -1,10 +1,13 @@
 <{if $poslogs.lists}>
+<div>
+	<{$counts.tongji}>
+</div>
 <table>
 	<tr>
 		<td>记录总数：<{$total}>(条)</td>
-		<td>总金额：<{$poslogs.moneySum|cur_odr}></td>
-		<td>结算总金额：<{$poslogs.jiesuan_moneySum|cur_odr}></td>
-		<td>利息：<{$poslogs.lixiSum|cur_odr}></td>
+		<td>总金额：<{$counts.moneySum|cur_odr}></td>
+		<td>结算总金额：<{$counts.jiesuan_moneySum|cur_odr}></td>
+		<td>利息：<{$counts.lixiSum|cur_odr}></td>
 	</tr>
 </table>
 <table>
