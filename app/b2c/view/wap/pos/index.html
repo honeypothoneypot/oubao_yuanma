@@ -1,4 +1,4 @@
-<div class="content" style="margin-top: 20px;">
+<div class="content" style="margin-top: 20px;float: left;">
 	<div class="demos">
 		<label for="appDate">开始日期</label>
 		<input value="" class="" readonly="readonly" name="timefrom" id="appDate" type="text" onchange="timeChange();">
@@ -8,6 +8,25 @@
 		<input value="" class="" readonly="readonly" name="timeto" id="appDate2" type="text" onchange="timeChange();">
 	</div>
 </div>
+<div class="" style="float: left;margin-left: 20px;margin-top: 10px;">
+	<div>
+		<input type="radio" name="time-scope" value="benzhou"  id="benzhou">
+		<label for="benzhou">本周</label>
+		<input type="radio" name="time-scope" value="bennian" id="bennian" style="margin-left: 20px;">
+		<label for="bennian">本年</label>
+	</div>
+	<div>
+		<input type="radio" name="time-scope" value="benyue" id="benyue">
+		<label for="benyue">本月</label>
+		<input type="radio" name="time-scope" value="qunian" id="qunian" style="margin-left: 20px;">
+		<label for="qunian">去年</label>
+	</div>
+	<div>
+		<input type="radio" name="time-scope" value="shangyue" id="shangyue">
+		<label for="shangyue">上月</label>
+	</div>
+</div>
+<div style="clear: both;"></div>
 <div class="pos-main">
 	<form action="<{link app=b2c ctl=wap_pos act=save}>" method="post" data-type="ajax" class="form-log">
 		<div class="menu1" style="padding-top: 20px;">
@@ -20,6 +39,9 @@
 				</li>
 				<li>
 					<input type="radio" name="belong_to" value="liu" id="liu" ><label for="liu">刘</label>
+				</li>
+				<li>
+					<input type="checkbox" name="jiansuo" value="jiansuo" id="jiansuo" ><label for="jiansuo">pos机检索</label>
 				</li>
 			</ul>
 		</div>
@@ -49,6 +71,9 @@
 			mcc：
 			<input type="number" name="mcc" value="<{$mcc}>">
 		</div>
+		<div style="margin-top: 5px;margin-left: 10px;">
+			<input type="checkbox" name="lvyou-mcc" id="lvyou-mcc"><label for="lvyou-mcc">旅游白返现MCC-检索</label>
+		</div>
 		<div class="btn-bar" style="margin-top: 30px;">
 			<button type="button" class="btn orange" id="tijiao" rel="_request">提交</button>
 		</div>
@@ -61,7 +86,16 @@
 	</div>
 </div>
 <script type="text/javascript">
+	var t = {};
+	t.num =1;
+	//默认本月的时间
+	dateFrom = getMonthStartDate();
+	jq('input[name=timefrom]').val(dateFrom);
+	t.num=1;
+	filterLogs($('.poslog'),t);
 	jq(function(){
+
+		//所属人
 		var belong_to = jq('input[name=belong_to]:checked').val();
 		if (belong_to != 0) {
 			getPosCard(belong_to);
@@ -71,8 +105,6 @@
 		jq.post(urlPosBrand, {}, function(re) {
 			jq('.ajax-posbrand').html(re);
 		});
-		var t = {};
-		t.num =1;
 		//根据品牌ajax获取刷卡类型
 		jq(document).on('change','input[name=posbrand_id]', function(event) {
 			var posbrand_id = jq(this).val();
@@ -81,6 +113,12 @@
 			jq.post(urlPosType,{posbrand_id:posbrand_id},function(re){
 				jq('.ajax-postype').html(re);
 			});
+			//检索按钮是否选中,获取是否选中
+			var isChecked = $('input[name=jiansuo]').is(":checked");
+			if (isChecked) {
+				t.num=1;
+				filterLogs($('.poslog'),t);
+			}
 		}).on('change', 'input[name=belong_to]', function(event) {//ajax获取信用卡列表
 			//清空选中的卡id
 			$('input[name=card_id]:checked').val('');
@@ -89,14 +127,23 @@
 			filterLogs($('.poslog'),t);
 		}).on('change', 'input[name=card_id]', function(event) {//ajax获取日志列表-根据卡号
 			var card_id = jq(this).val();
-			filterLogs($('.poslog'),t);
+			t.num=1;
+			//旅游白返现mcc检索按钮是否选中,获取是否选中
+			var isCheckedLv = $('input[name=lvyou-mcc]').is(":checked");
+			var mccflag = '';
+			var lvtext = jq(this).next().text();
+			if (isCheckedLv && lvtext.indexOf("旅游白") != -1 ) {
+				mccflag = 1;
+			}
+			filterLogs($('.poslog'),t,mccflag);
 		});
 
 		//ajax获取日志
-		filterLogs($('.poslog'));
+		filterLogs($('.poslog'),t);
 	});
 	function timeChange(){
-		filterLogs($('.poslog'));
+		t.num=1
+		filterLogs($('.poslog'),t);
 	}
 	//获取信用卡列表
 	function getPosCard(belong_to){
@@ -120,7 +167,8 @@
 			if (re.success) {
 				//清空金额
 				// jq('input[name=money]').val('');
-				filterLogs($('.poslog'));
+				t.num=1
+				filterLogs($('.poslog'),t);
 			}
 			jq('#tijiao').removeAttr('disabled');
 		});
@@ -130,8 +178,12 @@
 	$('.poslog').on('click',function(e){
 		var t = $(e.target);
 		if(t.hasClass('flip')){
-			if(t.hasClass('next'))t.num = parseInt(page)+1;
-			if(t.hasClass('prev'))t.num = parseInt(page)-1;
+			if(t.hasClass('next')){
+				t.num = parseInt(page)+1;
+			}
+			if(t.hasClass('prev')){
+				t.num = parseInt(page)-1;
+			}
 			filterLogs($(this),t);
 			return false;
 		}
@@ -144,7 +196,7 @@
 	});
 
 	//获取记录
-	function filterLogs(e,t){
+	function filterLogs(e,t,mccflag){
 		var p = 'page=';
 
 		//参数-所属人
@@ -165,37 +217,107 @@
 			}
 		}
 
+		//刷卡机品牌
+		var posbrand_id = 'posbrand_id=';
+		var posbrand_id_val = $('input[name=posbrand_id]:checked').val();
+
+		//旅游白mcc检索
+		var mcc = 'mcc=';
+		//pos机检索按钮是否选中,获取是否选中
+		var isChecked = $('input[name=jiansuo]').is(":checked");
+
+		//旅游白返现mcc检索按钮是否选中,获取是否选中
+		var isCheckedLv = $('input[name=lvyou-mcc]').is(":checked");
 		if(t&&t.num){
 	        p += t.num;
 			page = t.num;
     	}else{
     		p='';
     	}
+
     	if (belong_to_val) {
     		belong_to += belong_to_val;
     	}else{
     		belong_to='';
     	}
+
     	if (card_id_val) {
     		card_id += card_id_val;
     	}else{
     		card_id='';
     	}
+
     	if (timefrom) {
     		timefrom ='from_time='+timefrom;
     	}else{
     		timefrom = '';
     	}
+
     	if (timeto) {
     		timeto ='to_time='+timeto;
     	}else{
     		timeto = '';
     	}
+    	//pos检索
+    	if (isChecked && posbrand_id_val) {
+    		posbrand_id += posbrand_id_val;
+    	}else{
+    		posbrand_id = '';
+    	}
 
-		var params = [p,belong_to,card_id,timefrom,timeto].filter(function(d){ return d;}).join('&');
+    	//旅游白mcc检索
+    	if (isCheckedLv && mccflag) {
+    		mcc += '1';
+    	}else{
+    		mcc = '';
+    	}
+		var params = [p,belong_to,card_id,timefrom,timeto,posbrand_id,mcc].filter(function(d){ return d;}).join('&');
   		var url = '<{link app=b2c ctl=wap_pos act=ajax_get_poslog}>';
 		$.post(url, params, function(re){
 			$(e).html(re);
 		});
 	}
+
+	jq(document).on('change', 'input[name=time-scope]', function(event) {
+		event.preventDefault();
+		var timeScop = jq(this).val();
+		var dateFrom = '';
+		var dateTo = '';
+		if (timeScop=='benzhou') {
+			dateFrom = getWeekStartDate();
+		}else if (timeScop=='benyue'){
+			dateFrom = getMonthStartDate();
+		}else if (timeScop=='shangyue') {
+			dateFrom = getLastMonthStartDate();
+			dateTo = getLastMonthEndDate();
+		}else if (timeScop=='bennian') {
+			dateFrom = getYearStartDate();
+		}else if (timeScop=='qunian') {
+			dateFrom = getLastYearStartDate();
+			dateTo = getLastYearEndDate();
+		}
+		jq('input[name=timefrom]').val(dateFrom);
+		jq('input[name=timeto]').val(dateTo);
+		t.num=1;
+		filterLogs($('.poslog'),t);
+	});
+
+	//pos机检索选中事件
+	jq(document).on('change', 'input[name=jiansuo]', function(event) {
+		event.preventDefault();
+		t.num=1;
+		filterLogs($('.poslog'),t);
+	});
+
+	//旅游白返现mcc检索
+	jq(document).on('change', 'input[name=lvyou-mcc]', function(event) {
+		event.preventDefault();
+		var objCard = jq('input[name=card_id]:checked').next().text();
+		if (objCard.indexOf("旅游白") != -1 ) {
+			var mccflag = 1;
+			//获取日志
+			t.num=1;
+			filterLogs($('.poslog'),t,mccflag);
+		}
+	});
 </script>

@@ -45,7 +45,7 @@ class b2c_mdl_poslog extends dbeav_model{
 				LEFT JOIN sdb_b2c_postype AS c ON a.postype_id  = c.postype_id
 				LEFT JOIN sdb_b2c_posbrand AS d ON c.posbrand_id  = d.posbrand_id WHERE 1";
 		//搜索条件
-        //$id,$belong_to,$card_id,$postype_id,$from_time,$to_time
+        //$id,$belong_to,$card_id,$postype_id,$from_time,$to_time,posbrand_id
 		if ($filter['id']) {
 			$sql.=" AND a.id='{$filter['id']}' ";
 		}
@@ -60,6 +60,12 @@ class b2c_mdl_poslog extends dbeav_model{
 		}
 		if ($filter['to_time']) {
 			$sql.=" AND a.create_time <={$filter['to_time']}";
+		}
+		if ($filter['posbrand_id']) {
+			$sql.=" AND d.posbrand_id ={$filter['posbrand_id']}";
+		}
+		if ($filter['mcc']) {
+			$sql.=" AND a.mcc in (4511,4722,7011)";
 		}
 		$sql.=" ORDER BY a.create_time DESC LIMIT {$offset},{$limit}";
 		$datas = kernel::database()->select($sql);
@@ -91,6 +97,12 @@ class b2c_mdl_poslog extends dbeav_model{
 		}
 		if ($filter['to_time']) {
 			$sql.=" AND a.create_time <={$filter['to_time']}";
+		}
+		if ($filter['posbrand_id']) {
+			$sql.=" AND d.posbrand_id ={$filter['posbrand_id']}";
+		}
+		if ($filter['mcc']) {
+			$sql.=" AND a.mcc in (4511,4722,7011)";
 		}
 		$sql.=" GROUP BY d.posbrand_id ORDER BY count DESC";
 		//获取所有品牌：
