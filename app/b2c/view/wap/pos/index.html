@@ -24,6 +24,8 @@
 	<div>
 		<input type="radio" name="time-scope" value="shangyue" id="shangyue">
 		<label for="shangyue">上月</label>
+		<input type="radio" name="time-scope" value="zuotian" id="zuotian" style="margin-left: 20px;">
+		<label for="zuotian">昨天</label>
 	</div>
 </div>
 <div style="clear: both;"></div>
@@ -295,6 +297,9 @@
 		}else if (timeScop=='qunian') {
 			dateFrom = getLastYearStartDate();
 			dateTo = getLastYearEndDate();
+		}else if (timeScop=='zuotian') {
+			dateFrom = getYesterdayStartDate();
+			dateTo = getYesterdayEndDate();
 		}
 		jq('input[name=timefrom]').val(dateFrom);
 		jq('input[name=timeto]').val(dateTo);
