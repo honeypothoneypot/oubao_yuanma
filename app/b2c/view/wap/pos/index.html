@@ -71,11 +71,24 @@
 		</div>
 		<div class="clean-both"></div>
 		<div class="pos-input">
-			¥&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：<input type="number" name="money">
-			备注：
-			<input type="text" name="memo"><br>
-			mcc：
-			<input type="number" name="mcc" value="<{$mcc}>">
+			<table style="width: 100%;">
+				<tr>
+					<th class="posinput-td">金额(¥)</th>
+					<th class="posinput-td">mcc</th>
+					<th class="posinput-td">备注</th>
+				</tr>
+				<tr>
+					<td class="posinput-td">
+						<input type="number" name="money">
+					</td>
+					<td class="posinput-td">
+						<input type="number" name="mcc">
+					</td>
+					<td class="posinput-td">
+						<input type="text" name="memo">
+					</td>
+				</tr>
+			</table>
 		</div>
 		<div style="margin-top: 5px;margin-left: 10px;">
 			<input type="checkbox" name="lvyou-mcc" id="lvyou-mcc"><label for="lvyou-mcc">旅游白返现MCC-检索</label>

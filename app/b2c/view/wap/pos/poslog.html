@@ -12,7 +12,7 @@
 		<td>利息：<{$counts.lixiSum|cur_odr}></td>
 	</tr>
 </table>
-<table>
+<table class="poslog_table">
 	<tr>
 		<th>姓名</th>
 		<th>银行</th>
@@ -25,9 +25,9 @@
 	</tr>
 	<{foreach from=$poslogs.lists item=poslog}>
 	<tr>
-		<td><{$poslog.belong_to}></td>
-		<td><{$poslog.bankname}></td>
-		<td><{$poslog.card_no}>-<{$poslog.bankmemo}></td>
+		<td colspan="3">
+			<{$poslog.belong_to}>:<{$poslog.bankname}>-<{$poslog.card_no}>-<{$poslog.bankmemo}>
+		</td>
 		<td><{$poslog.money|cur_odr}></td>
 		<td><{$poslog.jiesuan_money|cur_odr}></td>
 		<td><{$poslog.mcc}></td>
