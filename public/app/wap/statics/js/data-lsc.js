@@ -32,6 +32,11 @@ function getMonthDays(myMonth) {
     var days = (monthEndDate - monthStartDate) / (1000 * 60 * 60 * 24);
     return days;
 }
+//获得今天的开始日期
+function getTodayStartDate() {
+    var todayStartDate = new Date(nowYear, nowMonth, nowDay);
+    return formatDate(todayStartDate);
+}
 //获得昨天的开始日期
 function getYesterdayStartDate() {
     var yesterdayStartDate = new Date(nowYear, nowMonth, nowDay - 1);

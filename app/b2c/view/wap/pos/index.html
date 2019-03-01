@@ -1,4 +1,4 @@
-<div class="content" style="margin-top: 20px;float: left;">
+<div class="content" style="margin-top: 25px;float: left;">
 	<div class="demos">
 		<label for="appDate">开始日期</label>
 		<input value="" class="" readonly="readonly" name="timefrom" id="appDate" type="text" onchange="timeChange();">
@@ -27,11 +27,15 @@
 		<input type="radio" name="time-scope" value="zuotian" id="zuotian" style="margin-left: 20px;">
 		<label for="zuotian">昨天</label>
 	</div>
+	<div>
+		<input type="radio" name="time-scope" value="jintian" id="jintian" style="margin-left: 20px;">
+		<label for="jintian">今天</label>
+	</div>
 </div>
 <div style="clear: both;"></div>
 <div class="pos-main">
 	<form action="<{link app=b2c ctl=wap_pos act=save}>" method="post" data-type="ajax" class="form-log">
-		<div class="menu1" style="padding-top: 20px;">
+		<div class="menu1" style="padding-top: 20px;padding-left: 20px;">
 			<ul>
 				<li>
 					<input type="radio" name="belong_to" value="0" id="belong_to0" checked><label for="belong_to0">全部</label>
@@ -299,7 +303,9 @@
 			dateTo = getLastYearEndDate();
 		}else if (timeScop=='zuotian') {
 			dateFrom = getYesterdayStartDate();
-			dateTo = getYesterdayEndDate();
+			dateTo = getYesterdayStartDate();
+		}else if (timeScop=='jintian') {
+			dateFrom = getTodayStartDate();
 		}
 		jq('input[name=timefrom]').val(dateFrom);
 		jq('input[name=timeto]').val(dateTo);
