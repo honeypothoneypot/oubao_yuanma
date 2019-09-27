@@ -17,10 +17,10 @@ class desktop_router implements base_interface_router{
             $error_code = app::get('site')->getConf('desktop.whitelist.error_code');
             $forbidden = true;
             foreach ($ips as $ip) {
-		$ip = trim($ip);
-		if(!$ip) {
-			continue;
-		}
+    		$ip = trim($ip);
+    		if(!$ip) {
+    			continue;
+    		}
                 if ( base_request::ip_in_range($remote_ip, $ip)) {
                     $forbidden = false;
                     break;
