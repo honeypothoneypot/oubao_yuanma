@@ -6,4 +6,4 @@
 *.swo
 $.swn
 config/certi.php
-/tmp
+tmp/
