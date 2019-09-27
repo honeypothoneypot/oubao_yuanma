@@ -118,6 +118,7 @@ class b2c_ctl_admin_posbrand extends desktop_controller{
             $data['jiesuan_bank'] = '-';
             $data['memo'] = '-';
         }
+        $data['display'] = $_POST['display']?'true':'false';
         $posbrand_id = $data['posbrand_id'];
         try {
             if ($posbrand_id) {

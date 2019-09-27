@@ -106,7 +106,7 @@ class b2c_mdl_poslog extends dbeav_model{
 		}
 		$sql.=" GROUP BY d.posbrand_id ORDER BY count DESC";
 		//获取所有品牌：
-		$brands = app::get('b2c')->model('posbrand')->getList('posbrand_id,name');
+		$brands = app::get('b2c')->model('posbrand')->getList('posbrand_id,name',array('display'=>'true'));
 
 		$countsSum = 0;
 		$moneySum = 0;

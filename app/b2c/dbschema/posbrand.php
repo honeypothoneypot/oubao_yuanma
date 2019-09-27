@@ -95,6 +95,16 @@ $db['posbrand'] = array (
 			'label' => app::get('b2c')->_('修改时间'),
 			'comment' => app::get('b2c')->_('修改时间'),
 		),
+		'display'=> array(
+	        'type'=> "enum('true', 'false')",
+	        'default' =>'true',
+	        'editable' => false,
+			'filtertype' => 'yes',
+			'filterdefault' => true,
+			'in_list' => true,
+			'default_in_list' => true,
+	        'label' => app::get('b2c')->_('是否显示'),
+    	),
 	),
 	'index' => array (
 		'ind_name' => array (

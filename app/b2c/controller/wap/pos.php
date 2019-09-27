@@ -110,7 +110,7 @@ class b2c_ctl_wap_pos extends wap_frontpage{
     //获取pos品牌
     public function ajaxGetPosBrand(){
         $mdlBrand = $this->app->model('posbrand');
-        $lists = $mdlBrand->getList('posbrand_id,name',array());
+        $lists = $mdlBrand->getList('posbrand_id,name',array('display'=>'true'));
         $this->pagedata['lists'] = $lists;
         $view = 'wap/pos/posbrand.html';
         echo $this->fetch($view);

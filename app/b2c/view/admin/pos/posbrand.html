@@ -11,6 +11,10 @@
             <tr><th><em class="red">*</em><{t}>pos机名称：<{/t}></th>
                 <td><{input type="text" name="name" size="20" vtype="required" value=$info.name }></td>
             </tr>
+            <tr class="">
+                <th><{t}>是否启用：<{/t}></th>
+                <td><input type="checkbox" name="display" id="display" <{if $info.display=='true'}> checked="true" <{/if}>><label for="display">是否启用</label></td>
+            </tr>
             <tr>
                 <th><em class="red">*</em><{t}>是否含有子品牌：<{/t}></th>
                 <td>
