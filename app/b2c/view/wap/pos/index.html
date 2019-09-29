@@ -10,25 +10,27 @@
 </div>
 <div class="" style="float: left;margin-left: 20px;margin-top: 35px;">
 	<div>
-		<input type="radio" name="time-scope" value="benzhou"  id="benzhou">
-		<label for="benzhou">本周</label>
-		<input type="radio" name="time-scope" value="bennian" id="bennian" style="margin-left: 20px;">
-		<label for="bennian">本年</label>
-	</div>
-	<div>
-		<input type="radio" name="time-scope" value="benyue" id="benyue">
-		<label for="benyue">本月</label>
-		<input type="radio" name="time-scope" value="qunian" id="qunian" style="margin-left: 20px;">
+		<input type="radio" name="time-scope" value="qunian" id="qunian">
 		<label for="qunian">去年</label>
+		<input type="radio" name="time-scope" value="bennian" id="bennian" class="input-left">
+		<label for="bennian">本年</label>
 	</div>
 	<div>
 		<input type="radio" name="time-scope" value="shangyue" id="shangyue">
 		<label for="shangyue">上月</label>
-		<input type="radio" name="time-scope" value="zuotian" id="zuotian" style="margin-left: 20px;">
-		<label for="zuotian">昨天</label>
+		<input type="radio" name="time-scope" value="benyue" id="benyue" class="input-left">
+		<label for="benyue">本月</label>
 	</div>
 	<div>
-		<input type="radio" name="time-scope" value="jintian" id="jintian" style="margin-left: 20px;">
+		<input type="radio" name="time-scope" value="shangzhou"  id="shangzhou">
+		<label for="shangzhou">上周</label>
+		<input type="radio" name="time-scope" value="benzhou"  id="benzhou" class="input-left">
+		<label for="benzhou">本周</label>
+	</div>
+	<div>
+		<input type="radio" name="time-scope" value="zuotian" id="zuotian">
+		<label for="zuotian">昨天</label>
+		<input type="radio" name="time-scope" value="jintian" id="jintian" class="input-left">
 		<label for="jintian">今天</label>
 	</div>
 </div>
@@ -156,9 +158,6 @@
 			}
 			filterLogs($('.poslog'),t,mccflag);
 		});
-
-		//ajax获取日志
-		filterLogs($('.poslog'),t);
 	});
 	function timeChange(){
 		t.num=1
@@ -216,6 +215,7 @@
 
 	//获取记录
 	function filterLogs(e,t,mccflag){
+		console.log(t);
 		var p = 'page=';
 
 		//参数-所属人
@@ -304,8 +304,11 @@
 		var dateTo = '';
 		if (timeScop=='benzhou') {
 			dateFrom = getWeekStartDate();
+			dateTo = getWeekEndDate();
+			console.log(dateFrom);
 		}else if (timeScop=='benyue'){
 			dateFrom = getMonthStartDate();
+			dateTo = getMonthEndDate();
 		}else if (timeScop=='shangyue') {
 			dateFrom = getLastMonthStartDate();
 			dateTo = getLastMonthEndDate();
@@ -319,6 +322,9 @@
 			dateTo = getYesterdayStartDate();
 		}else if (timeScop=='jintian') {
 			dateFrom = getTodayStartDate();
+		}else if (timeScop == 'shangzhou'){
+			dateFrom = getLastWeekStartDate();
+			dateTo = getLastWeekEndDate();
 		}
 		jq('input[name=timefrom]').val(dateFrom);
 		jq('input[name=timeto]').val(dateTo);

@@ -37,6 +37,7 @@ function getTodayStartDate() {
     var todayStartDate = new Date(nowYear, nowMonth, nowDay);
     return formatDate(todayStartDate);
 }
+
 //获得昨天的开始日期
 function getYesterdayStartDate() {
     var yesterdayStartDate = new Date(nowYear, nowMonth, nowDay - 1);
@@ -47,26 +48,48 @@ function getYesterdayEndDate() {
     var yesterdayEndDate = new Date(nowYear, nowMonth, nowDay);
     return formatDate(yesterdayEndDate);
 }
+
+/*********/
 //获得本周的开始日期
 function getWeekStartDate() {
-    var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek +1);
+    var nowDayOfWeekNew = nowDayOfWeek-1;
+    if (nowDayOfWeek ==0) {
+        nowDayOfWeekNew = 6;
+    }
+    var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeekNew);
     return formatDate(weekStartDate);
 }
 //获得本周的结束日期
 function getWeekEndDate() {
-    var weekEndDate = new Date(nowYear, nowMonth, nowDay + (6 - nowDayOfWeek));
+    var nowDayOfWeekNew = nowDayOfWeek;
+    if (nowDayOfWeek ==0) {
+        nowDayOfWeekNew = 7;
+    }
+    var weekEndDate = new Date(nowYear, nowMonth, nowDay + (7 - nowDayOfWeekNew));
     return formatDate(weekEndDate);
 }
+
+/*********/
 //获得上周的开始日期
 function getLastWeekStartDate() {
-    var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek - 7);
+    var nowDayOfWeekNew = nowDayOfWeek;
+    if (nowDayOfWeek ==0) {
+        nowDayOfWeekNew = 6;
+    }
+    var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeekNew - 7);
     return formatDate(weekStartDate);
 }
 //获得上周的结束日期
 function getLastWeekEndDate() {
-    var weekEndDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek - 1);
+    var nowDayOfWeekNew = nowDayOfWeek;
+    if (nowDayOfWeek ==0) {
+        nowDayOfWeekNew = 6;
+    }
+    var weekEndDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeekNew - 1);
     return formatDate(weekEndDate);
 }
+
+/*********/
 //获得本月的开始日期
 function getMonthStartDate() {
     var monthStartDate = new Date(nowYear, nowMonth, 1);
@@ -77,6 +100,8 @@ function getMonthEndDate() {
     var monthEndDate = new Date(nowYear, nowMonth, getMonthDays(nowMonth));
     return formatDate(monthEndDate);
 }
+
+/*********/
 //获得上月开始时间
 function getLastMonthStartDate() {
     var lastMonthStartDate = new Date(nowYear, lastMonth, 1);
@@ -87,11 +112,15 @@ function getLastMonthEndDate() {
     var lastMonthEndDate = new Date(nowYear, lastMonth, getMonthDays(lastMonth));
     return formatDate(lastMonthEndDate);
 }
+
+/*********/
 //获得本年开始时间
 function getYearStartDate() {
     var yearStartDate = new Date(nowYear, 0);
     return formatDate(yearStartDate);
 }
+
+/*********/
 //获得去年开始时间
 function getLastYearStartDate() {
     var lastYearStartDate = new Date(nowYear-1, 0);

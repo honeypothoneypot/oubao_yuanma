@@ -104,9 +104,9 @@ class b2c_mdl_poslog extends dbeav_model{
 		if ($filter['mcc']) {
 			$sql.=" AND a.mcc in (4511,4722,7011)";
 		}
-		$sql.=" GROUP BY d.posbrand_id ORDER BY count DESC";
+		$sql.=" GROUP BY d.posbrand_id";
 		//获取所有品牌：
-		$brands = app::get('b2c')->model('posbrand')->getList('posbrand_id,name',array('display'=>'true'));
+		// $brands = app::get('b2c')->model('posbrand')->getList('posbrand_id,name');
 
 		$countsSum = 0;
 		$moneySum = 0;
@@ -117,29 +117,12 @@ class b2c_mdl_poslog extends dbeav_model{
 		$tongji = '';
 		$a = 0;
 		if ($counts) {
-			foreach ($brands as $key => $brand) {
-				foreach ($counts as $ke => $value) {
-					if ($value['posbrand_id'] == $brand['posbrand_id']) {
-						$al[] = $value['posbrand_id'];
-
-						$countsSum += $value['count'];
-						$moneySum += $value['moneySum'];
-						$jiesuan_moneySum += $value['jiesuan_moneySum'];
-						$lixiSum += $value['lixiSum'];
-						$tongji[$ke] = $value['name'].'-'.$value['count'].'次';
-					}
-				}
-				if (!in_array($brand['posbrand_id'], $al)) {
-					$arrPu['count'] = 0;
-					$arrPu['name'] = $brand['name'];
-					$arrPu['count'] = 0;
-					$tongji1[] = $brand['name'].'-'.'0次';
-					array_push($counts, $arrPu);
-				}
+			foreach ($counts as $ke => $value) {
+				$countsSum += $value['count'];
+				$moneySum += $value['moneySum'];
+				$jiesuan_moneySum += $value['jiesuan_moneySum'];
+				$lixiSum += $value['lixiSum'];
 			}
-			ksort($tongji);
-			$tongji = array_merge($tongji, $tongji1);
-			$tongji = implode('<br/>', $tongji);
 		}
 		$rets['countsSum']=$countsSum;
 		$rets['moneySum']=$moneySum;

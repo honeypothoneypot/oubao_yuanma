@@ -19,7 +19,6 @@
 		<th>卡号</th>
 		<th>金额</th>
 		<th>结算金额</th>
-		<th>mcc</th>
 		<th>刷卡方式</th>
 		<th>时间</th>
 	</tr>
@@ -30,7 +29,6 @@
 		</td>
 		<td><{$poslog.money|cur_odr}></td>
 		<td><{$poslog.jiesuan_money|cur_odr}></td>
-		<td><{$poslog.mcc}></td>
 		<td><{$poslog.brandname}>-<{$poslog.sub_name}>-<{$poslog.shuaka_type}></td>
 		<td><{$poslog.create_time|cdate:FDATE_STIME}></td>
 	</tr>
