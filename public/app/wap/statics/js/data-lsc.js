@@ -74,18 +74,18 @@ function getWeekEndDate() {
 function getLastWeekStartDate() {
     var nowDayOfWeekNew = nowDayOfWeek;
     if (nowDayOfWeek ==0) {
-        nowDayOfWeekNew = 6;
+        nowDayOfWeekNew = 7;
     }
-    var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeekNew - 7);
+    var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeekNew - 6);
     return formatDate(weekStartDate);
 }
 //获得上周的结束日期
 function getLastWeekEndDate() {
     var nowDayOfWeekNew = nowDayOfWeek;
     if (nowDayOfWeek ==0) {
-        nowDayOfWeekNew = 6;
+        nowDayOfWeekNew = 7;
     }
-    var weekEndDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeekNew - 1);
+    var weekEndDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeekNew);
     return formatDate(weekEndDate);
 }
 

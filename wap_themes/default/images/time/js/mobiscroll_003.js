@@ -1,6 +1,6 @@
 <!--  陈廷峰增加中文资源包 (ceo@vmeitime.com)  -->
-(function ($) {
-    $.mobiscroll.i18n.zh = $.extend($.mobiscroll.i18n.zh, {
+(function (jq) {
+    jq.mobiscroll.i18n.zh = jq.extend(jq.mobiscroll.i18n.zh, {
         dateFormat: 'yyyy-mm-dd',
         dateOrder: 'yymmdd',
         dayNames: ['周日', '周一;', '周二;', '周三', '周四', '周五', '周六'],

@@ -1,5 +1,5 @@
-(function ($) {
-    $.mobiscroll.i18n.zh = $.extend($.mobiscroll.i18n.zh, {
+(function (jq) {
+    jq.mobiscroll.i18n.zh = jq.extend(jq.mobiscroll.i18n.zh, {
         setText: '确定',
         cancelText: '取消'
     });

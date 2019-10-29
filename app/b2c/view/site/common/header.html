@@ -3,8 +3,6 @@
 <{if $DESCRIPTION}><meta name="description" content="<{$DESCRIPTION}>" /><{/if}>
 <{if $NOFOLLOW eq 'true'}><meta name="nofollow" content="nofollow" /><{/if}>
 <{if $NOINDEX eq 'true'}><meta name="noindex" content="noindex" /><{/if}>
-<link rel="icon" href="<{$env.app.favicon}>/favicon.ico" type="image/x-icon" />
-<link rel="shortcut icon" href="<{$env.app.favicon}>/favicon.ico" type="image/x-icon" />
 <{if !is_array($headers)}><{$headers|replace:"\n":' '}><{/if}>
 <{if defined("DEBUG_CSS") && DEBUG_CSS}>
 <{css src="base.css" app="b2c"}>

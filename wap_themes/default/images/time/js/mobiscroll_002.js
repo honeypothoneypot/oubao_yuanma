@@ -7,7 +7,7 @@
  * Licensed under the MIT license.
  *
  */
-(function ($) {
+(function (jq) {
 
     function Scroller(elem, settings) {
         var m,
@@ -22,9 +22,9 @@
             anim,
             debounce,
             that = this,
-            ms = $.mobiscroll,
+            ms = jq.mobiscroll,
             e = elem,
-            elm = $(e),
+            elm = jq(e),
             theme,
             lang,
             s = extend({}, defaults),
@@ -38,8 +38,8 @@
         // Private functions
 
         function isReadOnly(wh) {
-            if ($.isArray(s.readonly)) {
-                var i = $('.dwwl', dw).index(wh);
+            if (jq.isArray(s.readonly)) {
+                var i = jq('.dwwl', dw).index(wh);
                 return s.readonly[i];
             }
             return s.readonly;
@@ -62,9 +62,9 @@
         }
 
         function setGlobals(t) {
-            min = $('.dw-li', t).index($('.dw-v', t).eq(0));
-            max = $('.dw-li', t).index($('.dw-v', t).eq(-1));
-            index = $('.dw-ul', dw).index(t);
+            min = jq('.dw-li', t).index(jq('.dw-v', t).eq(0));
+            max = jq('.dw-li', t).index(jq('.dw-v', t).eq(-1));
+            index = jq('.dw-ul', dw).index(t);
             h = hi;
             inst = that;
         }
@@ -85,10 +85,10 @@
             if (event('validate', [dw, index, time]) !== false) {
 
                 // Set scrollers to position
-                $('.dw-ul', dw).each(function (i) {
-                    var t = $(this),
-                        cell = $('.dw-li[data-val="' + that.temp[i] + '"]', t),
-                        cells = $('.dw-li', t),
+                jq('.dw-ul', dw).each(function (i) {
+                    var t = jq(this),
+                        cell = jq('.dw-li[data-val="' + that.temp[i] + '"]', t),
+                        cells = jq('.dw-li', t),
                         v = cells.index(cell),
                         l = cells.length,
                         sc = i == index || index === undefined;
@@ -125,7 +125,7 @@
                         that.temp[i] = cell.attr('data-val');
 
                         // Add selected class to cell
-                        $('.dw-sel', t).removeClass('dw-sel');
+                        jq('.dw-sel', t).removeClass('dw-sel');
                         cell.addClass('dw-sel');
 
                         // Scroll to position
@@ -142,7 +142,7 @@
 
         function position(check) {
 
-            if (s.display == 'inline' || (ww === $(window).width() && rwh === $(window).height() && check)) {
+            if (s.display == 'inline' || (ww === jq(window).width() && rwh === jq(window).height() && check)) {
                 return;
             }
             
@@ -160,20 +160,20 @@
                 scroll,
                 totalw = 0,
                 minw = 0,
-                st = $(window).scrollTop(),
-                wr = $('.dwwr', dw),
-                d = $('.dw', dw),
+                st = jq(window).scrollTop(),
+                wr = jq('.dwwr', dw),
+                d = jq('.dw', dw),
                 css = {},
                 anchor = s.anchor === undefined ? elm : s.anchor;
             
-            ww = $(window).width();
-            rwh = $(window).height();
+            ww = jq(window).width();
+            rwh = jq(window).height();
             wh = window.innerHeight; // on iOS we need innerHeight
             wh = wh || rwh;
             
             if (/modal|bubble/.test(s.display)) {
-                $('.dwc', dw).each(function () {
-                    w = $(this).outerWidth(true);
+                jq('.dwc', dw).each(function () {
+                    w = jq(this).outerWidth(true);
                     totalw += w;
                     minw = (w > minw) ? w : minw;
                 });
@@ -189,7 +189,7 @@
                 t = st + (wh - mh) / 2;
             } else if (s.display == 'bubble') {
                 scroll = true;
-                arr = $('.dw-arrw-i', dw);
+                arr = jq('.dw-arrw-i', dw);
                 ap = anchor.offset();
                 at = ap.top;
                 al = ap.left;
@@ -217,7 +217,7 @@
                 arrl = al + aw / 2 - (l + (mw - arrw) / 2);
 
                 // Limit Arrow position to [0, pocw.width] intervall
-                $('.dw-arr', dw).css({ left: arrl > arrw ? arrw : arrl });
+                jq('.dw-arr', dw).css({ left: arrl > arrw ? arrw : arrl });
             } else {
                 css.width = '100%';
                 if (s.display == 'top') {
@@ -232,11 +232,11 @@
             d.css(css);
             
             // If top + modal height > doc height, increase doc height
-            $('.dw-persp', dw).height(0).height(t + mh > $(document).height() ? t + mh : $(document).height());
+            jq('.dw-persp', dw).height(0).height(t + mh > jq(document).height() ? t + mh : jq(document).height());
             
             // Scroll needed
             if (scroll && ((t + mh > st + wh) || (at > st + wh))) {
-                $(window).scrollTop(t + mh - wh);
+                jq(window).scrollTop(t + mh - wh);
             }
         }
         
@@ -256,7 +256,7 @@
         function event(name, args) {
             var ret;
             args.push(that);
-            $.each([theme.defaults, pres, settings], function (i, v) {
+            jq.each([theme.defaults, pres, settings], function (i, v) {
                 if (v[name]) { // Call preset event
                     ret = v[name].apply(e, args);
                 }
@@ -362,7 +362,7 @@
         * @param {Boolean} temp - If true, then only set the temporary value.(only scroll there but not set the value)
         */
         that.setValue = function (sc, fill, time, temp) {
-            if (!$.isArray(that.temp)) {
+            if (!jq.isArray(that.temp)) {
                 that.temp = s.parseValue(that.temp + '', that);
             }
             
@@ -414,7 +414,7 @@
             if (s.display == 'inline') {
                 that.setValue(false, manual);
             } else {
-                $('.dwv', dw).html(formatHeader(v));
+                jq('.dwv', dw).html(formatHeader(v));
             }
 
             if (manual) {
@@ -434,9 +434,9 @@
 
                 for (j in s.wheels) {
                     for (k in s.wheels[j]) {
-                        if ($.inArray(i, idx) > -1) {
+                        if (jq.inArray(i, idx) > -1) {
                             warr[i] = s.wheels[j][k];
-                            $('.dw-ul', dw).eq(i).html(generateWheelItems(i));
+                            jq('.dw-ul', dw).eq(i).html(generateWheelItems(i));
                             nr--;
                             if (!nr) {
                                 position();
@@ -538,7 +538,7 @@
                 html += '</tr></table></div></div>';
             }
             html += (s.display != 'inline' ? '<div class="dwbc' + (s.button3 ? ' dwbc-p' : '') + '"><span class="dwbw dwb-s"><span class="dwb">' + s.setText + '</span></span>' + (s.button3 ? '<span class="dwbw dwb-n"><span class="dwb">' + s.button3Text + '</span></span>' : '') + '<span class="dwbw dwb-c"><span class="dwb">' + s.cancelText + '</span></span></div></div>' : '<div class="dwcc"></div>') + '</div></div></div>';
-            dw = $(html);
+            dw = jq(html);
 
             scrollToPos();
             
@@ -566,19 +566,19 @@
             
             if (s.display != 'inline') {
                 // Init buttons
-                that.tap($('.dwb-s span', dw), function () {
+                that.tap(jq('.dwb-s span', dw), function () {
                     if (that.hide(false, 'set') !== false) {
                         that.setValue(false, true);
                         event('onSelect', [that.val]);
                     }
                 });
 
-                that.tap($('.dwb-c span', dw), function () {
+                that.tap(jq('.dwb-c span', dw), function () {
                     that.cancel();
                 });
 
                 if (s.button3) {
-                    that.tap($('.dwb-n span', dw), s.button3);
+                    that.tap(jq('.dwb-n span', dw), s.button3);
                 }
 
                 // prevent scrolling if not specified otherwise
@@ -591,15 +591,15 @@
                 }
 
                 // Disable inputs to prevent bleed through (Android bug)
-                $('input,select,button').each(function () {
-                    if (!$(this).prop('disabled')) {
-                        $(this).addClass('dwtd').prop('disabled', true);
+                jq('input,select,button').each(function () {
+                    if (!jq(this).prop('disabled')) {
+                        jq(this).addClass('dwtd').prop('disabled', true);
                     }
                 });
                 
                 // Set position
                 position();
-                $(window).bind('resize.dw', function () {
+                jq(window).bind('resize.dw', function () {
                     // Sometimes scrollTop is not correctly set, so we wait a little
                     clearTimeout(debounce);
                     debounce = setTimeout(function () {
@@ -614,7 +614,7 @@
                     e.preventDefault();
                     e = e.originalEvent;
                     var delta = e.wheelDelta ? (e.wheelDelta / 120) : (e.detail ? (-e.detail / 3) : 0),
-                        t = $('.dw-ul', this),
+                        t = jq('.dw-ul', this),
                         p = +t.data('pos'),
                         val = Math.round(p - delta);
                     setGlobals(t);
@@ -622,16 +622,16 @@
                 }
             }).delegate('.dwb, .dwwb', START_EVENT, function (e) {
                 // Active button
-                $(this).addClass('dwb-a');
+                jq(this).addClass('dwb-a');
             }).delegate('.dwwb', START_EVENT, function (e) {
                 e.stopPropagation();
                 e.preventDefault();
-                var w = $(this).closest('.dwwl');
+                var w = jq(this).closest('.dwwl');
                 if (testTouch(e) && !isReadOnly(w) && !w.hasClass('dwa')) {
                     click = true;
                     // + Button
                     var t = w.find('.dw-ul'),
-                        func = $(this).hasClass('dwwbp') ? plus : minus;
+                        func = jq(this).hasClass('dwwbp') ? plus : minus;
                     
                     setGlobals(t);
                     clearInterval(timer);
@@ -644,8 +644,8 @@
                 // Scroll start
                 if (testTouch(e) && !move && !isReadOnly(this) && !click) {
                     move = true;
-                    $(document).bind(MOVE_EVENT, onMove);
-                    target = $('.dw-ul', this);
+                    jq(document).bind(MOVE_EVENT, onMove);
+                    target = jq('.dw-ul', this);
                     scrollable = s.mode != 'clickpick';
                     pos = +target.data('pos');
                     setGlobals(target);
@@ -673,7 +673,7 @@
             }
 
             // Re-enable temporary disabled fields
-            $('.dwtd').prop('disabled', false).removeClass('dwtd');
+            jq('.dwtd').prop('disabled', false).removeClass('dwtd');
             elm.blur();
 
             // Hide wheels and overlay
@@ -691,7 +691,7 @@
                 visible = false;
                 pixels = {};
                 // Stop positioning on window resize
-                $(window).unbind('.dw');
+                jq(window).unbind('.dw');
             }
         };
 
@@ -815,7 +815,7 @@
     function calc(t, val, dir, anim, orig) {
         val = constrain(val, min, max);
 
-        var cell = $('.dw-li', t).eq(val),
+        var cell = jq('.dw-li', t).eq(val),
             o = orig === undefined ? val : orig,
             idx = index,
             time = anim ? (val == o ? 0.1 : Math.abs((val - o) * 0.1)) : 0;
@@ -863,7 +863,7 @@
         mod = document.createElement('modernizr').style,
         has3d = testProps(['perspectiveProperty', 'WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective']),
         prefix = testPrefix(),
-        extend = $.extend,
+        extend = jq.extend,
         tap,
         touch,
         START_EVENT = 'touchstart mousedown',
@@ -1026,17 +1026,17 @@
                     var inst = getInst(this);
                     if (inst) {
                         inst.hide();
-                        $(this).unbind('.dw');
+                        jq(this).unbind('.dw');
                         delete scrollers[this.id];
-                        if ($(this).is('input')) {
-                            this.readOnly = bool($(this).data('dwro'));
+                        if (jq(this).is('input')) {
+                            this.readOnly = bool(jq(this).data('dwro'));
                         }
                     }
                 });
             }
         };
 
-    $(document).bind(END_EVENT, function (e) {
+    jq(document).bind(END_EVENT, function (e) {
         if (move) {
             var time = new Date() - startTime,
                 val = constrain(pos + (start - stop) / h, min - 1, max + 1),
@@ -1059,7 +1059,7 @@
             
             if (!dist && !moved) { // this is a "tap"
                 var idx = Math.floor((stop - ttop) / h),
-                    li = $('.dw-li', target).eq(idx),
+                    li = jq('.dw-li', target).eq(idx),
                     hl = scrollable;
                 
                 if (inst.trigger('onValueTap', [li]) !== false) {
@@ -1083,7 +1083,7 @@
             move = false;
             target = null;
         
-            $(document).unbind(MOVE_EVENT, onMove);
+            jq(document).unbind(MOVE_EVENT, onMove);
         }
 
         if (click) {
@@ -1091,7 +1091,7 @@
             click = false;
         }
     
-        $('.dwb-a').removeClass('dwb-a');
+        jq('.dwb-a').removeClass('dwb-a');
                 
     }).bind('mouseover mouseup mousedown click', function (e) { // Prevent standard behaviour on body click
         if (tap) {
@@ -1101,12 +1101,12 @@
         }
     });
 
-    $.fn.mobiscroll = function (method) {
-        extend(this, $.mobiscroll.shorts);
+    jq.fn.mobiscroll = function (method) {
+        extend(this, jq.mobiscroll.shorts);
         return init(this, method, arguments);
     };
 
-    $.mobiscroll = $.mobiscroll || {
+    jq.mobiscroll = jq.mobiscroll || {
         /**
         * Set settings for all instances.
         * @param {Object} o - New default settings.
@@ -1125,7 +1125,7 @@
         i18n: {}
     };
 
-    $.scroller = $.scroller || $.mobiscroll;
-    $.fn.scroller = $.fn.scroller || $.fn.mobiscroll;
+    jq.scroller = jq.scroller || jq.mobiscroll;
+    jq.fn.scroller = jq.fn.scroller || jq.fn.mobiscroll;
 
 })(jQuery);

@@ -1,7 +1,7 @@
 /*jslint eqeq: true, plusplus: true, undef: true, sloppy: true, vars: true, forin: true */
-(function ($) {
+(function (jq) {
 
-    var ms = $.mobiscroll,
+    var ms = jq.mobiscroll,
         date = new Date(),
         defaults = {
             dateFormat: 'mm/dd/yy',
@@ -30,7 +30,7 @@
             separator: ' '
         },
         preset = function (inst) {
-            var that = $(this),
+            var that = jq(this),
                 html5def = {},
                 format;
             // Force format for html5 date inputs (experimental)
@@ -65,7 +65,7 @@
             }
 
             // Set year-month-day order
-            var s = $.extend({}, defaults, html5def, inst.settings),
+            var s = jq.extend({}, defaults, html5def, inst.settings),
                 offset = 0,
                 wheels = [],
                 ord = [],
@@ -94,14 +94,14 @@
             if (p.match(/date/i)) {
 
                 // Determine the order of year, month, day wheels
-                $.each(['y', 'm', 'd'], function (j, v) {
+                jq.each(['y', 'm', 'd'], function (j, v) {
                     i = dord.search(new RegExp(v, 'i'));
                     if (i > -1) {
                         ord.push({ o: i, v: v });
                     }
                 });
                 ord.sort(function (a, b) { return a.o > b.o ? 1 : -1; });
-                $.each(ord, function (i, v) {
+                jq.each(ord, function (i, v) {
                     o[v.v] = i;
                 });
 
@@ -137,7 +137,7 @@
 
                 // Determine the order of hours, minutes, seconds wheels
                 ord = [];
-                $.each(['h', 'i', 's', 'a'], function (i, v) {
+                jq.each(['h', 'i', 's', 'a'], function (i, v) {
                     i = tord.search(new RegExp(v, 'i'));
                     if (i > -1) {
                         ord.push({ o: i, v: v });
@@ -146,7 +146,7 @@
                 ord.sort(function (a, b) {
                     return a.o > b.o ? 1 : -1;
                 });
-                $.each(ord, function (i, v) {
+                jq.each(ord, function (i, v) {
                     o[v.v] = offset + i;
                 });
 
@@ -275,13 +275,13 @@
                         maxs = { y: maxd.getFullYear(), m: 11, d: 31, h: step(hampm ? 11 : 23, stepH), i: step(59, stepM), s: step(59, stepS), a: 1 },
                         minprop = true,
                         maxprop = true;
-                    $.each(['y', 'm', 'd', 'a', 'h', 'i', 's'], function (x, i) {
+                    jq.each(['y', 'm', 'd', 'a', 'h', 'i', 's'], function (x, i) {
                         if (o[i] !== undefined) {
                             var min = mins[i],
                                 max = maxs[i],
                                 maxdays = 31,
                                 val = get(temp, i),
-                                t = $('.dw-ul', dw).eq(o[i]),
+                                t = jq('.dw-ul', dw).eq(o[i]),
                                 y,
                                 m;
                             if (i == 'd') {
@@ -290,12 +290,12 @@
                                 maxdays = 32 - new Date(y, m, 32).getDate();
                                 max = maxdays;
                                 if (regen) {
-                                    $('.dw-li', t).each(function () {
-                                        var that = $(this),
+                                    jq('.dw-li', t).each(function () {
+                                        var that = jq(this),
                                             d = that.data('val'),
                                             w = new Date(y, m, d).getDay(),
                                             str = dord.replace(/[my]/gi, '').replace(/dd/, d < 10 ? '0' + d : d).replace(/d/, d);
-                                        $('.dw-i', that).html(str.match(/DD/) ? str.replace(/DD/, '<span class="dw-day">' + s.dayNames[w] + '</span>') : str.replace(/D/, '<span class="dw-day">' + s.dayNamesShort[w] + '</span>'));
+                                        jq('.dw-i', that).html(str.match(/DD/) ? str.replace(/DD/, '<span class="dw-day">' + s.dayNames[w] + '</span>') : str.replace(/D/, '<span class="dw-day">' + s.dayNamesShort[w] + '</span>'));
                                     });
                                 }
                             }
@@ -306,11 +306,11 @@
                                 max = maxd[f[i]] ? maxd[f[i]]() : f[i](maxd);
                             }
                             if (i != 'y') {
-                                var i1 = $('.dw-li', t).index($('.dw-li[data-val="' + min + '"]', t)),
-                                    i2 = $('.dw-li', t).index($('.dw-li[data-val="' + max + '"]', t));
-                                $('.dw-li', t).removeClass('dw-v').slice(i1, i2 + 1).addClass('dw-v');
+                                var i1 = jq('.dw-li', t).index(jq('.dw-li[data-val="' + min + '"]', t)),
+                                    i2 = jq('.dw-li', t).index(jq('.dw-li[data-val="' + max + '"]', t));
+                                jq('.dw-li', t).removeClass('dw-v').slice(i1, i2 + 1).addClass('dw-v');
                                 if (i == 'd') { // Hide days not in month
-                                    $('.dw-li', t).removeClass('dw-h').slice(maxdays).addClass('dw-h');
+                                    jq('.dw-li', t).removeClass('dw-h').slice(maxdays).addClass('dw-h');
                                 }
                             }
                             if (val < min) {
@@ -330,7 +330,7 @@
                                 var idx = [];
                                 // Disable exact dates
                                 if (s.invalid.dates) {
-                                    $.each(s.invalid.dates, function (i, v) {
+                                    jq.each(s.invalid.dates, function (i, v) {
                                         if (v.getFullYear() == y && v.getMonth() == m) {
                                             idx.push(v.getDate() - 1);
                                         }
@@ -340,7 +340,7 @@
                                 if (s.invalid.daysOfWeek) {
                                     var first = new Date(y, m, 1).getDay(),
                                         j;
-                                    $.each(s.invalid.daysOfWeek, function (i, v) {
+                                    jq.each(s.invalid.daysOfWeek, function (i, v) {
                                         for (j = v - first; j < maxdays; j += 7) {
                                             if (j >= 0) {
                                                 idx.push(j);
@@ -350,7 +350,7 @@
                                 }
                                 // Disable days of month
                                 if (s.invalid.daysOfMonth) {
-                                    $.each(s.invalid.daysOfMonth, function (i, v) {
+                                    jq.each(s.invalid.daysOfMonth, function (i, v) {
                                         v = (v + '').split('/');
                                         if (v[1]) {
                                             if (v[0] - 1 == m) {
@@ -361,8 +361,8 @@
                                         }
                                     });
                                 }
-                                $.each(idx, function (i, v) {
-                                    $('.dw-li', t).eq(v).removeClass('dw-v');
+                                jq.each(idx, function (i, v) {
+                                    jq('.dw-li', t).eq(v).removeClass('dw-v');
                                 });
                             }
 
@@ -378,7 +378,7 @@
                     * @return {Date}
                     */
                     getDate: function (temp) {
-                        var inst = $(this).mobiscroll('getInst');
+                        var inst = jq(this).mobiscroll('getInst');
                         if (inst) {
                             return inst.getDate(temp ? inst.temp : inst.values);
                         }
@@ -394,7 +394,7 @@
                             fill = false;
                         }
                         return this.each(function () {
-                            var inst = $(this).mobiscroll('getInst');
+                            var inst = jq(this).mobiscroll('getInst');
                             if (inst) {
                                 inst.setDate(d, fill, time, temp);
                             }
@@ -404,7 +404,7 @@
             };
         };
 
-    $.each(['date', 'time', 'datetime'], function (i, v) {
+    jq.each(['date', 'time', 'datetime'], function (i, v) {
         ms.presets[v] = preset;
         ms.presetShort(v);
     });
@@ -420,7 +420,7 @@
         if (!date) {
             return null;
         }
-        var s = $.extend({}, defaults, settings),
+        var s = jq.extend({}, defaults, settings),
             look = function (m) { // Check whether a format character is doubled
                 var n = 0;
                 while (i + 1 < format.length && format.charAt(i + 1) == m) {
@@ -522,7 +522,7 @@
 
         value = (typeof value == 'object' ? value.toString() : value + '');
 
-        var s = $.extend({}, defaults, settings),
+        var s = jq.extend({}, defaults, settings),
             shortYearCutoff = s.shortYearCutoff,
             year = def.getFullYear(),
             month = def.getMonth() + 1,

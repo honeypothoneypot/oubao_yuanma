@@ -38,8 +38,8 @@ class site_ctl_default extends site_controller{
             $this->pagedata['headers'][] = '<title>' . htmlspecialchars($title) . '</title>';
             $this->pagedata['headers'][] = '<meta name="keywords" content="' . htmlspecialchars($keywords). '" />';
             $this->pagedata['headers'][] = '<meta name="description" content="' . htmlspecialchars($description) . '" />';
-            $this->pagedata['headers'][] = "<link rel='icon' href='{$this->app->res_url}/favicon.ico' type='image/x-icon' />";
-            $this->pagedata['headers'][] = "<link rel='shortcut icon' href='{$this->app->res_url}/favicon.ico' type='image/x-icon' />";
+            // $this->pagedata['headers'][] = "<link rel='icon' href='{$this->app->res_url}/favicon.ico' type='image/x-icon' />";
+            // $this->pagedata['headers'][] = "<link rel='shortcut icon' href='{$this->app->res_url}/favicon.ico' type='image/x-icon' />";
             $GLOBALS['runtime']['path'][] = array('title'=>app::get('b2c')->_('首页'),'link'=>kernel::base_url(1));
             $this->set_tmpl('index');
             $this->page('index.html');
