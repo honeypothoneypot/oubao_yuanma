@@ -24,6 +24,7 @@ class b2c_mdl_postype extends dbeav_model{
             'bank_app'=>'银行app扫码',
             'yun_pay'=>'银联云闪付',
             'hongshan'=>'红闪封顶',
+            'long_pay'=>'龙支付'
         );
         return $postype;
     }

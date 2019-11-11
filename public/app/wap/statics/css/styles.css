@@ -574,3 +574,9 @@ header { background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop
 .coupon-widget .coupons-list-type2 .cp-item { margin-bottom: 7px; height: 4rem; width: 100%; color: #fff; background: url(../images/coupon_bg.png) no-repeat center; background-size: 100%; background-origin: content-box; }
 .coupon-widget .coupons-list-type2 .act { background: url(../images/coupon_bg_dis.png) no-repeat center; background-size: 100%; background-origin: content-box; }
 .coupon-widget .coupons-list-type2 .act .cp-btn { color: #bbb; }
+.pos-main .noactive{
+	display: none;
+}
+.pos-main .active{
+	display: block;
+}

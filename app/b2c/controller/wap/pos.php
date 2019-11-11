@@ -31,12 +31,18 @@ class b2c_ctl_wap_pos extends wap_frontpage{
 
     public function index(){
         //base_component_request
-        $request_params = $this->_request->get_params();
-        $this->pagedata['name'] = $request_params[0];
-        $this->pagedata['pos_type'] = $request_params[1];
-        $this->pagedata['bank'] = $request_params[2];
-        $this->pagedata['mcc'] = $request_params[3];
-        $this->pagedata['time'] = time();
+        //$request_params = $this->_request->get_params();
+        //获取信用卡列表
+        $mdlCard = $this->app->model('poscard');
+        $cardLists = $mdlCard->getList('card_id,name,belong_to,card_no,memo',array('is_enabled'=>'1'));
+        $cardLists = utils::array_group_by($cardLists,'belong_to');
+        $this->pagedata['cardLists'] = $cardLists;
+
+        //获取pos品牌
+        $mdlBrand = $this->app->model('posbrand');
+        $posBrandAndTypeLists = $mdlBrand->getBrandAndType();
+        $posBrandAndTypeLists = utils::array_group_by($posBrandAndTypeLists,'posbrand_id');
+        $this->pagedata['posBrandLists'] = $posBrandAndTypeLists;
         $this->page('wap/pos/index.html');
     }
     public function save(){

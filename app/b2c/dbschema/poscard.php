@@ -75,6 +75,19 @@ $db['poscard'] = array (
 			'label' => app::get('b2c')->_('修改时间'),
 			'comment' => app::get('b2c')->_('修改时间'),
 		),
+		'is_enabled'=> array(
+			'type' => array (
+				0 => app::get('b2c')->_('否'),
+				1 => app::get('b2c')->_('是'),
+			),
+			'default' => '1',
+			'in_list' => true,
+			'default_in_list' => true,
+			'width' => '100',
+			'order' => 18,
+			'label' => app::get('b2c')->_('是否可用1'),
+			'comment' => app::get('b2c')->_('是否可用'),
+		),
 	),
 	'index' => array (
 		'ind_name' => array (

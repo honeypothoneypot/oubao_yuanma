@@ -57,19 +57,38 @@
 		<div class="menu">
 			刷卡机品牌：
 			<ul class="ajax-posbrand">
+				<{foreach from=$posBrandLists item=item}>
+					<li>
+						<input type="radio" name="posbrand_id" value="<{$item.0.posbrand_id}>" id="posbrand<{$item.0.posbrand_id}>"><label for="posbrand<{$item.0.posbrand_id}>"><{$item.0.name}></label>
+					</li>
+				<{/foreach}>
 			</ul>
 		</div>
 		<div class="clean-both"></div>
 		<div class="menu">
 			刷卡方式：
-			<ul class="ajax-postype">
-			</ul>
+				<{foreach from=$posBrandLists key=belong_to item=posBrandList}>
+				<ul class="ajax-postype noactive posBrandList-<{$belong_to}>">
+					<{foreach from=$posBrandList item=item}>
+						<li>
+							<input type="radio" name="postype_id" value="<{$item.postype_id}>" id="postype<{$item.postype_id}>" data-feilv="<{$item.feilv}>" data-fengding="<{$item.fengding}>"><label for="postype<{$item.postype_id}>"><{$item.sub_name}>-<{$item.shuaka_type}>-<{if $item.fengding>0}><{$item.fengding}><{else}><{$item.feilv}><{/if}></label>
+						</li>
+					<{/foreach}>
+				</ul>
+				<{/foreach}>
 		</div>
 		<div class="clean-both"></div>
 		<div class="menu">
 			银行卡：
-			<ul class="ajax-poscard">
+			<{foreach from=$cardLists key=belong_to item=cardList}>
+			<ul class="ajax-poscard noactive card-<{$belong_to}>">
+				<{foreach from=$cardList item=item}>
+				<li>
+					<input type="radio" name="card_id" value="<{$item.card_id}>" id="poscard<{$item.card_id}>" ><label for="poscard<{$item.card_id}>"><{$item.name}>-<{$item.card_no}>-<{$item.memo}></label>
+				</li>
+				<{/foreach}>
 			</ul>
+			<{/foreach}>
 		</div>
 		<div class="clean-both"></div>
 		<div class="pos-input">
@@ -92,9 +111,6 @@
 				</tr>
 			</table>
 		</div>
-		<div style="margin-top: 5px;margin-left: 10px;">
-			<input type="checkbox" name="lvyou-mcc" id="lvyou-mcc"><label for="lvyou-mcc">旅游白返现MCC-检索</label>
-		</div>
 		<div class="btn-bar" style="margin-top: 30px;">
 			<button type="button" class="btn orange" id="tijiao" rel="_request">提交</button>
 		</div>
@@ -115,25 +131,18 @@
 	t.num=1;
 	filterLogs($('.poslog'),t);
 	jq(function(){
-
 		//所属人
 		var belong_to = jq('input[name=belong_to]:checked').val();
 		if (belong_to != 0) {
 			getPosCard(belong_to);
 		}
-		//ajax获取刷卡机品牌
-		var urlPosBrand = '<{link app=b2c ctl=wap_pos act=ajaxGetPosBrand}>';
-		jq.post(urlPosBrand, {}, function(re) {
-			jq('.ajax-posbrand').html(re);
-		});
-		//根据品牌ajax获取刷卡类型
+		//获取刷卡方式
 		jq(document).on('change','input[name=posbrand_id]', function(event) {
-			var posbrand_id = jq(this).val();
-			//ajax获取刷卡方式
-			var urlPosType = '<{link app=b2c ctl=wap_pos act=ajaxGetPosType}>';
-			jq.post(urlPosType,{posbrand_id:posbrand_id},function(re){
-				jq('.ajax-postype').html(re);
-			});
+			//清空选中的
+			$('input[name=postype_id]:checked').prop("checked",false);
+			//获取刷卡方式
+			var belong_to = jq(this).val();
+			getPosBrandList(belong_to);
 			//检索按钮是否选中,获取是否选中
 			var isChecked = $('input[name=jiansuo]').is(":checked");
 			if (isChecked) {
@@ -142,7 +151,7 @@
 			}
 		}).on('change', 'input[name=belong_to]', function(event) {//ajax获取信用卡列表
 			//清空选中的卡id
-			$('input[name=card_id]:checked').val('');
+			$('input[name=card_id]:checked').prop("checked",false);
 			var belong_to = jq(this).val();
 			getPosCard(belong_to);
 			filterLogs($('.poslog'),t);
@@ -165,10 +174,13 @@
 	}
 	//获取信用卡列表
 	function getPosCard(belong_to){
-		var url = '<{link app=b2c ctl=wap_pos act=ajaxGetPosCard}>';
-		jq.post(url,{belong_to:belong_to},function(re){
-			jq('.ajax-poscard').html(re);
-		});
+		jq(".ajax-poscard").removeClass('active');
+		jq(".card-"+belong_to).addClass('active');
+	}
+	//获取刷卡方式
+	function getPosBrandList(belong_to){
+		jq(".ajax-postype").removeClass('active');
+		jq(".posBrandList-"+belong_to).addClass('active');
 	}
 	//ajax提交表单
 	jq('#tijiao').on('click', function(event) {
@@ -337,15 +349,4 @@
 		filterLogs($('.poslog'),t);
 	});
 
-	//旅游白返现mcc检索
-	jq(document).on('change', 'input[name=lvyou-mcc]', function(event) {
-		event.preventDefault();
-		var objCard = jq('input[name=card_id]:checked').next().text();
-		if (objCard.indexOf("旅游白") != -1 ) {
-			var mccflag = 1;
-			//获取日志
-			t.num=1;
-			filterLogs($('.poslog'),t,mccflag);
-		}
-	});
 </script>
