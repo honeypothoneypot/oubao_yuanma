@@ -1,18 +1,20 @@
 <{foreach from=$rowsets item=rowset}>
     <div class="belong">
         <ul>
-            <li>
+            <li class="belongSon">
                 <span>所属人</span>
                 <span>银行</span>
                 <span>卡号</span>
+                <span>还款日</span>
                 <span>可用额度</span>
                 <span style="color:#2F4F4F ">今日已刷</span>
             </li>
             <{foreach from=$rowset item=item}>
-                <li data-cardId="<{$item.card_id}>">
+                <li data-cardId="<{$item.card_id}>" class="belongSon">
                     <span><{$item.belong_to}></span>
                     <span><{$item.name}></span>
                     <span><{$item.card_no}>-<{$item.memo}></span>
+                    <span><{$item.huankuan_date}>日</span>
                     <span><{$item.usable_edu}></span>
                     <span style="color:#CD0000 "><{$item.count}></span>
                 </li>
