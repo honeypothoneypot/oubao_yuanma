@@ -34,7 +34,7 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         //$request_params = $this->_request->get_params();
         //获取信用卡列表
         $mdlCard = $this->app->model('poscard');
-        $cardLists = $mdlCard->getList('card_id,name,belong_to,card_no,memo',array('is_enabled'=>'1'));
+        $cardLists = $mdlCard->getList('card_id,name,belong_to,card_no,memo,share_flag',array('is_enabled'=>'1'));
         $cardLists = utils::array_group_by($cardLists,'belong_to');
         $this->pagedata['cardLists'] = $cardLists;
 
@@ -63,10 +63,20 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $data['create_time'] = time();
         // $url = $this->gen_url(array('app'=>'b2c','ctl'=>'wap_pos','act'=>'index','arg0'=>$_POST['name'],'arg1'=>$_POST['pos_type'],'arg2'=>$_POST['bank'],'arg3'=>$_POST['mcc']));
         $poslog = $this->app->model('poslog');
+        $db = $this->app->model('poscard')->db;
+        $db->beginTransaction();
         try {
-            $poslog->save($data);
+            $ret1 = $poslog->save($data);
+            $ret2 = $this->app->model('poscard')->upEdu($_POST['share_flag'],$data['money']*-1);
+            if ($ret1 && $ret2) {
+                $db->commit();
+            }else{
+                $db->rollback();
+                echo  json_encode(array('success'=>false,'msg'=>'提交失败1'));exit;
+            }
         } catch (Exception $e) {
-            echo  json_encode(array('success'=>false,'msg'=>'提交失败'));exit;
+            $db->rollback();
+            echo  json_encode(array('success'=>false,'msg'=>'提交失败2'));exit;
         }
         echo  json_encode(array('success'=>true,'msg'=>'提交成功'));exit;
     }

@@ -76,4 +76,13 @@ class b2c_ctl_admin_poscard extends desktop_controller{
         $this->pagedata['memo'] = $info['memo'];
         $this->display('admin/pos/postypeadd.html');
     }
+    public function setShare(){
+        $sql = "SELECT belong_to,name,card_no FROM sdb_b2c_poscard where 1 GROUP BY belong_to,name";
+        $rowsetList = app::get('b2c')->model('poscard')->db->select($sql);
+        foreach ($rowsetList as $key => $value) {
+            $upSql = "UPDATE sdb_b2c_poscard set share_flag='{$value['card_no']}' where belong_to='{$value['belong_to']}' and name='{$value['name']}' ";
+            app::get('b2c')->model('poscard')->db->exec($upSql);
+        }
+        echo "成功";
+    }
 }

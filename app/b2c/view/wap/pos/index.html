@@ -84,7 +84,7 @@
 			<ul class="ajax-poscard noactive card-<{$belong_to}>">
 				<{foreach from=$cardList item=item}>
 				<li>
-					<input type="radio" name="card_id" value="<{$item.card_id}>" id="poscard<{$item.card_id}>" ><label for="poscard<{$item.card_id}>"><{$item.name}>-<{$item.card_no}>-<{$item.memo}></label>
+					<input type="radio" name="card_id" data-share_flag="<{$item.share_flag}>" value="<{$item.card_id}>" id="poscard<{$item.card_id}>" ><label for="poscard<{$item.card_id}>"><{$item.name}>-<{$item.card_no}>-<{$item.memo}></label>
 				</li>
 				<{/foreach}>
 			</ul>
@@ -189,9 +189,11 @@
 		var feilv = jq('input[name=postype_id]:checked').data('feilv');
 		//获得已选中刷卡方式的封顶
 		var fengding = jq('input[name=postype_id]:checked').data('fengding');
+		//共享额度标识
+		var share_flag = jq('input[name=card_id]:checked').data('share_flag');
 		jq(this).attr("disabled","true");
 		var url = '<{link app=b2c ctl=wap_pos act=save}>';
-		jq.post(url, jq('.form-log').serialize()+'&feilv='+feilv+'&fengding='+fengding, function(re) {
+		jq.post(url, jq('.form-log').serialize()+'&feilv='+feilv+'&fengding='+fengding+'&share_flag='+share_flag, function(re) {
 			re =  JSON.parse(re);
 			alert(re.msg);
 			if (re.success) {

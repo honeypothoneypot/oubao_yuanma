@@ -1,0 +1,26 @@
+<style>
+.belong{
+    float: left;
+    margin-right: 20px;
+    font-size: 14px;
+}
+.belong span{
+    text-align: center;
+    display: inline-block;
+    width: 120px;
+}
+</style>
+<div class="pos-main">
+</div>
+<script type="text/javascript">
+//获取信息
+
+function getLog(){
+    var url = 'index.php?app=b2c&ctl=admin_everyday&act=ajaxGetRemind';
+    jq.post(url, function(res) {
+        jq('.pos-main').html(res);
+    });
+}
+getLog();
+// setInterval('getLog()',5000);
+</script>
