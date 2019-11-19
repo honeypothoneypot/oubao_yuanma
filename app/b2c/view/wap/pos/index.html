@@ -1,4 +1,9 @@
-<div class="content" style="margin-top: 45px;float: left;">
+<{css src="pos.css" app="b2c"}>
+<div class="remind-main">
+	
+</div>
+
+<div class="content" style="float: left;margin-top: 10px;">
 	<div class="demos">
 		<label for="appDate">开始日期</label>
 		<input value="" class="content-input" readonly="readonly" name="timefrom" id="appDate" type="text" onchange="timeChange();">
@@ -8,7 +13,7 @@
 		<input value="" class="content-input" readonly="readonly" name="timeto" id="appDate2" type="text" onchange="timeChange();">
 	</div>
 </div>
-<div class="" style="float: left;margin-left: 20px;margin-top: 35px;">
+<div class="" style="float: left;margin-left: 20px;margin-top: 10px;">
 	<div>
 		<input type="radio" name="time-scope" value="qunian" id="qunian">
 		<label for="qunian">去年</label>
@@ -36,7 +41,7 @@
 </div>
 <div style="clear: both;"></div>
 <div class="pos-main">
-	<form action="<{link app=b2c ctl=wap_pos act=save}>" method="post" data-type="ajax" class="form-log">
+	<form action="#" method="post" data-type="ajax" class="form-log">
 		<div class="menu1" style="padding-top: 20px;padding-left: 20px;">
 			<ul>
 				<li>
@@ -84,7 +89,7 @@
 			<ul class="ajax-poscard noactive card-<{$belong_to}>">
 				<{foreach from=$cardList item=item}>
 				<li>
-					<input type="radio" name="card_id" data-share_flag="<{$item.share_flag}>" value="<{$item.card_id}>" id="poscard<{$item.card_id}>" ><label for="poscard<{$item.card_id}>"><{$item.name}>-<{$item.card_no}>-<{$item.memo}></label>
+					<input type="radio" name="card_id" data-share_flag=\'<{$item.share_flag}>\' value="<{$item.card_id}>" id="poscard<{$item.card_id}>" ><label for="poscard<{$item.card_id}>"><{$item.name}>-<{$item.card_no}>-<{$item.memo}></label>
 				</li>
 				<{/foreach}>
 			</ul>
@@ -112,7 +117,7 @@
 			</table>
 		</div>
 		<div class="btn-bar" style="margin-top: 30px;">
-			<button type="button" class="btn orange" id="tijiao" rel="_request">提交</button>
+			<button type="button" class="btn orange" id="tijiao">提交</button>
 		</div>
 	</form>
 	<div>
@@ -139,7 +144,7 @@
 		//获取刷卡方式
 		jq(document).on('change','input[name=posbrand_id]', function(event) {
 			//清空选中的
-			$('input[name=postype_id]:checked').prop("checked",false);
+			jq('input[name=postype_id]:checked').prop("checked",false);
 			//获取刷卡方式
 			var belong_to = jq(this).val();
 			getPosBrandList(belong_to);
@@ -151,7 +156,7 @@
 			}
 		}).on('change', 'input[name=belong_to]', function(event) {//ajax获取信用卡列表
 			//清空选中的卡id
-			$('input[name=card_id]:checked').prop("checked",false);
+			jq('input[name=card_id]:checked').prop("checked",false);
 			var belong_to = jq(this).val();
 			getPosCard(belong_to);
 			filterLogs($('.poslog'),t);
@@ -191,6 +196,7 @@
 		var fengding = jq('input[name=postype_id]:checked').data('fengding');
 		//共享额度标识
 		var share_flag = jq('input[name=card_id]:checked').data('share_flag');
+		share_flag = share_flag.replace(/[\'\"\\\/\b\f\n\r\t]/g,'');// 去掉转义字符
 		jq(this).attr("disabled","true");
 		var url = '<{link app=b2c ctl=wap_pos act=save}>';
 		jq.post(url, jq('.form-log').serialize()+'&feilv='+feilv+'&fengding='+fengding+'&share_flag='+share_flag, function(re) {
@@ -350,5 +356,13 @@
 		t.num=1;
 		filterLogs($('.poslog'),t);
 	});
-
+//提醒
+function getRemind(){
+    var url = '<{link app=b2c ctl=wap_pos act=ajaxGetRemind}>';
+    jq.post(url, function(res) {
+        jq('.remind-main').html(res);
+    });
+}
+getRemind();
+// setInterval('getRemind()',7000);
 </script>

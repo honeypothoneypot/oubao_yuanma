@@ -5,20 +5,20 @@
  * @copyright  Copyright (c) 2005-2010 ShopEx Technologies Inc. (http://www.shopex.cn)
  * @license  http://ecos.shopex.cn/ ShopEx License
  */
- 
+
 class desktop_finder_builder_dorecycle extends desktop_finder_builder_prototype{
 
     function main(){
 
         $this->controller->begin();
-        
+
         $o = $this->app->model($this->object->table_name());
         $o->filter_use_like = true;
 
         $this->dbschema = $this->object->get_schema();
 
         $pkey = $this->dbschema['idColumn'];
-        
+
         $pkey_value = $_POST[$pkey];
         $filter = array($pkey=>$pkey_value);
         if( $_POST['isSelectedAll']=='_ALL_'){  //edit by 矫雷 （点此选择全部) 分开写的应该统一函数处理/@modify(修复高级筛选，全选后删除不了的错误@lujy)
@@ -47,7 +47,7 @@ class desktop_finder_builder_dorecycle extends desktop_finder_builder_prototype{
         }else{
             $this->controller->end(false,$o->recycle_msg?$o->recycle_msg:app::get('desktop')->_('删除失败！'));
         }
-        
+
     }
 
 }

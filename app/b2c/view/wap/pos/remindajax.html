@@ -1,0 +1,22 @@
+<{foreach from=$rowsets item=rowset}>
+<table class="table_remind">
+    <tr>
+        <th>所属人</th>
+        <th>银行</th>
+        <th>卡号</th>
+        <th>还款日</th>
+        <th>可用额度</th>
+        <th>今日已刷</th>
+    </tr>
+    <{foreach from=$rowset item=item}>
+        <tr>
+            <td><{$item.belong_to}></td>
+            <td><{$item.name}></td>
+            <td><{$item.card_no}>-<{$item.memo}></td>
+            <td><{$item.huankuan_date}>日</td>
+            <td><{$item.usable_edu}></td>
+            <td style="color:#CD0000"><{$item.count}></td>
+        </tr>
+    <{/foreach}>
+</table>
+<{/foreach}>

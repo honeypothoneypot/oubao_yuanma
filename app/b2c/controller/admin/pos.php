@@ -18,8 +18,23 @@ class b2c_ctl_admin_pos extends desktop_controller{
         $this->finder('b2c_mdl_poslog',$actions_base);
 	}
 
+    //获取公共数据
+    public function getPagedata(){
+        //获取pos品牌
+        $mdlBrand = $this->app->model('posbrand');
+        $posBrandAndTypeLists = $mdlBrand->getBrandAndType();
+        $posBrandAndTypeLists = utils::array_group_by($posBrandAndTypeLists,'posbrand_id');
+        $this->pagedata['posBrandLists'] = $posBrandAndTypeLists;
+
+        //获取信用卡列表
+        $mdlCard = $this->app->model('poscard');
+        $cardLists = $mdlCard->getList('card_id,name,belong_to,card_no,memo,share_flag',array('is_enabled'=>'1'));
+        $cardLists = utils::array_group_by($cardLists,'belong_to');
+        $this->pagedata['cardLists'] = $cardLists;
+    }
     public function logadd(){
         $this->pagedata['create_time'] = time();
+        $this->getPagedata();
         $this->display('admin/pos/logadd.html');
     }
     public function logedit($id){
@@ -28,6 +43,7 @@ class b2c_ctl_admin_pos extends desktop_controller{
         $info = $obj_pos->getLog($filter);
         $info = $info['lists'][0];
         $this->pagedata['info'] = $info;
+        $this->getPagedata();
         $this->display('admin/pos/logadd.html');
     }
     public function logsave(){
@@ -43,16 +59,19 @@ class b2c_ctl_admin_pos extends desktop_controller{
             $jiesuan = $data['money']*(1-$data['feilv']/100);
             $data['jiesuan_money'] = substr(sprintf("%.3f",$jiesuan),0,-1);
         }
-        $data['create_time'] = strtotime($data['from_time'].' '. implode(':', $temp));
+        if ($data['id']) {
+            $data['create_time'] = strtotime($data['from_time'].' '. implode(':', $temp));
+        }else{
+            $data['create_time'] = time();
+        }
         unset($data['_DTYPE_TIME'],$data['_DTIME_'],$data['from_time']);
-        $this->begin();
         $obj_pos = app::get('b2c')->model('poslog');
         try {
             $obj_pos->save($data);
         } catch (Exception $e) {
-            $this->end(false, app::get('b2c')->_('保存失败！'));
+            echo  json_encode(array('success'=>false,'msg'=>$e->getMessage()));exit;
         }
-        $this->end(true, app::get('b2c')->_('保存成功！'));
+        echo  json_encode(array('success'=>true,'msg'=>'提交成功'));exit;
     }
 
     //获取pos机品牌

@@ -131,4 +131,47 @@ class b2c_mdl_poslog extends dbeav_model{
 		$rets['tongji']=$tongji;
 		return $rets;
 	}
+	public function save($data){
+		$db = $this->db;
+		$db->beginTransaction();
+		if ($data['id']) {//编辑时对比额度的变化
+			//新的-老的？
+			$eduMoney = round($data['money']-$data['oldMoney'],2);
+		}else{
+			$eduMoney = $data['money'];
+		}
+		$ret1 = parent::save($data);
+		$ret2 = $this->upEdu($data['share_flag'],$eduMoney*-1);
+		if ($ret1 && $ret2) {
+			$db->commit();
+		}else{
+			$db->rollback();
+			throw new Exception("记录保存失败");
+			return false;
+		}
+	}
+	//删除之前的动作。恢复额度
+	public function pre_recycle($data){
+		$objCard = app::get('b2c')->model('poscard');
+		foreach ($data as $key => $value) {
+			if ($value['card_id']) {
+				$share_flag = $objCard->getRow('share_flag',array('card_id'=>$value['card_id']));
+				$share_flag = $share_flag['share_flag'];
+				$ret[] = $this->upEdu($share_flag,$value['money']);
+			}
+		}
+		if (in_array('0',$ret)) {
+			return false;
+		}else{
+			return true;
+
+		}
+	}
+	//额度的增减
+	public function upEdu($share_flag,$money){
+		$upSql = "UPDATE sdb_b2c_poscard set usable_edu=usable_edu+{$money} where share_flag='{$share_flag}' and is_enabled='1'";
+		$this->db->exec($upSql);
+		$ret = $this->db->affect_row();
+		return $ret;
+	}
 }

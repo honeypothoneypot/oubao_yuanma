@@ -51,6 +51,7 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $data['money'] = $_POST['money'];
         $data['feilv'] = $_POST['feilv'];
         $data['fengding'] = $_POST['fengding'];
+        $data['share_flag'] = $_POST['share_flag'];
         //计算结算金额
         if ($data['fengding']>0) {
             $data['jiesuan_money'] = $data['money']-$data['fengding'];
@@ -61,22 +62,11 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $data['memo'] = $_POST['memo'];
         $data['mcc'] = $_POST['mcc'];
         $data['create_time'] = time();
-        // $url = $this->gen_url(array('app'=>'b2c','ctl'=>'wap_pos','act'=>'index','arg0'=>$_POST['name'],'arg1'=>$_POST['pos_type'],'arg2'=>$_POST['bank'],'arg3'=>$_POST['mcc']));
         $poslog = $this->app->model('poslog');
-        $db = $this->app->model('poscard')->db;
-        $db->beginTransaction();
         try {
             $ret1 = $poslog->save($data);
-            $ret2 = $this->app->model('poscard')->upEdu($_POST['share_flag'],$data['money']*-1);
-            if ($ret1 && $ret2) {
-                $db->commit();
-            }else{
-                $db->rollback();
-                echo  json_encode(array('success'=>false,'msg'=>'提交失败1'));exit;
-            }
         } catch (Exception $e) {
-            $db->rollback();
-            echo  json_encode(array('success'=>false,'msg'=>'提交失败2'));exit;
+            echo  json_encode(array('success'=>false,'msg'=>$e->getMessage()));exit;
         }
         echo  json_encode(array('success'=>true,'msg'=>'提交成功'));exit;
     }
@@ -150,5 +140,25 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $this->pagedata['lists'] = $lists;
         $view = 'wap/pos/poscard.html';
         echo $this->fetch($view);
+    }
+
+    public function ajaxGetRemind(){
+        //默认按可用额度排序
+        $sql = "SELECT * FROM sdb_b2c_poscard WHERE is_enabled='1' order by usable_edu desc,all_edu desc";
+        $rowsets = app::get('b2c')->model('poscard')->db->select($sql);
+        //查询日志：
+        //获取今天零点的时间戳：
+        $start = strtotime(date('Y-m-d',time()));
+        $sql = "SELECT card_id,count(id) as count FROM sdb_b2c_poslog where modified_time>'{$start}' group by card_id ";
+        $logs = app::get('b2c')->model('poscard')->db->select($sql);
+        foreach ($logs as $key => $value) {
+            $count[$value['card_id']]=$value['count'];
+        }
+        foreach ($rowsets as $key => &$value) {
+            $value['count'] = $count[$value['card_id']];
+            $new[$value['belong_to']][] = $value;
+        }
+        $this->pagedata['rowsets'] = $new;
+        echo $this->fetch('wap/pos/remindajax.html');exit;
     }
 }

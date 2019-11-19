@@ -4,6 +4,9 @@
     margin-right: 50px;
     font-size: 14px;
 }
+.belong li{
+    margin-top: 10px;
+}
 .belong span{
     text-align: center;
     display: inline-block;
@@ -13,10 +16,9 @@
 }
 .belongSon span:nth-child(1){
     width: 50px;
-
 }
 .belongSon span:nth-child(2){
-    width: 80px;
+    width: 100px;
 }
 .belongSon span:nth-child(3){
     width: 120px;
@@ -31,17 +33,17 @@
     width: 80px;
 }
 </style>
-<div class="pos-main">
+<div class="remind-main">
 </div>
 <script type="text/javascript">
 //获取信息
 
-function getLog(){
+function getRemind(){
     var url = 'index.php?app=b2c&ctl=admin_everyday&act=ajaxGetRemind';
     jq.post(url, function(res) {
-        jq('.pos-main').html(res);
+        jq('.remind-main').html(res);
     });
 }
-getLog();
-setInterval('getLog()',5000);
+getRemind();
+setInterval('getRemind()',7000);
 </script>
