@@ -156,7 +156,8 @@
             <menu controller='admin_postype' action='index' permission='sales' display='true' order='3'>pos刷卡类型</menu>
             <menu controller='admin_poscard' action='index' permission='sales' display='true' order='4'>信用卡列表</menu>
             <menu controller='admin_everyday' action='remind' permission='sales' display='true' order='5'>每日提醒</menu>
-            <menu controller='admin_poscard' action='setShare' permission='sales' display='true' order='6'>一键设置信用卡共享标识</menu>
+            <menu controller='admin_pos_guozhang' action='index' permission='sales' display='true' order='6'>额度过账</menu>
+            <menu controller='admin_poscard' action='setShare' permission='sales' display='true' order='7'>一键设置信用卡共享标识</menu>
         </menugroup>
     </workground>
     <workground name="营销" id="b2c.wrokground.sale" controller="admin_sales_order" action="index" order="50">

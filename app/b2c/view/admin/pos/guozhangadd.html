@@ -1,0 +1,149 @@
+<style>
+.main {
+    clear: both;
+}
+
+.clean-both {
+    clear: both;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #000;
+}
+
+.menu1 ul li {
+    float: left;
+    /* 向左漂移，将竖排变为横排 */
+    padding-left: 10px;
+    margin-bottom: 10px;
+    width: 20%;
+}
+
+.menu ul li {
+    float: left;
+    /* 向左漂移，将竖排变为横排 */
+    padding-left: 10px;
+    margin-bottom: 10px;
+    width: 42%;
+}
+
+.menu3 ul li {
+    float: left;
+    /* 向左漂移，将竖排变为横排 */
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.pos-input input {
+    width: 30%;
+    height: 40px;
+    border: 1px solid #000000;
+}
+
+.poslog table td {
+    border: 1px solid #F00;
+    padding: 3px;
+}
+
+.pos-main .noactive {
+    display: none;
+}
+
+.pos-main .active {
+    display: block;
+}
+</style>
+<div class="pos-main">
+    <form action="#" method="post" id='newmember-edit-form' class="tableform form-log">
+    <input type="hidden" name="id" value="<{$info.id}>" >
+        <div class="menu1" style="padding-top: 20px;">
+            <ul>
+                <li>
+                    <input type="radio" name="belong_to" value="lsc" id="lsc" <{if $info.belong_to=='lsc'}> checked <{/if}> ><label for="lsc">我的</label>
+                </li>
+                <li>
+                    <input type="radio" name="belong_to" value="liu" id="liu" <{if $info.belong_to=='liu'}> checked <{/if}> ><label for="liu">刘</label>
+                </li>
+            </ul>
+        </div>
+        <div class="clean-both"></div>
+        <div class="menu">
+            银行卡：
+            <{foreach from=$cardLists key=belong_to item=cardList}>
+            <ul class="ajax-poscard noactive card-<{$belong_to}>">
+                <{foreach from=$cardList item=item}>
+                <li>
+                    <input type="radio" name="card_id" data-share_flag=\'<{$item.share_flag}>\' value="<{$item.card_id}>" id="poscard<{$item.card_id}>" ><label for="poscard<{$item.card_id}>"><{$item.name}>-<{$item.card_no}>-<{$item.memo}></label>
+                </li>
+                <{/foreach}>
+            </ul>
+            <{/foreach}>
+        </div>
+        <div class="clean-both"></div>
+        <div>
+            <select name="guozhang_type">
+                <option value="还款" <{if $info.guozhang_type == "还款"}>selected<{/if}> >还款</option>
+                <option value="消费" <{if $info.guozhang_type == "消费"}>selected<{/if}> >消费</option>
+                <option value="其他" <{if $info.guozhang_type == "其他"}>selected<{/if}> >其他</option>
+            </select>
+        </div>
+        <div>
+            创建时间：
+            <{input type="time" value=$info.create_time vtype="required" name="from_time"}>
+        </div>
+        <div class="pos-input">
+            ¥&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：<input type="text" name="money" value="<{$info.money}>">
+            备注：
+            <input type="text" name="memo" value="<{$info.memo}>">
+        </div>
+        <div class="table-action">
+            <button type="button" id="tijiao" class="btn"><span><span>保存</span></span></button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    var isEdit = '<{$info.id}>';
+    var oldMoney = 0;
+    if (isEdit) {
+        console.log(isEdit);
+        var belong_to2 = '<{$info.belong_to}>';
+        getPosCard(belong_to2);
+        //选中的
+        var card_id = '<{$info.card_id}>';
+        jq("input[id=poscard"+card_id+"]").prop("checked",true);
+        //编辑时需要保留老的money数据，方便额度的变化
+        oldMoney = '<{$info.money}>';
+    }
+    jq(function(){
+        jq(document).on('change', 'input[name=belong_to]', function(event) {//ajax获取信用卡列表
+            //清空选中的卡id
+            jq('input[name=card_id]:checked').prop("checked",false);
+            var belong_to2 = jq(this).val();
+            getPosCard(belong_to2);
+        })
+    });
+    //获取信用卡列表
+    function getPosCard(belong_to){
+        jq(".ajax-poscard").removeClass('active');
+        jq(".card-"+belong_to).addClass('active');
+    }
+    //ajax提交表单
+    jq('#tijiao').on('click', function(event) {
+        event.preventDefault();
+        //共享额度标识
+        var share_flag = jq('input[name=card_id]:checked').data('share_flag');
+        share_flag = share_flag.replace(/[\'\"\\\/\b\f\n\r\t]/g,'');// 去掉转义字符
+        jq(this).attr("disabled","true");
+        var url = 'index.php?app=b2c&ctl=admin_pos_guozhang&act=logsave';
+        jq.post(url, jq('.form-log').serialize()+'&share_flag='+share_flag+'&oldMoney='+oldMoney, function(re) {
+            re =  JSON.parse(re);
+            alert(re.msg);
+            if (re.success) {
+                var btn =$('tijiao');
+                var finder = finderGroup['<{$env.get._finder.finder_id}>'];
+                var _dialogIns = btn.getParent('.dialog').retrieve('instance');
+                _dialogIns.close();
+                finder.refresh.delay(400,finder);
+            }
+            jq('#tijiao').removeAttr('disabled');
+        });
+    });
+</script>

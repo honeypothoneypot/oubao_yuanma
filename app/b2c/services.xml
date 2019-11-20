@@ -156,6 +156,10 @@
         <class>b2c_finder_poscard</class>
     </service>
 
+    <service id="desktop_finder.b2c_mdl_posguozhang">
+        <class>b2c_finder_posguozhang</class>
+    </service>
+
     <service id="desktop_finder_detail_modifier.b2c_mdl_members.default">
             <class>b2c_finder_detail</class>
     </service>

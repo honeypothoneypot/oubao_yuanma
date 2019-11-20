@@ -141,8 +141,13 @@ class b2c_mdl_poslog extends dbeav_model{
 			$eduMoney = $data['money'];
 		}
 		$ret1 = parent::save($data);
-		$ret2 = $this->upEdu($data['share_flag'],$eduMoney*-1);
-		if ($ret1 && $ret2) {
+		//变化的额度不等于0时才更新额度
+		if ($eduMoney!=0) {
+			$ret2 = $this->upEdu($data['share_flag'],$eduMoney*-1);
+		}else{
+			$ret2 = 1;
+		}
+		if ($ret1 && $ret2>0) {
 			$db->commit();
 		}else{
 			$db->rollback();

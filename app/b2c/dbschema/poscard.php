@@ -32,7 +32,7 @@ $db['poscard'] = array (
 			'comment' => app::get('b2c')->_('信用卡所属银行'),
 		),
 		'belong_to' => array(
-			'type' => 'varchar(128)',
+			'type' => 'varchar(10)',
 			'required' => true,
 			'in_list' => true,
 			'default_in_list' => true,
