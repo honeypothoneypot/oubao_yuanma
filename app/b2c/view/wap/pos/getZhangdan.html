@@ -1,0 +1,23 @@
+<{foreach from=$data key=key item=items}>
+<div class="tablenew">
+    <div class="">
+        <div class="">
+            <span><{$key}></span>
+        </div>
+    </div>
+    <div class="rownew">
+        <div class="cellnew">银行</div>
+        <div class="cellnew">卡号</div>
+        <div class="cellnew">还款日</div>
+        <div class="cellnew">还款额度</div>
+    </div>
+    <{foreach from=$items item=item}>
+        <div class="rownew">
+            <div class="cellnew"><{$item.name}></div>
+            <div class="cellnew"><{$item.card_no}></div>
+            <div class="cellnew"><{$item.huankuan_date}></div>
+            <div class="cellnew"><{$item.needHuankuan}></div>
+        </div>
+    <{/foreach}>
+</div>
+<{/foreach}>

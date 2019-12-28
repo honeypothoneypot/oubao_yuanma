@@ -46,12 +46,7 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $this->page('wap/pos/index.html');
     }
     public function save(){
-        $data['card_id'] = $_POST['card_id'];
-        $data['postype_id'] = $_POST['postype_id'];
-        $data['money'] = $_POST['money'];
-        $data['feilv'] = $_POST['feilv'];
-        $data['fengding'] = $_POST['fengding'];
-        $data['share_flag'] = $_POST['share_flag'];
+        $data = $_POST;
         //计算结算金额
         if ($data['fengding']>0) {
             $data['jiesuan_money'] = $data['money']-$data['fengding'];
@@ -74,7 +69,7 @@ class b2c_ctl_wap_pos extends wap_frontpage{
     //ajax获取日志列表
     public function ajax_get_poslog(){
         $page = $_POST['page'] ? $_POST['page'] : 1;
-        $pageLimit = 50;//每页条数
+        $pageLimit = 15;//每页条数
         $poslog = $this->app->model('poslog');
         //$belong_to,$card_id,$postype_id,$from_time,$to_time
         $filter['belong_to'] = $_POST['belong_to'];
@@ -84,7 +79,6 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $filter['to_time'] = $_POST['to_time']?strtotime($_POST['to_time'])+86400:'';
         $filter['posbrand_id'] = $_POST['posbrand_id'];
         $filter['mcc'] = $_POST['mcc'];
-
         $ret = $poslog->getLog($filter,$pageLimit*($page-1),$pageLimit);
         //刷卡方式
         $mdlType = $this->app->model('postype');
@@ -100,7 +94,6 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $counts = $poslog->getCount($filter);//统计的总数-条数、金额、结算金额、利息、次数等
         $total = $counts['countsSum'];//总数
         $pagetotal= $total ? ceil($total/$pageLimit) : 1;//总页数
-        $this->pagedata['page'] = $page;
         //分页
         $this->pagedata['pager'] = array(
             'current'=>$page,
@@ -144,12 +137,21 @@ class b2c_ctl_wap_pos extends wap_frontpage{
 
     public function ajaxGetRemind(){
         //默认按可用额度排序
-        $sql = "SELECT * FROM sdb_b2c_poscard WHERE is_enabled='1' order by usable_edu desc,all_edu desc";
+        $sql = "SELECT group_concat(t.newid ) as newid FROM (
+                SELECT group_concat(card_id ORDER BY usable_edu DESC) as newid,1 as flag  FROM sdb_b2c_poscard WHERE is_enabled='1' GROUP BY share_flag order by usable_edu desc ) as t GROUP BY t.flag";
+        $newid = app::get('b2c')->model('poscard')->db->select($sql);
+        $newid = $newid['0']['newid'];
+        $newid = explode(',', $newid);
+        foreach ($newid as $key => $value) {
+            $newCartId .="'{$value}',";
+        }
+        $newCartId = rtrim($newCartId,',');
+        $sql = "SELECT * FROM sdb_b2c_poscard WHERE card_id in ($newCartId) order by field (card_id,$newCartId)";
         $rowsets = app::get('b2c')->model('poscard')->db->select($sql);
         //查询日志：
         //获取今天零点的时间戳：
         $start = strtotime(date('Y-m-d',time()));
-        $sql = "SELECT card_id,count(id) as count FROM sdb_b2c_poslog where modified_time>'{$start}' group by card_id ";
+        $sql = "SELECT card_id,count(id) as count FROM sdb_b2c_poslog where type='pos' and modified_time>'{$start}' group by card_id ";
         $logs = app::get('b2c')->model('poscard')->db->select($sql);
         foreach ($logs as $key => $value) {
             $count[$value['card_id']]=$value['count'];
@@ -158,7 +160,38 @@ class b2c_ctl_wap_pos extends wap_frontpage{
             $value['count'] = $count[$value['card_id']];
             $new[$value['belong_to']][] = $value;
         }
+        krsort($new);
         $this->pagedata['rowsets'] = $new;
         echo $this->fetch('wap/pos/remindajax.html');exit;
+    }
+    //获取账单
+    public function getZhangdan(){
+        $thismonth = date('m');
+        $thisyear = date('Y');
+        if ($thismonth == 1) {
+            $lastmonth = 12;
+            $lastyear = $thisyear - 1;
+        } else {
+            $lastmonth = $thismonth - 1;
+            $lastyear = $thisyear;
+        }
+        if ($_POST['flag']=='1') {
+            if ($thismonth==12) {
+                $thisyear = date('Y',strtotime('+1year'));
+                $thismonth = 1;
+                $lastmonth = 12;
+            }else{
+                $thismonth += 1;
+                $lastmonth += 1;
+            }
+        }
+        $lastStartDay = $lastyear.'-'.$lastmonth.'-1';
+        $lastEndDay = $lastyear.'-'.$lastmonth.'-'.date('t',strtotime($lastStartDay));
+        $b_time = strtotime($lastStartDay);//上个月的月初时间戳
+        $e_time = strtotime($lastEndDay);//上个月的月末时间戳
+        $poslog = $this->app->model('poslog');
+        $data = $poslog->getZhangdan($thisyear,$thismonth,$lastyear,$lastmonth,$b_time);
+        $this->pagedata['data'] = $data;
+        echo $this->fetch('wap/pos/getZhangdan.html');exit;
     }
 }

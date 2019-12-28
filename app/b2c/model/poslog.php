@@ -38,12 +38,12 @@ class b2c_mdl_poslog extends dbeav_model{
 
 	public function getLog($filter,$offset=0, $limit=50){
 		$sql = "SELECT
-					a.id,a.money,a.mcc,a.feilv,a.jiesuan_money,a.memo,a.create_time,b.card_id,b.name as bankname,b.belong_to,
+					a.*,b.card_id,b.name as bankname,b.belong_to,
 					b.card_no,b.memo as bankmemo,c.postype_id,c.posbrand_id,c.sub_name,c.shuaka_type,d.name as brandname
 				FROM sdb_b2c_poslog AS a
 				LEFT JOIN sdb_b2c_poscard AS b ON a.card_id = b.card_id
 				LEFT JOIN sdb_b2c_postype AS c ON a.postype_id  = c.postype_id
-				LEFT JOIN sdb_b2c_posbrand AS d ON c.posbrand_id  = d.posbrand_id WHERE 1";
+				LEFT JOIN sdb_b2c_posbrand AS d ON c.posbrand_id  = d.posbrand_id WHERE 1 ";
 		//搜索条件
         //$id,$belong_to,$card_id,$postype_id,$from_time,$to_time,posbrand_id
 		if ($filter['id']) {
@@ -67,11 +67,14 @@ class b2c_mdl_poslog extends dbeav_model{
 		if ($filter['mcc']) {
 			$sql.=" AND a.mcc in (4511,4722,7011)";
 		}
+		if ($filter['type']) {
+			$sql .=" And a.type='{$filter['type']}'";
+		}
 		$sql.=" ORDER BY a.create_time DESC LIMIT {$offset},{$limit}";
 		$datas = kernel::database()->select($sql);
-		$moneySum = array_sum(array_map(create_function('$val', 'return $val["money"];'), $datas));
-		$jiesuan_moneySum = array_sum(array_map(create_function('$val', 'return $val["jiesuan_money"];'), $datas));
-		$lixiSum = bcsub($moneySum,$jiesuan_moneySum,2);
+		// $moneySum = array_sum(array_map(create_function('$val', 'return $val["money"];'), $datas));
+		// $jiesuan_moneySum = array_sum(array_map(create_function('$val', 'return $val["jiesuan_money"];'), $datas));
+		// $lixiSum = bcsub($moneySum,$jiesuan_moneySum,2);
 		$ret['lists'] = $datas;
 		return $ret;
 	}
@@ -107,28 +110,25 @@ class b2c_mdl_poslog extends dbeav_model{
 		$sql.=" GROUP BY d.posbrand_id";
 		//获取所有品牌：
 		// $brands = app::get('b2c')->model('posbrand')->getList('posbrand_id,name');
-
 		$countsSum = 0;
 		$moneySum = 0;
 		$jiesuan_moneySum = 0;
 		$lixiSum = 0;
-
 		$counts = kernel::database()->select($sql);
-		$tongji = '';
-		$a = 0;
 		if ($counts) {
 			foreach ($counts as $ke => $value) {
 				$countsSum += $value['count'];
-				$moneySum += $value['moneySum'];
-				$jiesuan_moneySum += $value['jiesuan_moneySum'];
-				$lixiSum += $value['lixiSum'];
+				if ($value['posbrand_id']) {
+					$moneySum += $value['moneySum'];
+					$jiesuan_moneySum += $value['jiesuan_moneySum'];
+					$lixiSum += $value['lixiSum'];
+				}
 			}
 		}
 		$rets['countsSum']=$countsSum;
 		$rets['moneySum']=$moneySum;
 		$rets['jiesuan_moneySum']=$jiesuan_moneySum;
 		$rets['lixiSum']=$lixiSum;
-		$rets['tongji']=$tongji;
 		return $rets;
 	}
 	public function save($data){
@@ -140,10 +140,21 @@ class b2c_mdl_poslog extends dbeav_model{
 		}else{
 			$eduMoney = $data['money'];
 		}
+		if (in_array($data['type'], array('pos','xiaofei','nianfei'))) {
+			$eduMoney = $eduMoney*-1;
+			if ($data['type']=='pos' && !$data['postype_id']) {
+				throw new Exception("pos刷卡请选择刷卡方式");
+			}
+		}
+		if ($data['type']!='pos') {
+			$data['posbrand_id'] = 0;
+			$data['postype_id'] = 0;
+			$data['jiesuan_money'] = 0;
+		}
 		$ret1 = parent::save($data);
 		//变化的额度不等于0时才更新额度
 		if ($eduMoney!=0) {
-			$ret2 = $this->upEdu($data['share_flag'],$eduMoney*-1);
+			$ret2 = $this->app->model('poscard')->upEdu($data['share_flag'],$eduMoney);
 		}else{
 			$ret2 = 1;
 		}
@@ -162,21 +173,45 @@ class b2c_mdl_poslog extends dbeav_model{
 			if ($value['card_id']) {
 				$share_flag = $objCard->getRow('share_flag',array('card_id'=>$value['card_id']));
 				$share_flag = $share_flag['share_flag'];
-				$ret[] = $this->upEdu($share_flag,$value['money']);
+				$ret[] = $objCard->upEdu($share_flag,$value['money']);
 			}
 		}
 		if (in_array('0',$ret)) {
 			return false;
 		}else{
 			return true;
-
 		}
 	}
-	//额度的增减
-	public function upEdu($share_flag,$money){
-		$upSql = "UPDATE sdb_b2c_poscard set usable_edu=usable_edu+{$money} where share_flag='{$share_flag}' and is_enabled='1'";
-		$this->db->exec($upSql);
-		$ret = $this->db->affect_row();
+
+	//查询账单
+	public function getZhangdan($thisyear,$thismonth,$lastyear,$lastmonth,$b_time){
+		$sql = "SELECT a.*,b.card_no,b.belong_to,b.zhangdan_date,b.huankuan_date,b.name,b.zhangdan_dateTime,c.shuaka_type
+			FROM sdb_b2c_poslog a
+			LEFT JOIN sdb_b2c_poscard b ON b.card_id = a.card_id
+			LEFT JOIN sdb_b2c_postype c ON c.postype_id = a.postype_id
+			WHERE a.create_time>={$b_time} and a.type in('pos','xiaofei','huankuan','nianfei')
+			ORDER BY b.huankuan_date asc,b.card_id asc
+		";
+		$data =$this->db->select($sql);
+		foreach ($data as $key => &$value) {
+			if ($value['name']=='广发银行' && in_array($value['shuaka_type'], array('weixin','zhifubao'))) {
+				$value['zhangdan_dateTime'] = 24;
+			}
+			$startTime = strtotime("{$lastyear}-{$lastmonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+			$endTime = strtotime("{$thisyear}-{$thismonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+			if ($value['create_time']>=$startTime && $value['create_time']< $endTime) {
+				$newData[$value['belong_to']]["{$value['card_id']}"][] = $value;
+			}
+		}
+		foreach ($newData as $key => $value) {
+			foreach ($value as $ke => $val) {
+				$sum = array_sum(array_map(create_function('$val', 'return $val["money"];'), $val));
+				$ret[$key]["{$ke}"]['name'] = $val['0']['name'];
+				$ret[$key]["{$ke}"]['needHuankuan'] = $sum;
+				$ret[$key]["{$ke}"]['huankuan_date'] = $val['0']['huankuan_date'];
+				$ret[$key]["{$ke}"]['card_no'] = $val['0']['card_no'];
+			}
+		}
 		return $ret;
 	}
 }

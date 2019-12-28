@@ -80,9 +80,10 @@
         <div class="clean-both"></div>
         <div>
             <select name="guozhang_type">
-                <option value="还款" <{if $info.guozhang_type == "还款"}>selected<{/if}> >还款</option>
-                <option value="消费" <{if $info.guozhang_type == "消费"}>selected<{/if}> >消费</option>
-                <option value="其他" <{if $info.guozhang_type == "其他"}>selected<{/if}> >其他</option>
+                <option value="pos" <{if $info.guozhang_type == "pos"}>selected<{/if}> >pos刷卡</option>
+                <option value="xiaofei" <{if $info.guozhang_type == "xiaofei"}>selected<{/if}> >消费</option>
+                <option value="huankuan" <{if $info.guozhang_type == "huankuan"}>selected<{/if}> >还款</option>
+                <option value="nianfei" <{if $info.guozhang_type == "nianfei"}>selected<{/if}> >年费</option><option value="change" <{if $info.guozhang_type == "change"}>selected<{/if}> >手动调整</option>
             </select>
         </div>
         <div>

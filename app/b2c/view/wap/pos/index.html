@@ -1,8 +1,24 @@
 <{css src="pos.css" app="b2c"}>
 <div class="remind-main">
-	
-</div>
 
+</div>
+<div class="clean-both"></div>
+<div>
+	<div style="float: left;margin-right: 50px;">
+		<button type="button" class="getZhangdan" data-flag='0'>查询上期账单</button>
+	</div>
+	<div style="float: left;margin-right: 50px;">
+		<button type="button" class="getZhangdan" data-flag='1'>查询本期账单</button>
+	</div>
+	<div style="float: left;">
+		<button type="button" class="cancelZhangdan">取消查询</button>
+	</div>
+</div>
+<div class="clean-both"></div>
+<div class="toZhangdan">
+
+</div>
+<div style="clear: both;"></div>
 <div class="content" style="float: left;margin-top: 10px;">
 	<div class="demos">
 		<label for="appDate">开始日期</label>
@@ -39,7 +55,7 @@
 		<label for="jintian">今天</label>
 	</div>
 </div>
-<div style="clear: both;"></div>
+<div class="clean-both"></div>
 <div class="pos-main">
 	<form action="#" method="post" data-type="ajax" class="form-log">
 		<div class="menu1" style="padding-top: 20px;padding-left: 20px;">
@@ -57,6 +73,19 @@
 					<input type="checkbox" name="jiansuo" value="jiansuo" id="jiansuo" ><label for="jiansuo">pos机检索</label>
 				</li>
 			</ul>
+		</div>
+		<div class="clean-both"></div>
+		<div class="menu">
+			银行卡：
+			<{foreach from=$cardLists key=belong_to item=cardList}>
+			<ul class="ajax-poscard noactive card-<{$belong_to}>">
+				<{foreach from=$cardList item=item}>
+				<li>
+					<input type="radio" name="card_id" data-share_flag=\'<{$item.share_flag}>\' value="<{$item.card_id}>" id="poscard<{$item.card_id}>" ><label for="poscard<{$item.card_id}>"><{$item.name}>-<{$item.card_no}>-<{$item.memo}></label>
+				</li>
+				<{/foreach}>
+			</ul>
+			<{/foreach}>
 		</div>
 		<div class="clean-both"></div>
 		<div class="menu">
@@ -83,39 +112,35 @@
 				<{/foreach}>
 		</div>
 		<div class="clean-both"></div>
-		<div class="menu">
-			银行卡：
-			<{foreach from=$cardLists key=belong_to item=cardList}>
-			<ul class="ajax-poscard noactive card-<{$belong_to}>">
-				<{foreach from=$cardList item=item}>
-				<li>
-					<input type="radio" name="card_id" data-share_flag=\'<{$item.share_flag}>\' value="<{$item.card_id}>" id="poscard<{$item.card_id}>" ><label for="poscard<{$item.card_id}>"><{$item.name}>-<{$item.card_no}>-<{$item.memo}></label>
-				</li>
-				<{/foreach}>
-			</ul>
-			<{/foreach}>
+		<div class="pos-input" style="overflow: hidden;">
+			<div class="pos-input1">
+				<div class="pos-input2">
+					金额(¥)
+				</div>
+				<div class="pos-input2">
+					类型
+				</div>
+				<div class="pos-input2">
+					mcc
+				</div>
+				<div class="pos-input2">
+					<input type="number" name="money" style="color: red;">
+				</div>
+				<div class="pos-input2">
+					<select name="type">
+	                    <option value="pos" >pos刷卡</option>
+	                    <option value="xiaofei">消费</option>
+	                    <option value="huankuan">还款</option>
+	                    <option value="nianfei">年费</option>
+	                    <option value="change">手动调整</option>
+	                </select>
+				</div>
+				<div class="pos-input2">
+					<input type="number" name="mcc" value="0">
+				</div>
+			</div>
 		</div>
 		<div class="clean-both"></div>
-		<div class="pos-input">
-			<table style="width: 100%;">
-				<tr>
-					<th class="posinput-td">金额(¥)</th>
-					<th class="posinput-td">mcc</th>
-					<th class="posinput-td">备注</th>
-				</tr>
-				<tr>
-					<td class="posinput-td">
-						<input type="number" name="money" style="color: red;">
-					</td>
-					<td class="posinput-td">
-						<input type="number" name="mcc" value="0">
-					</td>
-					<td class="posinput-td">
-						<input type="text" name="memo">
-					</td>
-				</tr>
-			</table>
-		</div>
 		<div class="btn-bar" style="margin-top: 30px;">
 			<button type="button" class="btn orange" id="tijiao">提交</button>
 		</div>
@@ -190,16 +215,41 @@
 	//ajax提交表单
 	jq('#tijiao').on('click', function(event) {
 		event.preventDefault();
+		if(jq(this).attr('tijiao')=='1'){
+            return false;
+        }
+        jq(this).attr('tijiao','1');
+        setTimeout(
+        	function(){
+        		jq('#tijiao').attr('tijiao','0');
+        	},5000
+        );
 		//获得已选中刷卡方式的费率
 		var feilv = jq('input[name=postype_id]:checked').data('feilv');
 		//获得已选中刷卡方式的封顶
 		var fengding = jq('input[name=postype_id]:checked').data('fengding');
 		//共享额度标识
 		var share_flag = jq('input[name=card_id]:checked').data('share_flag');
+		if (typeof(share_flag)=='undefined') {
+            return false;
+        }
 		share_flag = share_flag.replace(/[\'\"\\\/\b\f\n\r\t]/g,'');// 去掉转义字符
-		jq(this).attr("disabled","true");
+		if (typeof(feilv)=='undefined') {
+            feilv=0;
+        }
+        if (typeof(fengding)=='undefined') {
+            fengding=0;
+        }
+		var type = jq("select[name=type]").val();
+
+		var fomObj = jq('.form-log').serializeObject();
+		fomObj['feilv'] = feilv;
+		fomObj['fengding'] = fengding;
+		fomObj['share_flag'] = share_flag;
+		fomObj['type'] = type;
+		console.log(fomObj);
 		var url = '<{link app=b2c ctl=wap_pos act=save}>';
-		jq.post(url, jq('.form-log').serialize()+'&feilv='+feilv+'&fengding='+fengding+'&share_flag='+share_flag, function(re) {
+		jq.post(url,fomObj, function(re) {
 			re =  JSON.parse(re);
 			alert(re.msg);
 			if (re.success) {
@@ -364,5 +414,35 @@ function getRemind(){
     });
 }
 getRemind();
-setInterval('getRemind()',6000);
+// setInterval('getRemind()',10000);
+
+jq.fn.serializeObject = function(){
+    var o = {};
+   	var a = this.serializeArray();
+   	jq.each(a, function() {
+       	if (o[this.name]) {
+           	if (!o[this.name].push) {
+               	o[this.name] = [o[this.name]];
+           	}
+           	o[this.name].push(this.value || '');
+       	} else {
+           	o[this.name] = this.value || '';
+       	}
+   	});
+   	return o;
+};
+
+jq('.getZhangdan').on('click', function(event) {
+	event.preventDefault();
+	var flag = jq(this).data('flag');
+	console.log(flag);
+  	var url = '<{link app=b2c ctl=wap_pos act=getZhangdan}>';
+  	jq.post(url,{flag:flag}, function(re) {
+  		jq('.toZhangdan').html(re);
+  	});
+});
+jq('.cancelZhangdan').on('click',function(event) {
+	event.preventDefault();
+  	jq('.toZhangdan').html('');
+});
 </script>

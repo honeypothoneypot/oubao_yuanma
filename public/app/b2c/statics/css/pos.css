@@ -1,42 +1,55 @@
-.remind-main{
+.remind-main {
     margin-top: 45px;
     text-align: center;
+    /*display: flex;*/
 }
+
 .table_remind {
     /*table-layout: fixed*/
 }
-.table_remind td:nth-child(1){
+
+.table_remind td:nth-child(1) {
     width: 60px;
 }
-.table_remind td:nth-child(2){
+
+.table_remind td:nth-child(2) {
     width: 110px;
 }
-.table_remind td:nth-child(3){
+
+.table_remind td:nth-child(3) {
     width: 130px;
 }
-.table_remind td:nth-child(4){
+
+.table_remind td:nth-child(4) {
     width: 50px;
 }
-.table_remind td:nth-child(5){
+
+.table_remind td:nth-child(5) {
     width: 30px;
 }
-.table_remind td:nth-child(6){
+
+.table_remind td:nth-child(6) {
     width: 70px;
 }
-.belong{
+
+.belong {
     margin-right: 50px;
     font-size: 13px;
 }
-.belong li{
+
+.belong li {
     /*margin-top: 6px;*/
 }
-.belong span{
+
+.belong span {
     text-align: center;
     display: inline-block;
 }
-.belongSon{
+
+.belongSon {
     text-align: center;
 }
+
 /*.belongSon span:nth-child(1){
     width: 20px;
 }
@@ -55,3 +68,138 @@
 .belongSon span:nth-child(6){
     width: 50px;
 }*/
+.remind-mainSon {
+    font-size: 11px;
+}
+
+.remindAjax {
+    display: flex;
+}
+
+.remindAjax div {
+    border-top: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
+}
+
+.remindAjax:last-child {
+    border-bottom: 1px solid #cccccc;
+}
+
+.remindAjax div:nth-child(1) {
+    flex: 1
+}
+
+.remindAjax div:nth-child(2) {
+    flex: 2
+}
+
+.remindAjax div:nth-child(3) {
+    flex: 1
+}
+
+.remindAjax div:nth-child(4) {
+    flex: 1
+}
+
+.toZhangdan {
+    font-size: 11px;
+    text-align: center;
+}
+
+.rownew {
+    display: flex;
+}
+
+.rownew div {
+    border-top: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
+}
+
+.rownew:last-child {
+    border-bottom: 1px solid #cccccc;
+}
+
+.rownew div:nth-child(1) {
+    flex: 2
+}
+
+.rownew div:nth-child(2) {
+    flex: 2
+}
+
+.rownew div:nth-child(3) {
+    flex: 1
+}
+
+.rownew div:nth-child(4) {
+    flex: 2
+}
+
+.pos-input1 {
+    display: flex;
+    width: calc(100% + 10px);
+    flex-wrap: wrap;
+    text-align: center;
+    align-items: center;
+}
+
+.pos-input2 {
+    flex: 0 0 calc(33.33% - 10px);
+    margin-right: 10px;
+}
+
+.pos-input2 input {
+    text-align: center;
+}
+
+.poslog-count {
+    display: flex;
+}
+
+.poslog-count div {
+    flex: 1;
+    border: 1px solid #cccccc;
+}
+
+.poslog-list-title {
+    display: flex;
+    text-align: center;
+    font-size: 11px;
+}
+
+.poslog-list-title div {
+    border-bottom: 0.5px solid #CD0000;
+    border-left: 0.5px solid #CD0000;
+}
+
+.poslog-list-title1 div {
+    border-top: 0.5px solid #CD0000;
+}
+
+.poslog-list-title div:nth-child(1) {
+    flex: 3;
+}
+
+.poslog-list-title div:nth-child(2) {
+    flex: 2;
+}
+
+.poslog-list-title div:nth-child(3) {
+    flex: 2;
+}
+
+.poslog-list-title div:nth-child(4) {
+    flex: 3;
+}
+
+.poslog-list-title div:nth-child(5) {
+    flex: 2;
+}
+
+.poslog-list-title2 div:nth-child(2) {
+    line-height: 36px;
+}
+
+.poslog-list-title2 div:nth-child(3) {
+    line-height: 36px;
+}

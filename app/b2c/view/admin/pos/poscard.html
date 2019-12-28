@@ -26,16 +26,28 @@
                 <td><{input type="text" name="all_edu" value=$info.all_edu }></td>
             </tr>
             <tr class="is_xianshi">
+                <th><{t}>临时额度：<{/t}></th>
+                <td><{input type="text" name="linshi_edu" value=$info.linshi_edu }></td>
+            </tr>
+            <tr class="is_xianshi">
+                <th><{t}>临时额度到期日：<{/t}></th>
+                <td><{input type="text" name="linshi_eduDate" value=$info.linshi_eduDate }></td>
+            </tr>
+            <tr class="is_xianshi">
                 <th><{t}>可用额度：<{/t}></th>
                 <td><{input type="text" name="usable_edu" value=$info.usable_edu }></td>
             </tr>
             <tr class="is_xianshi">
                 <th><{t}>账单日：<{/t}></th>
-                <td><{input type="text" name="zhangdan_date" value=$info.zhangdan_date }>日/月</td>
+                <td><{input type="text" name="zhangdan_date" value=$info.zhangdan_date }>日/每月</td>
+            </tr>
+            <tr class="is_xianshi">
+                <th><{t}>账单日刷卡计入本期截止时间：<{/t}></th>
+                <td><{input type="text" name="zhangdan_dateTime" value=$info.zhangdan_dateTime }>点</td>
             </tr>
             <tr class="is_xianshi">
                 <th><{t}>还款日：<{/t}></th>
-                <td><{input type="text" name="huankuan_date" value=$info.huankuan_date }>日/月</td>
+                <td><{input type="text" name="huankuan_date" value=$info.huankuan_date }>日/每月</td>
             </tr>
             <tr class="is_xianshi">
                 <th><{t}>备注：<{/t}></th>

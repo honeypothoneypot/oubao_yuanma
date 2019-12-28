@@ -53,11 +53,4 @@ class b2c_mdl_posguozhang extends dbeav_model{
 
 		}
 	}
-	//额度的增减
-	public function upEdu($share_flag,$money){
-		$upSql = "UPDATE sdb_b2c_poscard set usable_edu=usable_edu+{$money} where share_flag='{$share_flag}' and is_enabled='1'";
-		$this->db->exec($upSql);
-		$ret = $this->db->affect_row();
-		return $ret;
-	}
 }

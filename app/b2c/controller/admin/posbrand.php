@@ -136,7 +136,7 @@ class b2c_ctl_admin_posbrand extends desktop_controller{
                             'posbrand_id'=>$posbrand_id,
                             'sub_name'=>$data['sub_name'][$ke],
                             'shuaka_type'=>$key,
-                            'feilv'=>$val['feilv']?$val['feilv']:'',
+                            'feilv'=>$val['feilv']?$val['feilv']:'0',
                             'fengding'=>$val['fengding'],
                             'merchant_code'=>$val['merchant_code'],
                             'faren'=>$data['sub_faren'][$ke],

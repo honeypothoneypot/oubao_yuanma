@@ -52,7 +52,12 @@ class b2c_mdl_poscard extends dbeav_model{
 	}
 	//额度的增减
 	public function upEdu($share_flag,$money){
-		$upSql = "UPDATE sdb_b2c_poscard set usable_edu=usable_edu+{$money} where share_flag='{$share_flag}'";
+		$upSql = "UPDATE sdb_b2c_poscard
+			set usable_edu = (
+			case
+			  when usable_edu+{$money} < 0  then 0
+			  when usable_edu+{$money} >= 0 then usable_edu+{$money}
+			end) where share_flag='{$share_flag}' ";
 		$this->db->exec($upSql);
 		$ret = $this->db->affect_row();
 		return $ret;

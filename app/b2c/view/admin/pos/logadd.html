@@ -62,6 +62,14 @@
                 <li>
                     <input type="radio" name="belong_to" value="liu" id="liu" <{if $info.belong_to=='liu'}> checked <{/if}> ><label for="liu">刘</label>
                 </li>
+                <li>
+                <select name="type">
+                    <option value="pos" <{if $info.type == "pos"}>selected<{/if}> >pos刷卡</option>
+                    <option value="xiaofei" <{if $info.type == "xiaofei"}>selected<{/if}> >消费</option>
+                    <option value="huankuan" <{if $info.type == "huankuan"}>selected<{/if}> >还款</option>
+                    <option value="nianfei" <{if $info.type == "nianfei"}>selected<{/if}> >年费</option><option value="change" <{if $info.type == "change"}>selected<{/if}> >手动调整</option>
+                </select>
+                </li>
             </ul>
         </div>
         <div class="clean-both"></div>
@@ -175,6 +183,12 @@
         share_flag = share_flag.replace(/[\'\"\\\/\b\f\n\r\t]/g,'');// 去掉转义字符
         jq(this).attr("disabled","true");
         var url = 'index.php?app=b2c&ctl=admin_pos&act=logsave';
+        if (typeof(feilv)=='undefined') {
+            feilv=0;
+        }
+        if (typeof(fengding)=='undefined') {
+            fengding=0;
+        }
         jq.post(url, jq('.form-log').serialize()+'&feilv='+feilv+'&fengding='+fengding+'&share_flag='+share_flag+'&oldMoney='+oldMoney, function(re) {
             re =  JSON.parse(re);
             alert(re.msg);

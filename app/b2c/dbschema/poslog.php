@@ -30,7 +30,7 @@ $db['poslog'] = array (
 		),
 		'postype_id' => array(
 			'type' => 'number',
-			'required' => true,
+			'default' => 0,
 			'in_list' => true,
 			'default_in_list' => true,
 			'filtertype' => 'normal',
@@ -38,8 +38,7 @@ $db['poslog'] = array (
 			'comment' => app::get('b2c')->_('刷卡类型'),
 		),
 		'mcc' => array(
-			'type' => 'varchar(128)',
-			'required' => true,
+			'type' => 'varchar(10)',
 			'in_list' => true,
 			'default_in_list' => true,
 			'label' => app::get('b2c')->_('mcc'),
@@ -55,7 +54,6 @@ $db['poslog'] = array (
 		),
 		'feilv' => array(
 			'type' => 'money',
-			'required' => true,
 			'in_list' => true,
 			'default_in_list' => true,
 			'label' => app::get('b2c')->_('费率'),
@@ -63,14 +61,13 @@ $db['poslog'] = array (
 		),
 		'jiesuan_money' => array(
 			'type' => 'money',
-			'required' => true,
 			'in_list' => true,
 			'default_in_list' => true,
 			'label' => app::get('b2c')->_('结算金额'),
 			'comment' => app::get('b2c')->_('结算金额'),
 		),
 		'memo' => array(
-			'type' => 'varchar(128)',
+			'type' => 'varchar(20)',
 			'in_list' => true,
 			'default_in_list' => true,
 			'label' => app::get('b2c')->_('备注'),
@@ -94,6 +91,25 @@ $db['poslog'] = array (
 			'label' => app::get('b2c')->_('修改时间'),
 			'comment' => app::get('b2c')->_('修改时间'),
 		),
+		'type' => array (
+			'type' => array (
+				'pos' => app::get('b2c')->_('pos刷卡'),
+				'xiaofei' => app::get('b2c')->_('消费'),
+				'huankuan' => app::get('b2c')->_('还款'),
+				'nianfei' => app::get('b2c')->_('年费'),
+				'change' => app::get('b2c')->_('手动调整'),
+			),
+			'default' => 'pos',
+			'required' => true,
+			'width' => 75,
+			'editable' => false,
+			'filtertype' => 'yes',
+			'filterdefault' => true,
+			'in_list' => true,
+			'default_in_list' => true,
+			'label' => app::get('b2c')->_('账单类型'),
+			'comment' => app::get('b2c')->_('账单类型'),
+		),
 	),
 	'index' => array (
 		'ind_card_id' => array (
@@ -114,5 +130,5 @@ $db['poslog'] = array (
 	),
 	'engine' => 'innodb',
 	'version' => '$Rev: 42376 $',
-	'comment' => app::get('b2c')->_('pos刷卡记录表'),
+	'comment' => app::get('b2c')->_('信用卡账单记录表'),
 );

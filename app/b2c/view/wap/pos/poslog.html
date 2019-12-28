@@ -1,39 +1,35 @@
 <{if $poslogs.lists}>
-<div style="text-align: center;">
+<div class="poslog-count">
 	<div>
-		<{$counts.tongji}>
+		记录总数：<{$total}>(条)
+	</div>
+	<div>
+		总金额：<{$counts.moneySum|cur_odr}>
+	</div>
+	<div>
+		结算总金额：<{$counts.jiesuan_moneySum|cur_odr}>
+	</div>
+	<div>
+		利息：<{$counts.lixiSum|cur_odr}>
 	</div>
 </div>
-<table>
-	<tr>
-		<td>记录总数：<{$total}>(条)</td>
-		<td>总金额：<{$counts.moneySum|cur_odr}></td>
-		<td>结算总金额：<{$counts.jiesuan_moneySum|cur_odr}></td>
-		<td>利息：<{$counts.lixiSum|cur_odr}></td>
-	</tr>
-</table>
-<table class="poslog_table">
-	<tr>
-		<th>姓名</th>
-		<th>银行</th>
-		<th>卡号</th>
-		<th>金额</th>
-		<th>结算金额</th>
-		<th>刷卡方式</th>
-		<th>时间</th>
-	</tr>
-	<{foreach from=$poslogs.lists item=poslog}>
-	<tr>
-		<td colspan="3">
-			<{$poslog.belong_to}>:<{$poslog.bankname}>-<{$poslog.card_no}>-<{$poslog.bankmemo}>
-		</td>
-		<td><{$poslog.money|cur_odr}></td>
-		<td><{$poslog.jiesuan_money|cur_odr}></td>
-		<td><{$poslog.brandname}>-<{$poslog.sub_name}>-<{$poslog.shuaka_type}></td>
-		<td><{$poslog.create_time|cdate:FDATE_STIME}></td>
-	</tr>
-	<{/foreach}>
-</table>
+
+<div class="poslog-list-title poslog-list-title1">
+	<div>姓名-银行-卡号</div>
+	<div>金额</div>
+	<div>结算金额</div>
+	<div>刷卡方式</div>
+	<div>时间</div>
+</div>
+<{foreach from=$poslogs.lists item=poslog}>
+<div class="poslog-list-title poslog-list-title2">
+	<div><{$poslog.belong_to}>:<{$poslog.bankname}>-<{$poslog.card_no}>-<{$poslog.bankmemo}></div>
+	<div><{$poslog.money|cur_odr}></div>
+	<div><{$poslog.jiesuan_money|cur_odr}></div>
+	<div><{$poslog.brandname}>-<{$poslog.sub_name}>-<{$poslog.shuaka_type}></div>
+	<div><{$poslog.create_time|cdate:FDATE_STIME}></div>
+</div>
+<{/foreach}>
 <{wap_pagers ajax=true data=$pager}>
 <{else}>
 暂无数据

@@ -153,7 +153,7 @@
         <menugroup name="pos">
             <menu controller='admin_pos' action='index' permission='sales' display='true' order='1'>日志列表</menu>
             <menu controller='admin_posbrand' action='index' permission='sales' display='true' order='2'>pos机品牌</menu>
-            <menu controller='admin_postype' action='index' permission='sales' display='true' order='3'>pos刷卡类型</menu>
+            <menu controller='admin_postype' action='index' permission='sales' display='false' order='3'>pos刷卡类型</menu>
             <menu controller='admin_poscard' action='index' permission='sales' display='true' order='4'>信用卡列表</menu>
             <menu controller='admin_everyday' action='remind' permission='sales' display='true' order='5'>每日提醒</menu>
             <menu controller='admin_pos_guozhang' action='index' permission='sales' display='true' order='6'>额度过账</menu>
