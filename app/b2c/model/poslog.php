@@ -203,11 +203,13 @@ class b2c_mdl_poslog extends dbeav_model{
 				$newData[$value['belong_to']]["{$value['card_id']}"][] = $value;
 			}
 		}
-		foreach ($newData as $key => $value) {
-			foreach ($value as $ke => $val) {
+		foreach ($newData as $key => &$valu) {
+			foreach ($valu as $ke => &$val) {
+				$flag = utils::_array_column($val,'create_time');
+				array_multisort($flag,SORT_DESC,$val);
 				$sum = array_sum(array_map(create_function('$val', 'return $val["money"];'), $val));
-				$ret[$key]["{$ke}"]['name'] = $val['0']['name'];
 				$ret[$key]["{$ke}"]['needHuankuan'] = $sum;
+				$ret[$key]["{$ke}"]['name'] = $val['0']['name'];
 				$ret[$key]["{$ke}"]['huankuan_date'] = $val['0']['huankuan_date'];
 				$ret[$key]["{$ke}"]['card_no'] = $val['0']['card_no'];
 			}

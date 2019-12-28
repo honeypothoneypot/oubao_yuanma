@@ -59,11 +59,7 @@ class b2c_ctl_admin_pos extends desktop_controller{
             $jiesuan = $data['money']*(1-$data['feilv']/100);
             $data['jiesuan_money'] = substr(sprintf("%.3f",$jiesuan),0,-1);
         }
-        if ($data['id']) {
-            $data['create_time'] = strtotime($data['from_time'].' '. implode(':', $temp));
-        }else{
-            $data['create_time'] = time();
-        }
+        $data['create_time'] = strtotime($data['from_time'].' '. implode(':', $temp));
         unset($data['_DTYPE_TIME'],$data['_DTIME_'],$data['from_time']);
         $obj_pos = app::get('b2c')->model('poslog');
         try {
