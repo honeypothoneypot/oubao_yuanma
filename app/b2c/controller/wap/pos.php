@@ -137,15 +137,25 @@ class b2c_ctl_wap_pos extends wap_frontpage{
 
     public function ajaxGetRemind(){
         //默认按可用额度排序
-        $sql = "SELECT group_concat(t.newid ) as newid FROM (
-                SELECT group_concat(card_id ORDER BY usable_edu DESC) as newid,1 as flag  FROM sdb_b2c_poscard WHERE is_enabled='1' GROUP BY share_flag order by usable_edu desc ) as t GROUP BY t.flag";
-        $newid = app::get('b2c')->model('poscard')->db->select($sql);
-        $newid = $newid['0']['newid'];
-        $newid = explode(',', $newid);
-        foreach ($newid as $key => $value) {
-            $newCartId .="'{$value}',";
+        // $sql = "SELECT group_concat(t.newid ) as newid FROM (
+        //         SELECT group_concat(card_id ORDER BY usable_edu DESC) as newid,1 as flag  FROM sdb_b2c_poscard WHERE is_enabled='1' GROUP BY share_flag order by usable_edu desc ) as t GROUP BY t.flag";
+        $sql = "SELECT card_id,share_flag FROM sdb_b2c_poscard WHERE is_enabled = '1' order by usable_edu DESC";
+        $temp = app::get('b2c')->model('poscard')->db->select($sql);
+        foreach ($temp as $key => $value) {
+            $temp1[$value['share_flag']][]=$value['card_id'];
         }
-        $newCartId = rtrim($newCartId,',');
+        $str='';
+        foreach ($temp1 as $key => $value) {
+            if (count($value)>1) {
+                foreach ($value as $ke => $val) {
+                    $str.="'{$val}',";
+                }
+            }else{
+                $str1 = implode(',', $value);
+                $str.="'{$str1}',";
+            }
+        }
+        $newCartId = rtrim($str,',');
         $sql = "SELECT * FROM sdb_b2c_poscard WHERE card_id in ($newCartId) order by field (card_id,$newCartId)";
         $rowsets = app::get('b2c')->model('poscard')->db->select($sql);
         //查询日志：

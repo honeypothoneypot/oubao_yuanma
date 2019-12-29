@@ -1,3 +1,64 @@
+.main {
+    clear: both;
+}
+
+.clean-both {
+    clear: both;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #000;
+}
+
+.menu1 ul li {
+    float: left;
+    /* 向左漂移，将竖排变为横排 */
+    margin-bottom: 10px;
+    width: 80px;
+}
+
+.menu ul li {
+    float: left;
+    /* 向左漂移，将竖排变为横排 */
+    padding-left: 10px;
+    margin-bottom: 10px;
+    width: 42%;
+}
+
+.menu3 ul li {
+    float: left;
+    /* 向左漂移，将竖排变为横排 */
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.pos-input {
+    padding: 5px;
+}
+
+.pos-input input {
+    width: 100%;
+    height: 20px;
+    border: 1px solid #000000;
+}
+
+.poslog table td {
+    border: 1px solid #CD3278;
+    padding: 3px;
+}
+
+.content-input {
+    margin: 2px 0 5px 0;
+}
+
+.poslog_table {
+    width: 100%;
+    font-size: 10px;
+    /*table-layout:fixed;*/
+}
+
+.input-left {
+    margin-left: 25px;
+}
+
 .remind-main {
     margin-top: 45px;
     text-align: center;
@@ -50,24 +111,6 @@
     text-align: center;
 }
 
-/*.belongSon span:nth-child(1){
-    width: 20px;
-}
-.belongSon span:nth-child(2){
-    width: 50px;
-}
-.belongSon span:nth-child(3){
-    width: 50px;
-}
-.belongSon span:nth-child(4){
-    width: 50px;
-}
-.belongSon span:nth-child(5){
-    width: 50px;
-}
-.belongSon span:nth-child(6){
-    width: 50px;
-}*/
 .remind-mainSon {
     font-size: 11px;
 }
@@ -86,7 +129,7 @@
 }
 
 .remindAjax div:nth-child(1) {
-    flex: 1
+    flex: 1.5
 }
 
 .remindAjax div:nth-child(2) {
@@ -94,10 +137,14 @@
 }
 
 .remindAjax div:nth-child(3) {
-    flex: 1
+    flex: 1.5
 }
 
 .remindAjax div:nth-child(4) {
+    flex: 1
+}
+
+.remindAjax div:nth-child(5) {
     flex: 1
 }
 
