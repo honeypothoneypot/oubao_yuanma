@@ -27,11 +27,18 @@
             </tr>
             <tr class="is_xianshi">
                 <th><{t}>临时额度：<{/t}></th>
-                <td><{input type="text" name="linshi_edu" value=$info.linshi_edu }></td>
+                <td>
+                    <{input type="text" name="linshi_edu" value=$info.linshi_edu }>
+                    <{if $info.linshi_edu >0}>
+                        <input type="hidden" name="alreadyHaveLinshi" value="1">
+                    <{/if}>
+                </td>
             </tr>
             <tr class="is_xianshi">
                 <th><{t}>临时额度到期日：<{/t}></th>
-                <td><{input type="text" name="linshi_eduDate" value=$info.linshi_eduDate }></td>
+                <td>
+                    <{input type="time" value=$info.linshi_eduDate  name="linshi_eduDate"}>
+                </td>
             </tr>
             <tr class="is_xianshi">
                 <th><{t}>可用额度：<{/t}></th>

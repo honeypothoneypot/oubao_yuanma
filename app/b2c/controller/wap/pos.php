@@ -151,7 +151,7 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         //查询日志：
         //获取今天零点的时间戳：
         $start = strtotime(date('Y-m-d',time()));
-        $sql = "SELECT card_id,count(id) as count FROM sdb_b2c_poslog where type='pos' and modified_time>'{$start}' group by card_id ";
+        $sql = "SELECT card_id,count(id) as count FROM sdb_b2c_poslog where type='pos' and create_time>'{$start}' group by card_id ";
         $logs = app::get('b2c')->model('poscard')->db->select($sql);
         foreach ($logs as $key => $value) {
             $count[$value['card_id']]=$value['count'];

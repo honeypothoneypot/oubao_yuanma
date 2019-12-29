@@ -34,6 +34,9 @@ class b2c_ctl_admin_poscard extends desktop_controller{
     }
     public function save(){
         $data = $_POST;
+        if ($data['linshi_edu']>0 && !$data['alreadyHaveLinshi']) {
+            $data['usable_edu'] +=$data['linshi_edu'];
+        }
         $data['create_time'] = time();
         $this->begin();
         $obj_pos = app::get('b2c')->model('poscard');
