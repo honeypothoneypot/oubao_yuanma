@@ -22,11 +22,11 @@
 <div class="content" style="float: left;margin-top: 10px;">
 	<div class="demos">
 		<label for="appDate">开始日期</label>
-		<input value="" class="content-input" readonly="readonly" name="timefrom" id="appDate" type="text" onchange="timeChange();">
+		<input value="" class="content-input" readonly="readonly" name="timefrom" id="appDate" type="text">
 	</div>
 	<div class="demos">
 		<label for="appDate2">结束日期</label>
-		<input value="" class="content-input" readonly="readonly" name="timeto" id="appDate2" type="text" onchange="timeChange();">
+		<input value="" class="content-input" readonly="readonly" name="timeto" id="appDate2" type="text">
 	</div>
 </div>
 <div class="" style="float: left;margin-left: 20px;margin-top: 10px;">
@@ -153,11 +153,33 @@
 	</div>
 </div>
 <script type="text/javascript">
+	var appdate = new Rolldate({
+		el: '#appDate',
+		format: 'YYYY-MM-DD',
+		beginYear: 2010,
+		endYear: 2100,
+		confirm: function(date) {
+			jq("#appDate").val(date);
+			timeChange();
+		},
+	});
+	var appdate2 = new Rolldate({
+		el: '#appDate2',
+		format: 'YYYY-MM-DD',
+		beginYear: 2010,
+		endYear: 2100,
+		confirm: function(date) {
+			jq("#appDate2").val(date);
+			timeChange();
+		},
+	})
 	var t = {};
 	t.num =1;
 	//默认本月的时间
 	dateFrom = getMonthStartDate();
 	jq('input[name=timefrom]').val(dateFrom);
+	appdate.$('#appDate').bindDate=new Date(dateFrom);
+
 	t.num=1;
 	filterLogs($('.poslog'),t);
 	jq(function(){
@@ -247,7 +269,6 @@
 		fomObj['fengding'] = fengding;
 		fomObj['share_flag'] = share_flag;
 		fomObj['type'] = type;
-		console.log(fomObj);
 		var url = '<{link app=b2c ctl=wap_pos act=save}>';
 		jq.post(url,fomObj, function(re) {
 			re =  JSON.parse(re);
@@ -394,6 +415,8 @@
 			dateFrom = getLastWeekStartDate();
 			dateTo = getLastWeekEndDate();
 		}
+		appdate.$('#appDate').bindDate=new Date(dateFrom);
+		appdate.$('#appDate2').bindDate=new Date(dateTo);
 		jq('input[name=timefrom]').val(dateFrom);
 		jq('input[name=timeto]').val(dateTo);
 		t.num=1;
@@ -435,7 +458,6 @@ jq.fn.serializeObject = function(){
 jq('.getZhangdan').on('click', function(event) {
 	event.preventDefault();
 	var flag = jq(this).data('flag');
-	console.log(flag);
   	var url = '<{link app=b2c ctl=wap_pos act=getZhangdan}>';
   	jq.post(url,{flag:flag}, function(re) {
   		jq('.toZhangdan').html(re);
