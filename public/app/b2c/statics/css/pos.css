@@ -179,9 +179,11 @@
 }
 
 .rownew div:nth-child(4) {
+    flex: 1
+}
+.rownew div:nth-child(5) {
     flex: 2
 }
-
 .pos-input1 {
     display: flex;
     width: calc(100% + 10px);
@@ -249,4 +251,10 @@
 
 .poslog-list-title2 div:nth-child(3) {
     line-height: 36px;
+}
+.chaxun-button{
+    display: flex;
+}
+.chaxun-button div {
+    flex: 1;
 }

@@ -3,15 +3,18 @@
 
 </div>
 <div class="clean-both"></div>
-<div>
-	<div style="float: left;margin-right: 50px;">
-		<button type="button" class="getZhangdan" data-flag='0'>查询上期账单</button>
+<div class="chaxun-button">
+	<div>
+		<button type="button" class="getZhangdan" data-flag='0'>查询本期账单</button>
 	</div>
-	<div style="float: left;margin-right: 50px;">
-		<button type="button" class="getZhangdan" data-flag='1'>查询本期账单</button>
+	<div>
+		<button type="button" class="getZhangdan" data-flag='1'>查询下期账单</button>
 	</div>
-	<div style="float: left;">
-		<button type="button" class="cancelZhangdan">取消查询</button>
+	<div>
+		<button type="button" class="cancelZhangdan" >取消查询</button>
+	</div>
+	<div>
+		<button type="button" class="getQiankuan">查询总欠款</button>
 	</div>
 </div>
 <div class="clean-both"></div>
@@ -437,7 +440,7 @@ function getRemind(){
     });
 }
 getRemind();
-setInterval('getRemind()',10000);
+// setInterval('getRemind()',10000);
 
 jq.fn.serializeObject = function(){
     var o = {};
@@ -466,5 +469,12 @@ jq('.getZhangdan').on('click', function(event) {
 jq('.cancelZhangdan').on('click',function(event) {
 	event.preventDefault();
   	jq('.toZhangdan').html('');
+});
+jq('.getQiankuan').on('click',function(event) {
+	event.preventDefault();
+	var url = '<{link app=b2c ctl=wap_pos act=getQiankuan}>';
+  	jq.post(url, function(re) {
+  		jq('.toZhangdan').html(re);
+  	});
 });
 </script>

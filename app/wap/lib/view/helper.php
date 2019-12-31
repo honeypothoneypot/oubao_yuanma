@@ -38,7 +38,8 @@ class wap_view_helper
                 "<meta name='keywords' content='$keywords' />",
                 "<meta name='description' content='$description' />",
                 "<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'/>",
-                "<link type='image/x-icon' href='$appleDesktop' rel='apple-touch-icon-precomposed'>"
+                "<link type='image/x-icon' href='$appleDesktop' rel='apple-touch-icon-precomposed'>",
+                "<link rel='icon' href='data:;base64,='>"
             );
         if($nofollow == '是'){
             $_outputHeader[]="<meta name='nofollow' content='nofollow' />";

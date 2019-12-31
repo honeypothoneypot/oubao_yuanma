@@ -195,13 +195,28 @@ class b2c_ctl_wap_pos extends wap_frontpage{
                 $lastmonth += 1;
             }
         }
-        $lastStartDay = $lastyear.'-'.$lastmonth.'-1';
+        //前一个月
+        $prevmonth = $lastmonth-1;
+        $lastStartDay = $lastyear.'-'.$prevmonth.'-1';
         $lastEndDay = $lastyear.'-'.$lastmonth.'-'.date('t',strtotime($lastStartDay));
         $b_time = strtotime($lastStartDay);//上个月的月初时间戳
         $e_time = strtotime($lastEndDay);//上个月的月末时间戳
         $poslog = $this->app->model('poslog');
-        $data = $poslog->getZhangdan($thisyear,$thismonth,$lastyear,$lastmonth,$b_time);
+        $data = $poslog->getZhangdan($thisyear,$thismonth,$lastyear,$lastmonth,$prevmonth,$b_time);
         $this->pagedata['data'] = $data;
         echo $this->fetch('wap/pos/getZhangdan.html');exit;
+    }
+    function getQiankuan(){
+        $sql = "SELECT t.* FROM
+        ( SELECT share_flag, max(all_edu) AS all_edu FROM sdb_b2c_poscard GROUP BY share_flag ) a
+        LEFT JOIN sdb_b2c_poscard t ON t.share_flag = a.share_flag
+        AND t.all_edu = a.all_edu
+        AND t.is_enabled = '1' GROUP BY t.share_flag";
+        $rowsets = app::get('b2c')->model('poscard')->db->select($sql);
+        foreach ($rowsets as $key => $value) {
+            $tmp1 = $value['all_edu']+$value['linshi_edu']-$value['usable_edu'];
+            $tmp2+=$tmp1;
+        }
+        echo $tmp2;
     }
 }

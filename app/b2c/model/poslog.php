@@ -183,8 +183,8 @@ class b2c_mdl_poslog extends dbeav_model{
 		}
 	}
 
-	//查询账单
-	public function getZhangdan($thisyear,$thismonth,$lastyear,$lastmonth,$b_time){
+	//查询账单：$prevmonth前一个月
+	public function getZhangdan($thisyear,$thismonth,$lastyear,$lastmonth,$prevmonth,$b_time){
 		$sql = "SELECT a.*,b.card_no,b.belong_to,b.zhangdan_date,b.huankuan_date,b.name,b.zhangdan_dateTime,c.shuaka_type
 			FROM sdb_b2c_poslog a
 			LEFT JOIN sdb_b2c_poscard b ON b.card_id = a.card_id
@@ -197,8 +197,16 @@ class b2c_mdl_poslog extends dbeav_model{
 			if ($value['name']=='广发银行' && in_array($value['shuaka_type'], array('weixin','zhifubao'))) {
 				$value['zhangdan_dateTime'] = 24;
 			}
-			$startTime = strtotime("{$lastyear}-{$lastmonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
-			$endTime = strtotime("{$thisyear}-{$thismonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+			//账单日大于还款日的 说明还款日是下个月的还款日:本期账单就是：账单开始时间就是前一个月-上月
+			//账单日小于于还款日的 说明还款日是当月的还款日:本期账单就是：账单开始时间就是上个月-本月
+			if ($value['zhangdan_date']>$value['huankuan_date']) {
+				$startTime = strtotime("{$lastyear}-{$prevmonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+				$endTime = strtotime("{$lastyear}-{$lastmonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+			}else{
+				$startTime = strtotime("{$lastyear}-{$lastmonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+				$endTime = strtotime("{$thisyear}-{$thismonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+			}
+			$value['huankuan_date'] = $thismonth."-{$value['huankuan_date']}";
 			if ($value['create_time']>=$startTime && $value['create_time']< $endTime) {
 				$newData[$value['belong_to']]["{$value['card_id']}"][] = $value;
 			}
@@ -212,6 +220,7 @@ class b2c_mdl_poslog extends dbeav_model{
 				$ret[$key]["{$ke}"]['name'] = $val['0']['name'];
 				$ret[$key]["{$ke}"]['huankuan_date'] = $val['0']['huankuan_date'];
 				$ret[$key]["{$ke}"]['card_no'] = $val['0']['card_no'];
+				$ret[$key]["{$ke}"]['zhangdan_date'] = $val['0']['zhangdan_date'];
 			}
 		}
 		return $ret;
