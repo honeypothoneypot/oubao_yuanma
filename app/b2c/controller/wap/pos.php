@@ -176,33 +176,26 @@ class b2c_ctl_wap_pos extends wap_frontpage{
     }
     //获取账单
     public function getZhangdan(){
-        $thismonth = date('m');
-        $thisyear = date('Y');
-        if ($thismonth == 1) {
-            $lastmonth = 12;
-            $lastyear = $thisyear - 1;
-        } else {
-            $lastmonth = $thismonth - 1;
-            $lastyear = $thisyear;
-        }
+        $time = time();
+        $arg = $arg2= -1;
         if ($_POST['flag']=='1') {
-            if ($thismonth==12) {
-                $thisyear = date('Y',strtotime('+1year'));
-                $thismonth = 1;
-                $lastmonth = 12;
-            }else{
-                $thismonth += 1;
-                $lastmonth += 1;
-            }
+            $arg = $arg2= 0;
         }
-        //前一个月
-        $prevmonth = $lastmonth-1;
-        $lastStartDay = $lastyear.'-'.$prevmonth.'-1';
-        $lastEndDay = $lastyear.'-'.$lastmonth.'-'.date('t',strtotime($lastStartDay));
-        $b_time = strtotime($lastStartDay);//上个月的月初时间戳
-        $e_time = strtotime($lastEndDay);//上个月的月末时间戳
+        $arg2++;
+        //本月：年-月
+        $thisMonth = date("Y-m",strtotime("{$arg2} months"));
+        //上月：年-月
+        $lastMonth = date("Y-m",strtotime("{$arg} months"));
+        //前月：年-月
+        $arg--;
+        $prevMonth = date("Y-m",strtotime("{$arg} months"));
+        //下月：年-月
+        $arg2++;
+        $nextMonth = date("Y-m",strtotime("{$arg2} months"));
+        //前月1号作为开始时间
+        $b_time = strtotime("{$prevMonth}-1");
         $poslog = $this->app->model('poslog');
-        $data = $poslog->getZhangdan($thisyear,$thismonth,$lastyear,$lastmonth,$prevmonth,$b_time);
+        $data = $poslog->getZhangdan($thisMonth,$lastMonth,$prevMonth,$nextMonth,$b_time);
         $this->pagedata['data'] = $data;
         echo $this->fetch('wap/pos/getZhangdan.html');exit;
     }

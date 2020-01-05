@@ -10,7 +10,8 @@
         <div class="cellnew">卡号</div>
         <div class="cellnew">账单日</div>
         <div class="cellnew">还款日</div>
-        <div class="cellnew">还款额度</div>
+        <div class="cellnew">本期账单</div>
+        <div class="cellnew">已还款</div>
     </div>
     <{foreach from=$items item=item}>
         <div class="rownew">
@@ -19,6 +20,7 @@
             <div class="cellnew"><{$item.zhangdan_date}></div>
             <div class="cellnew"><{$item.huankuan_date}></div>
             <div class="cellnew"><{$item.needHuankuan}></div>
+            <div class="cellnew"><{$item.benqiHuankuan}></div>
         </div>
     <{/foreach}>
 </div>
