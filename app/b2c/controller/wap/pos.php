@@ -167,6 +167,8 @@ class b2c_ctl_wap_pos extends wap_frontpage{
             $count[$value['card_id']]=$value['count'];
         }
         foreach ($rowsets as $key => &$value) {
+            $value['usable_edu'] = round($value['usable_edu'],2);
+            $value['linshi_edu'] = round($value['linshi_edu'],2);
             $value['count'] = $count[$value['card_id']];
             $new[$value['belong_to']][] = $value;
         }
