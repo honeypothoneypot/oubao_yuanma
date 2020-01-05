@@ -147,7 +147,7 @@ class b2c_mdl_poslog extends dbeav_model{
 			}
 		}
 		if ($data['type']=='huankuan') {
-			$data['money'] = $data['money']*-1;
+			// $data['money'] = $data['money']*-1;
 		}
 		if ($data['type']!='pos') {
 			$data['posbrand_id'] = 0;
@@ -186,8 +186,8 @@ class b2c_mdl_poslog extends dbeav_model{
 		}
 	}
 
-	//查询账单：$prevmonth前一个月
-	public function getZhangdan($thisMonth,$lastMonth,$prevMonth,$nextMonth,$b_time){
+	//查询账单
+	public function getZhangdan($thisMonth,$lastMonth,$prevMonth,$nextMonth,$thisMonth2,$b_time){
 		$sql = "SELECT a.*,b.card_no,b.belong_to,b.zhangdan_date,b.huankuan_date,b.name,b.zhangdan_dateTime,c.shuaka_type
 			FROM sdb_b2c_poslog a
 			LEFT JOIN sdb_b2c_poscard b ON b.card_id = a.card_id
@@ -233,7 +233,8 @@ class b2c_mdl_poslog extends dbeav_model{
 					$value['isBenqi'] = 2;
 				}
 			}
-			$value['huankuan_date'] = $thisMonth."-{$value['huankuan_date']}";
+			$value['huankuan_date'] = $thisMonth2."-{$value['huankuan_date']}";
+			$value['create_time2'] = date('Y-m-d H:i:s',$value['create_time']);
 			$newData[$value['belong_to']]["{$value['card_id']}"][] = $value;
 		}
 		foreach ($newData as $key => &$valu) {
@@ -258,6 +259,7 @@ class b2c_mdl_poslog extends dbeav_model{
 				);
 				$ret[$key]["{$ke}"]['needHuankuan'] = $needHuankuan;
 				$ret[$key]["{$ke}"]['benqiHuankuan'] = $benqiHuankuan;
+				$ret[$key]["{$ke}"]['daiHuankuan'] = bcsub($needHuankuan,$benqiHuankuan,2);
 				$ret[$key]["{$ke}"]['name'] = $val['0']['name'];
 				$ret[$key]["{$ke}"]['huankuan_date'] = $val['0']['huankuan_date'];
 				$ret[$key]["{$ke}"]['card_no'] = $val['0']['card_no'];

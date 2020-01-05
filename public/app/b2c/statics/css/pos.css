@@ -180,14 +180,18 @@
 }
 /*还款日*/
 .rownew div:nth-child(4) {
-    flex: 1.2
+    flex: 0.8
 }
-/*还款额度*/
+/*本期账单*/
 .rownew div:nth-child(5) {
-    flex: 1.5
+    flex: 1.2
 }
 /*已还款*/
 .rownew div:nth-child(6) {
+    flex: 1
+}
+/*待还款*/
+.rownew div:nth-child(7) {
     flex: 1
 }
 .pos-input1 {

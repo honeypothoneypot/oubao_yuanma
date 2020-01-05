@@ -186,6 +186,7 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $arg2++;
         //本月：年-月
         $thisMonth = date("Y-m",strtotime("{$arg2} months"));
+        $thisMonth2 = date("m",strtotime("{$arg2} months"));
         //上月：年-月
         $lastMonth = date("Y-m",strtotime("{$arg} months"));
         //前月：年-月
@@ -197,7 +198,7 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         //前月1号作为开始时间
         $b_time = strtotime("{$prevMonth}-1");
         $poslog = $this->app->model('poslog');
-        $data = $poslog->getZhangdan($thisMonth,$lastMonth,$prevMonth,$nextMonth,$b_time);
+        $data = $poslog->getZhangdan($thisMonth,$lastMonth,$prevMonth,$nextMonth,$thisMonth2,$b_time);
         $this->pagedata['data'] = $data;
         echo $this->fetch('wap/pos/getZhangdan.html');exit;
     }
