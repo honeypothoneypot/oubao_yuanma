@@ -179,9 +179,9 @@
 	var t = {};
 	t.num =1;
 	//默认本月的时间
-	dateFrom = getMonthStartDate();
-	jq('input[name=timefrom]').val(dateFrom);
-	appdate.$('#appDate').bindDate=new Date(dateFrom);
+	var dateFrom = formatDateNew('benyue');
+	jq('input[name=timefrom]').val(dateFrom[0]);
+	appdate.$('#appDate').bindDate=new Date(dateFrom[0]);
 
 	t.num=1;
 	filterLogs($('.poslog'),t);
@@ -395,29 +395,9 @@
 		var timeScop = jq(this).val();
 		var dateFrom = '';
 		var dateTo = '';
-		if (timeScop=='benzhou') {
-			dateFrom = getWeekStartDate();
-			dateTo = getWeekEndDate();
-		}else if (timeScop=='benyue'){
-			dateFrom = getMonthStartDate();
-			dateTo = getMonthEndDate();
-		}else if (timeScop=='shangyue') {
-			dateFrom = getLastMonthStartDate();
-			dateTo = getLastMonthEndDate();
-		}else if (timeScop=='bennian') {
-			dateFrom = getYearStartDate();
-		}else if (timeScop=='qunian') {
-			dateFrom = getLastYearStartDate();
-			dateTo = getLastYearEndDate();
-		}else if (timeScop=='zuotian') {
-			dateFrom = getYesterdayStartDate();
-			dateTo = getYesterdayStartDate();
-		}else if (timeScop=='jintian') {
-			dateFrom = getTodayStartDate();
-		}else if (timeScop == 'shangzhou'){
-			dateFrom = getLastWeekStartDate();
-			dateTo = getLastWeekEndDate();
-		}
+		var geshiDate = formatDateNew(timeScop);
+		dateFrom = geshiDate[0];
+		dateTo = geshiDate[1];
 		appdate.$('#appDate').bindDate=new Date(dateFrom);
 		appdate.$('#appDate2').bindDate=new Date(dateTo);
 		jq('input[name=timefrom]').val(dateFrom);
