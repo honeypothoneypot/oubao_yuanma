@@ -52,12 +52,10 @@ function formatDateNew(type){
         case 'zuotian':
             //减去的天数
             var minusDay=1;
-            //增加的天数
-            var plusDay=week==0?0:7-week;
-            //本周 周一
+            //昨天开始时间
             var start=new Date(now.getTime()-(minusDay*millisecond));
-            //本周 周日
-            var end=new Date(now.getTime());
+            //昨天结束时间
+            var end=new Date(now.getTime()-(minusDay*millisecond));
             break;
         case 'jintian':
             //减去的天数
