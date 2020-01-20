@@ -223,8 +223,8 @@ class b2c_mdl_poslog extends dbeav_model{
 				$endTime = strtotime("{$thisMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
 				if ($value['type']=='huankuan') {
 					//上期还款日
-					$huanDateLast = strtotime("{$thisMonth}-{$value['huankuan_date']} 24:00:00");
-					$huanDate = strtotime("{$nextMonth}-{$value['huankuan_date']} 24:00:00");
+					$huanDateLast = strtotime("{$lastMonth}-{$value['huankuan_date']} 23:59:59");
+					$huanDate = strtotime("{$thisMonth}-{$value['huankuan_date']} 24:00:00");
 					if ($value['create_time']>$huanDateLast && $value['create_time']<=$huanDate) {
 						$value['yiHuan_benqi'] = 1;//已还上期的
 					}
