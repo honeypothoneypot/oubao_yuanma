@@ -181,6 +181,7 @@ $db['poscard'] = array (
 			'filterdefault' => true,
 			'in_list' => true,
 			'default_in_list' => true,
+			'label' => app::get('b2c')->_('账单日后多少天为还款日'),
 			'comment' => app::get('b2c')->_('账单日后多少天为还款日'),
     	),
 	),

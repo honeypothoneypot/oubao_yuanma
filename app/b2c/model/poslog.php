@@ -187,7 +187,7 @@ class b2c_mdl_poslog extends dbeav_model{
 	}
 
 	//查询账单
-	public function getZhangdan($thisMonth,$lastMonth,$prevMonth,$nextMonth,$thisMonth2,$b_time){
+	public function getZhangdan($thisMonth,$lastMonth,$prevMonth,$nextMonth,$thisMonth2,$b_time,$time){
 		$sql = "SELECT a.*,b.card_no,b.belong_to,b.zhangdan_date,b.huankuan_date,b.name,b.zhangdan_dateTime,b.is_guding,b.zhangdanToDays,c.shuaka_type
 			FROM sdb_b2c_poslog a
 			LEFT JOIN sdb_b2c_poscard b ON b.card_id = a.card_id
@@ -207,7 +207,7 @@ class b2c_mdl_poslog extends dbeav_model{
 			*/
 			//本期账单计算时间：开始时间
 			//根据当前日期来算账单周期
-			$thisDay = date('j',time());//j-月份中的第几天，没有前导零，1到31s
+			$thisDay = date('j',$time);//j-月份中的第几天，没有前导零，1到31s
 			//如果账单日大于当天，则说明账单周期是前个月的账单日-上个月的账单日;还款日=当月
 			if ($value['zhangdan_date']>=$thisDay) {
 				$zhangdanStart = strtotime("{$prevMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
@@ -243,7 +243,7 @@ class b2c_mdl_poslog extends dbeav_model{
 					$value['huankuanDateThis'] = strtotime("{$lastMonthZhangdan} + {$value['zhangdanToDays']} day 23:59:59");
 				}else{
 					//上次还款日
-					$value['huankuanDateLast'] = strtotime("{$thisMonth}-{$value['huankuan_date']} 23:59:59");
+					$value['huankuanDateLast'] = strtotime("{$lastMonth}-{$value['huankuan_date']} 23:59:59");
 					//本次还款日
 					$value['huankuanDateThis'] = strtotime("{$thisMonth}-{$value['huankuan_date']} 23:59:59");
 				}
