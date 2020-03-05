@@ -179,23 +179,29 @@ class b2c_ctl_wap_pos extends wap_frontpage{
     }
     //获取账单
     public function getZhangdan(){
-        $time = time();
+        $time = '';
+        if ($time) {
+            $time = strtotime($time);
+        }else{
+            $time = time();
+        }
         $arg = $arg2= -1;
         if ($_POST['flag']=='1') {
             $arg = $arg2= 0;
         }
         $arg2++;
         //本月：年-月
-        $thisMonth = date("Y-m",strtotime("{$arg2} months"));
-        $thisMonth2 = date("m",strtotime("{$arg2} months"));
+        $thisMonth = date("Y-m",strtotime("{$arg2} months",$time));
+        //本月：月份
+        $thisMonth2 = date("m",strtotime("{$arg2} months",$time));
         //上月：年-月
-        $lastMonth = date("Y-m",strtotime("{$arg} months"));
+        $lastMonth = date("Y-m",strtotime("{$arg} months",$time));
         //前月：年-月
         $arg--;
-        $prevMonth = date("Y-m",strtotime("{$arg} months"));
+        $prevMonth = date("Y-m",strtotime("{$arg} months",$time));
         //下月：年-月
         $arg2++;
-        $nextMonth = date("Y-m",strtotime("{$arg2} months"));
+        $nextMonth = date("Y-m",strtotime("{$arg2} months",$time));
         //前月1号作为开始时间
         $b_time = strtotime("{$prevMonth}-1");
         $poslog = $this->app->model('poslog');

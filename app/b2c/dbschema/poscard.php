@@ -94,29 +94,29 @@ $db['poscard'] = array (
 			'editable' => false,
 			'label' => app::get('b2c')->_('总额度'),
 			'comment' => app::get('b2c')->_('总额度'),
-	    ),
-	    'linshi_edu' => array (
+		),
+		'linshi_edu' => array (
 			'type' => 'money',
 			'default' => '0',
 			'editable' => false,
 			'label' => app::get('b2c')->_('临时额度'),
 			'comment' => app::get('b2c')->_('临时额度'),
-	    ),
-	    'linshi_eduDate' => array (
+		),
+		'linshi_eduDate' => array (
 			'type' => 'varchar(20)',
 			'default' => '',
 			'editable' => false,
 			'label' => app::get('b2c')->_('临时额度到期日'),
 			'comment' => app::get('b2c')->_('临时额度到期日'),
-	    ),
-	    'usable_edu' => array (
+		),
+		'usable_edu' => array (
 			'type' => 'money',
 			'default' => '0',
 			'editable' => false,
 			'label' => app::get('b2c')->_('可用额度'),
 			'comment' => app::get('b2c')->_('可用额度'),
-	    ),
-	    'zhangdan_date' => array (
+		),
+		'zhangdan_date' => array (
 			'type' => 'number',
 			'width' => 110,
 			'editable' => false,
@@ -127,8 +127,8 @@ $db['poscard'] = array (
 			'orderby' => true,
 			'label' => app::get('b2c')->_('账单日'),
 			'comment' => app::get('b2c')->_('账单日'),
-	    ),
-	    'zhangdan_dateTime' => array (
+		),
+		'zhangdan_dateTime' => array (
 			'type' => 'number',
 			'width' => 110,
 			'editable' => false,
@@ -139,8 +139,8 @@ $db['poscard'] = array (
 			'orderby' => true,
 			'label' => app::get('b2c')->_('账单日刷卡计入本期截止时间'),
 			'comment' => app::get('b2c')->_('账单日刷卡计入本期截止时间'),
-	    ),
-	    'huankuan_date' => array (
+		),
+		'huankuan_date' => array (
 			'type' => 'number',
 			'width' => 110,
 			'editable' => false,
@@ -149,16 +149,40 @@ $db['poscard'] = array (
 			'in_list' => true,
 			'default_in_list' => true,
 			'orderby' => true,
-			'label' => app::get('b2c')->_('还款日'),
-			'comment' => app::get('b2c')->_('还款日'),
-	    ),
-	    'share_flag' => array(
+			'label' => app::get('b2c')->_('固定还款日'),
+			'comment' => app::get('b2c')->_('固定还款日'),
+		),
+		'share_flag' => array(
 			'type' => 'varchar(10)',
 			'in_list' => true,
 			'default_in_list' => true,
 			'label' => app::get('b2c')->_('信用卡额度共享标识'),
 			'comment' => app::get('b2c')->_('信用卡额度共享标识'),
 		),
+		'is_guding' => array (
+			'type' => array (
+				0 => app::get('b2c')->_('否'),
+				1 => app::get('b2c')->_('是'),
+			),
+			'default' => '1',
+			'width' => 75,
+			'editable' => false,
+			'filtertype' => 'yes',
+			'filterdefault' => true,
+			'in_list' => true,
+			'default_in_list' => true,
+			'label' => app::get('b2c')->_('是否固定还款日'),
+			'comment' => app::get('b2c')->_('是否固定还款日'),
+		),
+		'zhangdanToDays' => array (
+			'type' => 'number',
+			'editable' => false,
+			'filtertype' => 'yes',
+			'filterdefault' => true,
+			'in_list' => true,
+			'default_in_list' => true,
+			'comment' => app::get('b2c')->_('账单日后多少天为还款日'),
+    	),
 	),
 	'index' => array (
 		'ind_name' => array (

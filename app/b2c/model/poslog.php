@@ -188,59 +188,80 @@ class b2c_mdl_poslog extends dbeav_model{
 
 	//查询账单
 	public function getZhangdan($thisMonth,$lastMonth,$prevMonth,$nextMonth,$thisMonth2,$b_time){
-		$sql = "SELECT a.*,b.card_no,b.belong_to,b.zhangdan_date,b.huankuan_date,b.name,b.zhangdan_dateTime,c.shuaka_type
+		$sql = "SELECT a.*,b.card_no,b.belong_to,b.zhangdan_date,b.huankuan_date,b.name,b.zhangdan_dateTime,b.is_guding,b.zhangdanToDays,c.shuaka_type
 			FROM sdb_b2c_poslog a
 			LEFT JOIN sdb_b2c_poscard b ON b.card_id = a.card_id
 			LEFT JOIN sdb_b2c_postype c ON c.postype_id = a.postype_id
 			WHERE a.create_time>={$b_time} and a.type in('pos','xiaofei','huankuan','nianfei')
-			ORDER BY b.huankuan_date asc,b.card_id asc
+			order by a.create_time asc
 		";
 		$data =$this->db->select($sql);
 		foreach ($data as $key => &$value) {
-			$value['money'] = round($value['money'],2);
 			if ($value['name']=='广发银行' && in_array($value['shuaka_type'], array('weixin','zhifubao'))) {
-				$value['zhangdan_dateTime'] = 24;
+				$value['zhangdan_dateTime'] = '24';
 			}
-			//账单日大于还款日的 说明还款日是本月:本期账单开始时间就是前一个月→上月
-			//账单日小于于还款日的 说明还款日是下月:本期账单开始时间就是上个月→本月
-			if ($value['zhangdan_date']>$value['huankuan_date']) {
-				$startTime = strtotime("{$prevMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
-				$endTime = strtotime("{$lastMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
-				if ($value['type']=='huankuan') {
-					//上期还款日
-					$huanDateLast = strtotime("{$lastMonth}-{$value['huankuan_date']} 24:00:00");
-					//已还本期的：创建时间<=还款日
-					$huanDate = strtotime("{$thisMonth}-{$value['huankuan_date']} 24:00:00");
-					if ($value['create_time']>$huanDateLast && $value['create_time']<=$huanDate) {
-						$value['yiHuan_benqi'] = 1;
-					}
-				}
-				if ($value['create_time']>=$startTime && $value['create_time']< $endTime) {
+			/*
+			1.不是固定还款日的，则根据账单日-账单日多少天后来计算还款日;
+			2.上月还款日=前月-账单日的关系
+			3.本月还款日=上月-账单日的关系
+			*/
+			//本期账单计算时间：开始时间
+			//根据当前日期来算账单周期
+			$thisDay = date('j',time());//j-月份中的第几天，没有前导零，1到31s
+			//如果账单日大于当天，则说明账单周期是前个月的账单日-上个月的账单日;还款日=当月
+			if ($value['zhangdan_date']>=$thisDay) {
+				$zhangdanStart = strtotime("{$prevMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+				$zhangdanEnd = strtotime("{$lastMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+				if ($value['create_time']>=$zhangdanStart && $value['create_time']<= $zhangdanEnd) {
 					$value['isBenqi'] = 1;
 				}
-			}else{
-				$startTime = strtotime("{$lastMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
-				$endTime = strtotime("{$thisMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
-				if ($value['type']=='huankuan') {
-					//上期还款日
-					$huanDateLast = strtotime("{$lastMonth}-{$value['huankuan_date']} 23:59:59");
-					$huanDate = strtotime("{$thisMonth}-{$value['huankuan_date']} 24:00:00");
-					if ($value['create_time']>$huanDateLast && $value['create_time']<=$huanDate) {
-						$value['yiHuan_benqi'] = 1;//已还上期的
-					}
+				if ($value['is_guding']=='0') {
+					//上次还款日
+					$tmp = "{$prevMonth}-{$value['zhangdan_date']}";
+					$value['huankuanDateLast'] = strtotime("{$tmp} + {$value['zhangdanToDays']} day 23:59:59");
+					//本次还款日
+					$lastMonthZhangdan = "{$lastMonth}-{$value['zhangdan_date']}";
+					$value['huankuanDateThis'] = strtotime("{$lastMonthZhangdan} + {$value['zhangdanToDays']} day 23:59:59");
+				}else{
+					//上次还款日
+					$value['huankuanDateLast'] = strtotime("{$lastMonth}-{$value['huankuan_date']} 23:59:59");
+					//本次还款日
+					$value['huankuanDateThis'] = strtotime("{$thisMonth}-{$value['huankuan_date']} 23:59:59");
 				}
-				if ($value['create_time']>=$startTime && $value['create_time']< $endTime) {
+			}else{//如果账单日小于等于当天，则说明账单周期是上个月的账单日-这个月的账单日;还款日=下月
+				$zhangdanStart = strtotime("{$lastMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+				$zhangdanEnd = strtotime("{$thisMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+				if ($value['create_time']>=$zhangdanStart && $value['create_time']<= $zhangdanEnd) {
 					$value['isBenqi'] = 2;
 				}
+				if ($value['is_guding']=='0') {
+					//上次还款日
+					$tmp = "{$lastMonth}-{$value['zhangdan_date']}";
+					$value['huankuanDateLast'] = strtotime("{$tmp} + {$value['zhangdanToDays']} day 23:59:59");
+					//本次还款日
+					$lastMonthZhangdan = "{$thisMonth}-{$value['zhangdan_date']}";
+					$value['huankuanDateThis'] = strtotime("{$lastMonthZhangdan} + {$value['zhangdanToDays']} day 23:59:59");
+				}else{
+					//上次还款日
+					$value['huankuanDateLast'] = strtotime("{$thisMonth}-{$value['huankuan_date']} 23:59:59");
+					//本次还款日
+					$value['huankuanDateThis'] = strtotime("{$thisMonth}-{$value['huankuan_date']} 23:59:59");
+				}
 			}
-			$value['huankuan_date'] = $thisMonth2."-{$value['huankuan_date']}";
-			$value['create_time2'] = date('Y-m-d H:i:s',$value['create_time']);
-			$newData[$value['belong_to']]["{$value['card_id']}"][] = $value;
+			$value['huankuanDate2'] = date('n-j',$value['huankuanDateThis']);
+			$value['money'] = round($value['money'],2);
+			if ($value['type']=='huankuan' && $value['create_time']>$value['huankuanDateLast'] && $value['create_time']<=$value['huankuanDateThis']) {
+				$value['yiHuan_benqi'] = 1;
+			}
+		}
+		//重新排序
+		$flag = utils::_array_column($data,'huankuanDateThis');
+		array_multisort($flag,SORT_ASC,$data);
+		foreach ($data as $key => $value2) {
+			$newData[$value2['belong_to']]["{$value2['card_id']}"][] = $value2;
 		}
 		foreach ($newData as $key => &$valu) {
 			foreach ($valu as $ke => &$val) {
-				$flag = utils::_array_column($val,'create_time');
-				array_multisort($flag,SORT_DESC,$val);
 				$needHuankuan = array_sum(
 					array_map(
 						create_function('$val',
@@ -261,7 +282,7 @@ class b2c_mdl_poslog extends dbeav_model{
 				$ret[$key]["{$ke}"]['benqiHuankuan'] = $benqiHuankuan;
 				$ret[$key]["{$ke}"]['daiHuankuan'] = bcsub($needHuankuan,$benqiHuankuan,2);
 				$ret[$key]["{$ke}"]['name'] = $val['0']['name'];
-				$ret[$key]["{$ke}"]['huankuan_date'] = $val['0']['huankuan_date'];
+				$ret[$key]["{$ke}"]['huankuan_date'] = $val['0']['huankuanDate2'];
 				$ret[$key]["{$ke}"]['card_no'] = $val['0']['card_no'];
 				$ret[$key]["{$ke}"]['zhangdan_date'] = $val['0']['zhangdan_date'];
 			}

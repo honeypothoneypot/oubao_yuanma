@@ -35,33 +35,44 @@
                 </td>
             </tr>
             <tr class="is_xianshi">
-                <th><{t}>临时额度到期日：<{/t}></th>
+                <th><{t}>临时额度到期日:<{/t}></th>
                 <td>
                     <{input type="time" value=$info.linshi_eduDate  name="linshi_eduDate"}>
                 </td>
             </tr>
             <tr class="is_xianshi">
-                <th><{t}>可用额度：<{/t}></th>
+                <th><{t}>可用额度:<{/t}></th>
                 <td><{input type="text" name="usable_edu" value=$info.usable_edu }></td>
             </tr>
             <tr class="is_xianshi">
-                <th><{t}>账单日：<{/t}></th>
+                <th><{t}>账单日:<{/t}></th>
                 <td><{input type="text" name="zhangdan_date" value=$info.zhangdan_date }>日/每月</td>
             </tr>
             <tr class="is_xianshi">
-                <th><{t}>账单日刷卡计入本期截止时间：<{/t}></th>
+                <th><{t}>账单日刷卡计入本期截止时间:<{/t}></th>
                 <td><{input type="text" name="zhangdan_dateTime" value=$info.zhangdan_dateTime }>点</td>
             </tr>
             <tr class="is_xianshi">
-                <th><{t}>还款日：<{/t}></th>
+                <th><{t}>固定还款日:<{/t}></th>
                 <td><{input type="text" name="huankuan_date" value=$info.huankuan_date }>日/每月</td>
             </tr>
             <tr class="is_xianshi">
-                <th><{t}>备注：<{/t}></th>
+                <th><{t}>是否固定还款日:<{/t}></th>
+                <td>
+                    <input type="radio" name="is_guding" value="1" id="is_guding1" <{if $info.is_guding == 1 || !$info.is_guding}>checked <{/if}>> <label for="is_guding1">是</label>
+                    <input type="radio" name="is_guding" value="0" id="is_guding2" <{if $info.is_guding == 0}>checked <{/if}> > <label for="is_guding2">否</label>
+                </td>
+            </tr>
+            <tr class="is_xianshi">
+                <th><{t}>账单日后多少天为还款日:<{/t}></th>
+                <td><{input type="text" name="zhangdanToDays" value=$info.zhangdanToDays }>天</td>
+            </tr>
+            <tr class="is_xianshi">
+                <th><{t}>备注:<{/t}></th>
                 <td><{input type="text" name="memo" value=$info.memo }></td>
             </tr>
             <tr class="is_xianshi">
-                <th><{t}>是否启用：<{/t}></th>
+                <th><{t}>是否启用:<{/t}></th>
                 <td>
                     <input type="radio" name="is_enabled" value="1" id="is_enabled1" <{if $info.is_enabled == 1 || !$info.is_enabled}>checked <{/if}>> <label for="is_enabled1">是</label>
                     <input type="radio" name="is_enabled" value="0" id="is_enabled2" <{if $info.is_enabled == 0}>checked <{/if}> > <label for="is_enabled2">否</label>
