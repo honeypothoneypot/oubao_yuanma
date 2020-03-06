@@ -35,6 +35,7 @@ class b2c_ctl_admin_pos extends desktop_controller{
     public function logadd(){
         $this->pagedata['create_time'] = time();
         $this->getPagedata();
+        $this->pagedata['info'] = array('create_time'=>time());
         $this->display('admin/pos/logadd.html');
     }
     public function logedit($id){
