@@ -11,7 +11,7 @@
  * brand 模板
  */
 class b2c_mdl_poslog extends dbeav_model{
-	var $defaultOrder = array('create_time',' DESC');
+	var $defaultOrder = array('id',' DESC');
 	public function get_schema(){
 		$columns = parent::get_schema();
 		// $a = array(
@@ -187,19 +187,46 @@ class b2c_mdl_poslog extends dbeav_model{
 	}
 
 	//查询账单
-	public function getZhangdan($thisMonth,$lastMonth,$prevMonth,$nextMonth,$thisMonth2,$b_time,$time){
+	public function getZhangdan($flag,$card_id){
+		// $time = '2020-3-9';
+        if ($time) {
+            $time = strtotime($time);
+        }else{
+            $time = time();
+        }
+        $arg = $arg2= -1;
+        if ($flag=='1') {
+            $arg = $arg2= 0;
+        }
+        $arg2++;
+        //本月：年-月
+        $thisMonth = date("Y-m",strtotime("{$arg2} months",$time));
+        //上月：年-月
+        $lastMonth = date("Y-m",strtotime("{$arg} months",$time));
+        //前月：年-月
+        $arg--;
+        $prevMonth = date("Y-m",strtotime("{$arg} months",$time));
+        //下月：年-月
+        $arg2++;
+        $nextMonth = date("Y-m",strtotime("{$arg2} months",$time));
+        //前月1号作为开始时间
+        $b_time = strtotime("{$prevMonth}-1");
 		$sql = "SELECT a.*,b.card_no,b.belong_to,b.zhangdan_date,b.huankuan_date,b.name,b.zhangdan_dateTime,b.is_guding,b.zhangdanToDays,c.shuaka_type
 			FROM sdb_b2c_poslog a
 			LEFT JOIN sdb_b2c_poscard b ON b.card_id = a.card_id
 			LEFT JOIN sdb_b2c_postype c ON c.postype_id = a.postype_id
 			WHERE a.create_time>={$b_time} and a.type in('pos','xiaofei','huankuan','nianfei')
-			order by a.create_time asc
+			and b.is_enabled='1'
 		";
+		if ($card_id) {
+			$sql .= " and a.card_id='{$card_id}'";
+		}
+		$sql .=" order by a.create_time asc";
 		$data =$this->db->select($sql);
 		foreach ($data as $key => &$value) {
-			if ($value['name']=='广发银行' && in_array($value['shuaka_type'], array('weixin','zhifubao'))) {
-				$value['zhangdan_dateTime'] = '24';
-			}
+			// if ($value['name']=='广发银行' && in_array($value['shuaka_type'], array('weixin','zhifubao'))) {
+			// 	$value['zhangdan_dateTime'] = '24';
+			// }
 			/*
 			1.不是固定还款日的，则根据账单日-账单日多少天后来计算还款日;
 			2.上月还款日=前月-账单日的关系
@@ -207,14 +234,12 @@ class b2c_mdl_poslog extends dbeav_model{
 			*/
 			//本期账单计算时间：开始时间
 			//根据当前日期来算账单周期
-			$thisDay = date('j',$time);//j-月份中的第几天，没有前导零，1到31s
-			//如果账单日大于当天，则说明账单周期是前个月的账单日-上个月的账单日;还款日=当月
-			if ($value['zhangdan_date']>=$thisDay) {
-				$zhangdanStart = strtotime("{$prevMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
-				$zhangdanEnd = strtotime("{$lastMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
-				if ($value['create_time']>=$zhangdanStart && $value['create_time']<= $zhangdanEnd) {
-					$value['isBenqi'] = 1;
-				}
+			// $thisDay = date('j',$time);//j-月份中的第几天，没有前导零，1到31
+			//本月账单日
+        	$thisZhangdanTime = strtotime("{$thisMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+			//如果账单日大于当天，则说明账单周期是前个月的账单日-上个月的账单日;再判断还款日
+			if ($thisZhangdanTime>$time) {
+				//非固定还款日
 				if ($value['is_guding']=='0') {
 					//上次还款日
 					$tmp = "{$prevMonth}-{$value['zhangdan_date']}";
@@ -223,12 +248,24 @@ class b2c_mdl_poslog extends dbeav_model{
 					$lastMonthZhangdan = "{$lastMonth}-{$value['zhangdan_date']}";
 					$value['huankuanDateThis'] = strtotime("{$lastMonthZhangdan} + {$value['zhangdanToDays']} day 23:59:59");
 				}else{
-					//上次还款日
-					$value['huankuanDateLast'] = strtotime("{$lastMonth}-{$value['huankuan_date']} 23:59:59");
-					//本次还款日
-					$value['huankuanDateThis'] = strtotime("{$thisMonth}-{$value['huankuan_date']} 23:59:59");
+					if ($value['huankuan_date']>$value['zhangdan_date']) {
+						//上次还款日
+						$value['huankuanDateLast'] = strtotime("{$prevMonth}-{$value['huankuan_date']} 23:59:59");
+						//本次还款日
+						$value['huankuanDateThis'] = strtotime("{$lastMonth}-{$value['huankuan_date']} 23:59:59");
+					}else{
+						//上次还款日
+						$value['huankuanDateLast'] = strtotime("{$lastMonth}-{$value['huankuan_date']} 23:59:59");
+						//本次还款日
+						$value['huankuanDateThis'] = strtotime("{$thisMonth}-{$value['huankuan_date']} 23:59:59");
+					}
 				}
-			}else{//如果账单日小于等于当天，则说明账单周期是上个月的账单日-这个月的账单日;还款日=下月
+				$zhangdanStart = strtotime("{$prevMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+				$zhangdanEnd = strtotime("{$lastMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+				if ($value['create_time']>=$zhangdanStart && $value['create_time']<= $zhangdanEnd) {
+					$value['isBenqi'] = 1;
+				}
+			}else{//如果账单日小于等于当天，则说明账单周期是上个月的账单日-这个月的账单日;再判断还款日
 				$zhangdanStart = strtotime("{$lastMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
 				$zhangdanEnd = strtotime("{$thisMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
 				if ($value['create_time']>=$zhangdanStart && $value['create_time']<= $zhangdanEnd) {
@@ -242,10 +279,17 @@ class b2c_mdl_poslog extends dbeav_model{
 					$lastMonthZhangdan = "{$thisMonth}-{$value['zhangdan_date']}";
 					$value['huankuanDateThis'] = strtotime("{$lastMonthZhangdan} + {$value['zhangdanToDays']} day 23:59:59");
 				}else{
-					//上次还款日
-					$value['huankuanDateLast'] = strtotime("{$lastMonth}-{$value['huankuan_date']} 23:59:59");
-					//本次还款日
-					$value['huankuanDateThis'] = strtotime("{$thisMonth}-{$value['huankuan_date']} 23:59:59");
+					if ($value['huankuan_date']>$value['zhangdan_date']) {
+						//上次还款日
+						$value['huankuanDateLast'] = strtotime("{$lastMonth}-{$value['huankuan_date']} 23:59:59");
+						//本次还款日
+						$value['huankuanDateThis'] = strtotime("{$thisMonth}-{$value['huankuan_date']} 23:59:59");
+					}else{
+						//上次还款日
+						$value['huankuanDateLast'] = strtotime("{$thisMonth}-{$value['huankuan_date']} 23:59:59");
+						//本次还款日
+						$value['huankuanDateThis'] = strtotime("{$nextMonth}-{$value['huankuan_date']} 23:59:59");
+					}
 				}
 			}
 			$value['huankuanDate2'] = date('n-j',$value['huankuanDateThis']);
@@ -255,8 +299,8 @@ class b2c_mdl_poslog extends dbeav_model{
 			}
 		}
 		//重新排序
-		$flag = utils::_array_column($data,'huankuanDateThis');
-		array_multisort($flag,SORT_ASC,$data);
+		$flag2 = utils::_array_column($data,'huankuanDateThis');
+		array_multisort($flag2,SORT_ASC,$data);
 		foreach ($data as $key => $value2) {
 			$newData[$value2['belong_to']]["{$value2['card_id']}"][] = $value2;
 		}
@@ -278,6 +322,8 @@ class b2c_mdl_poslog extends dbeav_model{
 							}'
 						),$val)
 				);
+				$ret[$key]["{$ke}"]['flag'] = $flag;
+				$ret[$key]["{$ke}"]['card_id'] = $val['0']['card_id'];
 				$ret[$key]["{$ke}"]['needHuankuan'] = $needHuankuan;
 				$ret[$key]["{$ke}"]['benqiHuankuan'] = $benqiHuankuan;
 				$ret[$key]["{$ke}"]['daiHuankuan'] = bcsub($needHuankuan,$benqiHuankuan,2);
@@ -285,6 +331,13 @@ class b2c_mdl_poslog extends dbeav_model{
 				$ret[$key]["{$ke}"]['huankuan_date'] = $val['0']['huankuanDate2'];
 				$ret[$key]["{$ke}"]['card_no'] = $val['0']['card_no'];
 				$ret[$key]["{$ke}"]['zhangdan_date'] = $val['0']['zhangdan_date'];
+				if ($card_id) {
+					foreach ($val as $k => $v) {
+						if ($v['isBenqi']) {
+							$ret[$key]["{$ke}"]['benqiMx'][$k] = $v;
+						}
+					}
+				}
 			}
 		}
 		return $ret;

@@ -83,8 +83,16 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         //刷卡方式
         $mdlType = $this->app->model('postype');
         $postype = $mdlType->getPostype();
+        $type = array(
+            'huankuan'=>'还款',
+            'xiaofei'=>'消费',
+            'nianfei'=>'年费',
+        );
         foreach ($ret['lists'] as $key => &$value) {
             $value['shuaka_type'] = $postype[$value['shuaka_type']];
+            if (!$value['shuaka_type']) {
+                $value['shuaka_type'] = $type[$value['type']];
+            }
             if ($value['belong_to']=='lsc') {
                 $value['belong_to'] = '蔺苏川';
             }else{
@@ -140,7 +148,8 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         // $sql = "SELECT group_concat(t.newid ) as newid FROM (
         //         SELECT group_concat(card_id ORDER BY usable_edu DESC) as newid,1 as flag  FROM sdb_b2c_poscard WHERE is_enabled='1' GROUP BY share_flag order by usable_edu desc ) as t GROUP BY t.flag";
         $sql = "SELECT card_id,share_flag FROM sdb_b2c_poscard WHERE is_enabled = '1' order by usable_edu DESC";
-        $temp = app::get('b2c')->model('poscard')->db->select($sql);
+        $DB = app::get('b2c')->model('poscard')->db;
+        $temp = $DB->select($sql);
         foreach ($temp as $key => $value) {
             $temp1[$value['share_flag']][]=$value['card_id'];
         }
@@ -157,16 +166,44 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         }
         $newCartId = rtrim($str,',');
         $sql = "SELECT * FROM sdb_b2c_poscard WHERE card_id in ($newCartId) order by field (card_id,$newCartId)";
-        $rowsets = app::get('b2c')->model('poscard')->db->select($sql);
+        $rowsets = $DB->select($sql);
         //查询日志：
         //获取今天零点的时间戳：
         $start = strtotime(date('Y-m-d',time()));
         $sql = "SELECT card_id,count(id) as count FROM sdb_b2c_poslog where type='pos' and create_time>'{$start}' group by card_id ";
-        $logs = app::get('b2c')->model('poscard')->db->select($sql);
+        $logs = $DB->select($sql);
         foreach ($logs as $key => $value) {
             $count[$value['card_id']]=$value['count'];
         }
+        //计算免息天数：
+        $time = '';
+        if ($time) {
+            $time = strtotime($time);
+        }else{
+            $time = time();
+        }
+        $arg = $arg2= -1;
+        $arg2++;
+        //本月：年-月
+        $thisMonth = date("Y-m",strtotime("{$arg2} months",$time));
+        //上月：年-月
+        $lastMonth = date("Y-m",strtotime("{$arg} months",$time));
+        //前月：年-月
+        $arg--;
+        $prevMonth = date("Y-m",strtotime("{$arg} months",$time));
+        //下月：年-月
+        $arg2++;
+        $nextMonth = date("Y-m",strtotime("{$arg2} months",$time));
+        //下下月：年-月
+        //下月：年-月
+        $arg2++;
+        $nextMonth2 = date("Y-m",strtotime("{$arg2} months",$time));
+        //当前时间
         foreach ($rowsets as $key => &$value) {
+            if ($value['card_id']='22') {
+                $mianxiDays = $this->getMianxiDays($thisMonth,$lastMonth,$prevMonth,$nextMonth,$nextMonth2,$time,$value);
+                $value['mianxiDays'] = $mianxiDays;
+            }
             $value['all_edu'] = round($value['all_edu'],2);
             $value['usable_edu'] = round($value['usable_edu'],2);
             $value['linshi_edu'] = round($value['linshi_edu'],2);
@@ -177,35 +214,49 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $this->pagedata['rowsets'] = $new;
         echo $this->fetch('wap/pos/remindajax.html');exit;
     }
+    public function getMianxiDays($thisMonth,$lastMonth,$prevMonth,$nextMonth,$nextMonth2,$time,$value){
+        //本月账单日
+        $thisZhangdanTime = strtotime("{$thisMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+        //如果账单日大于当前时间
+        if ($thisZhangdanTime>$time) {
+            //计算本次还款日
+            if ($value['is_guding']=='0') {
+                $lastMonthZhangdan = "{$thisMonth}-{$value['zhangdan_date']}";
+                $huankuanDateThis = strtotime("{$lastMonthZhangdan} + {$value['zhangdanToDays']} day 23:59:59");
+            }else{
+                if ($value['huankuan_date']>$value['zhangdan_date']) {
+                    //下次还款日
+                    $huankuanDateThis = strtotime("{$thisMonth}-{$value['huankuan_date']} 23:59:59");
+                }else{
+                    //下次还款日
+                    $huankuanDateThis = strtotime("{$nextMonth}-{$value['huankuan_date']} 23:59:59");
+                }
+            }
+            $days = ($huankuanDateThis-$time)/86400;
+        }else{//如果账单日小于当前时间
+            if ($value['is_guding']=='0') {
+                //下次还款日
+                $lastMonthZhangdan = "{$nextMonth}-{$value['zhangdan_date']}";
+                $huankuanDateThis = strtotime("{$lastMonthZhangdan} + {$value['zhangdanToDays']} day 23:59:59");
+            }else{
+                if ($value['huankuan_date']>$value['zhangdan_date']) {
+                    //下次还款日
+                    $huankuanDateThis = strtotime("{$nextMonth}-{$value['huankuan_date']} 23:59:59");
+                }else{
+                    //下次还款日
+                    $huankuanDateThis = strtotime("{$nextMonth2}-{$value['huankuan_date']} 23:59:59");
+                }
+            }
+            $days = ($huankuanDateThis-$time)/86400;
+        }
+        $days = round($days);
+        return $days;
+    }
     //获取账单
     public function getZhangdan(){
-        $time = '';
-        if ($time) {
-            $time = strtotime($time);
-        }else{
-            $time = time();
-        }
-        $arg = $arg2= -1;
-        if ($_POST['flag']=='1') {
-            $arg = $arg2= 0;
-        }
-        $arg2++;
-        //本月：年-月
-        $thisMonth = date("Y-m",strtotime("{$arg2} months",$time));
-        //本月：月份
-        $thisMonth2 = date("m",strtotime("{$arg2} months",$time));
-        //上月：年-月
-        $lastMonth = date("Y-m",strtotime("{$arg} months",$time));
-        //前月：年-月
-        $arg--;
-        $prevMonth = date("Y-m",strtotime("{$arg} months",$time));
-        //下月：年-月
-        $arg2++;
-        $nextMonth = date("Y-m",strtotime("{$arg2} months",$time));
-        //前月1号作为开始时间
-        $b_time = strtotime("{$prevMonth}-1");
+        $flag = $_POST['flag'];
         $poslog = $this->app->model('poslog');
-        $data = $poslog->getZhangdan($thisMonth,$lastMonth,$prevMonth,$nextMonth,$thisMonth2,$b_time,$time);
+        $data = $poslog->getZhangdan($flag,0);
         $this->pagedata['data'] = $data;
         echo $this->fetch('wap/pos/getZhangdan.html');exit;
     }
@@ -221,5 +272,32 @@ class b2c_ctl_wap_pos extends wap_frontpage{
             $tmp2+=$tmp1;
         }
         echo $tmp2;
+    }
+    //获取账单明细
+    function getZhangdanMx(){
+        $card_id = $_POST['card_id'];
+        $flag = $_POST['flag'];
+        //刷卡方式
+        $mdlType = $this->app->model('postype');
+        $postype = $mdlType->getPostype();
+        $poslog = $this->app->model('poslog');
+        $data = $poslog->getZhangdan($flag,$card_id);
+        $data = array_values($data);
+        $data = $data['0'];
+        $data = $data[$card_id]['benqiMx'];
+        $type = array(
+            'huankuan'=>'还款',
+            'xiaofei'=>'消费',
+            'nianfei'=>'年费',
+        );
+        foreach ($data as $key => &$value) {
+            $value['shuaka_type'] = $postype[$value['shuaka_type']];
+            if (!$value['shuaka_type']) {
+                $value['shuaka_type'] = $type[$value['type']];
+            }
+        }
+        $this->pagedata['data'] = $data;
+        $html=$this->fetch('wap/pos/zhangdanMx.html');
+        echo $html;exit;
     }
 }

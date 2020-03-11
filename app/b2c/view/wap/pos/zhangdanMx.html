@@ -1,0 +1,15 @@
+<div class="poslog-list-title poslog-list-title1">
+	<div>姓名-银行-卡号</div>
+	<div>金额</div>
+	<div>刷卡方式</div>
+	<div>时间</div>
+</div>
+<{foreach from=$data item=poslog}>
+<div class="poslog-list-title poslog-list-title2">
+	<div><{$poslog.belong_to}>:<{$poslog.bankname}>-<{$poslog.card_no}>-<{$poslog.bankmemo}></div>
+	<div><{$poslog.money|cur_odr}></div>
+	<div><{$poslog.brandname}>-<{$poslog.sub_name}>-<{$poslog.shuaka_type}></div>
+	<div><{$poslog.create_time|cdate:FDATE_STIME}></div>
+</div>
+<{/foreach}>
+

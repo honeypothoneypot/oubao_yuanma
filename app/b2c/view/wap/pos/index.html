@@ -1,4 +1,6 @@
 <{css src="pos.css" app="b2c"}>
+<{css src="pos/alert.css" app="b2c"}>
+<{script src="pos/alert.js" app="b2c"}>
 <div class="remind-main">
 
 </div>
@@ -420,7 +422,7 @@ function getRemind(){
     });
 }
 getRemind();
-setInterval('getRemind()',10000);
+// setInterval('getRemind()',10000);
 
 jq.fn.serializeObject = function(){
     var o = {};
@@ -457,4 +459,30 @@ jq('.getQiankuan').on('click',function(event) {
   		jq('.toZhangdan').html(re);
   	});
 });
+//获取账单明细
+var M = {};
+jq(document).on('click','.getZhangdanMx',function(){
+	var url = "<{link app=b2c ctl=wap_pos act=getZhangdanMx}>";
+	var card_id = jq(this).data('cid');
+	var flag = jq(this).data('flag');
+	jq.post(url,{card_id:card_id,flag:flag},function(res){
+		// 按钮七
+		M.dialog7 = jqueryAlert({
+			'style'   : 'wap',
+			'title'   : '明细',
+			'content' :  res,
+			'modal'   : true,
+			'contentTextAlign' : 'left',
+			'width'   : '100%',
+			'height'  : '60%',
+			'animateType' : 'linear',
+			'buttons' :{
+				'关闭' : function(){
+					M.dialog7.close();
+				},
+			}
+		})
+	})
+
+})
 </script>

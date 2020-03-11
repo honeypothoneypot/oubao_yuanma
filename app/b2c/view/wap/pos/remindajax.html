@@ -8,15 +8,19 @@
     <div class="remindAjax">
         <div class="">银行</div>
         <div class="">卡号</div>
-        <div class="">总额度</div>
-        <div class="">可用额度</div>
-        <div class="">临时额度</div>
-        <div class="">今日已刷</div>
+        <div class="">账单日</div>
+        <div class="">免息</div>
+        <div class="">总额</div>
+        <div class="">可用额</div>
+        <div class="">临额</div>
+        <div class="">今日</div>
     </div>
     <{foreach from=$rowset item=item}>
     <div class="remindAjax">
         <div class=""><{$item.name}></div>
-        <div class=""><{$item.card_no}>-<{$item.memo}></div>
+        <div class=""><{$item.card_no}><{$item.memo}></div>
+        <div class=""><{$item.zhangdan_date}></div>
+        <div class=""><{$item.mianxiDays}>天</div>
         <div class=""><{$item.all_edu}></div>
         <div class=""><{$item.usable_edu}></div>
         <div class=""><{$item.linshi_edu}></div>
