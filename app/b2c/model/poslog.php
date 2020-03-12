@@ -300,7 +300,8 @@ class b2c_mdl_poslog extends dbeav_model{
 		}
 		//重新排序
 		$flag2 = utils::_array_column($data,'huankuanDateThis');
-		array_multisort($flag2,SORT_ASC,$data);
+		$flag3 = utils::_array_column($data,'create_time');
+		array_multisort($flag2,SORT_ASC,$flag3,SORT_DESC,$data);
 		foreach ($data as $key => $value2) {
 			$newData[$value2['belong_to']]["{$value2['card_id']}"][] = $value2;
 		}
