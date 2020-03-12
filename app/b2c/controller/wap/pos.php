@@ -200,10 +200,8 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $nextMonth2 = date("Y-m",strtotime("{$arg2} months",$time));
         //当前时间
         foreach ($rowsets as $key => &$value) {
-            if ($value['card_id']='22') {
-                $mianxiDays = $this->getMianxiDays($thisMonth,$lastMonth,$prevMonth,$nextMonth,$nextMonth2,$time,$value);
-                $value['mianxiDays'] = $mianxiDays;
-            }
+            $mianxiDays = $this->getMianxiDays($thisMonth,$lastMonth,$prevMonth,$nextMonth,$nextMonth2,$time,$value);
+            $value['mianxiDays'] = $mianxiDays;
             $value['all_edu'] = round($value['all_edu'],2);
             $value['usable_edu'] = round($value['usable_edu'],2);
             $value['linshi_edu'] = round($value['linshi_edu'],2);
