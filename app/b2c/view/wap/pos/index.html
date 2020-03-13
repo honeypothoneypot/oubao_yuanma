@@ -283,6 +283,7 @@
 				// jq('input[name=money]').val('');
 				t.num=1
 				filterLogs($('.poslog'),t);
+				getRemind();
 			}
 			jq('#tijiao').removeAttr('disabled');
 		});
@@ -422,7 +423,7 @@ function getRemind(){
     });
 }
 getRemind();
-setInterval('getRemind()',10000);
+// setInterval('getRemind()',10000);
 
 jq.fn.serializeObject = function(){
     var o = {};
