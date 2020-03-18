@@ -148,10 +148,10 @@
     flex: 1
 }
 .remindAjax div:nth-child(6) {
-    flex: 1.2
+    flex: 1
 }
 .remindAjax div:nth-child(7) {
-    flex: 1
+    flex: 1.2
 }
 .remindAjax div:nth-child(8) {
     flex: 0.6

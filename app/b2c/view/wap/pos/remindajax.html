@@ -11,8 +11,8 @@
         <div class="">账单日</div>
         <div class="">免息</div>
         <div class="">总额</div>
-        <div class="">可用额</div>
         <div class="">临额</div>
+        <div class="">可用额</div>
         <div class="">今日</div>
     </div>
     <{foreach from=$rowset item=item}>
@@ -22,8 +22,8 @@
         <div class=""><{$item.zhangdan_date}></div>
         <div class=""><{$item.mianxiDays}>天</div>
         <div class=""><{$item.all_edu}></div>
-        <div class=""><{$item.usable_edu}></div>
         <div class=""><{$item.linshi_edu}></div>
+        <div class=""><{$item.usable_edu}></div>
         <div class="" style="color:#CD0000"><{$item.count}></div>
     </div>
     <{/foreach}>
