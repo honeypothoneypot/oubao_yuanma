@@ -80,12 +80,35 @@ class b2c_ctl_admin_poscard extends desktop_controller{
         $this->display('admin/pos/postypeadd.html');
     }
     public function setShare(){
-        $sql = "SELECT belong_to,name,card_no FROM sdb_b2c_poscard where 1 GROUP BY belong_to,name";
+        $sql1 = "SELECT card_id,belong_to,name,card_no FROM sdb_b2c_poscard where 1 and name not in('支付宝花呗') GROUP BY belong_to,name";
+        $sql2 = "SELECT card_id,belong_to,name,card_no FROM sdb_b2c_poscard where 1 and name in('支付宝花呗') GROUP BY card_no";
+        $sql = "SELECT * FROM({$sql1} UNION {$sql2}) as t";
         $rowsetList = app::get('b2c')->model('poscard')->db->select($sql);
         foreach ($rowsetList as $key => $value) {
             $upSql = "UPDATE sdb_b2c_poscard set share_flag='{$value['card_no']}' where belong_to='{$value['belong_to']}' and name='{$value['name']}' ";
+            if ($value['name']=='支付宝花呗') {
+                $upSql .= "and card_id='{$value['card_id']}' ";
+            }
             app::get('b2c')->model('poscard')->db->exec($upSql);
         }
         echo "成功";
+    }
+    public function setjifen($card_id){
+        $this->getPagedata();
+        $this->display('admin/pos/setjifen.html');
+    }
+    //获取公共数据
+    public function getPagedata(){
+        //获取pos品牌
+        $mdlBrand = $this->app->model('posbrand');
+        $posBrandAndTypeLists = $mdlBrand->getBrandAndType();
+        $posBrandAndTypeLists = utils::array_group_by($posBrandAndTypeLists,'posbrand_id');
+        dump2file($posBrandAndTypeLists,'posBrandAndTypeLists.txt');
+        $this->pagedata['posBrandLists'] = $posBrandAndTypeLists;
+        //获取信用卡列表
+        $mdlCard = $this->app->model('poscard');
+        $cardLists = $mdlCard->getList('card_id,name,belong_to,card_no,memo,share_flag',array('is_enabled'=>'1'));
+        $cardLists = utils::array_group_by($cardLists,'belong_to');
+        $this->pagedata['cardLists'] = $cardLists;
     }
 }
