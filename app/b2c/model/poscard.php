@@ -41,6 +41,8 @@ class b2c_mdl_poscard extends dbeav_model{
 			'光大银行',
 			'无锡农商银行',
 			'南京银行',
+			'支付宝花呗',
+			'京东白条'
 		);
 		foreach($banks as $key=>$value ){
 			$new[$key]['bank'] = $value;
