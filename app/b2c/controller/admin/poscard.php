@@ -103,7 +103,6 @@ class b2c_ctl_admin_poscard extends desktop_controller{
         $mdlBrand = $this->app->model('posbrand');
         $posBrandAndTypeLists = $mdlBrand->getBrandAndType();
         $posBrandAndTypeLists = utils::array_group_by($posBrandAndTypeLists,'posbrand_id');
-        dump2file($posBrandAndTypeLists,'posBrandAndTypeLists.txt');
         $this->pagedata['posBrandLists'] = $posBrandAndTypeLists;
         //获取信用卡列表
         $mdlCard = $this->app->model('poscard');

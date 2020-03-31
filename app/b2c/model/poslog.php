@@ -45,7 +45,7 @@ class b2c_mdl_poslog extends dbeav_model{
 				LEFT JOIN sdb_b2c_postype AS c ON a.postype_id  = c.postype_id
 				LEFT JOIN sdb_b2c_posbrand AS d ON c.posbrand_id  = d.posbrand_id WHERE 1 ";
 		//搜索条件
-        //$id,$belong_to,$card_id,$postype_id,$from_time,$to_time,posbrand_id
+		//$id,$belong_to,$card_id,$postype_id,$from_time,$to_time,posbrand_id
 		if ($filter['id']) {
 			$sql.=" AND a.id='{$filter['id']}' ";
 		}
@@ -88,7 +88,7 @@ class b2c_mdl_poslog extends dbeav_model{
 				LEFT JOIN sdb_b2c_posbrand AS d ON c.posbrand_id  = d.posbrand_id WHERE 1
 				";
 		//搜索条件
-        //$belong_to,$card_id,$postype_id,$from_time,$to_time
+		//$belong_to,$card_id,$postype_id,$from_time,$to_time
 		if ($filter['belong_to']) {
 			$sql.=" AND b.belong_to='{$filter['belong_to']}' ";
 		}
@@ -189,28 +189,28 @@ class b2c_mdl_poslog extends dbeav_model{
 	//查询账单
 	public function getZhangdan($flag,$card_id){
 		// $time = '2020-3-9';
-        if ($time) {
-            $time = strtotime($time);
-        }else{
-            $time = time();
-        }
-        $arg = $arg2= -1;
-        if ($flag=='1') {
-            $arg = $arg2= 0;
-        }
-        $arg2++;
-        //本月：年-月
-        $thisMonth = date("Y-m",strtotime("{$arg2} months",$time));
-        //上月：年-月
-        $lastMonth = date("Y-m",strtotime("{$arg} months",$time));
-        //前月：年-月
-        $arg--;
-        $prevMonth = date("Y-m",strtotime("{$arg} months",$time));
-        //下月：年-月
-        $arg2++;
-        $nextMonth = date("Y-m",strtotime("{$arg2} months",$time));
-        //前月1号作为开始时间
-        $b_time = strtotime("{$prevMonth}-1");
+		if ($time) {
+			$time = strtotime($time);
+		}else{
+			$time = time();
+		}
+		$arg = $arg2= -1;
+		if ($flag=='1') {
+			$arg = $arg2= 0;
+		}
+		$arg2++;
+		//本月：年-月
+		$thisMonth = date("Y-m",strtotime("first day of {$arg2} months",$time));
+		//上月：年-月
+		$lastMonth = date("Y-m",strtotime("last day of {$arg} months",$time));
+		//前月：年-月
+		$arg--;
+		$prevMonth = date("Y-m",strtotime("last day of {$arg} months",$time));
+		//下月：年-月
+		$arg2++;
+		$nextMonth = date("Y-m",strtotime("first day of {$arg2} months",$time));
+		//前月1号作为开始时间
+		$b_time = strtotime("{$prevMonth}-1");
 		$sql = "SELECT a.*,b.card_no,b.belong_to,b.zhangdan_date,b.huankuan_date,b.name,b.zhangdan_dateTime,b.is_guding,b.zhangdanToDays,c.shuaka_type
 			FROM sdb_b2c_poslog a
 			LEFT JOIN sdb_b2c_poscard b ON b.card_id = a.card_id
@@ -236,7 +236,7 @@ class b2c_mdl_poslog extends dbeav_model{
 			//根据当前日期来算账单周期
 			// $thisDay = date('j',$time);//j-月份中的第几天，没有前导零，1到31
 			//本月账单日
-        	$thisZhangdanTime = strtotime("{$thisMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
+			$thisZhangdanTime = strtotime("{$thisMonth}-{$value['zhangdan_date']} {$value['zhangdan_dateTime']}:00:00");
 			//如果账单日大于当天，则说明账单周期是前个月的账单日-上个月的账单日;再判断还款日
 			if ($thisZhangdanTime>$time) {
 				//非固定还款日

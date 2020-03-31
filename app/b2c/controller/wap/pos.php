@@ -185,15 +185,15 @@ class b2c_ctl_wap_pos extends wap_frontpage{
         $arg = $arg2= -1;
         $arg2++;
         //本月：年-月
-        $thisMonth = date("Y-m",strtotime("{$arg2} months",$time));
+        $thisMonth = date("Y-m",strtotime("first day of {$arg2} months",$time));
         //上月：年-月
-        $lastMonth = date("Y-m",strtotime("{$arg} months",$time));
+        $lastMonth = date("Y-m",strtotime("last day of {$arg} months",$time));
         //前月：年-月
         $arg--;
-        $prevMonth = date("Y-m",strtotime("{$arg} months",$time));
+        $prevMonth = date("Y-m",strtotime("last day of{$arg} months",$time));
         //下月：年-月
         $arg2++;
-        $nextMonth = date("Y-m",strtotime("{$arg2} months",$time));
+        $nextMonth = date("Y-m",strtotime("first day of {$arg2} months",$time));
         //下下月：年-月
         //下月：年-月
         $arg2++;
