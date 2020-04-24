@@ -35,7 +35,7 @@
 }
 
 .pos-input input {
-    width: 100%;
+    width: 60px;
     height: 20px;
     border: 1px solid #000000;
 }
@@ -206,13 +206,10 @@
     display: flex;
     width: calc(100% + 10px);
     flex-wrap: wrap;
-    text-align: center;
-    align-items: center;
 }
 
 .pos-input2 {
     flex: 0 0 calc(33.33% - 10px);
-    margin-right: 10px;
 }
 
 .pos-input2 input {

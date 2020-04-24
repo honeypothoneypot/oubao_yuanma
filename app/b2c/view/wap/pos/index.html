@@ -117,16 +117,15 @@
 				<{/foreach}>
 		</div>
 		<div class="clean-both"></div>
-		<div class="pos-input" style="overflow: hidden;">
+		<div class="pos-input" style="overflow: hidden;position: relative;">
 			<div class="pos-input1">
 				<div class="pos-input2">
-					金额(¥)
+					金额(<span style="color: red">¥</span>)
 				</div>
 				<div class="pos-input2">
 					类型
 				</div>
 				<div class="pos-input2">
-					mcc
 				</div>
 				<div class="pos-input2">
 					<input type="number" name="money" style="color: red;">
@@ -141,14 +140,13 @@
 	                </select>
 				</div>
 				<div class="pos-input2">
-					<input type="number" name="mcc" value="0">
 				</div>
+			</div>
+			<div style="position: absolute;top: 16px;right: 15px;">
+				<button type="button" class="btn orange" id="tijiao">提交</button>
 			</div>
 		</div>
 		<div class="clean-both"></div>
-		<div class="btn-bar">
-			<button type="button" class="btn orange" id="tijiao">提交</button>
-		</div>
 	</form>
 	<div>
 		历史记录：(当前日期：<{$time|cdate:FDATE}>)
