@@ -25,7 +25,12 @@ class b2c_mdl_postype extends dbeav_model{
             'yun_pay'=>'银联云闪付',
             'hongshan'=>'红闪封顶',
             'long_pay'=>'龙支付',
-            'qianbao'=>'钱宝app'
+            'qianbao'=>'钱宝app',
+            'heika1'=>'常州·餐饮',
+            'heika2'=>'常州·百货',
+            'heika3'=>'无锡·加油站',
+            'heika4'=>'无锡·酒吧',
+            'heika5'=>'苏州·旅行社',
         );
         return $postype;
     }
