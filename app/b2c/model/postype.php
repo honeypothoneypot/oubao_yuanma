@@ -34,7 +34,8 @@ class b2c_mdl_postype extends dbeav_model {
             'heika6'     => '南京·酒店',
             'heika7'     => '南京·旅行社',
             'heika8'     => '常州·酒吧',
-            'small500'   => '小于等于500',
+            'small500A'  => '(wx)小于等于500',
+            'small500B'  => '(zfb)小于等于500',
         );
         return $postype;
     }
