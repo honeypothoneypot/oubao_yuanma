@@ -79,7 +79,6 @@ class kernel {
                 self::strip_magic_quotes($_GET);
                 self::strip_magic_quotes($_POST);
             }
-
             $pathinfo = self::request()->get_path_info();
             $jump     = false;
             if (isset($pathinfo{1})) {
@@ -158,7 +157,7 @@ class kernel {
                 cacheobject::init();
             }
 
-            //get app router
+            //get app router//site_router
             self::$__router = app::get($app)->router();
             self::$__router->dispatch($path);
 
