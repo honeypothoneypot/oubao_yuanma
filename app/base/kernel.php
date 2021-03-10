@@ -157,7 +157,7 @@ class kernel {
                 cacheobject::init();
             }
 
-            //get app router//site_router
+            //get app router//site_router && desktop_router
             self::$__router = app::get($app)->router();
             self::$__router->dispatch($path);
 
