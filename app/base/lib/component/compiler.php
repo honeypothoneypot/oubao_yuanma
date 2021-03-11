@@ -350,8 +350,11 @@ class base_component_compiler {
         default:
             $_result = "";
             if ($this->_compile_ui_function($function, $arguments, $_result)) {
+                dump2file2($_result, '_compile_ui_function.txt');
                 return $_result;
             } elseif ($this->_compile_compiler_function($function, $arguments, $bundle_var_only, $_result)) {
+                dump2file2($_result, '_compile_compiler_function.txt');
+
                 return $_result;
             } elseif ($this->_compile_custom_block($function, $arguments, $_result)) {
                 if ($function{0} == '/') {
@@ -361,8 +364,11 @@ class base_component_compiler {
                 } else {
                     $this->_block_stack[] = $function;
                 }
+                dump2file2($_result, '_compile_custom_block.txt');
                 return $_result;
             } elseif ($this->_compile_custom_function($function, $arguments, $_result)) {
+                dump2file2($_result, '_compile_custom_function.txt');
+
                 return $_result;
             } else {
                 trigger_error($function . " function does not exist in " . __FILE__ . ' on line ' . __LINE__, E_USER_ERROR);
