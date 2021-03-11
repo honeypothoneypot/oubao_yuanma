@@ -22,9 +22,7 @@ class base_ego_syscache {
     public function __construct($support_type) {
         $this->_support_type = $support_type;
         $this->_handler      = new self::$__supports[$support_type]();
-        if ($support_type == 'service') {
-            dump2file2($this->_handler instanceof base_interface_syscache_farmer, '_handler.txt');
-        }
+
         if ($this->_handler instanceof base_interface_syscache_farmer) {
             if (defined('SYSCACHE_ADAPTER')) {
                 $class_name = constant('SYSCACHE_ADAPTER');
